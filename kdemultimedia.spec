@@ -404,18 +404,6 @@ KDE Media Player - biblioteki wspó³dzielone.
 
 %build
 cp /usr/share/automake/config.sub admin
-for f in `find . -name \*.desktop | xargs grep -l '\[nb\]'` ; do
-	echo -e ',s/\[nb\]=/[no]=/\n,w' | ed $f 2>/dev/null
-done
-
-# kdemultimedia includes kernel headers which breaks things, ugly workaround
-#rm -rf linux
-#mkdir linux
-#sed -e 's#slots\[CDROM_MAX_SLOTS\]#kde_slots[CDROM_MAX_SLOTS]#g' \
-#/usr/include/linux/cdrom.h > linux/cdrom.h
-
-#sed -i 's/#include <asm\/byteorder.h>/#include <asm\/types.h>\n#include <endian.h>/' \
-#	linux/cdrom.h
 
 fix="kfile-plugins/ogg/configure.in.in \
      mpeglib_artsplug/configure.in.in"
