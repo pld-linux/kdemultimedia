@@ -10,10 +10,15 @@ Vendor:		The KDE Team
 #ftp:		ftp.kde.org
 #patch:		/pub/kde/stable/%{version}/distribution/tar/generic/source/
 Source:		%{name}-%{version}.tar.bz2
-Requires:	qt >= 1.44, kdelibs = %{version}
+BuildRequires:	kdelibs-devel = %{version}
+BuildRequires:	qt-devel >= 1.44
+BuildRequires:	XFree86-devel
+BuildRequires:	libstdc++-devel
+Requires:	qt >= 1.44
+Requires:	kdelibs = %{version}
 BuildRoot:	/tmp/%{name}-%{version}-root
 
-%define 	_prefix		/usr/X11R6/
+%define 	_prefix		/usr/X11R6
 
 %description
 KDE multimedia applications.
@@ -27,31 +32,33 @@ Package includes:
 %description -l pl
 Multimedialne aplikacje KDE.
 Pakiet zawiera:
-  KMedia - Programik do odgrywania plików d¼wiêkowych
-  KMID - Odgrywarka MIDI
-  KMIDI - Programowa odgrywarka MIDI
+  KMedia - Program do odtwarzania plików d¼wiêkowych
+  KMID - Odtwarzacz MIDI
+  KMIDI - Programowy odtwarzacz MIDI
   KMIX - Mixer audio
   KSCD - Odtwarzacz CD
 
 %package kmedia
-Summary:     KDE Media Player
-Summary(pl): Odgrywarka multimedialna KDE
-Group:       X11/KDE/Multimedia
-Requires:    qt >= 1.40, kdelibs = %{version}
+Summary:	KDE Media Player
+Summary(pl):	Odtwarzacz multimedialny dla KDE
+Group:		X11/KDE/Multimedia
+Requires:	qt >= 1.44
+Requires:	kdelibs = %{version}
 
 %description kmedia
 This is a media player for KDE.
 Currently it can be only used to play WAV files.
 
 %description -l pl kmedia
-Odgrywarka multimedialna dla KDE.
+Odtwarzacz multimedialny dla KDE.
 W tej chwili obs³uguje tylko pliki WAV.
 
 %package kmid
-Summary:     KDE MIDI Player	
-Summary(pl): Odgrywarka MIDI dla KDE
-Group:       X11/KDE/Multimedia
-Requires:    qt >= 1.40, kdelibs = %{version}
+Summary:	KDE MIDI Player	
+Summary(pl):	Odtwarzacz MIDI dla KDE
+Group:		X11/KDE/Multimedia
+Requires:	qt >= 1.44
+Requires:	kdelibs = %{version}
 
 %description kmid
 This is a MIDI player for KDE.
@@ -59,29 +66,31 @@ It uses sound-card synthetizer or other hardware connected to MIDI to play MIDI
 files.
 
 %description kmid -l pl
-Odgrywarka MIDI dla KDE.
+Odtwarzacz MIDI dla KDE.
 Wykorzystuje tylko syntetyzator na karcie muzycznej lub inne urz±dzenia MIDI
-po³±czone do niej.
+przy³±czone do niej.
 
 %package kmidi
-Summary:     KDE software MIDI Player	
-Summary(pl): Programowa odgrywarka MIDI dla KDE
-Group:       X11/KDE/Multimedia
-Requires:    qt >= 1.40, kdelibs = %{version}
+Summary:	KDE software MIDI Player	
+Summary(pl):	Programowy odtwarzacz MIDI dla KDE
+Group:		X11/KDE/Multimedia
+Requires:	qt >= 1.44
+Requires:	kdelibs = %{version}
 
 %description kmidi
 Software MIDI player. It uses GUS patch files and CPU power to create
 high-quality sound.
 
 %description kmidi -l pl
-Programowa odgrywarka MIDI. Wykorzystuje patche z GUSa i moc procesora do
+Programowy odtwarzacz MIDI. Wykorzystuje patche z GUSa i moc procesora do
 stworzenia dobrej jako¶ci d¼wiêku.
 
 %package kmix 
-Summary:     KDE audio mixer
-Summary(pl): Mixer audio dla KDE
-Group:       X11/KDE/Multimedia
-Requires:    qt >= 1.40, kdelibs = %{version}
+Summary:	KDE audio mixer
+Summary(pl):	Mixer audio dla KDE
+Group:		X11/KDE/Multimedia
+Requires:	qt >= 1.44
+Requires:	kdelibs = %{version}
 
 %description kmix
 Sound mixer application for KDE.
@@ -90,10 +99,11 @@ Sound mixer application for KDE.
 Mikser audio dla KDE.
 
 %package kscd
-Summary:     KDE CD Player	
-Summary(pl): Odtwarzacz CD dla KDE
-Group:       X11/KDE/Multimedia
-Requires:    qt >= 1.40, kdelibs = %{version} 
+Summary:	KDE CD Player	
+Summary(pl):	Odtwarzacz CD dla KDE
+Group:		X11/KDE/Multimedia
+Requires:	qt >= 1.44
+Requires:	kdelibs = %{version} 
 
 %description kscd
 CD Player with CDDB support. It can automaticaly update its CD database with
