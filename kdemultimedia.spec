@@ -312,12 +312,12 @@ Obsoletes:	kdemultimedia < 8:3.0.8
 %description kfile
 This package adds a fold to konqueror "file properties" dialog window
 with file enhanced informations for avi, au, FLAC, M3U, MP3, MPC, Ogg,
-sid and WAV files.
+SID and WAV files.
 
 %description kfile -l pl
 Ten pakiet dodaje do okna dialogowego "w³a¶ciwo¶ci pliku" konquerora
 dodatkow± zak³adkê z rozszerzonymi informacjami o plikach avi, au,
-FLAC, MP3, M3U, MPC, Ogg, sid and WAV.
+FLAC, MP3, M3U, MPC, Ogg, SID i WAV.
 
 %package kmid
 Summary:	KDE MIDI Player
