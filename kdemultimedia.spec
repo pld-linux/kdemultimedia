@@ -136,6 +136,7 @@ Narzêdzia Arts.
 Summary:        A jukebox like program
 Summary(pl):    Program spe³niaj±cy funkcje szafy graj±cej
 Group:          X11/Applications
+Requires:       id3lib
 Requires:       kdebase-core >= %{version}
 Requires:       %{name}-mpeglib = %{version}
 Obsoletes:	%{name}-aktion
