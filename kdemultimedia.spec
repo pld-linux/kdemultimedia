@@ -14,14 +14,14 @@
 
 %ifarch	sparc sparcv9 sparc64
 %define		_with_esd	1
-%define		_without_alsa	1
 %endif
+%define		_without_alsa	1
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	0.1
+Release:	0.2
 Epoch:		8
 License:	GPL
 Vendor:		The KDE Team
@@ -273,7 +273,6 @@ Wtyczka do Xine.
 
 %prep
 %setup -q
-
 %patch0 -p1
 
 %build
