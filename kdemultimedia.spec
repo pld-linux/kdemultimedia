@@ -21,7 +21,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	0.1
+Release:	1
 Epoch:		8
 License:	GPL
 Vendor:		The KDE Team
@@ -41,7 +41,7 @@ BuildRequires:	cdparanoia-III
 BuildRequires:	cdparanoia-III-devel
 BuildRequires:	gettext-devel
 BuildRequires:	gtk+-devel
-BuildRequires:	kdelibs-devel >= %{version}
+BuildRequires:	kdelibs-devel >= %{epoch}:%{version}
 BuildRequires:	libart_lgpl-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libogg-devel
@@ -441,6 +441,7 @@ echo "Remember to restart artsd !"
 %attr(755,root,root) %{_libdir}/kde3/libkaboodlepart.so
 %{_datadir}/apps/kaboodle
 %{_datadir}/services/kaboodle_component.desktop
+%{_datadir}/services/kaboodleengine.desktop
 %{_applnkdir}/Multimedia/kaboodle.desktop
 %{_pixmapsdir}/*/*/apps/kaboodle.*
 
