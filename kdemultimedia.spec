@@ -1,8 +1,13 @@
+#
+# Conditional build:
+# _with_pixmapsubdirs - leave different depth/resolution icons
+#
+%define		_with_pixmapsubdirs	1
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	3.0.4
-Release:	3
+Release:	4
 Epoch:		7
 License:	GPL
 Vendor:		The KDE Team
@@ -10,6 +15,7 @@ Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
 # generated from kde-i18n
 Source1:	kde-i18n-%{name}-%{version}.tar.bz2
+Source2:	%{name}-aktion.png
 Patch0:		%{name}-kmidi-alsa.patch
 Patch1:		%{name}-kmix-applet-no-version.patch
 Patch2:		%{name}-fix-arts-builder.patch
@@ -22,6 +28,7 @@ BuildRequires:	alsa-driver-devel
 %endif
 BuildRequires:	arts-devel
 BuildRequires:	arts-kde-devel
+BuildRequires:	awk
 BuildRequires:	cdparanoia-III-devel
 BuildRequires:	esound-devel
 BuildRequires:	gettext-devel
@@ -240,7 +247,30 @@ ALD=$RPM_BUILD_ROOT%{_applnkdir}
 install -d $ALD/Settings/KDE
 mv $ALD/{Settings/Sound,Settings/KDE}
 
+for i in $RPM_BUILD_ROOT%{_pixmapsdir}/hicolor/48x48/apps/{kaboodle,kmid,kmidi,kmix,kscd,noatun}.png
+do
+%if %{?_with_pixmapsubdirs:1}%{!?_with_pixmapsubdirs:0}
+	ln -sf `echo $i | sed "s:^$RPM_BUILD_ROOT%{_pixmapsdir}/::"` $RPM_BUILD_ROOT%{_pixmapsdir}
+%else
+	cp -af $i $RPM_BUILD_ROOT%{_pixmapsdir}
+%endif
+done
+
+install %{SOURCE2} $RPM_BUILD_ROOT%{_pixmapsdir}/aktion.png
+
+%if %{!?_with_pixmapsubdirs:1}%{?_with_pixmapsubdirs:0}
+# moved
+rm -f $RPM_BUILD_ROOT%{_pixmapsdir}/*color/??x??/*/{kaboodle,kmid,kmidi,kmix,kscd,noatun}.png
+# resized
+rm -f $RPM_BUILD_ROOT%{_pixmapsdir}/*color/??x??/*/aktion.png
+%endif
+
 bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
+
+for f in `find $RPM_BUILD_ROOT%{_applnkdir} -name '.directory' -o -name '*.desktop'` ; do
+	awk -v F=$f '/^Icon=/ && !/\.xpm$/ && !/\.png$/ { $0 = $0 ".png";} { print $0; } END { if(F == ".directory") print "Type=Directory"; }' < $f > $f.tmp
+	mv -f $f{.tmp,}
+done
 
 %find_lang aktion	--with-kde
 %find_lang artsbuilder	--with-kde
@@ -325,7 +355,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_applnkdir}/Multimedia/aktion.desktop
 %{_datadir}/apps/aktion
 %{_datadir}/config/aktionrc
-%{_pixmapsdir}/*/*/apps/aktion.png
+%{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/aktion.png}
+%{_pixmapsdir}/aktion.png
 
 %files arts -f arts.lang
 %defattr(644,root,root,755)
@@ -365,7 +396,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/mcop/winskinvis*
 %{_applnkdir}/Multimedia/noatun.desktop
 %{_datadir}/apps/noatun*
-%{_pixmapsdir}/*/*/apps/noatun.png
+%{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/noatun.png}
+%{_pixmapsdir}/noatun.png
 
 %files kmid -f kmid.lang
 %defattr(644,root,root,755)
@@ -376,7 +408,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kmid
 %{_datadir}/mimelnk/audio/x-karaoke.desktop
 %{_datadir}/servicetypes/*midi*.desktop
-%{_pixmapsdir}/*/*/apps/kmid.png
+%{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/kmid.png}
+%{_pixmapsdir}/kmid.png
 
 %files kmidi -f kmidi.lang
 %defattr(644,root,root,755)
@@ -386,7 +419,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_applnkdir}/Multimedia/kmidi.desktop
 %{_applnkdir}/Multimedia/timidity.desktop
 %{_datadir}/apps/kmidi
-%{_pixmapsdir}/*/*/apps/kmidi.png
+%{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/kmidi.png}
+%{_pixmapsdir}/kmidi.png
 
 %files kmix -f kmix.lang
 %defattr(644,root,root,755)
@@ -401,7 +435,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/kmixctrl_restore.desktop
 %{_datadir}/apps/kmix
 %{_datadir}/apps/kicker/applets/*
-%{_pixmapsdir}/*/*/apps/kmix.png
+%{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/kmix.png}
+%{_pixmapsdir}/kmix.png
 
 %files kscd -f kscd.lang
 %defattr(644,root,root,755)
@@ -412,7 +447,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_applnkdir}/Multimedia/kscd.desktop
 %{_datadir}/apps/kscd
 %{_datadir}/mimelnk/text/xmcd.desktop
-%{_pixmapsdir}/*/*/apps/kscd.png
+%{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/kscd.png}
+%{_pixmapsdir}/kscd.png
 
 %files devel
 %defattr(644,root,root,755)
@@ -447,4 +483,5 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kaboodle
 %{_datadir}/services/kaboodle_component.desktop
 %{_applnkdir}/Multimedia/kaboodle.desktop
-%{_pixmapsdir}/*/*/apps/kaboodle.*
+%{?_with_pixmapsubdirs:%{_pixmapsdir}/*/*/apps/kaboodle.png}
+%{_pixmapsdir}/kaboodle.png
