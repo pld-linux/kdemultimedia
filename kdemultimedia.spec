@@ -95,7 +95,7 @@ Arts plugin that supports high quality playback of the following
 formats:
 - musepack (.mpc)
 - mpeg (.MP3,.MP2, etc.)
-- ogg vorbis (.ogg)
+- Ogg Vorbis (.ogg)
 - flac
 - speex
 - WAV
@@ -106,7 +106,7 @@ Wtyczka arts, która wspiera wysokiej jako¶ci odtwarzanie nastêpuj±cych
 formatów:
 - musepack (.mpc)
 - mpeg (.MP3,.MP2, etc.)
-- ogg vorbis (.ogg)
+- Ogg Vorbis (.ogg)
 - flac
 - speex
 - WAV
@@ -192,7 +192,7 @@ supports:
 - flac
 - speex
 - ac3/aac/m4v/m4a
-- ogg vorbis (ogg)
+- Ogg Vorbis (ogg)
 
 %description artsplugin-xine -l pl
 Ta wtyczka umo¿liwia arts odtwarzanie d¼wiêku za pomoc± silnika xine.
@@ -209,7 +209,7 @@ jako¶æ przy konkretnym formacie. Wspierane formaty to:
 - flac
 - speex
 - ac3/aac/m4v/m4a
-- ogg vorbis (ogg)
+- Ogg Vorbis (ogg)
 
 %package audiocd
 Summary:	Audiocd protocol for konqueror
@@ -313,13 +313,13 @@ Obsoletes:	kdemultimedia < 8:3.0.8
 
 %description kfile
 This package adds a fold to konqueror "file properties" dialog window
-with file enhanced informations for avi, au, flac, m3u, MP3, mpc, ogg,
+with file enhanced informations for avi, au, flac, m3u, MP3, mpc, Ogg,
 sid and WAV files.
 
 %description kfile -l pl
 Ten pakiet dodaje do okna dialogowego "w³a¶ciwo¶ci pliku" konquerora
 dodatkow± zak³adkê z rozszerzonymi informacjami o plikach avi, au,
-flac, MP3, m3u, mpc, ogg, sid and WAV.
+flac, MP3, m3u, mpc, Ogg, sid and WAV.
 
 %package kmid
 Summary:	KDE MIDI Player
@@ -365,11 +365,11 @@ Requires:	%{name}-artscontrol = %{epoch}:%{version}-%{release}
 Requires:	%{name}-kmix = %{epoch}:%{version}-%{release}
 
 %description krec
-KDE sound recorder which supports MP3 and ogg exporting and simple
+KDE sound recorder which supports MP3 and Ogg exporting and simple
 effects and mixers.
 
 %description krec -l pl
-Rejestrator d¼wiêku dla KDE z obs³ug± eksportu do MP3 i ogg oraz
+Rejestrator d¼wiêku dla KDE z obs³ug± eksportu do MP3 i Ogg oraz
 prostymi efektami i mikserem.
 
 %package kscd
