@@ -12,7 +12,7 @@
 
 %define         _state          snapshots
 %define         _ver		3.2
-%define         _snap		030504
+%define         _snap		030509
 
 %ifarch	sparc sparcv9 sparc64
 %define		_with_esd	1
@@ -395,11 +395,20 @@ cat kmixcfg.lang >> kmix.lang
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post arts
-echo "Remember to restart artsd !"
+%post	arts		-p /sbin/ldconfig
+%postun	arts		-p /sbin/ldconfig
 
-%post   mpeglib -p /sbin/ldconfig
-%postun mpeglib -p /sbin/ldconfig
+%post	kscd		-p /sbin/ldconfig
+%postun	kscd		-p /sbin/ldconfig
+
+%post	mpeglib		-p /sbin/ldconfig
+%postun	mpeglib		-p /sbin/ldconfig
+
+%post	libkcddb	-p /sbin/ldconfig
+%postun	libkcddb	-p /sbin/ldconfig
+
+%post	noatun		-p /sbin/ldconfig
+%postun	noatun		-p /sbin/ldconfig
 
 %files devel
 %defattr(644,root,root,755)
@@ -438,9 +447,9 @@ echo "Remember to restart artsd !"
 %attr(755,root,root) %{_libdir}/libaudiofilearts.so
 %{_libdir}/libarts[!_]*.la
 %attr(755,root,root) %{_libdir}/libartseffects.so
-%attr(755,root,root) %{_libdir}/libarts[!_]*.so.*
-%{_libdir}/libarts_[!mx]*.la
-%attr(755,root,root) %{_libdir}/libarts_[!m]*.so.*
+%attr(755,root,root) %{_libdir}/libarts[!_]*.so.*.*.*
+%{_libdir}/libarts_splay.la
+%attr(755,root,root) %{_libdir}/libarts_splay.so.*.*.*
 %{_libdir}/mcop/audiofilearts*
 %{_libdir}/mcop/arts*
 %{_libdir}/mcop/Splay*
@@ -540,7 +549,7 @@ echo "Remember to restart artsd !"
 %attr(755,root,root) %{_bindir}/kscd
 %attr(755,root,root) %{_bindir}/workman2cddb.pl
 %{_libdir}/libworkman.la
-%attr(755,root,root) %{_libdir}/libworkman.so.*
+%attr(755,root,root) %{_libdir}/libworkman.so.*.*.*
 %{_desktopdir}/kscd.desktop
 %{_datadir}/apps/kscd
 %{_datadir}/mimelnk/text/xmcd.desktop
@@ -560,11 +569,11 @@ echo "Remember to restart artsd !"
 %attr(755,root,root) %{_bindir}/mpeglibartsplay
 %attr(755,root,root) %{_bindir}/yaf*
 %{_libdir}/libyaf*.la
-%attr(755,root,root) %{_libdir}/libyaf*.so.*
+%attr(755,root,root) %{_libdir}/libyaf*.so.*.*.*
 %{_libdir}/libarts_mpeglib.la
-%attr(755,root,root) %{_libdir}/libarts_mpeglib*.so.*
+%attr(755,root,root) %{_libdir}/libarts_mpeglib-0.3.0.so.*.*.*
 %{_libdir}/libmpeg.la
-%attr(755,root,root) %{_libdir}/libmpeg-*.so
+%attr(755,root,root) %{_libdir}/libmpeg-0.3.0.so
 # Note that SplayPlayObject.mopclass is *not* here.
 #%%{_libdir}/mcop/VCDPlayObject.mcopclass
 %{_libdir}/mcop/WAVPlayObject.mcopclass
@@ -576,18 +585,23 @@ echo "Remember to restart artsd !"
 
 %files libkcddb 
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libkcddb.so.1.0.0
 %{_libdir}/libkcddb.la
-%attr(755,root,root) %{_libdir}/kde3/libkcm_cddb_config.so
+%attr(755,root,root) %{_libdir}/libkcddb.so.*.*.*
 %{_libdir}/kde3/libkcm_cddb_config.la
+%attr(755,root,root) %{_libdir}/kde3/libkcm_cddb_config.so
 %{_applnkdir}/KDE-Settings/Sound/cddb.desktop
 
 %files noatun -f noatun.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/noatun*
-%{_libdir}/libnoatun*.la
-%attr(755,root,root) %{_libdir}/libnoatun*.so.*
+%{_libdir}/libnoatun.la
+%attr(755,root,root) %{_libdir}/libnoatun.so.*.*.*
+%{_libdir}/libnoatunarts.la
 %attr(755,root,root) %{_libdir}/libnoatunarts.so
+%{_libdir}/libnoatuncontrols.la
+%attr(755,root,root) %{_libdir}/libnoatuncontrols.so.*.*.*
+%{_libdir}/libnoatuntags.la
+%attr(755,root,root) %{_libdir}/libnoatuntags.so.*.*.*
 %{_libdir}/libwinskinvis.la
 %attr(755,root,root) %{_libdir}/libwinskinvis.so
 %{_libdir}/kde3/noatun*.la
