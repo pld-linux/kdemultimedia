@@ -1649,6 +1649,7 @@ noatun"
 
 
 for i in $files; do
+	> ${i}_en.lang
         echo "%defattr(644,root,root,755)" > ${i}_en.lang
 	grep en\/ ${i}.lang|grep -v apidocs >> ${i}_en.lang
 	grep -v apidocs $i.lang|grep -v en\/ > ${i}.lang.1
