@@ -11,8 +11,8 @@
 #
 
 %define         _state          snapshots
-%define         _ver		3.1.90
-%define         _snap		030726
+%define         _ver		3.1.91
+%define         _snap		030918
 
 %ifarch	sparc sparcv9 sparc64
 %define		_with_esd	1
@@ -30,8 +30,9 @@ Vendor:		The KDE Team
 Group:		X11/Applications
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
 Source0:        http://www.kernel.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
-# Source0-md5:	12e9f51a5f7ff88310cdf26ae8a6663d
-Patch0:		%{name}-timidity.patch
+# Source0-md5:	35ad2e12dec6a0dadc0c57b3dbe79b08
+Patch0:		%{name}-no_pedantic.patch
+#Patch0:	%{name}-timidity.patch
 #Patch1:	http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-video-20030316.patch
 #Patch2:	http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-streaming-20030317.patch
 #Patch2:	%{name}-streaming-fixed.patch
@@ -56,9 +57,6 @@ BuildRequires:	libvorbis-devel
 %{!?_without_xine:BuildRequires: xine-lib-devel >= 1.0b4}
 BuildRequires:	zlib-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-
-%define         _htmldir        %{_docdir}/kde/HTML
-%define         _icondir        %{_datadir}/icons
 
 %define		no_install_post_chrpath		1
 
@@ -345,7 +343,7 @@ mkdir linux
 sed -e 's#slots\[CDROM_MAX_SLOTS\]#kde_slots\[CDROM_MAX_SLOTS\]#g' \
 /usr/include/linux/cdrom.h > linux/cdrom.h
 
-%{__make} -f Makefile.cvs
+%{__make} -f admin/Makefile.common cvs
 
 %configure \
 	--enable-audio=$AUDIO
@@ -357,12 +355,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
-	kde_appsdir=%{_applnkdir} \
-	kde_htmldir=%{_htmldir}
+	kde_htmldir=%{_docdir}/kde/HTML
 
 #mv $RPM_BUILD_ROOT%{_bindir}/{timidity,ktimidity}
-
-mv -f $RPM_BUILD_ROOT%{_applnkdir}/{Settings,KDE-Settings}
 
 #cd $RPM_BUILD_ROOT%{_desktopdir}
 #cat timidity.desktop |sed 's/Exec=timidity/Exec=ktimidity/' \
@@ -376,7 +371,7 @@ mv -f $RPM_BUILD_ROOT%{_applnkdir}/{Settings,KDE-Settings}
 %find_lang artsbuilder	--with-kde
 cat artsbuilder.lang > arts.lang
 %find_lang juk		--with-kde
-%find_lang kaboodle	--with-kde
+#%find_lang kaboodle	--with-kde
 %find_lang kmid		--with-kde
 %find_lang kmidi	--with-kde
 %find_lang kmix		--with-kde
@@ -389,35 +384,20 @@ cat kmixcfg.lang >> kmix.lang
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post	arts
-/sbin/ldconfig
+%post	arts 		-p /sbin/ldconfig
+%postun	arts		-p /sbin/ldconfig
 
-%postun	arts
-/sbin/ldconfig
+%post	kscd		-p /sbin/ldconfig
+%postun	kscd		-p /sbin/ldconfig
 
-%post	kscd
-/sbin/ldconfig
+%post	mpeglib		-p /sbin/ldconfig
+%postun	mpeglib		-p /sbin/ldconfig
 
-%postun	kscd
-/sbin/ldconfig
+%post	libkcddb	-p /sbin/ldconfig
+%postun	libkcddb	-p /sbin/ldconfig
 
-%post	mpeglib
-/sbin/ldconfig
-
-%postun	mpeglib
-/sbin/ldconfig
-
-%post	libkcddb
-/sbin/ldconfig
-
-%postun	libkcddb
-/sbin/ldconfig
-
-%post	noatun
-/sbin/ldconfig
-
-%postun	noatun
-/sbin/ldconfig
+%post	noatun		-p /sbin/ldconfig
+%postun	noatun		-p /sbin/ldconfig
 
 %files devel
 %defattr(644,root,root,755)
@@ -471,30 +451,30 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/artsbuilder
 %{_datadir}/apps/artscontrol
 %{_datadir}/mimelnk/application/*arts*
-%{_desktopdir}/arts*.desktop
-%{_icondir}/*/*/*/arts*
+%{_desktopdir}/kde/arts*.desktop
+%{_iconsdir}/*/*/*/arts*
 
 %files juk -f juk.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/juk
 %{_datadir}/apps/juk
 %{_datadir}/apps/konqueror/servicemenus/jukservicemenu.desktop
-%{_desktopdir}/juk.desktop
-%{_icondir}/*/*/*/juk.png
+%{_desktopdir}/kde/juk.desktop
+%{_iconsdir}/*/*/*/juk*.png
 
 
-%files kaboodle -f kaboodle.lang
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/kaboodle
-%{_libdir}/kaboodle.la
-%attr(755,root,root) %{_libdir}/kaboodle.so
-%{_libdir}/kde3/libkaboodlepart.la
-%attr(755,root,root) %{_libdir}/kde3/libkaboodlepart.so
-%{_datadir}/apps/kaboodle
-%{_datadir}/services/kaboodle_component.desktop
-%{_datadir}/services/kaboodleengine.desktop
-%{_desktopdir}/kaboodle.desktop
-%{_icondir}/*/*/apps/kaboodle.*
+#%files kaboodle -f kaboodle.lang
+#%defattr(644,root,root,755)
+#%attr(755,root,root) %{_bindir}/kaboodle
+#%{_libdir}/kaboodle.la
+#%attr(755,root,root) %{_libdir}/kaboodle.so
+#%{_libdir}/kde3/libkaboodlepart.la
+#%attr(755,root,root) %{_libdir}/kde3/libkaboodlepart.so
+#%{_datadir}/apps/kaboodle
+#%{_datadir}/services/kaboodle_component.desktop
+#%{_datadir}/services/kaboodleengine.desktop
+#%{_desktopdir}/kde/kaboodle.desktop
+#%{_iconsdir}/*/*/apps/kaboodle.*
 
 %files kaudiocreator
 %defattr(644,root,root,755)
@@ -505,9 +485,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/kio_audiocd.so
 %{_datadir}/apps/kaudiocreator
 %{_datadir}/services/audiocd.protocol
-%{_desktopdir}/kaudiocreator.desktop
-%{_applnkdir}/KDE-Settings/Sound/audiocd.desktop
-%{_icondir}/[!l]*/*/*/kaudiocreator.png
+%{_desktopdir}/kde/kaudiocreator.desktop
+%{_desktopdir}/kde/audiocd.desktop
+%{_iconsdir}/[!l]*/*/*/kaudiocreator.png
 
 %files kfile
 %defattr(644,root,root,755)
@@ -523,8 +503,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kmid
 %{_datadir}/mimelnk/audio/x-karaoke.desktop
 %{_datadir}/servicetypes/*midi*.desktop
-%{_desktopdir}/kmid.desktop
-%{_icondir}/*/*/*/kmid.png
+%{_desktopdir}/kde/kmid.desktop
+%{_iconsdir}/*/*/*/kmid.png
 
 #%files kmidi -f kmidi.lang
 #%defattr(644,root,root,755)
@@ -534,26 +514,30 @@ rm -rf $RPM_BUILD_ROOT
 #%{_desktopdir}/kmidi.desktop
 #%{_desktopdir}/ktimidity.desktop
 #%{_datadir}/apps/kmidi
-#%{_icondir}/*/*/*/kmidi.png
+#%{_iconsdir}/*/*/*/kmidi.png
 
 %files kmix -f kmix.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kmix
 %attr(755,root,root) %{_bindir}/kmixctrl
-%{_libdir}/kmix.la
-%attr(755,root,root) %{_libdir}/kmix.so
-%{_libdir}/kmixctrl.la
-%attr(755,root,root) %{_libdir}/kmixctrl.so
+%{_libdir}/libkdeinit_kmix.la
+%attr(755,root,root) %{_libdir}/libkdeinit_kmix.so
+%{_libdir}/libkdeinit_kmixctrl.la
+%attr(755,root,root) %{_libdir}/libkdeinit_kmixctrl.so
+%{_libdir}/kde3/kmix.la
+%attr(755,root,root) %{_libdir}/kde3/kmix.so
+%{_libdir}/kde3/kmixctrl.la
+%attr(755,root,root) %{_libdir}/kde3/kmixctrl.so
 %{_libdir}/kde3/kcm_kmix.la
 %attr(755,root,root) %{_libdir}/kde3/kcm_kmix.so
 %{_libdir}/kde3/kmix_panelapplet.la
 %attr(755,root,root) %{_libdir}/kde3/kmix_panelapplet.so
-%{_desktopdir}/kmix.desktop
-%{_applnkdir}/.hidden/kmixcfg.desktop
+%{_desktopdir}/kde/kmix.desktop
+%{_desktopdir}/kde/kmixcfg.desktop
 %{_datadir}/services/kmixctrl_restore.desktop
 %{_datadir}/apps/kmix
 %{_datadir}/apps/kicker/applets/*
-%{_icondir}/*/*/*/kmix.png
+%{_iconsdir}/*/*/*/kmix.png
 
 %files kscd -f kscd.lang
 %defattr(644,root,root,755)
@@ -561,21 +545,35 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/workman2cddb.pl
 %{_libdir}/libworkman.la
 %attr(755,root,root) %{_libdir}/libworkman.so.*.*.*
-%{_desktopdir}/kscd.desktop
+%{_desktopdir}/kde/kscd.desktop
 %{_datadir}/apps/kscd
+%{_datadir}/apps/profiles/kscd.profile.xml
 %{_datadir}/mimelnk/text/xmcd.desktop
-%{_icondir}/*/*/*/kscd.png
+%{_iconsdir}/*/*/*/kscd.png
 
 %files krec -f krec.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/krec
 %{_libdir}/libkdeinit_krec.la
 %attr(755,root,root) %{_libdir}/libkdeinit_krec.so
+%{_libdir}/kde3/kcm_krec.la
+%attr(755,root,root) %{_libdir}/kde3/kcm_krec.so
+%{_libdir}/kde3/kcm_krec_files.la
+%attr(755,root,root) %{_libdir}/kde3/kcm_krec_files.so
 %{_libdir}/kde3/krec.la
-%attr(755,root,root) %{_libdir}/kde3/krec.so*
+%attr(755,root,root) %{_libdir}/kde3/krec.so
+%{_libdir}/kde3/libkrecexport_ogg.la
+%attr(755,root,root) %{_libdir}/kde3/libkrecexport_ogg.so
+%{_libdir}/kde3/libkrecexport_wave.la
+%attr(755,root,root) %{_libdir}/kde3/libkrecexport_wave.so
 %{_datadir}/apps/krec
-%{_desktopdir}/krec.desktop
-%{_icondir}/*/*/*/krec*
+%{_datadir}/services/kcm_krec.desktop
+%{_datadir}/services/kcm_krec_files.desktop
+%{_datadir}/services/krec_exportogg.desktop
+%{_datadir}/services/krec_exportwave.desktop
+%{_datadir}/servicetypes/krec_exportitem.desktop
+%{_desktopdir}/kde/krec.desktop
+%{_iconsdir}/*/*/*/krec*
 
 %files mpeglib
 %defattr(644,root,root,755)
@@ -600,9 +598,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir}/libkcddb.la
 %attr(755,root,root) %{_libdir}/libkcddb.so.*.*.*
-%{_libdir}/kde3/libkcm_cddb_config.la
-%attr(755,root,root) %{_libdir}/kde3/libkcm_cddb_config.so
-%{_applnkdir}/KDE-Settings/Sound/libkcddb.desktop
+%{_libdir}/kde3/kcm_cddb.la
+%attr(755,root,root) %{_libdir}/kde3/kcm_cddb.so
+%{_desktopdir}/kde/libkcddb.desktop
 
 %files noatun -f noatun.lang
 %defattr(644,root,root,755)
@@ -626,8 +624,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kconf_update/*.upd
 %{_datadir}/apps/noatun*
 %{_datadir}/mimelnk/interface/x-winamp-skin.desktop
-%{_desktopdir}/noatun.desktop
-%{_icondir}/*/*/*/noatun.png
+%{_desktopdir}/kde/noatun.desktop
+%{_iconsdir}/*/*/*/noatun.png
 
 %if %{?_without_xine:0}%{!?_without_xine:1}
 %files xine
