@@ -21,6 +21,7 @@ Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{_ver}.tar.bz2
 # Source0-md5:	73da4e0f9c5c25b441092305b867bb1e
 Patch0:		%{name}-llh.patch
+Patch1:		%{name}-akode_includes.patch
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	arts-qt-devel
 BuildRequires:	audiofile-devel
@@ -477,6 +478,7 @@ KDE Media Player - biblioteki wspó³dzielone.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Player;/' \
 	-e 's/Terminal=0/Terminal=false/' \
@@ -536,12 +538,12 @@ for f in `find . -name \*.desktop`; do
 	fi
 done
 
-for i in `find ./mpeglib/ -name Makefile.am`; do echo KDE_OPTIONS=nofinal >> ${i} ; done
+#for i in `find ./mpeglib/ -name Makefile.am`; do echo KDE_OPTIONS=nofinal >> ${i} ; done
 
 %build
 cp %{_datadir}/automake/config.sub admin
 
-export UNSERMAKE=%{_datadir}/unsermake/unsermake
+#export UNSERMAKE=%{_datadir}/unsermake/unsermake
 
 %{__make} -f admin/Makefile.common cvs
 
@@ -570,6 +572,7 @@ rm -rf $RPM_BUILD_ROOT
 %find_lang artsbuilder	--with-kde
 %find_lang juk		--with-kde
 %find_lang kaboodle	--with-kde
+%find_lang kio_audiocd	--with-kde
 %find_lang kmid		--with-kde
 %find_lang kmix		--with-kde
 %find_lang kmixcfg	--with-kde
@@ -698,7 +701,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mimelnk/application/x-artsbuilder.desktop
 %{_desktopdir}/kde/artsbuilder.desktop
 %{_iconsdir}/crystalsvg/*/actions/artsbuilderexecute.png
-%{_iconsdir}/crystalsvg/*/apps/artsbuilder.png
+%{_iconsdir}/crystalsvg/*/apps/artsbuilder.*
 
 %files artscontrol
 %defattr(644,root,root,755)
@@ -721,7 +724,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/videothumbnail.desktop
 %endif
 
-%files audiocd
+%files audiocd -f kio_audiocd.lang
 %defattr(644,root,root,755)
 %{_libdir}/kde3/kcm_audiocd.la
 %attr(755,root,root) %{_libdir}/kde3/kcm_audiocd.so
@@ -732,6 +735,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libaudiocdplugins.la
 %attr(755,root,root) %{_libdir}/libaudiocdplugins.so*
 %{_datadir}/apps/kconf_update/upgrade-metadata.sh
+%{_datadir}/apps/konqueror/servicemenus/audiocd_play.desktop
 %{_datadir}/config.kcfg/audiocd_*_encoder.kcfg
 %{_datadir}/services/audiocd.protocol
 %{_desktopdir}/kde/audiocd.desktop
