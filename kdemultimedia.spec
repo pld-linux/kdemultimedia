@@ -4,12 +4,12 @@
 # 
 
 %define         _state          unstable
-%define         _kdever         kde-3.1-rc2
+%define         _kdever         kde-3.1-rc3
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
-Version:	3.0.98
+Version:	3.0.99
 Release:	1
 Epoch:		7
 License:	GPL
