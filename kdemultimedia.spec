@@ -13,7 +13,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}.%{_snap}
-Release:	0.2
+Release:	0.3
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
@@ -21,8 +21,6 @@ Group:		X11/Applications
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
 Source0:	http://www.kernel.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
 # Source0-md5:	6ba045c7d203a3c0c70f68e35c0c612c
-Source1:	http://www.kernel.pl/~adgor/kde/%{name}-kernheaders-0.1.tar.bz2
-# Source1-md5:	af327360c7f2d0b688061ad32900b350
 Patch0:		%{name}-no_pedantic.patch
 Patch1:		%{name}-cdda_check.patch
 BuildRequires:	Xaw3d-devel
@@ -400,7 +398,7 @@ KDE Media Player - shared libs.
 KDE Media Player - biblioteki wspó³dzielone.
 
 %prep
-%setup -q -n %{name}-%{_snap} -a1
+%setup -q -n %{name}-%{_snap} 
 #%patch0 -p1
 %patch1 -p1
 
