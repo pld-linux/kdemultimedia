@@ -18,9 +18,9 @@ Vendor:		The KDE Team
 Group:		X11/Applications
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
 #Source0:	http://ep09.pld-linux.org/~adgor/kde/%{name}.tar.bz2
-Source0:       http://ep09.pld-linux.org/~djurban/kde/%{name}-%{_snap}.tar.bz2
+Source0:	http://ep09.pld-linux.org/~djurban/kde/%{name}-%{_snap}.tar.bz2
 # Source0-md5:	b778f97ac758d2520db40c6ec155c439
-#Source1:        http://ep09.pld-linux.org/~djurban/kde/i18n/kde-i18n-%{name}-%{version}.tar.bz2
+#Source1:	http://ep09.pld-linux.org/~djurban/kde/i18n/kde-i18n-%{name}-%{version}.tar.bz2
 ##%% Source1-md5:	f7aeb11765cd23f1719c1d18762fbc47
 Patch0:		%{name}-no_mpeglib_examples.patch
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
@@ -610,7 +610,7 @@ Pliki umiêdzynarodawiaj±ce dla kaudiocreatora.
 cp /usr/share/automake/config.sub admin
 
 #fix="kfile-plugins/ogg/configure.in.in \
-#     mpeglib_artsplug/configure.in.in"
+#	mpeglib_artsplug/configure.in.in"
 
 #for i in $fix;
 #do
@@ -658,7 +658,7 @@ fi
 %find_lang kaboodle	--with-kde
 %find_lang kmid		--with-kde
 # No kmidi
-# %find_lang kmidi        --with-kde
+# %find_lang kmidi	--with-kde
 %find_lang kmix		--with-kde
 %find_lang kmixcfg	--with-kde
 cat kmixcfg.lang >> kmix.lang
@@ -711,7 +711,7 @@ files="\
 
 for i in $files; do
 	> ${i}_en.lang
-        echo "%defattr(644,root,root,755)" > ${i}_en.lang
+	echo "%defattr(644,root,root,755)" > ${i}_en.lang
 	grep en\/ ${i}.lang|grep -v apidocs >> ${i}_en.lang
 	grep -v apidocs $i.lang|grep -v en\/ > ${i}.lang.1
 	mv ${i}.lang.1 ${i}.lang
