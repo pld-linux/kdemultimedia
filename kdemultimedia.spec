@@ -16,7 +16,7 @@ License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{_ver}.tar.bz2
-# Source0-md5:	062249563cbf66d77e61b41e5126f806
+# Source0-md5:	f49a1cf9c5d405aed791808b4bbf035d	
 #Source0:	http://ep09.pld-linux.org/~djurban/kde/%{name}-%{version}.tar.bz2
 Patch100:	%{name}-branch.diff
 # Patch0:		%{name}-no_pedantic.patch
