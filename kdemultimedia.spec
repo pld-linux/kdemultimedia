@@ -7,7 +7,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	3.0.4
-Release:	5
+Release:	6
 Epoch:		7
 License:	GPL
 Vendor:		The KDE Team
@@ -361,6 +361,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libarts[!_]*.so.*.*.*
 %attr(755,root,root) %{_libdir}/libarts_[!m]*.so.*.*.*
 %attr(755,root,root) %{_libdir}/libarts[!_mgb]*.so
+%attr(755,root,root) %{_libdir}/libartsmidi.la
 %{_libdir}/mcop/audiofilearts*
 %{_libdir}/mcop/arts*
 %{_libdir}/mcop/Splay*
@@ -454,13 +455,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libarts_splay.so
 %{_libdir}/libkmidpart.so
 %{_libdir}/libartsmidi.so
+%{_libdir}/libartsmidi.la
 %{_libdir}/libyafcore.so
 %{_libdir}/libworkman.so
 %{_libdir}/libartsgui.so
 %{_libdir}/libnoatun.so
 %{_libdir}/libaktion.so
 %{_libdir}/libdummy.so
-%attr(755,root,root) %{_libdir}/lib*.la
+%attr(755,root,root) %{_libdir}/lib*.la %except %{_libdir}/libartsmidi.la
 %{_includedir}/*.h
 %{_includedir}/arts/*
 %{_includedir}/mpeglib*
