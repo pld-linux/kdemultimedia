@@ -1,11 +1,12 @@
---- kdemultimedia-3.0.8/kscd/kscd.cpp.orig	Sun Sep 15 23:14:52 2002
-+++ kdemultimedia-3.0.8/kscd/kscd.cpp	Fri Oct  4 01:43:34 2002
-@@ -237,7 +237,7 @@
+diff -urN kdemultimedia-3.0.9.orig/kscd/kscd.cpp kdemultimedia-3.0.9/kscd/kscd.cpp
+--- kdemultimedia-3.0.9.orig/kscd/kscd.cpp	Mon Oct 28 10:59:49 2002
++++ kdemultimedia-3.0.9/kscd/kscd.cpp	Thu Oct 31 23:38:48 2002
+@@ -279,7 +279,7 @@
    action->plugAccel(accels);
    action = new KAction(i18n("Decrease Volume"), Key_Minus, this, SLOT(decVolume()), this, "DecVolume");
    action->plugAccel(accels);
--  action = new KAction(i18n("Options"), CTRL + Key_T, this, SLOT(aboutClicked()), this);
-+  action = new KAction(i18n("Options"), CTRL + Key_T, this, SLOT(aboutClicked()), this, "Options");
+-  action = new KAction(i18n("Options"), CTRL + Key_T, this, SLOT(showConfig), this);
++  action = new KAction(i18n("Options"), CTRL + Key_T, this, SLOT(showConfig), this, "Options");
    action->plugAccel(accels);
    action = new KAction(i18n("Shuffle"), Key_R, this, SLOT(randomSelected()), this, "Shuffle");
    action->plugAccel(accels);
