@@ -1,31 +1,27 @@
 #
 # Conditional build:
 %bcond_without	alsa	# build without ALSA support
-%bcond_without	i18n	# don't build i18n per module subpackages
+%bcond_with	i18n	# w/wo i18n subpackages
 #
-%define		_state		stable
-%define		_ver		3.2.0
-#%efine		_snap		040110
+%define		_state		snapshots
+%define		_ver		3.2.90
+%define		_snap		040216
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
-Version:	%{_ver}
-Release:	3
+Version:	%{_ver}.%{_snap}
+Release:	1
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
-Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
-# Source0-md5:	caa8578190d032acd3c8fa996cf9585a
-#Source0:	http://ep09.pld-linux.org/~djurban/kde/%{name}-%{version}.tar.bz2
-%if %{with i18n}
-Source1:        http://ep09.pld-linux.org/~djurban/kde/i18n/kde-i18n-%{name}-%{version}.tar.bz2
-# Source1-md5:	f7aeb11765cd23f1719c1d18762fbc47
-%endif
-Patch0:		%{name}-3.2branch.diff
-# Patch0:		%{name}-no_pedantic.patch
-# Patch1:		%{name}-cdda_check.patch
+#Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
+##%% Source0-md5:	caa8578190d032acd3c8fa996cf9585a
+Source0:	http://ep09.pld-linux.org/~adgor/kde/%{name}.tar.bz2
+#Source1:        http://ep09.pld-linux.org/~djurban/kde/i18n/kde-i18n-%{name}-%{version}.tar.bz2
+##%% Source1-md5:	f7aeb11765cd23f1719c1d18762fbc47
+Patch0:		%{name}-no_mpeglib_examples.patch
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	audiofile-devel
 BuildRequires:	cdparanoia-III-devel
@@ -40,6 +36,7 @@ BuildRequires: 	libmusicbrainz-devel
 BuildRequires:	libvorbis-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
 BuildRequires:	taglib-devel >= 0.95.031114
+BuildRequires:	unsermake
 BuildRequires:	xine-lib-devel >= 1:1.0
 BuildRequires:	zlib-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -592,21 +589,22 @@ Internationalization and localization files for kaudiocreator.
 Pliki umiêdzynarodawiaj±ce dla kaudiocreatora.
 
 %prep
-%setup -q -n %{name}-%{version} 
+%setup -q -n %{name}
 %patch0 -p1
-#%%patch1 -p1
 
 %build
 cp /usr/share/automake/config.sub admin
 
-fix="kfile-plugins/ogg/configure.in.in \
-     mpeglib_artsplug/configure.in.in"
+#fix="kfile-plugins/ogg/configure.in.in \
+#     mpeglib_artsplug/configure.in.in"
 
-for i in $fix;
-do
-	grep -v AC_REQUIRE $i >> $i.1
-	mv $i{.1,}
-done
+#for i in $fix;
+#do
+#	grep -v AC_REQUIRE $i >> $i.1
+#	mv $i{.1,}
+#done
+
+export UNSERMAKE=/usr/share/unsermake/unsermake
 
 %{__make} -f admin/Makefile.common cvs
 
@@ -614,9 +612,8 @@ export CDPARANOIA=%{_bindir}/cdparanoia
 
 %configure \
 	--disable-rpath \
-	--enable-final \
-	--with-qt-libraries=%{_libdir} \
-	--with%{?without_alsa:out}-arts-alsa
+	--with%{?without_alsa:out}-arts-alsa \
+	--with-qt-libraries=%{_libdir}
 
 %{__make}
 
@@ -656,49 +653,47 @@ cat kmixcfg.lang >> kmix.lang
 %find_lang noatun	--with-kde
 
 %if %{with i18n}
-%find_lang desktop_kdemultimedia --with-kde
+%find_lang desktop_kdemultimedia	--with-kde
 mv desktop_kdemultimedia.lang kdemultimedia.lang
-
-%find_lang libkcddb         --with-kde
-%find_lang kcmcddb         --with-kde
+%find_lang libkcddb			--with-kde
+%find_lang kcmcddb			--with-kde
 cat kcmcddb.lang >> libkcddb.lang
-
-%find_lang kio_audiocd         --with-kde
-%find_lang kcmaudiocd         --with-kde
+%find_lang kio_audiocd			--with-kde
+%find_lang kcmaudiocd			--with-kde
 cat kcmaudiocd.lang >> kio_audiocd.lang
-
-%find_lang kaudiocreator --with-kde
-%find_lang artscontrol  --with-kde
-%find_lang artsmodules  --with-kde
+%find_lang kaudiocreator		--with-kde
+%find_lang artscontrol			--with-kde
+%find_lang artsmodules			--with-kde
 mv artsmodules.lang arts.lang
-
-%find_lang kcmkmix      --with-kde
+%find_lang kcmkmix			--with-kde
 cat kcmkmix.lang >> kmix.lang
 
-kfile="au \
-avi \
-flac \
-m3u \
-mp3 \
-ogg \
-wav"
+kfile="\
+	au \
+	avi \
+	flac \
+	m3u \
+	mp3 \
+	ogg \
+	wav"
+
 > kfile.lang
 
-for i in $kfile;
-do
+for i in $kfile; do
 	%find_lang kfile_${i} --with-kde
 	cat kfile_${i}.lang >> kfile.lang
 done
 %endif
 
-files="artsbuilder \
-juk \
-kaboodle \
-kmid \
-kmix \
-krec \
-kscd \
-noatun"
+files="\
+	artsbuilder \
+	juk \
+	kaboodle \
+	kmid \
+	kmix \
+	krec \
+	kscd \
+	noatun"
 
 for i in $files; do
 	> ${i}_en.lang
@@ -710,8 +705,7 @@ done
 
 durne=`ls -1 *.lang|grep -v _en`
 
-for i in $durne; 
-do
+for i in $durne; do
 	echo $i >> control
 	grep -v en\/ $i|grep -v apidocs >> ${i}.1
 	if [ -f ${i}.1 ] ; then
@@ -772,8 +766,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libnoatuncontrols.so
 %attr(755,root,root) %{_libdir}/libnoatuntags.so
 %attr(755,root,root) %{_libdir}/libworkman.so
-%attr(755,root,root) %{_libdir}/libyafcore.so
-%attr(755,root,root) %{_libdir}/libyafxplayer.so
 # static-only library, no shared version - so here
 %{_libdir}/libworkmanaudio.a
 %{_includedir}/*.h
@@ -959,11 +951,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %files kscd -f kscd_en.lang
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/cddaslave
+#%attr(755,root,root) %{_bindir}/cddaslave
 %attr(755,root,root) %{_bindir}/kscd
 %attr(755,root,root) %{_bindir}/workman2cddb.pl
 %{_desktopdir}/kde/kscd.desktop
 %{_datadir}/apps/kscd
+%{_datadir}/config.kcfg/kscd.kcfg
 %{_datadir}/apps/profiles/kscd.profile.xml
 %{_datadir}/mimelnk/text/xmcd.desktop
 %{_iconsdir}/*/*/*/kscd.png
@@ -1028,21 +1021,23 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libarts_mpeglib.so
 %attr(755,root,root) %{_libdir}/libarts_splay.so
 %attr(755,root,root) %{_libdir}/libmpeg.so
+#%attr(755,root,root) %{_libdir}/libyafcore.so
+#%attr(755,root,root) %{_libdir}/libyafxplayer.so
 %{_includedir}/mpeglib
 %{_includedir}/mpeglib_artsplug
 
-%files mpeglib-examples
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/yaf-cdda
-%attr(755,root,root) %{_bindir}/yaf-mpgplay
-%attr(755,root,root) %{_bindir}/yaf-splay
-%attr(755,root,root) %{_bindir}/yaf-tplay
-%attr(755,root,root) %{_bindir}/yaf-vorbis
-%attr(755,root,root) %{_bindir}/yaf-yuv
-%{_libdir}/libyafcore.la
-%attr(755,root,root) %{_libdir}/libyafcore.so.0.0.0
-%{_libdir}/libyafxplayer.la
-%attr(755,root,root) %{_libdir}/libyafxplayer.so.0.0.0
+#%files mpeglib-examples
+#%defattr(644,root,root,755)
+#%attr(755,root,root) %{_bindir}/yaf-cdda
+#%attr(755,root,root) %{_bindir}/yaf-mpgplay
+#%attr(755,root,root) %{_bindir}/yaf-splay
+#%attr(755,root,root) %{_bindir}/yaf-tplay
+#%attr(755,root,root) %{_bindir}/yaf-vorbis
+#%attr(755,root,root) %{_bindir}/yaf-yuv
+#%{_libdir}/libyafcore.la
+#%attr(755,root,root) %{_libdir}/libyafcore.so.0.0.0
+#%{_libdir}/libyafxplayer.la
+#%attr(755,root,root) %{_libdir}/libyafxplayer.so.0.0.0
 
 %files noatun -f noatun_en.lang
 %defattr(644,root,root,755)
