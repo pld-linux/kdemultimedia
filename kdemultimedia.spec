@@ -5,7 +5,6 @@
 #
 %define		_state		stable
 %define		_ver		3.2.2
-#%efine		_snap		040110
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
@@ -654,8 +653,6 @@ cat kmixcfg.lang >> kmix.lang
 %find_lang noatun	--with-kde
 
 %if %{with i18n}
-%find_lang desktop_kdemultimedia --with-kde
-mv desktop_kdemultimedia.lang kdemultimedia.lang
 
 %find_lang libkcddb	--with-kde
 %find_lang kcmcddb	--with-kde
@@ -739,7 +736,6 @@ rm -rf $RPM_BUILD_ROOT
 %postun	noatun-libs		-p /sbin/ldconfig
 
 %if %{with i18n}
-%files i18n -f kdemultimedia.lang
 %files artsbuilder-i18n -f artsbuilder.lang
 %files artscontrol-i18n -f artscontrol.lang
 %files arts-i18n -f arts.lang
