@@ -2,7 +2,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	3.0.3
-Release:	4
+Release:	5
 Epoch:		7
 License:	GPL
 Vendor:		The KDE Team
@@ -423,7 +423,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libnoatun.so
 %{_libdir}/libaktion.so
 %{_libdir}/libdummy.so
-%{_libdir}/kde3/kmix_panelapplet.so
 %{_includedir}/*.h
 %{_includedir}/arts/*
 %{_includedir}/mpeglib*
