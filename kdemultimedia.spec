@@ -31,7 +31,7 @@ BuildRequires:	libjpeg-devel
 BuildRequires:	libogg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
-BuildRequires: 	libmusicbrainz-devel >= 1:2.1.1
+BuildRequires:	libmusicbrainz-devel >= 1:2.1.1
 BuildRequires:	libtunepimp-devel
 BuildRequires:	libvorbis-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
@@ -80,10 +80,10 @@ Header files for kdemultimedia libraries.
 Pliki nag³ówkowe bibliotek kdemultimedia
 
 %package akode
-Summary:      	TODO. 
-Summary(pl):  	Likewise. 
-Group:          X11/Libraries
-Requires:       %{name}-arts = %{epoch}:%{version}-%{release}
+Summary:	TODO.
+#Summary(pl):	Likewise.
+Group:		X11/Libraries
+Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 
 %description akode
 TODO.
@@ -196,7 +196,7 @@ JuK (pronounced jook) is a jukebox and music manager for the KDE
 desktop similar to jukebox software on other platforms such as
 iTunes(R) or RealOne(R). As is typical with many jukebox applications,
 JuK allows you to edit the "tags" of the audio files, and manage your
-collection and playlists. 
+collection and playlists.
 
 %description juk -l pl
 Juk (czyt. d¿uk, jak w Jukebox) to szafa graj±ca i zarz±dca muzyki
@@ -435,7 +435,7 @@ cat kmixcfg.lang >> kmix.lang
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post	arts 			-p /sbin/ldconfig
+%post	arts			-p /sbin/ldconfig
 %postun	arts			-p /sbin/ldconfig
 
 %post	libkcddb		-p /sbin/ldconfig
@@ -550,7 +550,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_iconsdir}/crystalsvg/*/apps/artsbuilder.png
 %{_kdedocdir}/en/artsbuilder
 
-%files artscontrol 
+%files artscontrol
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/artscontrol
 %{_datadir}/apps/artscontrol
