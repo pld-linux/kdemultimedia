@@ -23,10 +23,10 @@ License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
-# Source0-md5:	da1e05b8284976359cab32f0abf4b87b
+# Source0-md5:	f9f2b0b79a6a9ced3ae601b57da53129
 # generated from kde-i18n
 Source1:	ftp://blysk.ds.pg.gda.pl/linux/kde-i18n-package/%{version}/kde-i18n-%{name}-%{version}.tar.bz2
-# Source1-md5:	bf74bdf16415c1e71cf77339756bc64d
+# Source1-md5:	a8eeb928cdcd0082d337a2888a22340c
 Patch0:		%{name}-timidity.patch
 Patch1:		%{name}-qt-linuxcdrom.patch
 Patch2:		%{name}-libtool-sanitize.patch
