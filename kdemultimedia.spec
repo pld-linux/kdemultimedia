@@ -48,8 +48,8 @@ BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libvorbis-devel
 %{!?_without_xine:BuildRequires: xine-lib-devel}
-BuildRequires:	zlib-deve
-BuildRequires:	perll
+BuildRequires:	zlib-devel
+BuildRequires:	perl
 Requires:	kdelibs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
