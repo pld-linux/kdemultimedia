@@ -411,9 +411,6 @@ mkdir linux
 sed -e 's#slots\[CDROM_MAX_SLOTS\]#kde_slots[CDROM_MAX_SLOTS]#g' \
 /usr/include/linux/cdrom.h > linux/cdrom.h
 
-sed -i 's/#include <asm\/byteorder.h>/#include <asm\/types.h>\n#include <endan.h>/' \
-	linux/cdrom.h
-
 %{__make} -f admin/Makefile.common cvs
 
 export CDPARANOIA=%{_bindir}/cdparanoia
