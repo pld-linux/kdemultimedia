@@ -10,7 +10,7 @@
 #
 
 %define         _state          stable
-%define         _ver		3.1
+%define         _ver		3.1.1
 
 %ifarch	sparc sparcv9 sparc64
 %define		_with_esd	1
@@ -21,7 +21,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	4.3
+Release:	0.1
 Epoch:		8
 License:	GPL
 Vendor:		The KDE Team
