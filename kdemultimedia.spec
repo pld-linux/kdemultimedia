@@ -369,6 +369,7 @@ cat kfile_{au,avi,m3u,mp3,ogg,wav}.lang > kfile.lang
 #    >> %{name}.lang
 %find_lang	aktion		--with-kde
 %find_lang	artsbuilder	--with-kde
+%find_lang	artscontrol	--with-kde
 %find_lang	artsmodules	--with-kde
 cat arts{builder,control,modules}.lang > arts.lang
 %find_lang	kaboodle	--with-kde
