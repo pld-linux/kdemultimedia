@@ -93,7 +93,7 @@ Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 %description akode
 Arts plugin that supports high quality playback of the following
 formats:
-- musepack (.mpc)
+- Musepack (.MPC)
 - mpeg (.MP3,.MP2, etc.)
 - Ogg Vorbis (.ogg)
 - FLAC
@@ -104,7 +104,7 @@ formats:
 %description akode -l pl
 Wtyczka arts, która wspiera wysokiej jako¶ci odtwarzanie nastêpuj±cych
 formatów:
-- musepack (.mpc)
+- Musepack (.MPC)
 - mpeg (.MP3,.MP2, etc.)
 - Ogg Vorbis (.ogg)
 - FLAC
@@ -313,13 +313,13 @@ Obsoletes:	kdemultimedia < 8:3.0.8
 
 %description kfile
 This package adds a fold to konqueror "file properties" dialog window
-with file enhanced informations for avi, au, FLAC, m3u, MP3, mpc, Ogg,
+with file enhanced informations for avi, au, FLAC, m3u, MP3, MPC, Ogg,
 sid and WAV files.
 
 %description kfile -l pl
 Ten pakiet dodaje do okna dialogowego "w³a¶ciwo¶ci pliku" konquerora
 dodatkow± zak³adkê z rozszerzonymi informacjami o plikach avi, au,
-FLAC, MP3, m3u, mpc, Ogg, sid and WAV.
+FLAC, MP3, m3u, MPC, Ogg, sid and WAV.
 
 %package kmid
 Summary:	KDE MIDI Player
