@@ -1,19 +1,20 @@
+%define		REV	20000418
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
-Version:	1.1.2
-Release:	1
+Version:	2.0
+Release:	1.pre_%{REV}
 Copyright:	GPL
 Group:		X11/KDE/Multimedia
 Group(pl):	X11/KDE/Multimedia
 Vendor:		The KDE Team
-Source:		ftp.kde.org/pub/kde/stable/%{version}/distribution/tar/generic/source/%{name}-%{version}.tar.bz2
-BuildRequires:	kdelibs-devel = %{version}
-BuildRequires:	qt-devel >= 1.44
+Source:		ftp.kde.org/pub/kde/snapshost/current/%{name}-%{REV}.tar.bz2
+BuildRequires:	kdelibs-devel
+BuildRequires:	qt-devel >= 2.1
 BuildRequires:	XFree86-devel
 BuildRequires:	libstdc++-devel
-Requires:	qt >= 1.44
-Requires:	kdelibs = %{version}
+Requires:	qt >= 2.1
+Requires:	kdelibs
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define _prefix	/usr/X11R6/
@@ -113,13 +114,15 @@ o p³ytach CD z Internetem. Potrafi tak¿e wy¶wietliæ ³adn± graficzn±
 interpretacjê granych d¼wiêków.
 
 %prep
-%setup -q
+%setup -q -n %{name}
 
 %build
-export KDEDIR=%{_prefix}
-CXXFLAGS="$RPM_OPT_FLAGS -Wall -fno-rtti" \
-CFLAGS="$RPM_OPT_FLAGS -Wall" \
-./configure %{_target_platform} \
+make -f Makefile.cvs
+KDEDIR=%{_prefix}
+CXXFLAGS="$RPM_OPT_FLAGS -Wall" 
+CFLAGS="$RPM_OPT_FLAGS -Wall" 
+export KDEDIR CXXFLAGS CFLAGS
+%configure \
 	--prefix=$KDEDIR \
  	--with-install-root=$RPM_BUILD_ROOT \
 	--with-qt-dir=%{_prefix} \
@@ -130,7 +133,7 @@ make KDEDIR=$KDEDIR
 rm -rf $RPM_BUILD_ROOT
 
 export KDEDIR=%{_prefix}
-make RUN_KAPPFINDER=no prefix=$RPM_BUILD_ROOT$KDEDIR install
+make DESTDIR=$RPM_BUILD_ROOT install
 
 %find_lang kmedia
 %find_lang kmix
