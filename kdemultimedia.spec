@@ -11,7 +11,7 @@
 
 %define         _state          snapshots
 %define         _ver		3.2
-%define         _snap		030328
+%define         _snap		030329
 
 %ifarch	sparc sparcv9 sparc64
 %define		_with_esd	1
@@ -22,7 +22,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	0.%{_snap}.1
+Release:	0.%{_snap}.2
 Epoch:		8
 License:	GPL
 Vendor:		The KDE Team
@@ -32,7 +32,7 @@ Source0:        http://team.pld.org.pl/~djurban/kde/%{name}-%{_snap}.tar.bz2
 Patch0:		%{name}-timidity.patch
 Patch1:		http://rambo.its.tudelft.nl/~ewald/xine/kdemultimedia-3.1.1-video-20030316.patch
 #Patch2:		http://rambo.its.tudelft.nl/~ewald/xine/kdemultimedia-3.1.1-streaming-20030317.patch
-Patch2:		%{name}-streaming-fixed.patch
+Patch2:		%{name}-streaming-fixed.patch 
 %{!?_without_alsa:BuildRequires:	alsa-lib-devel}
 %{!?_without_alsa:BuildRequires:	alsa-driver-devel}
 %{?_with_nas:BuildRequires:	nas-devel >= 1.5}
@@ -92,6 +92,7 @@ Requires:	kdelibs-devel >= %{version}
 Requires:	kdemultimedia-arts = %{version}
 Requires:	kdemultimedia-mpeglib = %{version}
 Requires:	kdemultimedia-noatun = %{version}
+Requires:	%{name}-libkcddb = %{version}
 
 %description devel
 kdemultimedia - headers.
@@ -126,6 +127,20 @@ Arts Tools.
 
 %description arts -l pl
 Narzêdzia Arts.
+
+%package juk
+Summary:        A jukebox like program
+Summary(pl):    Program spe³niaj±cy funkcje szafy graj±cej
+Group:          X11/Applications
+Requires:       kdelibs >= %{version}
+Requires:       %{name}-mpeglib = %{version}
+
+%description juk
+JuK (pronounced jook) is a jukebox and music manager for the KDE desktop similar to jukebox software on other platforms such as iTunes (r) or RealOne (r). 
+
+%description juk -l pl
+Juk (czyt. juk) to szafa grajaca i zarz±dca muzyki pod KDE podobny do iTunes lub RealJukebox.
+
 
 %package kaboodle
 Summary:	Media player
@@ -234,6 +249,20 @@ Odtwarzacz CD z obs³ug± CDDB. Automatycznie uaktualnia swoj± bazê
 danych o p³ytach CD z Internetem. Potrafi tak¿e wy¶wietliæ ³adn±
 graficzn± interpretacjê granych d¼wiêków.
 
+%package libkcddb
+Summary:        cddb library for KDE
+Summary(pl):    Biblioteka cddb pod KDE
+Group:          X11/Libraries
+Requires:       kdelibs >= %{version}
+Requires:       arts >= 1.0.0
+
+%description libkcddb
+cddb library for KDE.
+
+%description libkcddb -l pl
+Biblioteka cddb pod KDE.
+
+
 %package mpeglib
 Summary:	MPEG lib
 Summary(pl):	MPEG lib
@@ -306,6 +335,8 @@ mkdir linux
 sed -e 's#slots\[CDROM_MAX_SLOTS\]#kde_slots\[CDROM_MAX_SLOTS\]#g' \
 /usr/include/linux/cdrom.h > linux/cdrom.h
 
+%{__make} -f Makefile.cvs
+
 %configure \
  	--with-pam="yes" \
 	--enable-final \
@@ -320,17 +351,15 @@ rm -rf $RPM_BUILD_ROOT
 
 mv $RPM_BUILD_ROOT%{_bindir}/{timidity,ktimidity}    
 
-ALD=$RPM_BUILD_ROOT%{_applnkdir}
-install -d $ALD/{Settings/KDE,Multimedia/ArtsTools}
-mv -f $ALD/{Multimedia/More/*.desktop,Multimedia}
-mv -f $ALD/{Multimedia/arts*.desktop,Multimedia/ArtsTools}
-mv -f $ALD/{Settings/[!K]*,Settings/KDE}
+ALD=$RPM_BUILD_ROOT%{_desktopdir}
+install -d $RPM_BUILD_ROOT%{_applnkdir}/Settings/KDE
+#mv -f $ALD/{Multimedia/More/*.desktop,Multimedia}
+#mv -f $ALD/{Multimedia/arts*.desktop,Multimedia/ArtsTools}
+mv -f $RPM_BUILD_ROOT%{_applnkdir}/{Settings/Sound,Settings/KDE/}
 
-echo "[Desktop Entry]\nName=Arts Tools\nIcon=arts\nType=Directory" \
-    > $ALD/Multimedia/ArtsTools/.directory
-
-cat $ALD/Multimedia/timidity.desktop |sed 's/Exec=timidity/Exec=ktimidity/' \
-    > $ALD/Multimedia/ktimidity.desktop
+cat $ALD/timidity.desktop |sed 's/Exec=timidity/Exec=ktimidity/' \
+    > $ALD/ktimidity.desktop
+echo "Hidden=true" >>  $ALD/timidity.desktop
 
 cd $RPM_BUILD_ROOT%{_datadir}/apps/kmidi/config
 ln -s gravis.cfg GUSpatches
@@ -349,6 +378,7 @@ cd -
 cat artsbuilder.lang > arts.lang
 #%find_lang artscontrol	--with-kde
 #cat artscontrol.lang >> arts.lang
+%find_lang juk		--with-kde
 %find_lang kaboodle	--with-kde
 %find_lang kmid		--with-kde
 %find_lang kmidi	--with-kde
@@ -393,6 +423,7 @@ echo "Remember to restart artsd !"
 %{_libdir}/libyafxplayer.so
 %{_includedir}/*.h
 %{_includedir}/arts/*
+%{_includedir}/libkcddb/*
 %{_includedir}/mpeglib*
 %{_includedir}/noatun
 
@@ -403,7 +434,7 @@ echo "Remember to restart artsd !"
 %attr(755,root,root) %{_libdir}/libaktion.so.*
 %{_datadir}/apps/aktion
 %{_datadir}/config/aktionrc
-%{_applnkdir}/Multimedia/aktion.desktop
+%{_desktopdir}/aktion.desktop
 %{_pixmapsdir}/*/*/apps/aktion.png
 
 %files arts -f arts.lang
@@ -428,10 +459,16 @@ echo "Remember to restart artsd !"
 %{_datadir}/apps/artsbuilder
 %{_datadir}/apps/artscontrol
 %{_datadir}/mimelnk/application/*arts*
-%dir %{_applnkdir}/Multimedia/ArtsTools
-%{_applnkdir}/Multimedia/ArtsTools/.directory
-%{_applnkdir}/Multimedia/ArtsTools/arts*.desktop
+%{_desktopdir}/arts*.desktop
 %{_pixmapsdir}/*/*/*/arts*
+
+%files juk -f juk.lang
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/juk
+%{_datadir}/apps/juk
+%{_desktopdir}/juk.desktop
+%{_pixmapsdir}/*/*/*/juk.png
+
 
 %files kaboodle -f kaboodle.lang
 %defattr(644,root,root,755)
@@ -442,7 +479,7 @@ echo "Remember to restart artsd !"
 %attr(755,root,root) %{_libdir}/kde3/libkaboodlepart.so
 %{_datadir}/apps/kaboodle
 %{_datadir}/services/kaboodle_component.desktop
-%{_applnkdir}/Multimedia/kaboodle.desktop
+%{_desktopdir}/kaboodle.desktop
 %{_pixmapsdir}/*/*/apps/kaboodle.*
 
 %files kaudiocreator
@@ -454,7 +491,7 @@ echo "Remember to restart artsd !"
 %attr(755,root,root) %{_libdir}/kde3/kio_audiocd.so
 %{_datadir}/apps/kaudiocreator
 %{_datadir}/services/audiocd.protocol
-%{_applnkdir}/Multimedia/kaudiocreator.desktop
+%{_desktopdir}/kaudiocreator.desktop
 %{_applnkdir}/Settings/KDE/Sound/audiocd.desktop
 %{_pixmapsdir}/[!l]*/*/*/kaudiocreator.png
 
@@ -472,7 +509,7 @@ echo "Remember to restart artsd !"
 %{_datadir}/apps/kmid
 %{_datadir}/mimelnk/audio/x-karaoke.desktop
 %{_datadir}/servicetypes/*midi*.desktop
-%{_applnkdir}/Multimedia/kmid.desktop
+%{_desktopdir}/kmid.desktop
 %{_pixmapsdir}/*/*/*/kmid.png
 
 %files kmidi -f kmidi.lang
@@ -480,8 +517,8 @@ echo "Remember to restart artsd !"
 %attr(755,root,root) %{_bindir}/kmidi
 %attr(755,root,root) %{_bindir}/sf2cfg
 %attr(755,root,root) %{_bindir}/ktimidity
-%{_applnkdir}/Multimedia/kmidi.desktop
-%{_applnkdir}/Multimedia/ktimidity.desktop
+%{_desktopdir}/kmidi.desktop
+%{_desktopdir}/ktimidity.desktop
 %{_datadir}/apps/kmidi
 %{_pixmapsdir}/*/*/*/kmidi.png
 
@@ -497,7 +534,7 @@ echo "Remember to restart artsd !"
 %attr(755,root,root) %{_libdir}/kde3/kcm_kmix.so
 %{_libdir}/kde3/kmix_panelapplet.la
 %attr(755,root,root) %{_libdir}/kde3/kmix_panelapplet.so
-%{_applnkdir}/Multimedia/kmix.desktop
+%{_desktopdir}/kmix.desktop
 %{_applnkdir}/.hidden/kmixcfg.desktop
 %{_datadir}/services/kmixctrl_restore.desktop
 %{_datadir}/apps/kmix
@@ -510,7 +547,7 @@ echo "Remember to restart artsd !"
 %attr(755,root,root) %{_bindir}/workman2cddb.pl
 %{_libdir}/libworkman.la
 %attr(755,root,root) %{_libdir}/libworkman.so.*
-%{_applnkdir}/Multimedia/kscd.desktop
+%{_desktopdir}/kscd.desktop
 %{_datadir}/apps/kscd
 %{_datadir}/mimelnk/text/xmcd.desktop
 %{_pixmapsdir}/*/*/*/kscd.png
@@ -521,7 +558,7 @@ echo "Remember to restart artsd !"
 %{_libdir}/krec.la
 %attr(755,root,root) %{_libdir}/krec.so
 %{_datadir}/apps/krec
-%{_applnkdir}/Multimedia/krec.desktop
+%{_desktopdir}/krec.desktop
 %{_pixmapsdir}/*/*/*/krec*
 
 %files mpeglib
@@ -543,6 +580,14 @@ echo "Remember to restart artsd !"
 %{_libdir}/mcop/CDDAPlayObject.mcopclass
 #%%{_libdir}/mcop/MPGPlayObject.mcopclass
 
+%files libkcddb 
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libkcddb.so.1.0.0
+%{_libdir}/libkcddb.la
+%attr(755,root,root) %{_libdir}/kde3/libkcm_cddb_config.so
+%{_libdir}/kde3/libkcm_cddb_config.la
+%{_applnkdir}/Settings/KDE/Sound/cddb.desktop
+
 %files noatun -f noatun.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/noatun*
@@ -560,17 +605,17 @@ echo "Remember to restart artsd !"
 %{_datadir}/apps/kconf_update/*.upd
 %{_datadir}/apps/noatun*
 %{_datadir}/mimelnk/interface/x-winamp-skin.desktop
-%{_applnkdir}/Multimedia/noatun.desktop
+%{_desktopdir}/noatun.desktop
 %{_pixmapsdir}/*/*/*/noatun.png
 
 %if %{?_without_xine:0}%{!?_without_xine:1}
 %files xine
 %defattr(644,root,root,755)
-#%{_libdir}/kde3/videothumbnail.la
-#%attr(755,root,root) %{_libdir}/kde3/videothumbnail.so
+%{_libdir}/kde3/videothumbnail.la
+%attr(755,root,root) %{_libdir}/kde3/videothumbnail.so
 %{_libdir}/*_xine.la
 %attr(755,root,root) %{_libdir}/*_xine.so
 %{_libdir}/mcop/xinePlayObject.mcopclass
-#%{_datadir}/apps/videothumbnail
-#%{_datadir}/services/videothumbnail.desktop
+%{_datadir}/apps/videothumbnail
+%{_datadir}/services/videothumbnail.desktop
 %endif
