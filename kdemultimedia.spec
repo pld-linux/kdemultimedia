@@ -10,7 +10,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	1
+Release:	2
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
@@ -399,7 +399,6 @@ Summary:	Internationalization and localization files for artsbuilder
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla artsbuildera
 Group:		X11/Applications
 Requires:	%{name}-artsbuilder = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	%{name}-arts-i18n = %{epoch}:%{version}-%{release}
 
 %description artsbuilder-i18n
@@ -426,7 +425,6 @@ Summary:	Internationalization and localization files for arts
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla arts
 Group:		X11/Applications
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 
 %description arts-i18n
 Internationalization and localization files for arts.
@@ -439,7 +437,6 @@ Summary:	Internationalization and localization files for juk
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla juk
 Group:		X11/Applications
 Requires:	%{name}-juk = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
 
 %description juk-i18n
@@ -453,7 +450,6 @@ Summary:	Internationalization and localization files for kaboodle
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kaboodle
 Group:		X11/Applications
 Requires:	%{name}-kaboodle = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
 
 %description kaboodle-i18n
@@ -467,7 +463,6 @@ Summary:	Internationalization and localization files for kmid
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kmid
 Group:		X11/Applications
 Requires:	%{name}-kmid = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
 
 %description kmid-i18n
@@ -481,7 +476,6 @@ Summary:	Internationalization and localization files for kmix
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kmix
 Group:		X11/Applications
 Requires:	%{name}-kmix = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
 
 %description kmix-i18n
@@ -496,7 +490,6 @@ Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kscd
 Group:		X11/Applications
 Requires:	%{name}-kscd = %{epoch}:%{version}-%{release}
 Requires:	%{name}-libkcddb-i18n = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
 
 %description kscd-i18n
@@ -510,7 +503,6 @@ Summary:	Internationalization and localization files for krec
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla krec
 Group:		X11/Applications
 Requires:	%{name}-krec = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	%{name}-artscontrol-i18n = %{epoch}:%{version}-%{release}
 Requires:	%{name}-kmix-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
@@ -526,7 +518,6 @@ Summary:	Internationalization and localization files for noatun
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla noatun
 Group:		X11/Applications
 Requires:	%{name}-noatun = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
 
 %description noatun-i18n
@@ -540,7 +531,6 @@ Summary:	Internationalization and localization files for kfile
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kfile
 Group:		X11/Applications
 Requires:	%{name}-kfile = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	konqueror-i18n >= 9:%{version}
 
 %description kfile-i18n
@@ -554,7 +544,6 @@ Summary:	Internationalization and localization files for audiocd
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla audiocd
 Group:		X11/Applications
 Requires:	%{name}-audiocd = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	%{name}-libkcddb-i18n = %{epoch}:%{version}-%{release}
 Requires:	konqueror-i18n >= 9:%{version}
 
@@ -581,7 +570,6 @@ Summary:	Internationalization and localization files for kaudiocreator
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kaudiocreatora
 Group:		X11/Applications
 Requires:	%{name}-kaudiocreator = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	%{name}-libkcddb-i18n = %{epoch}:%{version}-%{release}
 
 %description kaudiocreator-i18n
