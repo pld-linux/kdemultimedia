@@ -2,7 +2,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	2.2.2
-Release:	4
+Release:	5
 Epoch:		6
 License:	GPL
 Vendor:		The KDE Team
@@ -38,7 +38,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_prefix		/usr/X11R6
 %define         _fontdir        /usr/share/fonts
 %define         _sharedir       %{_prefix}/share
-%define         _htmldir        %{_sharedir}/doc/kde/HTML
+%define         _htmldir        /usr/share/doc/kde/HTML
 
 %description
 KDE multimedia applications. Package includes:
@@ -344,7 +344,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_pixmapsdir}/*/*/apps/arts*
 %{_datadir}/apps/artsbuilder
 %{_datadir}/apps/artscontrol
-%{_datadir}/doc/kde/HTML/en/artsbuilder
+%{_htmldir}/en/artsbuilder
 %{_datadir}/mimelnk/application/*arts*
 
 %files noatun
@@ -370,7 +370,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_applnkdir}/Multimedia/kmid.desktop
 %{_datadir}/apps/kmid
 %{_datadir}/mimelnk/audio/x-karaoke.desktop
-%{_datadir}/doc/kde/HTML/en/kmid
+%{_htmldir}/en/kmid
 %{_datadir}/servicetypes/*midi*.desktop
 %{_pixmapsdir}/*/*/apps/kmid.png
 
@@ -382,7 +382,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_applnkdir}/Multimedia/kmidi.desktop
 %{_applnkdir}/Multimedia/timidity.desktop
 %{_datadir}/apps/kmidi
-%{_datadir}/doc/kde/HTML/en/kmidi
+%{_htmldir}/en/kmidi
 %{_pixmapsdir}/*/*/apps/kmidi.png
 
 %files kmix
@@ -398,7 +398,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/kmixctrl_restore.desktop
 %{_datadir}/apps/kmix
 %{_datadir}/apps/kicker/applets/*
-%{_datadir}/doc/kde/HTML/en/kmix
+%{_htmldir}/en/kmix
 %{_pixmapsdir}/*/*/apps/kmix.png
 
 %files kscd
@@ -410,7 +410,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_applnkdir}/Multimedia/kscd.desktop
 %{_datadir}/apps/kscd
 %{_datadir}/mimelnk/text/xmcd.desktop
-%{_datadir}/doc/kde/HTML/en/kscd
+%{_htmldir}/en/kscd
 %{_pixmapsdir}/*/*/apps/kscd.png
 
 %files devel
