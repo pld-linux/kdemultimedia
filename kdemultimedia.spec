@@ -557,6 +557,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/artscontrol
 %{_datadir}/apps/artscontrol
+%{_datadir}/kicker/applets/artscontrolapplet.desktop
 %{_desktopdir}/kde/artscontrol.desktop
 %{_iconsdir}/crystalsvg/*/apps/artscontrol.png
 
@@ -651,7 +652,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kde/kmixcfg.desktop
 %{_datadir}/services/kmixctrl_restore.desktop
 %{_datadir}/apps/kmix
-%{_datadir}/apps/kicker/applets/*
+%{_datadir}/apps/kicker/applets/kmixapplet.desktop
 %{_iconsdir}/*/*/*/kmix.png
 
 %files kscd -f kscd.lang
