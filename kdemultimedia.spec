@@ -33,7 +33,7 @@ Patch0:		%{name}-timidity.patch
 %{!?_without_alsa:BuildRequires:	alsa-lib-devel}
 %{!?_without_alsa:BuildRequires:	alsa-driver-devel}
 %{?_with_nas:BuildRequires:	nas-devel >= 1.5}
-%{?_with_esd:BuildRequires:     esound-devel}
+%{?_with_esd:BuildRequires:	esound-devel}
 BuildRequires:	arts-devel
 BuildRequires:	arts-kde-devel
 BuildRequires:	cdparanoia-III
@@ -47,8 +47,8 @@ BuildRequires:	libogg-devel
 BuildRequires:	libpng-devel >= 1.2.5
 BuildRequires:	libstdc++-devel
 BuildRequires:	libvorbis-devel
-BuildRequires: 	sed >= 4.0
-%{!?_without_xine:BuildRequires: xine-lib-devel >= 1.0b4}
+BuildRequires:	sed >= 4.0
+%{!?_without_xine:BuildRequires:	xine-lib-devel >= 1.0b4}
 BuildRequires:	zlib-devel
 BuildRequires:	xanim
 Requires:	kdelibs = %{version}
@@ -197,7 +197,7 @@ Summary:	KDE audio mixer
 Summary(pl):	Mixer audio dla KDE
 Group:		X11/Applications
 Requires:	kdebase-core >= %{version}
-Requires:       kdebase-kicker >= %{version}
+Requires:	kdebase-kicker >= %{version}
 
 %description kmix
 Sound mixer application for KDE.
@@ -317,7 +317,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
 
-mv $RPM_BUILD_ROOT%{_bindir}/{timidity,ktimidity}    
+mv $RPM_BUILD_ROOT%{_bindir}/{timidity,ktimidity}
 
 ALD=$RPM_BUILD_ROOT%{_applnkdir}
 install -d $ALD/{Settings/KDE,Multimedia/ArtsTools}
