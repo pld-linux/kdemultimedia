@@ -199,7 +199,7 @@ Wspiera ona wiêcej formatów ni¿ akode, ale niektóre z nich akode
 odtwarza w lepszej jako¶ci. Dla najlepszej jako¶ci nale¿y u¿ywaæ tej
 wtyczki wraz z akode, a arts sam wykryje, która z nich da lepsz±
 jako¶æ przy konkretnym formacie. Wspierane formaty to:
-- microsoftowe windows media (asf,asx,wmv,wma)
+- Microsoft Windows media (asf,asx,wmv,wma)
 - mpeg (vob,mpg,mpeg,m1v,m2v,m1s,m2s,m2p,mp4,mp3,mp2,mp1)
 - divx i avi
 - quicktime (qt,mov,moov)
@@ -274,7 +274,7 @@ Requires:	kdebase-core >= %{_minbaseevr}
 A simple, embeddable, single file media player.
 
 %description kaboodle -l pl
-Prosty odtwarzacz pojedyñczych plików.
+Prosty odtwarzacz pojedynczych plików.
 
 %package kappfinder
 Summary:	Kappfinder multimedia data
@@ -415,7 +415,7 @@ beter for playing broken or low quality mp3 files than akode.
 %description mpeglib -l pl
 Wtyczka dodaj±ca obs³ugê MPEG do arts daje jako¶æ lepsz± od wtyczki
 xine i gorsz± akode. Jedynie w przypadku uszkodzonych i niskiej
-jako¶ci mp3 jest lepsza od akode. Obs³uguje zarówno d¼wiêg jak i obraz
+jako¶ci mp3 jest lepsza od akode. Obs³uguje zarówno d¼wiêk jak i obraz
 zakodowany w MPEG.
 
 %package mpeglib-devel
