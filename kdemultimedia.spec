@@ -18,7 +18,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	0.2
+Release:	0.3
 Epoch:		8
 License:	GPL
 Vendor:		The KDE Team
@@ -279,7 +279,6 @@ Summary(pl):	Wtyczka do Xine
 Group:		X11/Applications
 Requires:	kdebase-core >= %{version}
 Requires:	arts >= 1.0.0
-Requires:	xine-lib >= 1.0b4
 Obsoletes:	kdemultimedia < 3.0.8
 
 %description xine
