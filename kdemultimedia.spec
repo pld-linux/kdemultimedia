@@ -252,7 +252,7 @@ cat kcmkmix.lang >> kmix.lang
 %find_lang kfile_mp3	--with-kde
 %find_lang kfile_ogg	--with-kde
 %find_lang kfile_wav	--with-kde
-cat kfile_m3u.lang kfile_mp3.lang kfile_ogg.lang kfile_wav.lang kmyapp koncd >> %{name}.lang
+cat {kfile_m3u,kfile_mp3,kfile_ogg,kfile_wav,kmyapp,koncd}.lang >> %{name}.lang
 
 %post   mpeglib -p /sbin/ldconfig
 %postun mpeglib -p /sbin/ldconfig
