@@ -1,16 +1,17 @@
 # Conditional build:
 # --without	xine	Set this option in case You haven't
 #			xine-lib to ommit xine plug-in building.
-# 
 
 %define         _state          unstable
-%define         _kdever         kde-3.1-rc5
+%define         _ver		3.1
+%define         _rcver		rc6
+%define         _kdever		kde-%{_ver}-%{_rcver}
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
-Version:	3.1
-Release:	3
+Version:	%{_ver}%{_rcver}
+Release:	1
 Epoch:		7
 License:	GPL
 Vendor:		The KDE Team
@@ -18,8 +19,6 @@ Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_kdever}/src/%{name}-%{version}.tar.bz2
 # generated from kde-i18n
 #Source1:	kde-i18n-%{name}-%{version}.tar.bz2
-Patch0:		%{name}-kscd.patch
-Patch1:		%{name}-xineplugin.patch
 %ifnarch sparc sparc64
 BuildRequires:	alsa-lib-devel
 BuildRequires:	alsa-driver-devel
@@ -265,8 +264,6 @@ Plug-in do Xine
 
 %prep
 %setup -q
-%patch0 -p1
-#%patch1 -p1
 
 %build
 kde_htmldir="%{_htmldir}"; export kde_htmldir
@@ -334,15 +331,8 @@ echo "Remember to restart artsd !"
 %post   mpeglib -p /sbin/ldconfig
 %postun mpeglib -p /sbin/ldconfig
 
-%files
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libdummy.so.*
-%attr(755,root,root) %{_libdir}/libdummy.la
-%attr(755,root,root) %{_datadir}/mimelnk/interface/x-winamp-skin.desktop
-
 %files devel
 %defattr(644,root,root,755)
-%{_libdir}/libdummy.so
 %{_libdir}/libaktion.so
 %{_libdir}/libarts[!e]*.so
 %{_libdir}/libmpeg.so
@@ -483,13 +473,13 @@ echo "Remember to restart artsd !"
 %{_libdir}/libyaf*.la
 %{_libdir}/libarts_mpeglib*.la
 # Note that SplayPlayObject.mopclass is *not* here.
-%{_libdir}/mcop/VCDPlayObject.mcopclass
+#%{_libdir}/mcop/VCDPlayObject.mcopclass
 %{_libdir}/mcop/WAVPlayObject.mcopclass
 %{_libdir}/mcop/OGGPlayObject.mcopclass
 %{_libdir}/mcop/NULLPlayObject.mcopclass
 %{_libdir}/mcop/MP3PlayObject.mcopclass
 %{_libdir}/mcop/CDDAPlayObject.mcopclass
-%{_libdir}/mcop/MPGPlayObject.mcopclass
+#%{_libdir}/mcop/MPGPlayObject.mcopclass
 
 %files noatun -f noatun.lang
 %defattr(644,root,root,755)
@@ -505,8 +495,9 @@ echo "Remember to restart artsd !"
 %attr(755,root,root) %{_datadir}/apps/kconf_update/noatun20update
 %{_datadir}/apps/kconf_update/*.upd
 %{_datadir}/apps/noatun*
-%{_pixmapsdir}/*/*/*/noatun.png
+%{_datadir}/mimelnk/interface/x-winamp-skin.desktop
 %{_applnkdir}/Multimedia/noatun.desktop
+%{_pixmapsdir}/*/*/*/noatun.png
 
 %if %{?_without_xine:0}%{!?_without_xine:1}
 %files xine
