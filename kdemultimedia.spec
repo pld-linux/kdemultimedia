@@ -616,7 +616,7 @@ export CDPARANOIA=%{_bindir}/cdparanoia
 	--disable-rpath \
 	--enable-final \
 	--with-qt-libraries=%{_libdir} \
-	--with%{?without_alsa:out}-arts-alsa
+	--with%{!?with_alsa:out}-arts-alsa
 
 %{__make}
 
