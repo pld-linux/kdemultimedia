@@ -13,7 +13,7 @@ Source:		%{name}-%{version}.tar.bz2
 Requires:	qt >= 1.44, kdelibs = %{version}
 BuildRoot:	/tmp/%{name}-%{version}-root
 
-%define _prefix	/usr/X11R6/
+%define 	_prefix		/usr/X11R6/
 
 %description
 KDE multimedia applications.
@@ -137,11 +137,11 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 
 %files kmedia -f kmedia.lang
-%defattr(644, root, root, 755)
+%defattr(644,root,root,755)
 
 %{_datadir}/kde/apps/kmedia
 
-%lang(en) %{_datadir}/kde/doc/HTML/en/kmedia
+%{_datadir}/kde/doc/HTML/en/kmedia
 
 %{_datadir}/kde/icons/mini/kmedia.xpm
 %{_datadir}/kde/icons/kmedia.xpm
@@ -155,7 +155,7 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 
 %files kmid -f kmid.lang
-%defattr(644, root, root, 755)
+%defattr(644,root,root,755)
 
 %config /etc/X11/kde/mimelnk/audio/x-karaoke.kdelnk
 
@@ -166,7 +166,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/kde/icons/mini/kmid.xpm
 %{_datadir}/kde/icons/kmid.xpm
 
-%lang(en) %{_datadir}/kde/doc/HTML/en/kmid
+%{_datadir}/kde/doc/HTML/en/kmid
 %lang(es) %{_datadir}/kde/doc/HTML/es/kmid
 
 %attr(755,root,root) %{_bindir}/kmid
@@ -176,7 +176,7 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 
 %files kmidi -f kmidi.lang
-%defattr(644, root, root, 755)
+%defattr(644,root,root,755)
 
 %config(missingok) /etc/X11/kde/applnk/Multimedia/KMidi.kdelnk
 %config %{_datadir}/kde/apps/kmidi/config/*.cfg
@@ -198,7 +198,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/kde/apps/kmidi/config/patch/
 %{_datadir}/kde/apps/kmidi/pics/
 
-%lang(en) %{_datadir}/kde/doc/HTML/en/kmidi
+%{_datadir}/kde/doc/HTML/en/kmidi
 %lang(de) %{_datadir}/kde/doc/HTML/de/kmidi
 
 #################################################
@@ -206,7 +206,7 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 
 %files kmix -f kmix.lang
-%defattr(644, root, root, 755)
+%defattr(644,root,root,755)
 
 %config(missingok) /etc/X11/kde/applnk/Multimedia/KMix.kdelnk
 
@@ -216,14 +216,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/kde/icons/kmix.xpm
 %{_datadir}/kde/apps/kmix
 
-%lang(en) %{_datadir}/kde/doc/HTML/en/kmix
+%{_datadir}/kde/doc/HTML/en/kmix
 
 #################################################
 #             KSCD
 #################################################
 
 %files kscd -f kscd.lang
-%defattr(644, root, root, 755)
+%defattr(644,root,root,755)
 
 %config(missingok) /etc/X11/kde/applnk/Multimedia/kscd.kdelnk
 %config /etc/X11/kde/mimelnk/text/xmcd.kdelnk
@@ -239,4 +239,4 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/kde/icons/kscd.xpm
 %{_datadir}/kde/icons/cd.xpm
 
-%lang(en) %{_datadir}/kde/doc/HTML/en/kscd
+%{_datadir}/kde/doc/HTML/en/kscd
