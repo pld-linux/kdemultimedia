@@ -2,9 +2,8 @@
 # Conditional build:
 %bcond_without	alsa	# build without ALSA support
 
-%define		_state		unstable
+%define		_state		stable
 %define		_ver		3.3.0
-%define		_snap		rc2
 
 %define		_minlibsevr	9:3.3.0
 %define		_minbaseevr	9:3.3.0
@@ -18,8 +17,8 @@ Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
-# Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{_ver}.tar.bz2
-Source0:	ftp://ftp.pld-linux.org/software/kde/%{name}-%{version}-%{_snap}.tar.bz2
+Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/3.3/src/%{name}-%{_ver}.tar.bz2
+#Source0:	ftp://ftp.pld-linux.org/software/kde/%{name}-%{version}-%{_snap}.tar.bz2
 # Source0-md5:	7f59ece4b9fc1524d3970f3143af1565
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	arts-qt-devel
