@@ -402,7 +402,8 @@ cat {kmixcfg,kcmkmix}.lang >> kmix.lang
 %find_lang	noatun		--with-kde
 %find_lang	kaudiocreator	--with-kde
 %find_lang	kcmaudiocd	--with-kde
-cat kcmaudiocd.lang >> kaudiocreator.lang
+%find_lang	kio_audiocd	--with-kde
+cat k{cm,io_}audiocd.lang >> kaudiocreator.lang
 
 %clean
 rm -rf $RPM_BUILD_ROOT
