@@ -4,12 +4,12 @@
 %bcond_with     cvs     # use cvs build dirs instead of supplied sources
 
 %define		_state		snapshots
-%define		_ver		3.2.90
-%define		_snap		040616
+%define		_ver		3.2.91
+%define		_snap		040702
 %define		_packager	adgor
 
-%define		_minlibsevr	9:3.2.90.040524
-%define		_minbaseevr	9:3.2.90.040524
+%define		_minlibsevr	9:3.2.91.040629
+%define		_minbaseevr	9:3.2.91.040629
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
@@ -44,7 +44,6 @@ BuildRequires:	taglib-devel >= 0.95.031114
 BuildRequires:	unsermake >= 040511
 BuildRequires:	xine-lib-devel >= 1:1.0
 BuildRequires:	zlib-devel
-
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -87,6 +86,17 @@ Header files for kdemultimedia libraries.
 %description devel -l pl
 Pliki nag³ówkowe bibliotek kdemultimedia
 
+%package akode
+Summary:      	TODO. 
+Summary(pl):  	Likewise. 
+Group:          X11/Libraries
+Requires:       %{name}-arts = %{epoch}:%{version}-%{release}
+
+%description akode
+TODO.
+
+%description akode -l pl
+Jak wy¿ej!
 %package arts
 Summary:	Arts extensions
 Summary(pl):	Rozszerzenia Arts
@@ -383,19 +393,6 @@ KDE Media Player - shared libs.
 %description noatun-libs -l pl
 KDE Media Player - biblioteki wspó³dzielone.
 
-%package akode
-Summary:      	TODO. 
-Summary(pl):  	Likewise. 
-Group:          X11/Libraries
-Requires:       %{name}-arts = %{epoch}:%{version}-%{release}
-
-%description akode
-TODO.
-
-%description akode -l pl
-Jak wy¿ej!
-
-
 %prep
 %if ! %{with cvs}
 %setup -q -n %{name}-%{_snap} 
@@ -459,10 +456,12 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(644,root,root,755)
 %{_includedir}/*.h
+%{_includedir}/akode
 %{_includedir}/arts/*.h
 %{_includedir}/arts/*.idl
 %{_includedir}/libkcddb
 %{_includedir}/noatun
+%{_libdir}/libakode.so
 %{_libdir}/libartsbuilder.so
 %{_libdir}/libartsgui.so
 %{_libdir}/libartsgui_idl.so
@@ -474,6 +473,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libnoatun.so
 %{_libdir}/libnoatuncontrols.so
 %{_libdir}/libnoatuntags.so
+
+%files akode
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libakode.la
+%attr(755,root,root) %{_libdir}/libakode.so.*.*.*
+%{_libdir}/libarts_akode.la
+%attr(755,root,root) %{_libdir}/libarts_akode.so
+%{_libdir}/mcop/akode*PlayObject.mcopclass
+%{_libdir}/mcop/akodearts.mcop*
 
 %files arts
 %defattr(644,root,root,755)
@@ -573,17 +581,10 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/libaudiocd_encoder*.so
 %{_libdir}/libaudiocdplugins.la
 %attr(755,root,root) %{_libdir}/libaudiocdplugins.so*
+%{_datadir}/apps/kconf_update/upgrade-metadata.sh
 %{_datadir}/config.kcfg/audiocd_*_encoder.kcfg
 %{_datadir}/services/audiocd.protocol
 %{_desktopdir}/kde/audiocd.desktop
-
-%files akode
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libakode.so.0.0.0
-%attr(755,root,root) %{_libdir}/libarts_akode.so
-%{_libdir}/libarts_akode.la
-%{_libdir}/mcop/akode*PlayObject.mcopclass
-%{_libdir}/mcop/akodearts.mcop*
 
 %files cddb
 %defattr(644,root,root,755)
