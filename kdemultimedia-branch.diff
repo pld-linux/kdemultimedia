@@ -1,552 +1,445 @@
-diff -urN -x CVS kdemultimedia.orig/akode/arts_plugin/akodePlayObject_impl.cpp kdemultimedia/akode/arts_plugin/akodePlayObject_impl.cpp
---- kdemultimedia.orig/akode/arts_plugin/akodePlayObject_impl.cpp	Sun Sep 12 00:36:45 2004
-+++ kdemultimedia/akode/arts_plugin/akodePlayObject_impl.cpp	Tue Oct 12 00:54:01 2004
-@@ -356,7 +356,7 @@
-                 break;
- 	    }
- 	}
--        if (buffer->channel_config != MonoStereo || buffer->sample_width > 24 || buffer->sample_width == 0) {
-+        if (buffer->channels > 2 || buffer->sample_width > 24 || buffer->sample_width == 0) {
-             arts_warning("akode: Incompatible media");
- 	    halt();
- 	    break;
-diff -urN -x CVS kdemultimedia.orig/arts/builder/createtool.cpp kdemultimedia/arts/builder/createtool.cpp
---- kdemultimedia.orig/arts/builder/createtool.cpp	Fri Mar  7 23:11:32 2003
-+++ kdemultimedia/arts/builder/createtool.cpp	Mon Oct 18 16:17:31 2004
-@@ -156,7 +156,7 @@
- 	int input_width = 0;
- 	int output_width = 0;
+diff -urN -x CVS kdemultimedia.orig/admin/acinclude.m4.in kdemultimedia/admin/acinclude.m4.in
+--- kdemultimedia.orig/admin/acinclude.m4.in	2005-02-09 23:21:09.000000000 +0100
++++ kdemultimedia/admin/acinclude.m4.in	2005-03-24 20:18:09.000000000 +0100
+@@ -1644,7 +1644,15 @@
  
--	for(pi = minfo.ports.begin(); pi != minfo.ports.end(); pi++)
-+	for(pi = minfo.ports.begin(); pi != minfo.ports.end(); ++pi)
- 	{
- 		if(pi->direction == Arts::input)
- 			input_width++;
-@@ -179,7 +179,7 @@
- 	int output_width = 0;
+ AC_MSG_RESULT([$kde_cv_uic_plugins])
+ if test "$kde_cv_uic_plugins" != yes; then
+-	AC_MSG_ERROR([you need to install kdelibs first.])
++	AC_MSG_ERROR([
++you need to install kdelibs first.
++
++If you did install kdelibs, then the Qt version that is picked up by
++this configure is not the same version you used to compile kdelibs. 
++The Qt Plugin installed by kdelibs is *ONLY* loadable if its the 
++same Qt version, compiled with the same compiler and the same Qt
++configuration settings.
++])
+ fi
+ fi
+ ])
+@@ -3104,8 +3112,8 @@
+         fi
+         rm -f conftest.h conftest.h.gch
+     fi
+-    AM_CONDITIONAL(unsermake_enable_pch, test "$kde_use_pch" = "yes" && test "$kde_gcc_supports_pch" = "yes")
+   fi
++  AM_CONDITIONAL(unsermake_enable_pch, test "$kde_use_pch" = "yes" && test "$kde_gcc_supports_pch" = "yes")
+   if test "$CXX" = "KCC"; then
+     dnl unfortunately we currently cannot disable exception support in KCC
+     dnl because doing so is binary incompatible and Qt by default links with exceptions :-(
+@@ -3194,6 +3202,51 @@
+   ifdef([AM_DEPENDENCIES], AC_REQUIRE([KDE_ADD_DEPENDENCIES]), [])
+ ])
  
- 	for(pi = minfo.ports.begin(), pni = minfo.portnames.begin();
--		pi != minfo.ports.end(); pi++, pni++)
-+		pi != minfo.ports.end(); ++pi, pni++)
- 	{
- 		StructurePort *port = 0;
- 		/*
-@@ -209,7 +209,7 @@
- 	this->minfo = minfo;
- 
- 	vector<Arts::PortType>::iterator pi;
--	for(pi = this->minfo.ports.begin(); pi != this->minfo.ports.end(); pi++)
-+	for(pi = this->minfo.ports.begin(); pi != this->minfo.ports.end(); ++pi)
- 	{
- 		/* reverse since we're inside the interface, not outside */
- 		if(pi->direction == Arts::input)
-@@ -262,7 +262,7 @@
- 	std::list<StructureComponent *>::iterator i;
- 	std::list<StructureComponent *> *ComponentList = mwidget->structure->getComponentList();
- 
--	for(i = ComponentList->begin();i != ComponentList->end();i++)
-+	for(i = ComponentList->begin();i != ComponentList->end();++i)
- 	{
- 		StructureComponent *c = *i;
- 		if(c->selected() && !mwidget->hasSpace(c, c->x() + dx, c->y() + dy, true))
-@@ -270,7 +270,7 @@
- 	}
- 
- 	mwidget->beginUpdate();
--	for(i = ComponentList->begin();i != ComponentList->end();i++)
-+	for(i = ComponentList->begin();i != ComponentList->end();++i)
- 	{
- 		StructureComponent *c = *i;
- 		if(c->selected())
-diff -urN -x CVS kdemultimedia.orig/arts/builder/interfacedlg.cpp kdemultimedia/arts/builder/interfacedlg.cpp
---- kdemultimedia.orig/arts/builder/interfacedlg.cpp	Sat Jun 26 12:12:14 2004
-+++ kdemultimedia/arts/builder/interfacedlg.cpp	Mon Oct 18 16:17:31 2004
-@@ -160,7 +160,7 @@
- 	listbox->insertItem((indent + interface).c_str());
- 
- 	vector<string> *children = Arts::Dispatcher::the()->interfaceRepo().queryChildren(interface);
--	for (vector<string>::iterator ci = children->begin(); ci != children->end(); ci++)
-+	for (vector<string>::iterator ci = children->begin(); ci != children->end(); ++ci)
- 		update(ci->c_str(), indent+"  ");
- 	delete children;
- }
-diff -urN -x CVS kdemultimedia.orig/arts/builder/main.cpp kdemultimedia/arts/builder/main.cpp
---- kdemultimedia.orig/arts/builder/main.cpp	Sat Jun 26 12:12:14 2004
-+++ kdemultimedia/arts/builder/main.cpp	Mon Oct 18 16:17:31 2004
-@@ -110,7 +110,7 @@
- 	list<string> datadirs = PortableKDE::globalDirs("data");
- 	list<string>::iterator it;
- 
--	for(it = datadirs.begin(); it != datadirs.end(); it++)
-+	for(it = datadirs.begin(); it != datadirs.end(); ++it)
- 	{
- 		string common = *it;
- 		common += "artsbuilder";
-@@ -360,7 +360,7 @@
- 
- 		vector<Arts::TraderOffer>::iterator i;
- 		long n = 1;		/* TODO:PORT: is this necessary? I think not */
--		for(i = offers->begin(); i != offers->end(); i++)
-+		for(i = offers->begin(); i != offers->end(); ++i)
- 		{
- 			Arts::TraderOffer& offer = *i;
- 			string name = offer.interfaceName();
-diff -urN -x CVS kdemultimedia.orig/arts/builder/menumaker.cpp kdemultimedia/arts/builder/menumaker.cpp
---- kdemultimedia.orig/arts/builder/menumaker.cpp	Thu Nov 29 19:27:49 2001
-+++ kdemultimedia/arts/builder/menumaker.cpp	Mon Oct 18 16:17:31 2004
-@@ -48,7 +48,7 @@
- 
- 	list<string>::iterator i;
- 
--	for(i=prefixList.begin();i != prefixList.end(); i++)
-+	for(i=prefixList.begin();i != prefixList.end(); ++i)
- 	{
- 		const char *prefix = (*i).c_str();
- 
-@@ -110,7 +110,7 @@
- {
- 	MenuCategory *mc = 0;
- 	list<MenuCategory *>::iterator i;
--	for(i=categories.begin();i != categories.end();i++)
-+	for(i=categories.begin();i != categories.end();++i)
- 	{
- 		if((*i)->name() == name) mc = (*i);
- 	}
-@@ -122,7 +122,7 @@
- 	MenuCategory *mc = 0;
- 
- 	list<MenuCategory *>::iterator i;
--	for(i=categories.begin();i != categories.end();i++)
-+	for(i=categories.begin();i != categories.end();++i)
- 		if((*i)->matches(name)) mc = (*i);
- 	assert(mc);		// root category should always match
- 
-@@ -130,7 +130,7 @@
- 	{
- 		// if we hit the root category, it may be better to move the thing
- 		// into the catchall category (looks cleaner)
--		for(i=categories.begin();i != categories.end();i++)
-+		for(i=categories.begin();i != categories.end();++i)
- 			if((*i)->catchall()) mc = (*i);
- 	}
- 	//mc->menu()->insertItem(name,index); 000
-@@ -169,7 +169,7 @@
- void MenuMaker::clear()
- {
- 	list<MenuCategory *>::iterator i;
--	for(i=categories.begin();i != categories.end();i++)
-+	for(i=categories.begin();i != categories.end();++i)
- 	{
- 		/* 000
- 		KActionMenu *m = (*i)->menu();
-diff -urN -x CVS kdemultimedia.orig/arts/builder/module.cpp kdemultimedia/arts/builder/module.cpp
---- kdemultimedia.orig/arts/builder/module.cpp	Wed Aug 20 22:23:34 2003
-+++ kdemultimedia/arts/builder/module.cpp	Mon Oct 18 16:17:31 2004
-@@ -193,10 +193,10 @@
- 	arts_debug("sdfmd...");
- 	list<ModulePort *>::iterator i;
- 
--	for(i = inports.begin(); i != inports.end(); i++) delete *i;
-+	for(i = inports.begin(); i != inports.end(); ++i) delete *i;
- 	inports.clear();
- 
--	for(i = outports.begin(); i != outports.end(); i++) delete *i;
-+	for(i = outports.begin(); i != outports.end(); ++i) delete *i;
- 	outports.clear();
- 
- 	StructureDesc.freeModuleDesc(ModuleDesc);
-@@ -422,8 +422,8 @@
- void Module::dumpPorts(list<ModulePort *>& ports)
- {
- 	list<ModulePort *>::iterator i;
--	for(i = inports.begin(); i != inports.end(); i++) ports.push_back(*i);
--	for(i = outports.begin(); i != outports.end(); i++) ports.push_back(*i);
-+	for(i = inports.begin(); i != inports.end(); ++i) ports.push_back(*i);
-+	for(i = outports.begin(); i != outports.end(); ++i) ports.push_back(*i);
- }
- 
- QPixmap *Module::pixmap()
-diff -urN -x CVS kdemultimedia.orig/arts/builder/mwidget.cpp kdemultimedia/arts/builder/mwidget.cpp
---- kdemultimedia.orig/arts/builder/mwidget.cpp	Tue Feb  3 15:35:53 2004
-+++ kdemultimedia/arts/builder/mwidget.cpp	Mon Oct 18 16:17:31 2004
-@@ -363,7 +363,7 @@
- 
- 	std::map<long, ModulePort *> portmap;
- 
--	for(pi = portlist.begin(); pi != portlist.end(); pi++)
-+	for(pi = portlist.begin(); pi != portlist.end(); ++pi)
- 	{
- 		ModulePort *port = *pi;
- 
-@@ -386,10 +386,10 @@
- 	vector<long> owner(portlist.size());
- 
- 	long maxcolor = 0;
--	for(pi = portlist.begin(); pi != portlist.end(); pi++)
-+	for(pi = portlist.begin(); pi != portlist.end(); ++pi)
- 		color[*pi] = maxcolor++;
- 
--	for(pi = portlist.begin(); pi != portlist.end(); pi++)
-+	for(pi = portlist.begin(); pi != portlist.end(); ++pi)
- 	{
- 		ModulePort *src = *pi;
- 		unsigned long c;
-@@ -418,7 +418,7 @@
++AC_DEFUN([KDE_CHECK_VISIBILITY_GCC_BUG],
++  [
++    AC_CACHE_CHECK([for gcc -fvisibility-inlines-hidden bug], kde_cv_val_gcc_visibility_bug,
++      [
++        AC_LANG_SAVE
++        AC_LANG_CPLUSPLUS
++
++        safe_CXXFLAGS=$CXXFLAGS
++        safe_LDFLAGS=$LDFLAGS
++        CXXFLAGS="$CXXFLAGS -fPIC -fvisibility-inlines-hidden -O0"
++        LDFLAGS="$LDFLAGS -shared -fPIC"
++
++        AC_TRY_LINK(
++        [
++          /* http://gcc.gnu.org/bugzilla/show_bug.cgi?id=19664 */
++          template<typename CharT>
++          struct VisTest
++          {
++            inline VisTest ();
++          };
++          template<typename CharT>
++          inline VisTest<CharT>::VisTest()
++          {}
++          extern template class VisTest<char>;  // It works if we drop that line
++          int some_function( int do_something ) __attribute__ ((visibility("default")));
++          int some_function( int )
++          {
++            VisTest<char> a;
++            return 0;
++          }
++        ], [/* elvis is alive */],
++        kde_cv_val_gcc_visibility_bug=no, kde_cv_val_gcc_visibility_bug=yes)
++
++        CXXFLAGS=$safe_CXXFLAGS
++        LDFLAGS=$safe_LDFLAGS
++        AC_LANG_RESTORE
++      ]
++    )
++
++    if test x$kde_cv_val_gcc_visibility_bug = xno; then
++      CXXFLAGS="$CXXFLAGS -fvisibility-inlines-hidden"
++    fi
++  ]
++)
++
+ AC_DEFUN([KDE_CHECK_AND_ADD_HIDDEN_VISIBILITY],
+ [
+   if test "$GXX" = "yes"; then
+@@ -3202,7 +3255,9 @@
+     KDE_CHECK_COMPILER_FLAG(fno-common, [CXXFLAGS="$CXXFLAGS -fno-common"])
+     KDE_CHECK_COMPILER_FLAG(fvisibility=hidden, 
+     [
+-        CXXFLAGS="$CXXFLAGS -fvisibility=hidden -fvisibility-inlines-hidden"
++        CXXFLAGS="$CXXFLAGS -fvisibility=hidden"
++        KDE_CHECK_VISIBILITY_GCC_BUG
++
+         HAVE_GCC_VISIBILITY=1
+         AC_DEFINE_UNQUOTED(__KDE_HAVE_GCC_VISIBILITY, "$HAVE_GCC_VISIBILITY", [define to 1 if -fvisibility is supported])
+     ])
+diff -urN -x CVS kdemultimedia.orig/admin/am_edit kdemultimedia/admin/am_edit
+--- kdemultimedia.orig/admin/am_edit	2004-12-17 21:18:28.000000000 +0100
++++ kdemultimedia/admin/am_edit	2005-03-29 11:15:16.000000000 +0200
+@@ -483,6 +483,7 @@
+             $MakefileData =~ s/$lookup/$replacement/;
+             $lookup =~ s/\\\$\\\(CXXFLAGS\\\)/\\\$\\\(KCXXFLAGS\\\)/;
+             $replacement = "$stuff_before\$(KCXXFLAGS) \$(KDE_CXXFLAGS)$stuff_after";
++            next if ($stuff_before =~ /\$\(KDE_CXXFLAGS\)/ or $stuff_after =~ /\$\(KDE_CXXFLAGS\)/);
+             substituteLine($lookup, $replacement);
+         } else {
+             $found = 0;
+@@ -634,7 +635,7 @@
+ 		if ($pre eq '' && exists($varcontent{$variable})) {
+ 		    my @addlist = split(/[\034\s]+/, $varcontent{$variable});
+ 		    push(@objlist, @addlist);
+-                } elsif ($variable !~ 'OBJEXT') {
++                } elsif ($variable !~ 'OBJEXT' && $variable !~ /am__objects_\d+/ ) {
+                     $ocv = 1;
  		}
- 	}
+             }
+@@ -2276,7 +2277,7 @@
+            "\t        echo \"\$\$i\"; \\\n" . 
+            "\t        if ! ";
+     $t .=  $cxxsuffix eq "KKK" ?
+-           "\$(CXX) \$(DEFS) -I. -I\$(srcdir) -I\$(top_builddir) \$(INCLUDES) \$(AM_CPPFLAGS) \$(CPPFLAGS) \$(KDE_CXXFLAGS) " :
++           "\$(CXX) \$(DEFS) -I. -I\$(srcdir) -I\$(top_builddir) \$(INCLUDES) \$(AM_CPPFLAGS) \$(CPPFLAGS) \$(CXXFLAGS) \$(KDE_CXXFLAGS) " :
+            "\$(CXXCOMPILE) ";
+     $t .=  " --dump-class-hierarchy -c \$\$i.bchecktest.cc; then \\\n" .
+            "\t            rm -f \$\$i.bchecktest.cc; exit 1; \\\n" .
+@@ -2352,7 +2353,7 @@
+     $MakefileData =~ s/\034/\\\n/g;    # Restore continuation lines
+     # Append our $progId line, _below_ the "generated by automake" line
+     # because automake-1.6 relies on the first line to be his own.
+-    my $progIdLine = "\# $progId - " . '$Revision$ '."\n";
++    my $progIdLine = "\# $progId - " . '$Revision$ '."\n";
+     if ( !( $MakefileData =~ s/^(.*generated .*by automake.*\n)/$1$progIdLine/ ) ) {
+         warn "automake line not found in $makefile\n";
+ 	# Fallback: first line
+diff -urN -x CVS kdemultimedia.orig/akode/arts_plugin/akodePlayObject_impl.cpp kdemultimedia/akode/arts_plugin/akodePlayObject_impl.cpp
+--- kdemultimedia.orig/akode/arts_plugin/akodePlayObject_impl.cpp	2005-02-14 18:43:08.000000000 +0100
++++ kdemultimedia/akode/arts_plugin/akodePlayObject_impl.cpp	2005-03-14 00:03:55.000000000 +0100
+@@ -327,7 +327,7 @@
+     // Invalid frame from broken plugin
+     if (inBuffer->sample_rate == 0) return false;
  
--	for(pi = portlist.begin(); pi != portlist.end(); pi++)
-+	for(pi = portlist.begin(); pi != portlist.end(); ++pi)
- 	{
- 		ModulePort *p = *pi;
- 
-diff -urN -x CVS kdemultimedia.orig/arts/builder/portposdlg.cpp kdemultimedia/arts/builder/portposdlg.cpp
---- kdemultimedia.orig/arts/builder/portposdlg.cpp	Sat Jun 26 12:12:14 2004
-+++ kdemultimedia/arts/builder/portposdlg.cpp	Mon Oct 18 16:17:31 2004
-@@ -220,7 +220,7 @@
- 
- 		if(direction == 0) finddirection = ModulePort::out;
- 
--		for(ci = cl.begin(); ci != cl.end(); ci++)
-+		for(ci = cl.begin(); ci != cl.end(); ++ci)
- 		{
- 			StructureComponent *component = *ci;
- 			if(component->type() == StructureComponent::ctPort)
-diff -urN -x CVS kdemultimedia.orig/arts/builder/propertypanel.cpp kdemultimedia/arts/builder/propertypanel.cpp
---- kdemultimedia.orig/arts/builder/propertypanel.cpp	Thu Jul 10 02:49:54 2003
-+++ kdemultimedia/arts/builder/propertypanel.cpp	Mon Oct 18 16:17:31 2004
-@@ -377,7 +377,7 @@
- 	constantValueComboBox->clear();
- 
- 	std::vector<Arts::EnumComponent>::const_iterator eci;
--	for(eci = edef.contents.begin(); eci != edef.contents.end(); eci++)
-+	for(eci = edef.contents.begin(); eci != edef.contents.end(); ++eci)
- 		constantValueComboBox->insertItem(QString::fromUtf8(eci->name.c_str()));
- }
- 
-diff -urN -x CVS kdemultimedia.orig/arts/builder/retrievedlg.cpp kdemultimedia/arts/builder/retrievedlg.cpp
---- kdemultimedia.orig/arts/builder/retrievedlg.cpp	Sun Apr 11 11:02:39 2004
-+++ kdemultimedia/arts/builder/retrievedlg.cpp	Mon Oct 18 16:17:31 2004
-@@ -81,7 +81,7 @@
- 		names.insert(structures[i]->Name());
- 
- 	set<string>::iterator ni;
--	for(ni=names.begin();ni!=names.end();ni++)
-+	for(ni=names.begin();ni!=names.end();++ni)
- 		listbox->insertItem((*ni).c_str());
- #endif
- 
-diff -urN -x CVS kdemultimedia.orig/arts/builder/structure.cpp kdemultimedia/arts/builder/structure.cpp
---- kdemultimedia.orig/arts/builder/structure.cpp	Sun Jun 22 23:03:19 2003
-+++ kdemultimedia/arts/builder/structure.cpp	Mon Oct 18 16:17:31 2004
-@@ -215,13 +215,13 @@
- 
- 	arts_debug("clc");
- /*
--	for(ci = ComponentList.begin(); ci != ComponentList.end(); ci++)
-+	for(ci = ComponentList.begin(); ci != ComponentList.end(); ++ci)
- 		delete (*ci);
- 
- 	ComponentList.erase(ComponentList.begin(), ComponentList.end());
- 	ModuleList.erase(ModuleList.begin(), ModuleList.end());
- */
--	for(ci = ComponentList.begin(); ci != ComponentList.end(); ci++)
-+	for(ci = ComponentList.begin(); ci != ComponentList.end(); ++ci)
- 		(*ci)->setSelected(true);
- 	deleteSelected();
- 
-@@ -298,7 +298,7 @@
- 	vector<Arts::ModuleDesc> *modules = StructureDesc.modules();
- 	vector<Arts::ModuleDesc>::iterator mi;
- 
--	for(mi=modules->begin(); mi != modules->end(); mi++)
-+	for(mi=modules->begin(); mi != modules->end(); ++mi)
- 	{
- 		Module *m = new Module(*mi,StructureDesc,canvas);
- 
-@@ -311,7 +311,7 @@
- 	vector<Arts::StructurePortDesc> *ports = StructureDesc.ports();
- 	vector<Arts::StructurePortDesc>::iterator pi;
- 
--	for(pi=ports->begin(); pi != ports->end(); pi++)
-+	for(pi=ports->begin(); pi != ports->end(); ++pi)
- 	{
- 		StructurePort *p = new StructurePort(*pi,StructureDesc,canvas);
- 
-@@ -390,7 +390,7 @@
- 	list<StructureComponent *>::iterator ci;
- 	long targets = 0;
- 
--	for(ci=ComponentList.begin();ci!=ComponentList.end();ci++)
-+	for(ci=ComponentList.begin();ci!=ComponentList.end();++ci)
- 		if((*ci)->selected()) targets++;
- 
- 	return targets;
-@@ -418,12 +418,12 @@
- 	list<StructureComponent *>::iterator ci;
- 	list<ModulePort *> allPorts;
- 
--	for(ci = ComponentList.begin(); ci!=ComponentList.end(); ci++)
-+	for(ci = ComponentList.begin(); ci!=ComponentList.end(); ++ci)
- 		if((*ci)->selected())
- 			(*ci)->dumpPorts(allPorts);
- 
- 	list<ModulePort *>::iterator pi;
--	for(pi = allPorts.begin(); pi != allPorts.end(); pi++)
-+	for(pi = allPorts.begin(); pi != allPorts.end(); ++pi)
- 		(*pi)->PortDesc.disconnectAll();
- 
- 	// and from the ComponentList (the future ;)
-@@ -446,7 +446,7 @@
+-    if (samplingRate != inBuffer->sample_rate) {
++    if (samplingRate != inBuffer->sample_rate || mSpeed != 1.0) {
+         //arts_debug("akode: resampling to %d/%d", inBuffer->sample_rate, samplingRate);
+         if ( !buffer || buffer==inBuffer ) buffer = new AudioFrame;
+         if ( !resampler)
+diff -urN -x CVS kdemultimedia.orig/arts/builder/artsbuilder.desktop kdemultimedia/arts/builder/artsbuilder.desktop
+--- kdemultimedia.orig/arts/builder/artsbuilder.desktop	2005-02-23 06:06:30.000000000 +0100
++++ kdemultimedia/arts/builder/artsbuilder.desktop	2005-03-07 15:19:20.000000000 +0100
+@@ -37,7 +37,6 @@
+ Name[tr]=aRts Yapıcı
+ Name[ven]=Mufhati wa aRts
+ Name[xh]=Umakhi we aRts
+-Name[xx]=xxaRts Builderxx
+ Name[zh_CN]=aRts 构建程序
+ Name[zu]=Umakhi We aRts
+ GenericName=Audio Filter Designer
+@@ -85,7 +84,6 @@
+ GenericName[uk]=Дизайн аудіофільтрів
+ GenericName[ven]=Muvhati wa filithara ino pfala
+ GenericName[xh]=Umyili Wecebo lokucoca ulwelo Wesandi
+-GenericName[xx]=xxAudio Filter Designerxx
+ GenericName[zh_CN]=音频滤波器设计程序
+ GenericName[zh_TW]=音效過濾器設計師
+ GenericName[zu]=Umdwebi Wehluzo Lokuzwakalayo
+diff -urN -x CVS kdemultimedia.orig/arts/builder/x-artsbuilder.desktop kdemultimedia/arts/builder/x-artsbuilder.desktop
+--- kdemultimedia.orig/arts/builder/x-artsbuilder.desktop	2005-02-23 06:06:30.000000000 +0100
++++ kdemultimedia/arts/builder/x-artsbuilder.desktop	2005-03-07 15:19:20.000000000 +0100
+@@ -43,7 +43,6 @@
+ Comment[tr]=Arts Yapıcı
+ Comment[ven]=Muiti wa zwavhutsila
+ Comment[xh]=Umakhi wemizobo
+-Comment[xx]=xxArts Builderxx
+ Comment[zh_CN]=Arts 构建程序
+ Comment[zu]=Umakhi Wezamasiko
+ Icon=arts
+diff -urN -x CVS kdemultimedia.orig/arts/tools/artscontrolapplet.desktop kdemultimedia/arts/tools/artscontrolapplet.desktop
+--- kdemultimedia.orig/arts/tools/artscontrolapplet.desktop	2005-02-23 06:06:30.000000000 +0100
++++ kdemultimedia/arts/tools/artscontrolapplet.desktop	2005-03-07 15:19:21.000000000 +0100
+@@ -43,7 +43,6 @@
+ Comment[uk]=Аплет для керування aRts
+ Comment[uz]=Бутун aRts'ни бошқариш учун битта апплет
+ Comment[wa]=Ene aplikete po controler totafwaitmint aRts
+-Comment[xx]=xxOne Applet to control whole aRtsxx
+ Comment[zh_CN]=控制整个 aRts 的小程序
+ Name=aRts Control
+ Name[bn]=আর্ট্‌স নিয়ন্ত্রণ
+@@ -85,7 +84,6 @@
+ Name[tr]=aRts Kontol
+ Name[uk]=Керування aRts
+ Name[uz]=aRts бошқаруви
+-Name[xx]=xxaRts Controlxx
+ Name[zh_CN]=aRts 控制
+ X-KDE-Library=libartscontrolapplet
+ Icon=artscontrol
+diff -urN -x CVS kdemultimedia.orig/arts/tools/artscontrol.desktop kdemultimedia/arts/tools/artscontrol.desktop
+--- kdemultimedia.orig/arts/tools/artscontrol.desktop	2005-02-23 06:06:30.000000000 +0100
++++ kdemultimedia/arts/tools/artscontrol.desktop	2005-03-07 15:19:21.000000000 +0100
+@@ -49,7 +49,6 @@
+ Name[uz]=aRts бошқарув воситаси
+ Name[ven]=Tshishumiswa tshau langula aRTs
+ Name[xh]=Ulawulo Lwemizobo
+-Name[xx]=xxaRts Control Toolxx
+ Name[zh_CN]=aRts 控制工具
+ Name[zh_TW]=aRts 控制工具
+ Name[zu]=Ithuluazi Lokuphatha le aRts
+@@ -102,7 +101,6 @@
+ GenericName[ven]=Ndangulo ya siva ya mubvumo
+ GenericName[wa]=Contrôle do sierveu di sons
+ GenericName[xh]=Ulawulo Lomncedisi Wesandi
+-GenericName[xx]=xxSound Server Controlxx
+ GenericName[zh_CN]=声音服务器控制
+ GenericName[zh_TW]=聲音伺服器控制器
+ GenericName[zu]=Ukulawila Lomlekeleli Womsindo
+diff -urN -x CVS kdemultimedia.orig/juk/googlefetcher.cpp kdemultimedia/juk/googlefetcher.cpp
+--- kdemultimedia.orig/juk/googlefetcher.cpp	2005-01-15 23:56:10.000000000 +0100
++++ kdemultimedia/juk/googlefetcher.cpp	2005-03-17 23:57:54.000000000 +0100
+@@ -139,7 +139,6 @@
+ QPixmap GoogleFetcher::pixmap()
  {
- 	list<StructureComponent *>::iterator ci;
+     bool chosen = false;
+-    const int selectedIndex = 0;
+     m_loadedSize = All;
  
--	for(ci=ComponentList.begin();ci!=ComponentList.end();ci++)
-+	for(ci=ComponentList.begin();ci!=ComponentList.end();++ci)
- 	{
- 		StructureComponent *c = *ci;
+     displayWaitMessage();
+@@ -147,24 +146,21 @@
+     QPixmap pixmap;
  
-diff -urN -x CVS kdemultimedia.orig/juk/k3bexporter.cpp kdemultimedia/juk/k3bexporter.cpp
---- kdemultimedia.orig/juk/k3bexporter.cpp	Mon Jul  5 09:29:29 2004
-+++ kdemultimedia/juk/k3bexporter.cpp	Sat Oct 16 20:36:23 2004
-@@ -222,8 +222,8 @@
- void K3bPlaylistExporter::slotExport()
- {
-     if(m_playlistBox) {
--        setPlaylist(m_playlistBox->currentPlaylist());
--        exportPlaylistItems(m_playlistBox->currentPlaylist()->items());
-+        setPlaylist(m_playlistBox->visiblePlaylist());
-+        exportPlaylistItems(m_playlistBox->visiblePlaylist()->items());
+     while(!chosen) {
+-        GoogleFetcherDialog dialog("google", m_imageList, selectedIndex, m_file, 0);
+ 
+-        connect(&dialog, SIGNAL(sizeChanged(GoogleFetcher::ImageSize)),
+-                this, SLOT(slotLoadImageURLs(GoogleFetcher::ImageSize)));
+-        connect(this, SIGNAL(signalNewSearch(GoogleImageList &)),
+-                &dialog, SLOT(refreshScreen(GoogleImageList &)));
+-        dialog.exec();
+-        pixmap = dialog.result();
+-        chosen = dialog.takeIt();
+-        if(dialog.newSearch()) {
+-            bool ok;
+-            m_searchString = KInputDialog::getText(i18n("Cover Downloader"),
+-                                                   i18n("Enter new search terms:"),
+-                                                   m_searchString, &ok);
+-            if(ok && !m_searchString.isEmpty())
+-                displayWaitMessage();
+-            else
+-                m_searchString = m_loadedQuery;
++        if(m_imageList.isEmpty())
++            chosen = !requestNewSearchTerms(true);
++        else {
++            GoogleFetcherDialog dialog("google", m_imageList, m_file, 0);
++            connect(&dialog, SIGNAL(sizeChanged(GoogleFetcher::ImageSize)),
++                    this, SLOT(slotLoadImageURLs(GoogleFetcher::ImageSize)));
++            connect(this, SIGNAL(signalNewSearch(GoogleImageList &)),
++                    &dialog, SLOT(refreshScreen(GoogleImageList &)));
++            dialog.exec();
++            pixmap = dialog.result();
++            chosen = dialog.takeIt();
++
++            if(dialog.newSearch())
++                requestNewSearchTerms();
+         }
      }
+     return pixmap;
+@@ -178,5 +174,20 @@
+     statusBar->clear();
  }
  
-diff -urN -x CVS kdemultimedia.orig/juk/playermanager.cpp kdemultimedia/juk/playermanager.cpp
---- kdemultimedia.orig/juk/playermanager.cpp	Sat Aug 14 07:40:00 2004
-+++ kdemultimedia/juk/playermanager.cpp	Tue Oct  5 17:16:57 2004
-@@ -469,6 +469,7 @@
-     stop();
-     delete m_player;
-     m_player = createPlayer(system);
-+    setup();
- }
+-#include "googlefetcher.moc"
++bool GoogleFetcher::requestNewSearchTerms(bool noResults)
++{
++    bool ok;
++    m_searchString = KInputDialog::getText(i18n("Cover Downloader"),
++                                           noResults ?
++                                             i18n("No matching images found, please enter new search terms:") :
++                                             i18n("Enter new search terms:"),
++                                           m_searchString, &ok);
++    if(ok && !m_searchString.isEmpty())
++        displayWaitMessage();
++    else
++        m_searchString = m_loadedQuery;
  
- void PlayerManager::slotSetVolume(int volume)
-diff -urN -x CVS kdemultimedia.orig/juk/playlist.cpp kdemultimedia/juk/playlist.cpp
---- kdemultimedia.orig/juk/playlist.cpp	Wed Sep 15 11:32:20 2004
-+++ kdemultimedia/juk/playlist.cpp	Mon Oct 18 16:34:37 2004
-@@ -874,7 +874,7 @@
++    return ok;
++}
++
++#include "googlefetcher.moc"
+diff -urN -x CVS kdemultimedia.orig/juk/googlefetcherdialog.cpp kdemultimedia/juk/googlefetcherdialog.cpp
+--- kdemultimedia.orig/juk/googlefetcherdialog.cpp	2005-02-22 22:40:10.000000000 +0100
++++ kdemultimedia/juk/googlefetcherdialog.cpp	2005-03-17 23:57:54.000000000 +0100
+@@ -30,7 +30,6 @@
  
-     QStringList fileList;
+ GoogleFetcherDialog::GoogleFetcherDialog(const QString &name,
+                                          const GoogleImageList &imageList,
+-                                         uint /* selectedIndex */,
+                                          const FileHandle &file,
+                                          QWidget *parent) :
+     KDialogBase(parent, name.latin1(), true, QString::null,
+diff -urN -x CVS kdemultimedia.orig/juk/googlefetcherdialog.h kdemultimedia/juk/googlefetcherdialog.h
+--- kdemultimedia.orig/juk/googlefetcherdialog.h	2005-01-22 20:42:31.000000000 +0100
++++ kdemultimedia/juk/googlefetcherdialog.h	2005-03-17 23:57:54.000000000 +0100
+@@ -30,7 +30,6 @@
+ public:
+     GoogleFetcherDialog(const QString &name,
+                         const GoogleImageList &urlList,
+-                        uint selectedIndex,
+                         const FileHandle &file,
+                         QWidget *parent = 0);
  
--    for(KURL::List::Iterator it = urls.begin(); it != urls.end(); it++)
-+    for(KURL::List::Iterator it = urls.begin(); it != urls.end(); ++it)
- 	fileList.append((*it).path());
+diff -urN -x CVS kdemultimedia.orig/juk/googlefetcher.h kdemultimedia/juk/googlefetcher.h
+--- kdemultimedia.orig/juk/googlefetcher.h	2004-12-01 03:12:17.000000000 +0100
++++ kdemultimedia/juk/googlefetcher.h	2005-03-17 23:57:54.000000000 +0100
+@@ -52,21 +52,16 @@
+     GoogleFetcher(const FileHandle &file);
+     QPixmap pixmap();
  
-     addFiles(fileList, m_collection->importPlaylists(), after);
-diff -urN -x CVS kdemultimedia.orig/juk/playlistbox.cpp kdemultimedia/juk/playlistbox.cpp
---- kdemultimedia.orig/juk/playlistbox.cpp	Sat Oct  2 07:10:40 2004
-+++ kdemultimedia/juk/playlistbox.cpp	Mon Oct 18 16:34:37 2004
-@@ -210,7 +210,9 @@
-     if(m_dynamicPlaylist)
- 	return m_dynamicPlaylist;
++signals:
++    void signalNewSearch(GoogleImageList &images);
++
+ private:
+-    void cancel();
+-    void editSearch();
+-    void saveCover();
+-    void previous();
+-    void next();
+     void displayWaitMessage();
+-    void buildBox();
++    bool requestNewSearchTerms(bool noResults = false);
  
--    if(currentItem() && static_cast<Item *>(currentItem())->playlist())
-+    if(Playlist::playingItem())
-+	return Playlist::playingItem()->playlist();
-+    else if(currentItem() && static_cast<Item *>(currentItem())->playlist())
- 	return static_cast<Item *>(currentItem())->playlist();
-     else
- 	return PlaylistCollection::currentPlaylist();
-@@ -332,7 +334,7 @@
-     if ( m_dynamicPlaylist )
- 	return m_dynamicPlaylist;
+ private slots:
+     void slotLoadImageURLs(GoogleFetcher::ImageSize size = All);
  
--    return PlaylistCollection::currentPlaylist();
-+    return selectedItems().front()->playlist();
- }
- 
- void PlaylistBox::slotPlaylistDestroyed(Playlist *p)
-@@ -385,7 +387,7 @@
- 
-     if(KURLDrag::decode(s, urls) && !urls.isEmpty()) {
- 	QStringList files;
--	for(KURL::List::Iterator it = urls.begin(); it != urls.end(); it++)
-+	for(KURL::List::Iterator it = urls.begin(); it != urls.end(); ++it)
- 	    files.append((*it).path());
- 
- 	if(item) {
-@@ -525,11 +527,12 @@
-     KListView::keyReleaseEvent(e);
- }
- 
--PlaylistBox::ItemList PlaylistBox::selectedItems()
-+PlaylistBox::ItemList PlaylistBox::selectedItems() const
- {
-     ItemList l;
- 
--    for(QListViewItemIterator it(this, QListViewItemIterator::Selected); it.current(); ++it)
-+    for(QListViewItemIterator it(const_cast<PlaylistBox *>(this),
-+				 QListViewItemIterator::Selected); it.current(); ++it)
- 	l.append(static_cast<Item *>(*it));
- 
-     return l;
-diff -urN -x CVS kdemultimedia.orig/juk/playlistbox.h kdemultimedia/juk/playlistbox.h
---- kdemultimedia.orig/juk/playlistbox.h	Thu Sep 30 10:11:46 2004
-+++ kdemultimedia/juk/playlistbox.h	Sat Oct 16 20:36:23 2004
-@@ -89,7 +89,7 @@
-     virtual void keyPressEvent(QKeyEvent *e);
-     virtual void keyReleaseEvent(QKeyEvent *e);
- 
--    QValueList<Item *> selectedItems();
-+    QValueList<Item *> selectedItems() const;
-     void setSingleItem(QListViewItem *item);
- 
-     void setupItem(Item *item);
-diff -urN -x CVS kdemultimedia.orig/juk/playlistsplitter.cpp kdemultimedia/juk/playlistsplitter.cpp
---- kdemultimedia.orig/juk/playlistsplitter.cpp	Thu Sep 30 10:11:46 2004
-+++ kdemultimedia/juk/playlistsplitter.cpp	Sat Oct 16 20:36:23 2004
-@@ -97,8 +97,8 @@
- 
-     connect(m_playlistBox->object(), SIGNAL(signalSelectedItemsChanged()),
-             this, SLOT(slotPlaylistSelectionChanged()));
--    connect(m_playlistBox, SIGNAL(signalPlaylistDestroyed(Playlist*)),
--            m_editor, SLOT(slotPlaylistDestroyed(Playlist*)));
-+    connect(m_playlistBox, SIGNAL(signalPlaylistDestroyed(Playlist *)),
-+            m_editor, SLOT(slotPlaylistDestroyed(Playlist *)));
- 
-     moveToFirst(m_playlistBox);
- 
-@@ -157,7 +157,7 @@
- 
- void PlaylistSplitter::slotPlaylistSelectionChanged()
- {
--    m_editor->slotSetItems(static_cast<PlaylistCollection *>(m_playlistBox)->selectedItems());
-+    m_editor->slotSetItems(visiblePlaylist()->selectedItems());
- }
- 
- void PlaylistSplitter::slotPlaylistChanged(QWidget *w)
-diff -urN -x CVS kdemultimedia.orig/juk/statuslabel.cpp kdemultimedia/juk/statuslabel.cpp
---- kdemultimedia.orig/juk/statuslabel.cpp	Sat Oct  2 07:10:40 2004
-+++ kdemultimedia/juk/statuslabel.cpp	Sat Oct 16 20:36:23 2004
-@@ -28,8 +28,6 @@
- #include "playlistinterface.h"
- #include "actioncollection.h"
- #include "tag.h"
--#include "playlist.h"
--#include "playlistitem.h"
- 
- using namespace ActionCollection;
- 
-@@ -101,16 +99,8 @@
- 
- void StatusLabel::updateCurrent()
- {
--    //kdDebug(65432) << k_funcinfo << endl;
+-signals:
+-    void signalNewSearch(GoogleImageList &images);
 -
--    // Use a hack to always show the currently playing playlist in the status
--    // bar.  We can't change PlaylistBox::currentPlaylist() to do this as that
--    // has too many sideeffects at this point.
--
--    if(Playlist::playingItem()) {
--        PlaylistInterface *playlist = Playlist::playingItem()->playlist();
--
--        FileHandle file = playlist->currentFile();
-+    if(playlist()->playing()) {
-+        FileHandle file = playlist()->currentFile();
+ private:
+     FileHandle m_file;
+     QString m_searchString;
+diff -urN -x CVS kdemultimedia.orig/juk/juk.desktop kdemultimedia/juk/juk.desktop
+--- kdemultimedia.orig/juk/juk.desktop	2005-02-05 05:16:55.000000000 +0100
++++ kdemultimedia/juk/juk.desktop	2005-03-07 15:19:21.000000000 +0100
+@@ -6,13 +6,11 @@
+ Icon=juk
+ DocPath=juk/index.html
+ Comment=
+-Comment[xx]=xxxx
+ Terminal=false
+ Name=JuK
+ Name[bn]=জুক
+ Name[hi]=ज्यूक
+ Name[sv]=Juk
+-Name[xx]=xxJuKxx
+ GenericName=Music Player
+ GenericName[bg]=Плеър за музикални файлове
+ GenericName[br]=C'hoarier ar sonerezh
+@@ -55,6 +53,5 @@
+ GenericName[tr]=Müzik Yürütücüsü
+ GenericName[uk]=Програвач музики
+ GenericName[uz]=Мусиқа плейер
+-GenericName[xx]=xxMusic Playerxx
+ GenericName[zh_CN]=音乐播放器
+ Categories=Qt;KDE;AudioVideo;
+diff -urN -x CVS kdemultimedia.orig/juk/jukservicemenu.desktop kdemultimedia/juk/jukservicemenu.desktop
+--- kdemultimedia.orig/juk/jukservicemenu.desktop	2005-02-23 06:06:31.000000000 +0100
++++ kdemultimedia/juk/jukservicemenu.desktop	2005-03-07 15:19:21.000000000 +0100
+@@ -43,7 +43,6 @@
+ Name[tr]=JuK Koleksiyonu Ekle
+ Name[uk]=Додати до збірки JuK
+ Name[uz]=JuK тўпламига қўшиш
+-Name[xx]=xxAdd to JuK Collectionxx
+ Name[zh_CN]=添加到 JuK 收藏
+ Icon=juk
+ Exec=dcop juk Player openFile %u
+diff -urN -x CVS kdemultimedia.orig/juk/trackpickerdialog.cpp kdemultimedia/juk/trackpickerdialog.cpp
+--- kdemultimedia.orig/juk/trackpickerdialog.cpp	2004-12-07 16:43:15.000000000 +0100
++++ kdemultimedia/juk/trackpickerdialog.cpp	2005-03-17 23:58:35.000000000 +0100
+@@ -60,6 +60,10 @@
+         new TrackPickerItem(m_base->trackList, *it);
  
-         QString mid =  file.tag()->artist().isEmpty() || file.tag()->title().isEmpty()
-             ? QString::null : QString(" - ");
-@@ -118,15 +108,13 @@
-         QString text = file.tag()->artist() + mid + file.tag()->title();
- 
-         m_trackLabel->setText(text);
--        m_playlistLabel->setText(playlist->name().simplifyWhiteSpace());
-+        m_playlistLabel->setText(playlist()->name().simplifyWhiteSpace());
-     }
--    else
--        updateData();
+     m_base->trackList->setSelected(m_base->trackList->firstChild(), true);
++
++    connect(m_base->trackList, SIGNAL(doubleClicked(QListViewItem *, const QPoint &, int)),
++            this, SLOT(accept()));
++
+     setMinimumWidth(kMax(400, width()));
  }
  
- void StatusLabel::updateData()
- {
--    //kdDebug(65432) << k_funcinfo << endl;
-+    updateCurrent();
- 
-     if(!playlist()->playing()) {
-         setItemTotalTime(0);
-@@ -151,8 +139,6 @@
-         m_playlistLabel->setText(playlist()->name());
-         m_trackLabel->setText(i18n("1 item", "%n items", playlist()->count()) + " - " + time);
-     }
--    else
--        updateCurrent();
- }
- 
- ////////////////////////////////////////////////////////////////////////////////
-diff -urN -x CVS kdemultimedia.orig/juk/tageditor.cpp kdemultimedia/juk/tageditor.cpp
---- kdemultimedia.orig/juk/tageditor.cpp	Mon Aug 23 05:17:28 2004
-+++ kdemultimedia/juk/tageditor.cpp	Mon Oct 18 16:34:37 2004
-@@ -156,6 +156,15 @@
-     if(m_performingSave)
- 	return;
- 
-+    // Store the playlist that we're setting because saveChangesPrompt
-+    // can delete the PlaylistItems in list.
-+
-+    Playlist *itemPlaylist = 0;
-+    if(!list.isEmpty())
-+	itemPlaylist = list.first()->playlist();
-+
-+    bool hadPlaylist = m_currentPlaylist != 0;
-+
-     saveChangesPrompt();
- 
-     if(m_currentPlaylist) {
-@@ -163,7 +172,17 @@
- 		   this, SLOT(slotItemRemoved(PlaylistItem *)));
-     }
- 
--    m_currentPlaylist = list.isEmpty() ? 0 : static_cast<Playlist *>(list.first()->listView());
-+    if(hadPlaylist && !m_currentPlaylist || !itemPlaylist) {
-+	m_currentPlaylist = 0;
-+	m_items.clear();
-+    }
-+    else {
-+	m_currentPlaylist = itemPlaylist;
-+
-+	// We can't use list here, it may not be valid
-+
-+	m_items = itemPlaylist->selectedItems();
-+    }
- 
-     if(m_currentPlaylist) {
- 	connect(m_currentPlaylist, SIGNAL(signalAboutToRemove(PlaylistItem *)),
-@@ -171,8 +190,6 @@
- 	connect(m_currentPlaylist, SIGNAL(destroyed()), this, SLOT(slotPlaylistRemoved()));
-     }
- 
--    m_items = list;
--
-     if(isVisible())
- 	slotRefresh();
-     else
-@@ -701,7 +718,7 @@
- 
-     QStringList files;
- 
--    for(PlaylistItemList::Iterator it = m_items.begin(); it != m_items.end(); it++)
-+    for(PlaylistItemList::Iterator it = m_items.begin(); it != m_items.end(); ++it)
- 	files.append((*it)->file().absFilePath());
- 
-     if(KMessageBox::questionYesNoList(this,
+diff -urN -x CVS kdemultimedia.orig/kaboodle/kaboodle_component.desktop kdemultimedia/kaboodle/kaboodle_component.desktop
+--- kdemultimedia.orig/kaboodle/kaboodle_component.desktop	2005-02-23 06:06:31.000000000 +0100
++++ kdemultimedia/kaboodle/kaboodle_component.desktop	2005-03-07 15:19:21.000000000 +0100
+@@ -52,7 +52,6 @@
+ Name[uk]=Вмонтований програвач медіа
+ Name[ven]=Tshitambi tsha media tsha Embedded
+ Name[xh]=Umdlali ophakathi olungisiweyo
+-Name[xx]=xxEmbedded Media Playerxx
+ Name[zh_CN]=嵌入式媒体播放器
+ Name[zh_TW]=嵌入式媒體播放器
+ Name[zu]=Oxubiwe Umdlai Wezezindaba
+diff -urN -x CVS kdemultimedia.orig/kaboodle/kaboodle.desktop kdemultimedia/kaboodle/kaboodle.desktop
+--- kdemultimedia.orig/kaboodle/kaboodle.desktop	2005-02-23 06:06:31.000000000 +0100
++++ kdemultimedia/kaboodle/kaboodle.desktop	2005-03-20 21:43:56.000000000 +0100
+@@ -7,7 +7,6 @@
+ Name[ko]=K무리
+ Name[pa]=ਕੇਬੋਡਲੀ
+ Name[ta]=கபூடல்
+-Name[xx]=xxKaboodlexx
+ Exec=kaboodle %i %m -caption "%c" %U
+ Icon=kaboodle
+ X-KDE-StartupNotify=true
+@@ -65,11 +64,10 @@
+ GenericName[uz]=Медиа плейер
+ GenericName[ven]=Tshitambi tsha Media
+ GenericName[xh]=Umdlali we Midia
+-GenericName[xx]=xxMedia Playerxx
+ GenericName[zh_CN]=媒体播放器
+ GenericName[zh_TW]=媒體播放器
+ GenericName[zu]=Umdlali Womculo
+ Terminal=false
+ InitialPreference=6
+ X-DCOP-ServiceType=Multi
+-Categories=Qt;KDE;AudioVideo;
++Categories=Qt;KDE;AudioVideo;X-KDE-More;
+diff -urN -x CVS kdemultimedia.orig/kaboodle/kaboodleengine.desktop kdemultimedia/kaboodle/kaboodleengine.desktop
+--- kdemultimedia.orig/kaboodle/kaboodleengine.desktop	2005-02-23 06:06:31.000000000 +0100
++++ kdemultimedia/kaboodle/kaboodleengine.desktop	2005-03-07 15:19:21.000000000 +0100
+@@ -44,7 +44,6 @@
+ Name[uk]=Механізм вмонтованого програвача медіа
+ Name[ven]=Tshitambi tsha media tsho dzheniswaho
+ Name[xh]=Injini Yomdlali we Media Ebekiweyo
+-Name[xx]=xxEmbedded Media Player Enginexx
+ Name[zh_CN]=嵌入式媒体播放器引擎
+ Name[zh_TW]=嵌入式媒體播放器引擎
+ Name[zu]=Injini Yomdlali Womculom Ohlanganisiwe
 diff -urN -x CVS kdemultimedia.orig/kappfinder-data/ams.desktop kdemultimedia/kappfinder-data/ams.desktop
---- kdemultimedia.orig/kappfinder-data/ams.desktop	Fri Sep 24 15:46:43 2004
-+++ kdemultimedia/kappfinder-data/ams.desktop	Tue Oct  5 15:20:19 2004
-@@ -22,9 +22,10 @@
- GenericName[pt]=Sintetizador Modular do Alsa
- GenericName[pt_BR]=Sintetizador Modular do Alsa
- GenericName[ru]=Модульный синтезатор ALSA
-+GenericName[sk]=Modulárny syntezátor pre Alsa
+--- kdemultimedia.orig/kappfinder-data/ams.desktop	2005-02-23 06:06:31.000000000 +0100
++++ kdemultimedia/kappfinder-data/ams.desktop	2005-03-07 15:19:22.000000000 +0100
+@@ -4,7 +4,6 @@
+ Icon=
+ Name=ams
+ Name[sv]=AMS
+-Name[xx]=xxamsxx
+ GenericName=Alsa Modular Synthesizer
+ GenericName[bg]=Модулен синтезатор на ALSA
+ GenericName[ca]=Sintetitzador modular ALSA
+@@ -31,13 +30,12 @@
+ GenericName[sk]=Modulárny syntezátor pre Alsa
  GenericName[sl]=Modularni sintetizator Alsa
  GenericName[sr]=Модуларни Alsa-ин синтетизатор
 -GenericName[sr@Latn]=Модуларни Alsa-ин синтетизатор
@@ -554,42 +447,79 @@ diff -urN -x CVS kdemultimedia.orig/kappfinder-data/ams.desktop kdemultimedia/ka
  GenericName[sv]=Alsa modulär synthesizer
  GenericName[ta]=அல்சா ஏற்ற இறக்க தொகுப்பான்
  GenericName[tg]=Ҳамзамонсози Alsa Modular
+ GenericName[tr]=Alsa Sentezleyici
+ GenericName[uk]=Модульний синтезатор ALSA
+-GenericName[xx]=xxAlsa Modular Synthesizerxx
+ GenericName[zh_CN]=Alsa 模块化波表器
+ StartupNotify=true
+ Type=Application
 diff -urN -x CVS kdemultimedia.orig/kappfinder-data/amsynth.desktop kdemultimedia/kappfinder-data/amsynth.desktop
---- kdemultimedia.orig/kappfinder-data/amsynth.desktop	Sat Sep 25 15:40:46 2004
-+++ kdemultimedia/kappfinder-data/amsynth.desktop	Tue Oct  5 15:20:19 2004
-@@ -23,8 +23,9 @@
- GenericName[pt]=Retro Analógico - Sintetizador por Software
+--- kdemultimedia.orig/kappfinder-data/amsynth.desktop	2005-01-15 05:59:35.000000000 +0100
++++ kdemultimedia/kappfinder-data/amsynth.desktop	2005-03-07 15:19:22.000000000 +0100
+@@ -6,7 +6,6 @@
+ Name[pt_BR]=Sint. do Alsa Mixer
+ Name[sv]=Amsynt
+ Name[ta]=ஆம்சின்த்
+-Name[xx]=xxamSynthxx
+ GenericName=Retro Analog - Modeling Softsynth
+ GenericName[bg]=Аналогов синтезатор
+ GenericName[cy]=Synth Meddal Modelu Analog Retro
+@@ -26,12 +25,12 @@
  GenericName[pt_BR]=Retro Analog - sintetização de software de modelagem
  GenericName[ru]=Ретро - программный синтезатор
-+GenericName[sk]=Retro-analógované modelovanie Softsynth
+ GenericName[sk]=Retro-analógované modelovanie Softsynth
++GenericName[sl]=Retro Analog - Modelirni Softsynth
  GenericName[sr]=Ретро аналогно моделирање софтверског синтетизатора
 -GenericName[sr@Latn]=Ретро аналогно моделирање софтверског синтетизатора
 +GenericName[sr@Latn]=Retro analogno modeliranje softverskog sintetizatora
  GenericName[sv]=Programvarusynt med gammaldags analogmodellering
  GenericName[ta]=ரெட்ரோ அனலாக் -  மாடலிங் சாஃப்ட்சின்த்
- GenericName[tg]=Ҷӯркунии Шабеҳ - Моделсозии Ҳамзамонсози Нармафзор
+ GenericName[uk]=Програмний синтезатор - старі аналогові схеми
+-GenericName[xx]=xxRetro Analog - Modeling Softsynthxx
+ GenericName[zh_CN]=火箭模拟 - 模式软波表
+ StartupNotify=true
+ Type=Application
 diff -urN -x CVS kdemultimedia.orig/kappfinder-data/ardour.desktop kdemultimedia/kappfinder-data/ardour.desktop
---- kdemultimedia.orig/kappfinder-data/ardour.desktop	Thu Sep 16 15:49:10 2004
-+++ kdemultimedia/kappfinder-data/ardour.desktop	Tue Oct  5 15:20:19 2004
-@@ -24,8 +24,9 @@
- GenericName[pt]=Estúdio Áudio Multi-faixa
+--- kdemultimedia.orig/kappfinder-data/ardour.desktop	2005-02-23 06:06:31.000000000 +0100
++++ kdemultimedia/kappfinder-data/ardour.desktop	2005-03-07 15:19:22.000000000 +0100
+@@ -4,7 +4,6 @@
+ Icon=
+ Name=Ardour
+ Name[ta]=ஆர்டோர்
+-Name[xx]=xxArdourxx
+ GenericName=Multitrack Audio Studio
+ GenericName[bg]=Аудио студио
+ GenericName[ca]=Estudi d'àudio multipista
+@@ -29,14 +28,14 @@
  GenericName[pt_BR]=Estúdio de Áudio Multitrack 
  GenericName[ru]=Аудиостудия
-+GenericName[sk]=Audio studio pre niekoľko stôp
+ GenericName[sk]=Audio studio pre niekoľko stôp
++GenericName[sl]=Večstezni zvočni studio
  GenericName[sr]=Вишетрачни аудио студио
 -GenericName[sr@Latn]=Вишетрачни аудио студио
 +GenericName[sr@Latn]=Višetračni audio studio
  GenericName[sv]=Flerspårs ljudstudio
  GenericName[ta]=பலவிதபாதையடைய கேட்பொலி ஸ்டுடியோ
  GenericName[tg]=Студияи Садоии Бисёршиора
+ GenericName[tr]=Multitrack Sers Stüdyosu
+ GenericName[uk]=Аудіостудія з багатьма доріжками
+-GenericName[xx]=xxMultitrack Audio Studioxx
+ GenericName[zh_CN]=多音轨音频工作室
+ StartupNotify=true
+ Type=Application
 diff -urN -x CVS kdemultimedia.orig/kappfinder-data/djplay.desktop kdemultimedia/kappfinder-data/djplay.desktop
---- kdemultimedia.orig/kappfinder-data/djplay.desktop	Thu Sep 16 15:49:10 2004
-+++ kdemultimedia/kappfinder-data/djplay.desktop	Tue Oct  5 15:20:19 2004
-@@ -29,9 +29,10 @@
- GenericName[pt]=Leitor e Mistura para DJs
- GenericName[pt_BR]=Reprodutor e Mixer
- GenericName[ru]=DJ-Mixer и проигрыватель
-+GenericName[sk]=DJ-Mixer a prehrávač
+--- kdemultimedia.orig/kappfinder-data/djplay.desktop	2005-02-05 05:16:55.000000000 +0100
++++ kdemultimedia/kappfinder-data/djplay.desktop	2005-03-07 15:19:22.000000000 +0100
+@@ -6,7 +6,6 @@
+ Name[pt_BR]=DjPlay
+ Name[sv]=DJplay
+ Name[ta]=டிஜேதொடங்கு
+-Name[xx]=xxDJPlayxx
+ GenericName=DJ-Mixer and Player
+ GenericName[bg]=Диско миксер и плеър
+ GenericName[bs]=DJ-Mixer i Player
+@@ -36,13 +35,12 @@
+ GenericName[sk]=DJ-Mixer a prehrávač
  GenericName[sl]=DJ-mešalnik in predvajalnik
  GenericName[sr]=DJ-Mixer и плејер
 -GenericName[sr@Latn]=DJ-Mixer и плејер
@@ -597,10 +527,24 @@ diff -urN -x CVS kdemultimedia.orig/kappfinder-data/djplay.desktop kdemultimedia
  GenericName[sv]=DJ-mixer och ljudspelare
  GenericName[ta]=டிஜே-ஒன்றுசேர்த்து இயக்கும்
  GenericName[tg]=DJ-Омехтакунак ва Бозингар
+ GenericName[tr]=DJ-Karıştırıcı ve Çalıcı
+ GenericName[uk]=Мікшер та програвач DJ
+-GenericName[xx]=xxDJ-Mixer and Playerxx
+ GenericName[zh_CN]=DJ-Mixer 和播放器
+ StartupNotify=true
+ Type=Application
 diff -urN -x CVS kdemultimedia.orig/kappfinder-data/ecamegapedal.desktop kdemultimedia/kappfinder-data/ecamegapedal.desktop
---- kdemultimedia.orig/kappfinder-data/ecamegapedal.desktop	Sun Sep 12 15:56:24 2004
-+++ kdemultimedia/kappfinder-data/ecamegapedal.desktop	Mon Oct  4 15:25:25 2004
-@@ -13,7 +13,7 @@
+--- kdemultimedia.orig/kappfinder-data/ecamegapedal.desktop	2005-01-09 05:04:29.000000000 +0100
++++ kdemultimedia/kappfinder-data/ecamegapedal.desktop	2005-03-07 15:19:22.000000000 +0100
+@@ -5,7 +5,6 @@
+ Name=EcaMegaPedal
+ Name[sv]=Ecamegapedal
+ Name[ta]=எகாமெகாபெடல்
+-Name[xx]=xxEcaMegaPedalxx
+ GenericName=Ecasound Effektrack
+ GenericName[et]=Ecasound efektiräkk
+ GenericName[hu]=Ecasound effektező
+@@ -14,10 +13,9 @@
  GenericName[nn]=Ecasound-effektspor
  GenericName[pt_BR]=Faixas de Efeito do Ecasound
  GenericName[sr]=Ecasound трака са ефектима
@@ -608,29 +552,51 @@ diff -urN -x CVS kdemultimedia.orig/kappfinder-data/ecamegapedal.desktop kdemult
 +GenericName[sr@Latn]=Ecasound traka sa efektima
  GenericName[sv]=Ecasound-effektspår
  GenericName[ta]=எகாஒலி எபெஸ்பாதை
+-GenericName[xx]=xxEcasound Effektrackxx
  StartupNotify=true
+ Type=Application
+ Categories=Music;AudioVideo;
 diff -urN -x CVS kdemultimedia.orig/kappfinder-data/freebirth.desktop kdemultimedia/kappfinder-data/freebirth.desktop
---- kdemultimedia.orig/kappfinder-data/freebirth.desktop	Thu Sep 16 15:49:10 2004
-+++ kdemultimedia/kappfinder-data/freebirth.desktop	Tue Oct  5 15:20:19 2004
-@@ -25,8 +25,9 @@
- GenericName[pl]=Maszyna perkusyjna
- GenericName[pt]=Máquina de Percussão
+--- kdemultimedia.orig/kappfinder-data/freebirth.desktop	2005-02-23 06:06:31.000000000 +0100
++++ kdemultimedia/kappfinder-data/freebirth.desktop	2005-03-07 15:19:22.000000000 +0100
+@@ -5,7 +5,6 @@
+ Name=FreeBirth
+ Name[sv]=Freebirth
+ Name[ta]=ஃப்ரீபர்த்
+-Name[xx]=xxFreeBirthxx
+ GenericName=Drum Machine
+ GenericName[bg]=Барабан
+ GenericName[bs]=Ritam mašina
+@@ -30,14 +29,14 @@
  GenericName[pt_BR]=Bateria
-+GenericName[sk]=Nástroj pre bicie
+ GenericName[ro]=Maşină de tobe
+ GenericName[sk]=Nástroj pre bicie
++GenericName[sl]=Ritem mašina
  GenericName[sr]=Бубањ машина
 -GenericName[sr@Latn]=Бубањ машина
 +GenericName[sr@Latn]=Bubanj mašina
  GenericName[sv]=Trummaskin
  GenericName[ta]=டிரம் இயந்திரம்
  GenericName[tg]=Мошинаи Таблак
+ GenericName[tr]=Davul Makinası
+ GenericName[uk]=Барабани
+-GenericName[xx]=xxDrum Machinexx
+ GenericName[zh_CN]=鼓机
+ StartupNotify=true
+ Type=Application
 diff -urN -x CVS kdemultimedia.orig/kappfinder-data/freqtweak.desktop kdemultimedia/kappfinder-data/freqtweak.desktop
---- kdemultimedia.orig/kappfinder-data/freqtweak.desktop	Thu Sep 16 15:49:10 2004
-+++ kdemultimedia/kappfinder-data/freqtweak.desktop	Tue Oct  5 15:20:19 2004
-@@ -27,9 +27,10 @@
- GenericName[pt]=Efeitos para o Jack
- GenericName[pt_BR]=Efeitos para o Jack
- GenericName[ru]=Эффекты для Jack
-+GenericName[sk]=Efekty pre Jack
+--- kdemultimedia.orig/kappfinder-data/freqtweak.desktop	2005-02-23 06:06:31.000000000 +0100
++++ kdemultimedia/kappfinder-data/freqtweak.desktop	2005-03-07 15:19:22.000000000 +0100
+@@ -5,7 +5,6 @@
+ Name=FreqTweak
+ Name[sv]=Freqtweak
+ Name[ta]=பர்க்டீவீக்
+-Name[xx]=xxFreqTweakxx
+ GenericName=Effects for Jack
+ GenericName[bg]=Визуални ефекти за Jack
+ GenericName[bs]=Efekti za Jack
+@@ -35,13 +34,12 @@
+ GenericName[sk]=Efekty pre Jack
  GenericName[sl]=Učinki za Jack
  GenericName[sr]=Ефекти за Jack
 -GenericName[sr@Latn]=Ефекти за Jack
@@ -638,68 +604,132 @@ diff -urN -x CVS kdemultimedia.orig/kappfinder-data/freqtweak.desktop kdemultime
  GenericName[sv]=Effekter för Jack
  GenericName[ta]=ஜாக்குக்கான ஒலி அமைப்புகள
  GenericName[tg]=Натиҷаҳо барои Jack
+ GenericName[tr]=Jack için Efektler
+ GenericName[uk]=Ефекти для Jack
+-GenericName[xx]=xxEffects for Jackxx
+ GenericName[zh_CN]=Jack 的效果
+ StartupNotify=true
+ Type=Application
 diff -urN -x CVS kdemultimedia.orig/kappfinder-data/galan.desktop kdemultimedia/kappfinder-data/galan.desktop
---- kdemultimedia.orig/kappfinder-data/galan.desktop	Thu Sep 16 15:49:10 2004
-+++ kdemultimedia/kappfinder-data/galan.desktop	Tue Oct  5 15:20:19 2004
-@@ -24,8 +24,9 @@
- GenericName[pt]=Sintetizador Modular
- GenericName[pt_BR]=Sintetizador Modular
+--- kdemultimedia.orig/kappfinder-data/galan.desktop	2005-02-23 06:06:31.000000000 +0100
++++ kdemultimedia/kappfinder-data/galan.desktop	2005-03-07 15:19:22.000000000 +0100
+@@ -4,7 +4,6 @@
+ Icon=
+ Name=gAlan
+ Name[sv]=Galan
+-Name[xx]=xxgAlanxx
+ GenericName=Modular Synth
+ GenericName[bg]=Модулен синтезатор
+ GenericName[bs]=Modularni sintisajzer
+@@ -30,13 +29,13 @@
+ GenericName[ro]=Sintetizator modular
  GenericName[ru]=Синтезатор
-+GenericName[sk]=Modulárny syntezátor
+ GenericName[sk]=Modulárny syntezátor
++GenericName[sl]=Modularni Synth
  GenericName[sr]=Модуларни синтетизатор
 -GenericName[sr@Latn]=Модуларни синтетизатор
 +GenericName[sr@Latn]=Modularni sintetizator
  GenericName[sv]=Modulär synthesizer
  GenericName[ta]= மாடுலர் சிந்த்
  GenericName[tg]=Ҳамзамонсози Модулӣ
+ GenericName[uk]=Модульний синтезатор
+-GenericName[xx]=xxModular Synthxx
+ GenericName[zh_CN]=模块波表
+ StartupNotify=true
+ Type=Application
 diff -urN -x CVS kdemultimedia.orig/kappfinder-data/hydrogen.desktop kdemultimedia/kappfinder-data/hydrogen.desktop
---- kdemultimedia.orig/kappfinder-data/hydrogen.desktop	Thu Sep 16 15:49:10 2004
-+++ kdemultimedia/kappfinder-data/hydrogen.desktop	Tue Oct  5 15:20:19 2004
-@@ -27,8 +27,9 @@
- GenericName[pl]=Maszyna perkusyjna
- GenericName[pt]=Máquina de Percussão
+--- kdemultimedia.orig/kappfinder-data/hydrogen.desktop	2005-02-23 06:06:31.000000000 +0100
++++ kdemultimedia/kappfinder-data/hydrogen.desktop	2005-03-07 15:19:22.000000000 +0100
+@@ -8,7 +8,6 @@
+ Name[ga]=Hidrigin
+ Name[ta]=ஹைட்ரோஜன்
+ Name[tg]=Гидроген
+-Name[xx]=xxHydrogenxx
+ GenericName=Drum Machine
+ GenericName[bg]=Барабан
+ GenericName[bs]=Ritam mašina
+@@ -33,14 +32,14 @@
  GenericName[pt_BR]=Bateria
-+GenericName[sk]=Nástroj pre bicie
+ GenericName[ro]=Maşină de tobe
+ GenericName[sk]=Nástroj pre bicie
++GenericName[sl]=Ritem mašina
  GenericName[sr]=Бубањ машина
 -GenericName[sr@Latn]=Бубањ машина
 +GenericName[sr@Latn]=Bubanj mašina
  GenericName[sv]=Trummaskin
  GenericName[ta]=டிரம் இயந்திரம்
  GenericName[tg]=Мошинаи Таблак
+ GenericName[tr]=Davul Makinası
+ GenericName[uk]=Барабани
+-GenericName[xx]=xxDrum Machinexx
+ GenericName[zh_CN]=鼓机
+ StartupNotify=true
+ Type=Application
 diff -urN -x CVS kdemultimedia.orig/kappfinder-data/jack-rack.desktop kdemultimedia/kappfinder-data/jack-rack.desktop
---- kdemultimedia.orig/kappfinder-data/jack-rack.desktop	Thu Sep 16 15:49:10 2004
-+++ kdemultimedia/kappfinder-data/jack-rack.desktop	Mon Oct  4 15:25:25 2004
-@@ -22,7 +22,7 @@
+--- kdemultimedia.orig/kappfinder-data/jack-rack.desktop	2005-02-10 05:40:43.000000000 +0100
++++ kdemultimedia/kappfinder-data/jack-rack.desktop	2005-03-07 15:19:22.000000000 +0100
+@@ -6,7 +6,6 @@
+ Name[bn]=জ্যাক-র‍্যাক
+ Name[sv]=Jack-rack
+ Name[ta]=ஜாக்-ராக்
+-Name[xx]=xxJack-Rackxx
+ GenericName=Jack Effectrack
+ GenericName[bg]=Визуални ефекти
+ GenericName[bs]=Jack rack sa efektima
+@@ -22,12 +21,12 @@
+ GenericName[pl]=Zestaw efektów Jacka
  GenericName[pt]=Efeitos Jack
  GenericName[pt_BR]=Faixas de Efeito do Jack
++GenericName[sl]=Večpredstavnostni predvajalnik
  GenericName[sr]=Jack-ова трака са ефектима
 -GenericName[sr@Latn]=Jack-ова трака са ефектима
 +GenericName[sr@Latn]=Jack-ova traka sa efektima
  GenericName[sv]=Effektbord för Jack
  GenericName[ta]=ஜாக் ஒலி அமைப்பு பாதை
+ GenericName[uk]=Доріжка ефектів Jack
+-GenericName[xx]=xxJack Effectrackxx
  StartupNotify=true
+ Type=Application
+ Categories=Music;AudioVideo;
 diff -urN -x CVS kdemultimedia.orig/kappfinder-data/jamin.desktop kdemultimedia/kappfinder-data/jamin.desktop
---- kdemultimedia.orig/kappfinder-data/jamin.desktop	Fri Sep 24 15:46:43 2004
-+++ kdemultimedia/kappfinder-data/jamin.desktop	Tue Oct  5 15:20:19 2004
-@@ -27,8 +27,9 @@
- GenericName[pt]=Ferramenta de masterização do Jack
- GenericName[pt_BR]=Ferramenta de masterização Jack
+--- kdemultimedia.orig/kappfinder-data/jamin.desktop	2005-02-23 06:06:31.000000000 +0100
++++ kdemultimedia/kappfinder-data/jamin.desktop	2005-03-25 08:42:40.000000000 +0100
+@@ -5,7 +5,6 @@
+ Name=Jamin
+ Name[bn]=জ্যামিন
+ Name[ta]=ஜாமின்
+-Name[xx]=xxJaminxx
+ GenericName=Jack Mastering Tool
+ GenericName[bg]=Управление на Jack
+ GenericName[ca]=Eina de codificació Jack
+@@ -13,18 +12,21 @@
+ GenericName[de]=Werkzeug zur Audioendbearbeitung
+ GenericName[es]=Herramienta de masterización de JACK
+ GenericName[et]=Jacki masterdamise rakendus
++GenericName[eu]=Jack erabiltzeko tresna
+ GenericName[fr]=Outil de mastering Jack
+ GenericName[hu]=JACK-kezelő
+ GenericName[is]=Hljóðblöndunartól Jack
+ GenericName[it]=Strumento di masterizzazione Jack
++GenericName[ja]=Jackマスタリングツール
+ GenericName[nl]=Jack Mastering-hulpprogramma
+ GenericName[nn]=Jack-opptaksverktøy
+ GenericName[pl]=Narzędzie kontroli Jacka
+ GenericName[pt]=Ferramenta de Masterização do Jack
+ GenericName[pt_BR]=Ferramenta de masterização Jack 
  GenericName[ru]=Утилита мастеринга Jack
-+GenericName[sk]=Nahrávací nástroj pre Jack
- GenericName[sr]=Jack-ов алат за управљање
--GenericName[sr@Latn]=Jack-ов алат за управљање
-+GenericName[sr@Latn]=Jack-ov alat za upravljanje
++GenericName[sl]=Orodje za Jack Mastering
+ GenericName[sr]=Jack-ов алат за мастеровање
+-GenericName[sr@Latn]=Jack-ов алат за мастеровање
++GenericName[sr@Latn]=Jack-ov alat za masterovanje
  GenericName[sv]=Jack-inspelningsverktyg
- GenericName[ta]=ஜாக் முதன்மை கருவி
- GenericName[tg]=Асбоби устодии Jack
+ GenericName[uk]=Засіб керування Jack
+ GenericName[zh_CN]=Jack 管理工具
 diff -urN -x CVS kdemultimedia.orig/kappfinder-data/meterbridge.desktop kdemultimedia/kappfinder-data/meterbridge.desktop
---- kdemultimedia.orig/kappfinder-data/meterbridge.desktop	Thu Sep 16 15:49:10 2004
-+++ kdemultimedia/kappfinder-data/meterbridge.desktop	Tue Oct  5 15:20:19 2004
-@@ -27,9 +27,10 @@
- GenericName[pt]=Medidor VU de Dois Canais
- GenericName[pt_BR]=Vu-Meter de Canal duplo
- GenericName[ru]=Двухканальный измеритель уровня
-+GenericName[sk]=VU-Meter pre dvojitý kanál
+--- kdemultimedia.orig/kappfinder-data/meterbridge.desktop	2005-02-05 05:16:55.000000000 +0100
++++ kdemultimedia/kappfinder-data/meterbridge.desktop	2005-03-07 15:19:22.000000000 +0100
+@@ -31,19 +31,17 @@
+ GenericName[sk]=VU-Meter pre dvojitý kanál
  GenericName[sl]=Dvokanalni prikazovalnik glasnosti
  GenericName[sr]=Двоканални VU метар
 -GenericName[sr@Latn]=Двоканални VU метар
@@ -707,14 +737,31 @@ diff -urN -x CVS kdemultimedia.orig/kappfinder-data/meterbridge.desktop kdemulti
  GenericName[sv]=VU-mätare med två kanaler
  GenericName[ta]=இரட்டை அலை இடை வெளிப்பகுதி VU-அளவுக்கருவி
  GenericName[tg]=Маҷрои Дучанди VU-Meter
+ GenericName[tr]=İki Kanallı Ses Göstergesi
+ GenericName[uk]=Двоканальний VU-лічильник
+-GenericName[xx]=xxDual Channel VU-Meterxx
+ GenericName[zh_CN]=双声道 VU 衡量器
+ Name=Meterbridge
+ Name[bn]=মিটার-ব্রিজ
+ Name[nl]=Meterbrug
+ Name[ta]=மீட்டர்பிரிட்ஜ்
+-Name[xx]=xxMeterbridgexx
+ X-KDE-StartupNotify=false
+ X-DCOP-ServiceType=Multi
+ Categories=Music;AudioVideo;
 diff -urN -x CVS kdemultimedia.orig/kappfinder-data/mixxx.desktop kdemultimedia/kappfinder-data/mixxx.desktop
---- kdemultimedia.orig/kappfinder-data/mixxx.desktop	Thu Sep 16 15:49:10 2004
-+++ kdemultimedia/kappfinder-data/mixxx.desktop	Tue Oct  5 15:20:19 2004
-@@ -27,9 +27,10 @@
- GenericName[pt]=Leitor e Mistura para DJs
- GenericName[pt_BR]=Reprodutor e Mixer
- GenericName[ru]=DJ-Mixer и проигрыватель
-+GenericName[sk]=DJ-Mixer a prehrávač
+--- kdemultimedia.orig/kappfinder-data/mixxx.desktop	2005-02-05 05:16:55.000000000 +0100
++++ kdemultimedia/kappfinder-data/mixxx.desktop	2005-03-07 15:19:22.000000000 +0100
+@@ -4,7 +4,6 @@
+ Icon=
+ Name=Mixxx
+ Name[ta]=மிக்ஸ்
+-Name[xx]=xxMixxxxx
+ GenericName=DJ-Mixer and Player
+ GenericName[bg]=Диско миксер и плеър
+ GenericName[bs]=DJ-Mixer i Player
+@@ -34,13 +33,12 @@
+ GenericName[sk]=DJ-Mixer a prehrávač
  GenericName[sl]=DJ-mešalnik in predvajalnik
  GenericName[sr]=DJ-Mixer и плејер
 -GenericName[sr@Latn]=DJ-Mixer и плејер
@@ -722,14 +769,25 @@ diff -urN -x CVS kdemultimedia.orig/kappfinder-data/mixxx.desktop kdemultimedia/
  GenericName[sv]=DJ-mixer och ljudspelare
  GenericName[ta]=டிஜே-ஒன்றுசேர்த்து இயக்கும்
  GenericName[tg]=DJ-Омехтакунак ва Бозингар
+ GenericName[tr]=DJ-Karıştırıcı ve Çalıcı
+ GenericName[uk]=Мікшер та програвач DJ
+-GenericName[xx]=xxDJ-Mixer and Playerxx
+ GenericName[zh_CN]=DJ-Mixer 和播放器
+ StartupNotify=true
+ Type=Application
 diff -urN -x CVS kdemultimedia.orig/kappfinder-data/muse.desktop kdemultimedia/kappfinder-data/muse.desktop
---- kdemultimedia.orig/kappfinder-data/muse.desktop	Thu Sep 16 15:49:10 2004
-+++ kdemultimedia/kappfinder-data/muse.desktop	Tue Oct  5 15:20:19 2004
-@@ -26,9 +26,10 @@
- GenericName[pt]=Sequenciador de Música
- GenericName[pt_BR]=Seqüenciador de Músicas
- GenericName[ru]=Звуковой сиквенсор
-+GenericName[sk]=Sekvencér pre hudbu
+--- kdemultimedia.orig/kappfinder-data/muse.desktop	2005-02-05 05:16:55.000000000 +0100
++++ kdemultimedia/kappfinder-data/muse.desktop	2005-03-07 15:19:22.000000000 +0100
+@@ -4,7 +4,6 @@
+ Name=MusE
+ Name[sv]=Muse
+ Name[ta]=Mபயன்
+-Name[xx]=xxMusExx
+ Icon=
+ GenericName=Music Sequencer
+ GenericName[bg]=Музикален синтезатор
+@@ -34,13 +33,12 @@
+ GenericName[sk]=Sekvencér pre hudbu
  GenericName[sl]=Glasbeni sekvenčnik
  GenericName[sr]=Музички секвенцер
 -GenericName[sr@Latn]=Музички секвенцер
@@ -737,14 +795,25 @@ diff -urN -x CVS kdemultimedia.orig/kappfinder-data/muse.desktop kdemultimedia/k
  GenericName[sv]=Musik-sequencer
  GenericName[ta]=இசை வரிசைபடுத்தி
  GenericName[tg]=Тартибгузори Мусиқӣ
+ GenericName[tr]=Müzik Sıralayıcısı
+ GenericName[uk]=Програвач музики
+-GenericName[xx]=xxMusic Sequencerxx
+ GenericName[zh_CN]=音乐音序器
+ Type=Application
+ Categories=Music;AudioVideo;
 diff -urN -x CVS kdemultimedia.orig/kappfinder-data/qjackctl.desktop kdemultimedia/kappfinder-data/qjackctl.desktop
---- kdemultimedia.orig/kappfinder-data/qjackctl.desktop	Thu Sep 16 15:49:10 2004
-+++ kdemultimedia/kappfinder-data/qjackctl.desktop	Tue Oct  5 15:20:19 2004
-@@ -28,9 +28,10 @@
- GenericName[pt]=Controlo do Jack
- GenericName[pt_BR]=Controle para o Jack
- GenericName[ru]=Управление Jack
-+GenericName[sk]=Ovládanie pre Jack
+--- kdemultimedia.orig/kappfinder-data/qjackctl.desktop	2005-02-05 05:16:55.000000000 +0100
++++ kdemultimedia/kappfinder-data/qjackctl.desktop	2005-03-07 15:19:22.000000000 +0100
+@@ -5,7 +5,6 @@
+ Name=QJackCtl
+ Name[sv]=Qjackctl
+ Name[ta]=வரிசை ஜாக் கட்டுப்பாடு
+-Name[xx]=xxQJackCtlxx
+ GenericName=Control for Jack
+ GenericName[bg]=Управление на Jack
+ GenericName[bs]=Kontrola za Jack
+@@ -36,13 +35,12 @@
+ GenericName[sk]=Ovládanie pre Jack
  GenericName[sl]=Nadzor za Jack
  GenericName[sr]=Контрола за Jack
 -GenericName[sr@Latn]=Контрола за Jack
@@ -752,14 +821,25 @@ diff -urN -x CVS kdemultimedia.orig/kappfinder-data/qjackctl.desktop kdemultimed
  GenericName[sv]=Styrning av Jack
  GenericName[ta]=ஜாக்குக்கான கட்டுப்பாடு
  GenericName[tg]=Идора барои Jack
+ GenericName[tr]=Jack için Kontrol
+ GenericName[uk]=Керування для Jack
+-GenericName[xx]=xxControl for Jackxx
+ GenericName[zh_CN]=Jack 的控制
+ Type=Application
+ Categories=Qt;Music;AudioVideo;
 diff -urN -x CVS kdemultimedia.orig/kappfinder-data/qsynth.desktop kdemultimedia/kappfinder-data/qsynth.desktop
---- kdemultimedia.orig/kappfinder-data/qsynth.desktop	Thu Sep 16 15:49:10 2004
-+++ kdemultimedia/kappfinder-data/qsynth.desktop	Tue Oct  5 15:20:19 2004
-@@ -29,9 +29,10 @@
- GenericName[pt]=Controlo do FluidSynth
- GenericName[pt_BR]=Controle para o FluidSynth
- GenericName[ru]=Управление FluidSynth
-+GenericName[sk]=Ovládanie pre FluidSynth
+--- kdemultimedia.orig/kappfinder-data/qsynth.desktop	2005-02-05 05:16:55.000000000 +0100
++++ kdemultimedia/kappfinder-data/qsynth.desktop	2005-03-07 15:19:22.000000000 +0100
+@@ -6,7 +6,6 @@
+ Name[bn]=কিউ-সিন্থ
+ Name[sv]=Qsynth
+ Name[ta]=வரிசை தொகுப்பு
+-Name[xx]=xxQSynthxx
+ GenericName=Control for FluidSynth
+ GenericName[bg]=Контрол на FluidSynth
+ GenericName[bs]=Kontrola za FluidSynth
+@@ -37,13 +36,12 @@
+ GenericName[sk]=Ovládanie pre FluidSynth
  GenericName[sl]=Nadzor za FluidSynth
  GenericName[sr]=Контрола за FluidSynth
 -GenericName[sr@Latn]=Контрола за FluidSynth
@@ -767,14 +847,25 @@ diff -urN -x CVS kdemultimedia.orig/kappfinder-data/qsynth.desktop kdemultimedia
  GenericName[sv]=Styrning av Fluidsynth
  GenericName[ta]=ப்ளூயிட்சின்த்தின் கட்டுப்பாடு
  GenericName[tg]=Идора барои FluidSynth
+ GenericName[tr]=FluidSynth için Kontrol
+ GenericName[uk]=Керування для FluidSynth
+-GenericName[xx]=xxControl for FluidSynthxx
+ GenericName[zh_CN]=FluidSynth 的控制
+ Type=Application
+ Categories=Qt;Music;AudioVideo;
 diff -urN -x CVS kdemultimedia.orig/kappfinder-data/rezound.desktop kdemultimedia/kappfinder-data/rezound.desktop
---- kdemultimedia.orig/kappfinder-data/rezound.desktop	Thu Sep 16 15:49:10 2004
-+++ kdemultimedia/kappfinder-data/rezound.desktop	Tue Oct  5 15:20:19 2004
-@@ -31,9 +31,10 @@
- GenericName[pt]=Editor de Áudio
- GenericName[pt_BR]=Editor de Áudio
- GenericName[ru]=Звуковой редактор
-+GenericName[sk]=Audio editor
+--- kdemultimedia.orig/kappfinder-data/rezound.desktop	2005-02-23 06:06:31.000000000 +0100
++++ kdemultimedia/kappfinder-data/rezound.desktop	2005-03-07 15:19:22.000000000 +0100
+@@ -5,7 +5,6 @@
+ Name=reZound
+ Name[sv]=Rezound
+ Name[ta]=ரிசவுண்டு
+-Name[xx]=xxreZoundxx
+ GenericName=Audio Editor
+ GenericName[bg]=Аудио редактор
+ GenericName[bn]=অডিও সম্পাদক
+@@ -40,14 +39,13 @@
+ GenericName[sk]=Audio editor
  GenericName[sl]=Urejevalnik zvoka
  GenericName[sr]=Аудио уређивач
 -GenericName[sr@Latn]=Аудио уређивач
@@ -782,14 +873,26 @@ diff -urN -x CVS kdemultimedia.orig/kappfinder-data/rezound.desktop kdemultimedi
  GenericName[sv]=Ljudeditor
  GenericName[ta]=கேட்பொலி தொகுப்பாளர்
  GenericName[tg]=Муҳаррири Садо
+ GenericName[tr]=Ses Düzenleyicisi
+ GenericName[uk]=Аудіо редактор
+ GenericName[uz]=Аудио таҳрирчи
+-GenericName[xx]=xxAudio Editorxx
+ GenericName[zh_CN]=音频编辑器
+ StartupNotify=true
+ Type=Application
 diff -urN -x CVS kdemultimedia.orig/kappfinder-data/vkeybd.desktop kdemultimedia/kappfinder-data/vkeybd.desktop
---- kdemultimedia.orig/kappfinder-data/vkeybd.desktop	Thu Sep 16 15:49:10 2004
-+++ kdemultimedia/kappfinder-data/vkeybd.desktop	Tue Oct  5 15:20:19 2004
-@@ -28,9 +28,10 @@
- GenericName[pt]=Teclado MIDI Virtual
- GenericName[pt_BR]=Teclado MIDI Virtual
- GenericName[ru]=Виртуальная клавиатура MIDI
-+GenericName[sk]=Virtuálne klávesy MIDI
+--- kdemultimedia.orig/kappfinder-data/vkeybd.desktop	2005-02-05 05:16:55.000000000 +0100
++++ kdemultimedia/kappfinder-data/vkeybd.desktop	2005-03-07 15:19:22.000000000 +0100
+@@ -5,7 +5,6 @@
+ Name=vkeybd
+ Name[sv]=Vkeybd
+ Name[ta]=வி விசைப்பலகை
+-Name[xx]=xxvkeybdxx
+ GenericName=Virtual MIDI Keyboard
+ GenericName[bg]=Виртуална клавиатура за MIDI
+ GenericName[bs]=Virtualna MIDI klavijatura
+@@ -35,13 +34,12 @@
+ GenericName[sk]=Virtuálne klávesy MIDI
  GenericName[sl]=Navidezna klaviatura MIDI
  GenericName[sr]=Виртуелна MIDI клавијатура
 -GenericName[sr@Latn]=Виртуелна MIDI клавијатура
@@ -797,22 +900,51 @@ diff -urN -x CVS kdemultimedia.orig/kappfinder-data/vkeybd.desktop kdemultimedia
  GenericName[sv]=Virtuellt MIDI-keyboard
  GenericName[ta]=மாய மேசை மிடி விசைப்பலகை
  GenericName[tg]=Забонаки Маҷозии MIDI
+ GenericName[tr]=Görsel MIDI Klavye
+ GenericName[uk]=Віртуальна MIDI клавіатура
+-GenericName[xx]=xxVirtual MIDI Keyboardxx
+ GenericName[zh_CN]=虚拟 MIDI 键盘
+ StartupNotify=false
+ Type=Application
 diff -urN -x CVS kdemultimedia.orig/kappfinder-data/zynaddsubfx.desktop kdemultimedia/kappfinder-data/zynaddsubfx.desktop
---- kdemultimedia.orig/kappfinder-data/zynaddsubfx.desktop	Sat Sep 25 15:40:46 2004
-+++ kdemultimedia/kappfinder-data/zynaddsubfx.desktop	Mon Oct  4 15:25:25 2004
-@@ -26,7 +26,7 @@
+--- kdemultimedia.orig/kappfinder-data/zynaddsubfx.desktop	2005-01-15 05:59:35.000000000 +0100
++++ kdemultimedia/kappfinder-data/zynaddsubfx.desktop	2005-03-07 15:19:22.000000000 +0100
+@@ -5,7 +5,6 @@
+ Name=ZynaddsubFX
+ Name[sv]=Zynaddsubfx
+ Name[ta]=சயண்டன்சப்பெஸ்
+-Name[xx]=xxZynaddsubFXxx
+ GenericName=Soft Synth
+ GenericName[bg]=Софтуерен синтезатор
+ GenericName[bs]=Softverski sintisajzer
+@@ -27,13 +26,13 @@
  GenericName[pt_BR]=Sintetizador de software
+ GenericName[ro]=Sintetizator software
  GenericName[ru]=Программный синтезатор
++GenericName[sl]=Mehki Synth
  GenericName[sr]=Софтверски синтетизатор
 -GenericName[sr@Latn]=Софтверски синтетизатор
 +GenericName[sr@Latn]=Softverski sintetizator
  GenericName[sv]=Programvarusynt
  GenericName[ta]=மென்மையான சிந்த்
- GenericName[tg]=Ҳамзамонсози Нармафзор
+ GenericName[tr]=Yumuşak Sentez
+ GenericName[uk]=Програмний синтезатор
+-GenericName[xx]=xxSoft Synthxx
+ GenericName[zh_CN]=软波表
+ StartupNotify=false
+ Type=Application
 diff -urN -x CVS kdemultimedia.orig/kaudiocreator/eventsrc kdemultimedia/kaudiocreator/eventsrc
---- kdemultimedia.orig/kaudiocreator/eventsrc	Sat Sep 25 15:40:48 2004
-+++ kdemultimedia/kaudiocreator/eventsrc	Tue Oct  5 15:20:21 2004
-@@ -31,7 +31,7 @@
+--- kdemultimedia.orig/kaudiocreator/eventsrc	2005-02-23 06:06:32.000000000 +0100
++++ kdemultimedia/kaudiocreator/eventsrc	2005-03-16 09:33:01.000000000 +0100
+@@ -6,7 +6,6 @@
+ Comment[mk]=КАудиоКреатор
+ Comment[sv]=Kaudiocreator
+ Comment[tg]=KОфарандаи Садо
+-Comment[xx]=xxKAudioCreatorxx
+ 
+ [track ripped]
+ Name=Track Ripped
+@@ -36,13 +35,12 @@
  Name[ru]=Дорожка считана
  Name[sl]=Skladba zajeta
  Name[sr]=Нумера је изгребована
@@ -821,23 +953,34 @@ diff -urN -x CVS kdemultimedia.orig/kaudiocreator/eventsrc kdemultimedia/kaudioc
  Name[sv]=Spår lagrat
  Name[ta]=தடம் பிரிக்கப்பட்டது
  Name[tg]=Шиор Канда шудааст
-@@ -60,9 +60,10 @@
- Comment[pt]=A faixa foi extraída
- Comment[pt_BR]=Finalização da conversão da faixa
- Comment[ru]=Считывание дорожки завершено.
-+Comment[sk]=Dokončené ripovanie stopy
+ Name[tr]=İz Çevirici
+ Name[uk]=Витягнута доріжка
+-Name[xx]=xxTrack Rippedxx
+ Name[zh_CN]=音轨已抓取
+ Comment=Track finished ripping
+ Comment[bg]=Завършване на запис на пътечка
+@@ -73,12 +71,11 @@
+ Comment[sk]=Dokončené ripovanie stopy
  Comment[sl]=Zajemanje skladbe končano
  Comment[sr]=Гребовање нумере је завршено
 -Comment[sr@Latn]=Гребовање нумере је завршено
 +Comment[sr@Latn]=Grebovanje numere je završeno
  Comment[sv]=Spåret har lagrats klart
  Comment[ta]=தடம் பிரித்தலை முடித்தது
- Comment[tg]=Шиор кандашавиро ба охир расонд
-@@ -92,9 +93,10 @@
+ Comment[tr]=İz çevirici sonlandırıcı
+ Comment[uk]=Витягування доріжки закінчено
+-Comment[xx]=xxTrack finished rippingxx
+ Comment[zh_CN]=音轨抓取完成
+ 
+ [cd ripped]
+@@ -106,19 +103,18 @@
+ Name[nn]=CD innlesen
+ Name[pl]=Zgrane CD
  Name[pt]=CD Extraído
- Name[pt_BR]=CD Convertido
+-Name[pt_BR]=CD Extraído
++Name[pt_BR]=CD Convertido
  Name[ru]=CD считан
-+Name[sk]=Ripovanie CD dokončené
+ Name[sk]=Ripovanie CD dokončené
  Name[sl]=CD zajet
  Name[sr]=CD је изгребован
 -Name[sr@Latn]=CD је изгребован
@@ -845,23 +988,29 @@ diff -urN -x CVS kdemultimedia.orig/kaudiocreator/eventsrc kdemultimedia/kaudioc
  Name[sv]=Cd lagrad
  Name[ta]=CD பிரிக்கப்பட்டது
  Name[tg]=Диски Фишурда Канда шудааст
-@@ -123,9 +125,10 @@
- Comment[pt]=O CD foi extraído
- Comment[pt_BR]=Finalização da conversão do CD
- Comment[ru]=Считывание CD завершено.
-+Comment[sk]=Dokončené ripovanie CD
+ Name[tr]=CD Çevirici
+ Name[uk]=Витягнутий музичний КД
+ Name[uz]=Компакт-диск риппер
+-Name[xx]=xxCD Rippedxx
+ Name[zh_CN]=CD 已抓取
+ Comment=CD finished ripping
+ Comment[bg]=Завършване на запис на аудио диск
+@@ -149,12 +145,11 @@
+ Comment[sk]=Dokončené ripovanie CD
  Comment[sl]=Zajemanje CD-ja končano
  Comment[sr]=Гребовање CD-а је завршено
 -Comment[sr@Latn]=Гребовање CD-а је завршено
 +Comment[sr@Latn]=Grebovanje CD-a je završeno
  Comment[sv]=Cd:n har lagrats klart
  Comment[ta]=CD பிரித்தல் முடிந்தது
- Comment[tg]=Диски Фишурда кандашавиро ба охир расонд
-@@ -156,9 +159,10 @@
- Name[pt]=Faixa Codificada
- Name[pt_BR]=Faixa codificada
- Name[ru]=Дорожка преобразована
-+Name[sk]=Ripovanie stopy dokončené
+ Comment[tr]=CD çevirici sonlandırıcı
+ Comment[uk]=Видирання КД завершено
+-Comment[xx]=xxCD finished rippingxx
+ Comment[zh_CN]=CD 抓取完成
+ 
+ [track encoded]
+@@ -188,13 +183,12 @@
+ Name[sk]=Ripovanie stopy dokončené
  Name[sl]=Skladba kodirana
  Name[sr]=Нумера је искодирана
 -Name[sr@Latn]=Нумера је искодирана
@@ -869,23 +1018,28 @@ diff -urN -x CVS kdemultimedia.orig/kaudiocreator/eventsrc kdemultimedia/kaudioc
  Name[sv]=Spår kodat
  Name[ta]=தடம் மறையாக்கப்பட்டது
  Name[tg]=Шиор Рамзӣ кунонида шудааст
-@@ -187,9 +191,10 @@
- Comment[pt]=A faixa foi codificada
- Comment[pt_BR]=Finalização da codificação da faixa
- Comment[ru]=Преобразование дорожки завершено
-+Comment[sk]=Dokončené kódovanie stopy
+ Name[tr]=İz Dönüştürücü
+ Name[uk]=Закодована доріжка
+-Name[xx]=xxTrack Encodedxx
+ Name[zh_CN]=音轨已编码
+ Comment=Track finished encoding
+ Comment[bg]=Завършване на кодиране на пътечка
+@@ -225,12 +219,11 @@
+ Comment[sk]=Dokončené kódovanie stopy
  Comment[sl]=Kodiranje skladbe končano
  Comment[sr]=Кодирање нумере је завршено
 -Comment[sr@Latn]=Кодирање нумере је завршено
 +Comment[sr@Latn]=Kodiranje numere je završeno
  Comment[sv]=Spåret har kodats klart
  Comment[ta]=தடம் மறையாக்கத்தை முடித்தது
- Comment[tg]=Шиор рамзикунониро ба охир расонд
-@@ -220,9 +225,10 @@
- Name[pt]=CD Codificado
- Name[pt_BR]=CD Codificado
- Name[ru]=Преобразование CD завершено
-+Name[sk]=CD zakódované
+ Comment[tr]=İz çözümleyici solandırıcı
+ Comment[uk]=Кодування доріжки закінчене
+-Comment[xx]=xxTrack finished encodingxx
+ Comment[zh_CN]=音轨编码完成
+ 
+ [cd encoded]
+@@ -264,13 +257,12 @@
+ Name[sk]=CD zakódované
  Name[sl]=CD kodiran
  Name[sr]=CD је искодиран
 -Name[sr@Latn]=CD је искодиран
@@ -893,22 +1047,124 @@ diff -urN -x CVS kdemultimedia.orig/kaudiocreator/eventsrc kdemultimedia/kaudioc
  Name[sv]=Cd kodad
  Name[ta]=CD மறையாக்கப்பட்டது
  Name[tg]=Диски Фишурда Рамзӣ кунонида шудааст
-@@ -251,9 +257,10 @@
- Comment[pt]=O CD foi codificado
- Comment[pt_BR]=Finalização da codificação do CD
- Comment[ru]=Преобразование диска завершено
-+Comment[sk]=Dokončené kódovanie CD
+ Name[tr]=CD Dönüştürücü
+ Name[uk]=Закодовано КД
+-Name[xx]=xxCD Encodedxx
+ Name[zh_CN]=CD 已编码
+ Comment=CD finished encoding
+ Comment[bg]=Завършване на кодиране на аудио диск
+@@ -301,12 +293,11 @@
+ Comment[sk]=Dokončené kódovanie CD
  Comment[sl]=Kodiranje CD-ja končano
  Comment[sr]=Кодирање CD-а је завршено
 -Comment[sr@Latn]=Кодирање CD-а је завршено
 +Comment[sr@Latn]=Kodiranje CD-a je završeno
  Comment[sv]=Cd:n har kodats klart
  Comment[ta]=CD மறையாக்கத்தை முடித்தது.
- Comment[tg]=Диски Фишурда рамзикунониро ба охир расонд
+ Comment[tr]=CD çözümleyici sonlandırıldı
+ Comment[uk]=Кодування КД закінчено
+-Comment[xx]=xxCD finished encodingxx
+ Comment[zh_CN]=CD 编码完成
+ default_presentation=17
+ default_sound=KDE_ClockChime.wav
+diff -urN -x CVS kdemultimedia.orig/kaudiocreator/kaudiocreator.desktop kdemultimedia/kaudiocreator/kaudiocreator.desktop
+--- kdemultimedia.orig/kaudiocreator/kaudiocreator.desktop	2005-02-23 06:06:32.000000000 +0100
++++ kdemultimedia/kaudiocreator/kaudiocreator.desktop	2005-03-07 15:19:22.000000000 +0100
+@@ -47,7 +47,6 @@
+ Comment[tr]=Ses dosyası oluşturmak için bir önyüz
+ Comment[uk]=Зовнішній інтерфейс створення аудіо-файлів
+ Comment[ven]=Zwo vhewa phanda uitela nyito ya faela ya zwipfiwa
+-Comment[xx]=xxFrontend for audio file creationxx
+ Comment[zh_CN]=音频文件创建前端
+ Comment[zh_TW]=製作聲音檔案的前端
+ Comment[zu]=Isiqalo sesiphelo sokuzwakalayo kwefayela lokludala
+@@ -63,7 +62,6 @@
+ Name[ta]=கேஒலிஉருவாக்கி
+ Name[tg]=KОфарандаи Садо
+ Name[ven]=MuitiwazwamibvumoyaK
+-Name[xx]=xxKAudioCreatorxx
+ GenericName=CD Ripper
+ GenericName[bg]=Кодиране на аудио дискове
+ GenericName[bn]=সিডি রিপার
+@@ -100,7 +98,6 @@
+ GenericName[tr]=CD Aktarıcı
+ GenericName[uk]=Видирання з КД
+ GenericName[uz]=Компакт-диск риппер
+-GenericName[xx]=xxCD Ripperxx
+ GenericName[zh_CN]=CD 提取器
+ MimeType=
+ Exec=kaudiocreator
+diff -urN -x CVS kdemultimedia.orig/kaudiocreator/tracksimp.cpp kdemultimedia/kaudiocreator/tracksimp.cpp
+--- kdemultimedia.orig/kaudiocreator/tracksimp.cpp	2005-02-22 01:05:55.000000000 +0100
++++ kdemultimedia/kaudiocreator/tracksimp.cpp	2005-03-24 14:13:16.000000000 +0100
+@@ -249,7 +249,7 @@
+  * Helper function (toolbar button) for users.
+  **/ 
+ void TracksImp::performCDDB() {
+-	if (hasCD()) {
++	if (!hasCD()) {
+ 		KMessageBox::sorry(this, i18n("Please insert a disk."),
+ 		       i18n("CDDB Failed"));
+ 		return;
+diff -urN -x CVS kdemultimedia.orig/kfile-plugins/au/kfile_au.desktop kdemultimedia/kfile-plugins/au/kfile_au.desktop
+--- kdemultimedia.orig/kfile-plugins/au/kfile_au.desktop	2005-02-05 05:16:56.000000000 +0100
++++ kdemultimedia/kfile-plugins/au/kfile_au.desktop	2005-03-07 15:19:23.000000000 +0100
+@@ -46,7 +46,6 @@
+ Name[uk]=Інформація по AU
+ Name[uz]=XBM ҳақида маълумот
+ Name[xh]=Ulwazi lwe AU
+-Name[xx]=xxAU Infoxx
+ Name[zh_CN]=AU 信息
+ Name[zh_TW]=AU 資訊
+ Name[zu]=Ulwazi lwe-AU
+diff -urN -x CVS kdemultimedia.orig/kfile-plugins/avi/kfile_avi.desktop kdemultimedia/kfile-plugins/avi/kfile_avi.desktop
+--- kdemultimedia.orig/kfile-plugins/avi/kfile_avi.desktop	2005-02-05 05:16:56.000000000 +0100
++++ kdemultimedia/kfile-plugins/avi/kfile_avi.desktop	2005-03-07 15:19:23.000000000 +0100
+@@ -47,7 +47,6 @@
+ Name[uk]=Інформація по AVI
+ Name[uz]=AVI ҳақида маълумот
+ Name[xh]=Ulwazi lwe AVI
+-Name[xx]=xxAVI Infoxx
+ Name[zh_CN]=AVI 信息
+ Name[zh_TW]=AVI 資訊
+ Name[zu]=Ulwazi lwe-AVI
+diff -urN -x CVS kdemultimedia.orig/kfile-plugins/flac/kfile_flac.desktop kdemultimedia/kfile-plugins/flac/kfile_flac.desktop
+--- kdemultimedia.orig/kfile-plugins/flac/kfile_flac.desktop	2005-02-05 05:16:57.000000000 +0100
++++ kdemultimedia/kfile-plugins/flac/kfile_flac.desktop	2005-03-07 15:19:23.000000000 +0100
+@@ -40,7 +40,6 @@
+ Name[tr]=FLAC Bilgisi
+ Name[uk]=Інформація по FLAC
+ Name[uz]=FLAC ҳақида маълумот
+-Name[xx]=xxFLAC Infoxx
+ Name[zh_CN]=FLAC 信息
+ ServiceTypes=KFilePlugin
+ X-KDE-Library=kfile_flac
+diff -urN -x CVS kdemultimedia.orig/kfile-plugins/m3u/kfile_m3u.desktop kdemultimedia/kfile-plugins/m3u/kfile_m3u.desktop
+--- kdemultimedia.orig/kfile-plugins/m3u/kfile_m3u.desktop	2005-02-05 05:16:57.000000000 +0100
++++ kdemultimedia/kfile-plugins/m3u/kfile_m3u.desktop	2005-03-07 15:19:23.000000000 +0100
+@@ -51,7 +51,6 @@
+ Name[uk]=Інформація списку композицій M3U
+ Name[ven]=Mavhungo a mutevhe wa tshitambi tsha M3U
+ Name[xh]=M3U Ulwazi Loluhlu Lokudlala
+-Name[xx]=xxM3U Playlist Infoxx
+ Name[zh_CN]=M3U 播放列表信息
+ Name[zh_TW]=M3U 播放清單資訊
+ Name[zu]=Ulwazi Lohlu lokudlala lwe-M3U
+diff -urN -x CVS kdemultimedia.orig/kfile-plugins/mp3/kfile_mp3.desktop kdemultimedia/kfile-plugins/mp3/kfile_mp3.desktop
+--- kdemultimedia.orig/kfile-plugins/mp3/kfile_mp3.desktop	2005-02-05 05:16:57.000000000 +0100
++++ kdemultimedia/kfile-plugins/mp3/kfile_mp3.desktop	2005-03-07 15:19:24.000000000 +0100
+@@ -48,7 +48,6 @@
+ Name[uk]=Інформація по MP3
+ Name[uz]=MP3 ҳақида маълумот
+ Name[xh]=MP3 ulwazi
+-Name[xx]=xxMP3 Infoxx
+ Name[zh_CN]=MP3 信息
+ Name[zh_TW]=MP3 資訊
+ Name[zu]=Ulwazi lwe-MP3 
 diff -urN -x CVS kdemultimedia.orig/kfile-plugins/mpc/kfile_mpc.desktop kdemultimedia/kfile-plugins/mpc/kfile_mpc.desktop
---- kdemultimedia.orig/kfile-plugins/mpc/kfile_mpc.desktop	Sat Sep 25 15:40:50 2004
-+++ kdemultimedia/kfile-plugins/mpc/kfile_mpc.desktop	Mon Oct  4 15:25:29 2004
-@@ -23,7 +23,7 @@
+--- kdemultimedia.orig/kfile-plugins/mpc/kfile_mpc.desktop	2005-02-05 05:16:57.000000000 +0100
++++ kdemultimedia/kfile-plugins/mpc/kfile_mpc.desktop	2005-03-07 15:19:24.000000000 +0100
+@@ -27,12 +27,11 @@
  Name[ru]=Сведения о Musepack
  Name[sl]=Informacije o Musepack
  Name[sr]=Информације о Musepack-у
@@ -916,201 +1172,332 @@ diff -urN -x CVS kdemultimedia.orig/kfile-plugins/mpc/kfile_mpc.desktop kdemulti
 +Name[sr@Latn]=Informacije o Musepack-u
  Name[sv]=Musepack-information
  Name[ta]=MP3 தகவல்
- Name[tg]=Ахбороти Musepack
+ Name[tr]=MusePack Bilgisi
+ Name[uk]=Інформація по Musepack
+-Name[xx]=xxMusepack Infoxx
+ Name[zh_CN]=Musepack 信息
+ ServiceTypes=KFilePlugin
+ X-KDE-Library=kfile_mpc
+diff -urN -x CVS kdemultimedia.orig/kfile-plugins/ogg/kfile_ogg.desktop kdemultimedia/kfile-plugins/ogg/kfile_ogg.desktop
+--- kdemultimedia.orig/kfile-plugins/ogg/kfile_ogg.desktop	2005-02-23 06:06:32.000000000 +0100
++++ kdemultimedia/kfile-plugins/ogg/kfile_ogg.desktop	2005-03-07 15:19:24.000000000 +0100
+@@ -48,7 +48,6 @@
+ Name[uk]=Інформація по OGG
+ Name[uz]=OGG ҳақида маълумот
+ Name[xh]=OGG Ulwazi
+-Name[xx]=xxOGG Infoxx
+ Name[zh_CN]=OGG 信息
+ Name[zh_TW]=OGG 資訊
+ Name[zu]=Ulwazi lwe OGG
 diff -urN -x CVS kdemultimedia.orig/kfile-plugins/sid/kfile_sid.desktop kdemultimedia/kfile-plugins/sid/kfile_sid.desktop
---- kdemultimedia.orig/kfile-plugins/sid/kfile_sid.desktop	Thu Sep 16 15:49:14 2004
-+++ kdemultimedia/kfile-plugins/sid/kfile_sid.desktop	Tue Oct  5 15:20:23 2004
-@@ -25,9 +25,10 @@
- Name[pt]=Informação do SID
- Name[pt_BR]=Informação sobre SID
- Name[ru]=Сведения о SID
-+Name[sk]=SID info
+--- kdemultimedia.orig/kfile-plugins/sid/kfile_sid.desktop	2005-02-19 05:27:45.000000000 +0100
++++ kdemultimedia/kfile-plugins/sid/kfile_sid.desktop	2005-03-07 15:19:25.000000000 +0100
+@@ -31,13 +31,12 @@
+ Name[sk]=SID info
  Name[sl]=Informacije o SID
- Name[sr]=SID информације
--Name[sr@Latn]=SID информације
-+Name[sr@Latn]=SID informacije
+ Name[sr]=Информације о SID-у
+-Name[sr@Latn]=Информације о SID-у
++Name[sr@Latn]=Informacije o SID-u
  Name[sv]=SID-information
  Name[ta]=SID தகவல்
  Name[tg]=SID Ахборот
-diff -urN -x CVS kdemultimedia.orig/kioslave/audiocd/kcmaudiocd/kcmaudiocd.cpp kdemultimedia/kioslave/audiocd/kcmaudiocd/kcmaudiocd.cpp
---- kdemultimedia.orig/kioslave/audiocd/kcmaudiocd/kcmaudiocd.cpp	Sat Sep 18 23:47:29 2004
-+++ kdemultimedia/kioslave/audiocd/kcmaudiocd/kcmaudiocd.cpp	Mon Oct  4 00:56:00 2004
-@@ -58,7 +58,7 @@
-   
-     KConfigDialogManager *widget;
-     for ( widget = encoderSettings.first(); widget; widget = encoderSettings.next() ){
--      connect(widget, SIGNAL(widgetModified()), this, SLOT(slotConfigChanged()));
-+      connect(widget, SIGNAL(widgetModified()), this, SLOT(slotModuleChanged()));
-     }
-    
-     //CDDA Options
-@@ -141,6 +141,16 @@
-   }
- }
+ Name[tr]=SID Bilgisi
+ Name[uk]=Інформація по SID
+-Name[xx]=xxSID Infoxx
+ Name[zh_CN]=SID 信息
+ ServiceTypes=KFilePlugin
+ X-KDE-Library=kfile_sid
+diff -urN -x CVS kdemultimedia.orig/kfile-plugins/theora/kfile_theora.desktop kdemultimedia/kfile-plugins/theora/kfile_theora.desktop
+--- kdemultimedia.orig/kfile-plugins/theora/kfile_theora.desktop	2005-02-23 06:06:32.000000000 +0100
++++ kdemultimedia/kfile-plugins/theora/kfile_theora.desktop	2005-03-08 10:28:51.000000000 +0100
+@@ -13,6 +13,7 @@
+ Name[hu]=Theora-jellemzők
+ Name[is]=theora upplýsingar
+ Name[it]=Informazioni su theora
++Name[ja]=theora 情報
+ Name[mk]=theora информации
+ Name[nl]=theora-informatie
+ Name[nn]=theora-info
+@@ -22,12 +23,11 @@
+ Name[ru]=Сведения о theora
+ Name[sl]=Informacije o theora
+ Name[sr]=Информације о theora-и
+-Name[sr@Latn]=Информације о theora-и
++Name[sr@Latn]=Informacije o theora-i
+ Name[sv]=Theora-information
+ Name[ta]= தியோரா தகவல்
+ Name[tr]=theora Bilgisi
+ Name[uk]=Інформація по theora
+-Name[xx]=xxtheora Infoxx
+ Name[zh_CN]=theora 信息
+ ServiceTypes=KFilePlugin
+ X-KDE-Library=kfile_theora
+diff -urN -x CVS kdemultimedia.orig/kfile-plugins/wav/kfile_wav.desktop kdemultimedia/kfile-plugins/wav/kfile_wav.desktop
+--- kdemultimedia.orig/kfile-plugins/wav/kfile_wav.desktop	2005-02-05 05:16:58.000000000 +0100
++++ kdemultimedia/kfile-plugins/wav/kfile_wav.desktop	2005-03-07 15:19:25.000000000 +0100
+@@ -47,7 +47,6 @@
+ Name[uk]=Інформація по WAV
+ Name[uz]=WAV ҳақида маълумот
+ Name[xh]=MAV Ulwazi
+-Name[xx]=xxWAV Infoxx
+ Name[zh_CN]=WAV 信息
+ Name[zh_TW]=WAV 資訊
+ Name[zu]=Ulwazi lwe WAV
+diff -urN -x CVS kdemultimedia.orig/kioslave/audiocd/kcmaudiocd/audiocd.desktop kdemultimedia/kioslave/audiocd/kcmaudiocd/audiocd.desktop
+--- kdemultimedia.orig/kioslave/audiocd/kcmaudiocd/audiocd.desktop	2005-02-07 05:55:22.000000000 +0100
++++ kdemultimedia/kioslave/audiocd/kcmaudiocd/audiocd.desktop	2005-03-07 15:19:25.000000000 +0100
+@@ -54,7 +54,6 @@
+ Name[uz]=Аудио компакт-дисклар
+ Name[ven]=CD ino thetsheleswa
+ Name[xh]=CDs Zokuvakalayo
+-Name[xx]=xxAudio CDsxx
+ Name[zh_CN]=音频 CD
+ Name[zh_TW]=音樂 CD
+ Name[zu]=Ama-CD Okuzwakalayo
+@@ -107,7 +106,6 @@
+ Comment[uk]=Налаштування підлеглого В/В "Audiocd"
+ Comment[ven]=Nzudzanyo Audiocd IO Slave
+ Comment[xh]=Video-DVD IO Slave Uqwalaselo
+-Comment[xx]=xxAudiocd IO Slave Configurationxx
+ Comment[zh_CN]=音频 CD 输入输出从属模块配置
+ Comment[zh_TW]=音樂 CD IO Slave 組態
+ Comment[zu]=Inhlanganiselo ye-Audiocd IO Slave
+@@ -145,7 +143,6 @@
+ Keywords[tg]=Диски Фишурдаи Садо,Диски Фишурда,Ogg,Vorbis,Рамзигузор,CDDA,Bitrate
+ Keywords[tr]=Ses CD,CD,Ogg,Vorbis,Kodlama,CDDA,Bitrate
+ Keywords[uk]=Аудіо-КД,КД,Ogg,Vorbis,кодування,CDDA,частота вибірки
+-Keywords[xx]=xxAudio CD,CD,Ogg,Vorbis,Encoding,CDDA,Bitratexx
+ Keywords[zh_CN]=音频 CD,CD,Ogg,Vorbis,编码,CDDA,Bitrate
  
-+void KAudiocdModule::slotModuleChanged() {
-+	KConfigDialogManager *widget;
-+	for ( widget = encoderSettings.first(); widget; widget = encoderSettings.next() ){
-+		if(widget->hasChanged()){
-+			slotConfigChanged();
-+			break;
-+		}
-+	}
-+}
-+
- void KAudiocdModule::slotConfigChanged() {
- 
-   if (!configChanged) configChanged = true;
-diff -urN -x CVS kdemultimedia.orig/kioslave/audiocd/kcmaudiocd/kcmaudiocd.h kdemultimedia/kioslave/audiocd/kcmaudiocd/kcmaudiocd.h
---- kdemultimedia.orig/kioslave/audiocd/kcmaudiocd/kcmaudiocd.h	Sun Mar 21 04:58:59 2004
-+++ kdemultimedia/kioslave/audiocd/kcmaudiocd/kcmaudiocd.h	Mon Oct  4 00:56:00 2004
-@@ -51,13 +51,12 @@
- 
-   void slotConfigChanged();
-   void slotEcEnable();
--private:
-+  void slotModuleChanged();
- 
-+private:
-   KConfig *config;
-   bool configChanged;
- 
--  int getBitrateIndex(int value);
--
-   QPtrList<KConfigDialogManager> encoderSettings;
- };
- 
-diff -urN -x CVS kdemultimedia.orig/kioslave/audiocd/plugins/lame/Makefile.am kdemultimedia/kioslave/audiocd/plugins/lame/Makefile.am
---- kdemultimedia.orig/kioslave/audiocd/plugins/lame/Makefile.am	Mon Jul 26 15:22:26 2004
-+++ kdemultimedia/kioslave/audiocd/plugins/lame/Makefile.am	Thu Oct  7 14:16:43 2004
-@@ -13,3 +13,6 @@
- pluginsdir = $(kde_datadir)/audiocd/plugins
- 
- METASOURCES = AUTO
-+
-+messages: rc.cpp
-+	$(XGETTEXT) *.cpp -o $(podir)/audiocd_encoder_lame.pot
-diff -urN -x CVS kdemultimedia.orig/kioslave/audiocd/plugins/lame/audiocd_lame_encoder.kcfg kdemultimedia/kioslave/audiocd/plugins/lame/audiocd_lame_encoder.kcfg
---- kdemultimedia.orig/kioslave/audiocd/plugins/lame/audiocd_lame_encoder.kcfg	Sun Mar 21 04:58:59 2004
-+++ kdemultimedia/kioslave/audiocd/plugins/lame/audiocd_lame_encoder.kcfg	Mon Oct  4 00:26:56 2004
-@@ -20,7 +20,7 @@
-     </entry>
-     <entry name="quality" type="Int">
-       <label>Quality</label>
--      <default>2</default>
-+      <default>-2</default>
-     </entry>
- 
- <!-- Options  -->
-diff -urN -x CVS kdemultimedia.orig/kioslave/audiocd/plugins/lame/encoderlame.cpp kdemultimedia/kioslave/audiocd/plugins/lame/encoderlame.cpp
---- kdemultimedia.orig/kioslave/audiocd/plugins/lame/encoderlame.cpp	Thu Sep 16 03:37:07 2004
-+++ kdemultimedia/kioslave/audiocd/plugins/lame/encoderlame.cpp	Mon Oct  4 00:26:56 2004
-@@ -409,7 +409,7 @@
-   Settings *settings = Settings::self();
- 
-   int quality = settings->quality();
--  if (quality < 0 ) quality = 0;
-+  if (quality < 0 ) quality = quality *-1;
-   if (quality > 9) quality = 9;
- 
-   int method = settings->bitrate_constant() ? 0 : 1 ;
-diff -urN -x CVS kdemultimedia.orig/kioslave/audiocd/plugins/lame/encoderlameconfig.ui kdemultimedia/kioslave/audiocd/plugins/lame/encoderlameconfig.ui
---- kdemultimedia.orig/kioslave/audiocd/plugins/lame/encoderlameconfig.ui	Sun Jun 20 00:06:55 2004
-+++ kdemultimedia/kioslave/audiocd/plugins/lame/encoderlameconfig.ui	Mon Oct  4 00:26:56 2004
-@@ -135,7 +135,7 @@
-                                 <cstring>TextLabel3_2</cstring>
-                             </property>
-                             <property name="text">
--                                <string>High</string>
-+                                <string>Low</string>
-                             </property>
-                         </widget>
-                         <widget class="QSlider">
-@@ -143,16 +143,16 @@
-                                 <cstring>kcfg_quality</cstring>
-                             </property>
-                             <property name="minValue">
--                                <number>0</number>
-+                                <number>-9</number>
-                             </property>
-                             <property name="maxValue">
--                                <number>9</number>
-+                                <number>0</number>
-                             </property>
-                             <property name="pageStep">
-                                 <number>1</number>
-                             </property>
-                             <property name="value">
--                                <number>2</number>
-+                                <number>-7</number>
-                             </property>
-                             <property name="orientation">
-                                 <enum>Horizontal</enum>
-@@ -166,7 +166,7 @@
-                                 <cstring>TextLabel2_2</cstring>
-                             </property>
-                             <property name="text">
--                                <string>Low</string>
-+                                <string>High</string>
-                             </property>
-                         </widget>
-                     </hbox>
-diff -urN -x CVS kdemultimedia.orig/kioslave/audiocd/plugins/vorbis/Makefile.am kdemultimedia/kioslave/audiocd/plugins/vorbis/Makefile.am
---- kdemultimedia.orig/kioslave/audiocd/plugins/vorbis/Makefile.am	Mon Jul 26 15:22:26 2004
-+++ kdemultimedia/kioslave/audiocd/plugins/vorbis/Makefile.am	Thu Oct  7 14:16:44 2004
-@@ -13,3 +13,6 @@
- pluginsdir = $(kde_datadir)/audiocd/plugins
- 
- METASOURCES = AUTO
-+
-+messages: rc.cpp
-+	$(XGETTEXT) *.cpp -o $(podir)/audiocd_encoder_vorbis.pot
+ Categories=Qt;KDE;X-KDE-settings-sound;
 diff -urN -x CVS kdemultimedia.orig/kioslave/audiocd/plugins/vorbis/audiocd_vorbis_encoder.kcfg kdemultimedia/kioslave/audiocd/plugins/vorbis/audiocd_vorbis_encoder.kcfg
---- kdemultimedia.orig/kioslave/audiocd/plugins/vorbis/audiocd_vorbis_encoder.kcfg	Sun Mar 21 04:59:00 2004
-+++ kdemultimedia/kioslave/audiocd/plugins/vorbis/audiocd_vorbis_encoder.kcfg	Mon Oct  4 01:26:17 2004
-@@ -29,7 +29,7 @@
-     <entry name="vorbis_quality" type="Int">
+--- kdemultimedia.orig/kioslave/audiocd/plugins/vorbis/audiocd_vorbis_encoder.kcfg	2004-11-20 18:46:00.000000000 +0100
++++ kdemultimedia/kioslave/audiocd/plugins/vorbis/audiocd_vorbis_encoder.kcfg	2005-03-14 22:57:13.000000000 +0100
+@@ -28,7 +28,7 @@
+       <label>Add Comments</label>
+       <default>true</default>
+     </entry>
+-    <entry name="vorbis_quality" type="Int">
++    <entry name="vorbis_quality" type="Double">
        <label>Quality</label>
        <default>3</default>
--      <min>0</min>
-+      <min>-1</min>
-       <max>10</max>
-     </entry>
-    
+       <min>-1</min>
+diff -urN -x CVS kdemultimedia.orig/kmid/kmid.desktop kdemultimedia/kmid/kmid.desktop
+--- kdemultimedia.orig/kmid/kmid.desktop	2005-02-05 05:16:59.000000000 +0100
++++ kdemultimedia/kmid/kmid.desktop	2005-03-07 15:19:26.000000000 +0100
+@@ -7,7 +7,6 @@
+ Name[hi]=के-मिड
+ Name[sv]=Kmid
+ Name[th]=มิดี้ - K
+-Name[xx]=xxKMidxx
+ Name[zh_TW]=KMidi
+ Name[zu]=KMidi
+ MimeType=audio/x-karaoke;audio/x-midi;audio/midi
+@@ -63,7 +62,6 @@
+ GenericName[uz]=Midi/Караоки плейер
+ GenericName[ven]=Midi/Tshitambi tsha Karaoke
+ GenericName[xh]=Umdlali we Midi/Karaoke
+-GenericName[xx]=xxMidi/Karaoke Playerxx
+ GenericName[zh_CN]=Midi/卡拉 OK 播放器
+ GenericName[zh_TW]=Midi/Karaoke 播放器
+ GenericName[zu]=Umdlali weMidi/Karaoke
+diff -urN -x CVS kdemultimedia.orig/kmid/x-karaoke.desktop kdemultimedia/kmid/x-karaoke.desktop
+--- kdemultimedia.orig/kmid/x-karaoke.desktop	2005-02-05 05:16:59.000000000 +0100
++++ kdemultimedia/kmid/x-karaoke.desktop	2005-03-07 15:19:26.000000000 +0100
+@@ -44,5 +44,4 @@
+ Comment[tr]=Karaoke Dosyası
+ Comment[uk]=Файл Karaoke
+ Comment[uz]=Караоки файли
+-Comment[xx]=xxKaraoke Filexx
+ Comment[zh_CN]=卡拉 OK 文件
+diff -urN -x CVS kdemultimedia.orig/kmix/kmixapplet.desktop kdemultimedia/kmix/kmixapplet.desktop
+--- kdemultimedia.orig/kmix/kmixapplet.desktop	2005-02-05 05:16:59.000000000 +0100
++++ kdemultimedia/kmix/kmixapplet.desktop	2005-03-07 15:19:27.000000000 +0100
+@@ -44,7 +44,6 @@
+ Name[uk]=Аудіомікшер
+ Name[uz]=Аудио миксер
+ Name[wa]=Maxheu d' sons
+-Name[xx]=xxSound Mixerxx
+ 
+ Comment=Sound Mixer Applet
+ Comment[af]=Klank Menger Miniprogram
+@@ -98,7 +97,6 @@
+ Comment[uz]=Аудио миксер апплети
+ Comment[ven]=Tshitanganisi tsha mubvumo tsha Applet
+ Comment[wa]=Aplikete maxheu d' sons
+-Comment[xx]=xxSound Mixer Appletxx
+ Comment[zh_CN]=混音器小程序
+ Comment[zh_TW]=音效混音器小程式
+ Comment[zu]=Umxubi Womsindo We applet
+diff -urN -x CVS kdemultimedia.orig/kmix/kmixctrl_restore.desktop kdemultimedia/kmix/kmixctrl_restore.desktop
+--- kdemultimedia.orig/kmix/kmixctrl_restore.desktop	2005-02-23 06:06:33.000000000 +0100
++++ kdemultimedia/kmix/kmixctrl_restore.desktop	2005-03-07 15:19:27.000000000 +0100
+@@ -57,7 +57,6 @@
+ Name[ven]=Vhuedzedzani vhuvha ha tshitanganisi
+ Name[wa]=Rimete come divant les apontiaedjes d maxheu d' sons
+ Name[xh]=Gcina kwakhona izicwangciso zoMxubi
+-Name[xx]=xxRestore Mixer Settingsxx
+ Name[zh_CN]=恢复混音器设置
+ Name[zh_TW]=回復混音器設定
+ Name[zu]=Gcina futhi izilungiso zoMxubi
+diff -urN -x CVS kdemultimedia.orig/kmix/kmix.desktop kdemultimedia/kmix/kmix.desktop
+--- kdemultimedia.orig/kmix/kmix.desktop	2005-02-12 05:26:53.000000000 +0100
++++ kdemultimedia/kmix/kmix.desktop	2005-03-07 15:19:26.000000000 +0100
+@@ -61,7 +61,6 @@
+ GenericName[ven]=Tshitanganisi tsha mubvumo
+ GenericName[wa]=Maxheu d' sons
+ GenericName[xh]=Umxubi WokuvakalayoU
+-GenericName[xx]=xxSound Mixerxx
+ GenericName[zh_CN]=混音器
+ GenericName[zh_TW]=音效混音器
+ GenericName[zu]=Umxubi Womsindo
+@@ -76,7 +75,6 @@
+ Name[ta]=கேமிக்ஸ்
+ Name[tg]=KОмезиш
+ Name[ven]=U tanganisa ha K
+-Name[xx]=xxKMixxx
+ X-KDE-StartupNotify=true
+ X-DCOP-ServiceType=Unique
+ Categories=Qt;KDE;AudioVideo;AudioMixer;
+diff -urN -x CVS kdemultimedia.orig/kmix/mixer_alsa9.cpp kdemultimedia/kmix/mixer_alsa9.cpp
+--- kdemultimedia.orig/kmix/mixer_alsa9.cpp	2005-01-22 11:29:54.000000000 +0100
++++ kdemultimedia/kmix/mixer_alsa9.cpp	2005-03-25 14:03:49.000000000 +0100
+@@ -56,7 +56,6 @@
+ Mixer_ALSA::Mixer_ALSA( int device, int card ) :
+ 	Mixer( device, card ), _handle(0)
+ {
+-	masterChosen = false;
+         _initialUpdate = true;
+ }
+ 
+@@ -69,14 +68,7 @@
+ {
+ 	QString name = snd_mixer_selem_id_get_name( sid );
+ 
+-	if ( name == "Master" )
+-	{
+-		if (!masterChosen) {
+-			m_masterDevice = snd_mixer_selem_id_get_index( sid );
+-			masterChosen = true; // -<- this makes KMix select the *first* master device
+-		}
+-		return MixDevice::VOLUME;
+-	}
++	if ( name == "Master" ) return MixDevice::VOLUME;
+         if ( name == "Capture" ) return MixDevice::RECMONITOR;
+ 	if ( name == "Master Mono" ) return MixDevice::VOLUME;
+         if ( name == "PC Speaker" ) return MixDevice::VOLUME;
+@@ -106,6 +98,7 @@
+ {
+     bool virginOpen = m_mixDevices.isEmpty();
+     bool validDevice = false;
++    bool masterChosen = false;
+     int err;
+ 
+     release();
+@@ -209,6 +202,11 @@
+ 	snd_mixer_selem_get_capture_volume_range( elem, &minVolumeRec , &maxVolumeRec  );
+ 	// New mix device
+ 	MixDevice::ChannelType ct = (MixDevice::ChannelType)identify( sid );
++        if (!masterChosen && ct==MixDevice::VOLUME) {
++           // Determine a nicer MasterVolume
++	   m_masterDevice = mixerIdx;
++           masterChosen = true;
++        }
+ 
+ 	if( virginOpen )
+ 	{
+diff -urN -x CVS kdemultimedia.orig/kmix/mixer_alsa.h kdemultimedia/kmix/mixer_alsa.h
+--- kdemultimedia.orig/kmix/mixer_alsa.h	2005-01-07 01:07:12.000000000 +0100
++++ kdemultimedia/kmix/mixer_alsa.h	2005-03-25 14:03:49.000000000 +0100
+@@ -34,7 +34,6 @@
+ 		typedef QValueList<snd_mixer_selem_id_t *>AlsaMixerSidList;
+ 		AlsaMixerSidList mixer_sid_list;
+ 
+-		bool masterChosen;
+                 bool _initialUpdate;
+ 		snd_mixer_t *_handle;
+ };
 diff -urN -x CVS kdemultimedia.orig/kmix/restore_kmix_volumes.desktop kdemultimedia/kmix/restore_kmix_volumes.desktop
---- kdemultimedia.orig/kmix/restore_kmix_volumes.desktop	Sat Sep 25 15:40:52 2004
-+++ kdemultimedia/kmix/restore_kmix_volumes.desktop	Tue Oct  5 15:20:25 2004
-@@ -27,9 +27,10 @@
- Name[pt]=Repor os Volumes
- Name[pt_BR]=Restaurar volumes do mixer
- Name[ru]=Восстановление настроек микшера
-+Name[sk]=Obnoviť nastavenia mixéra
+--- kdemultimedia.orig/kmix/restore_kmix_volumes.desktop	2005-02-23 06:06:33.000000000 +0100
++++ kdemultimedia/kmix/restore_kmix_volumes.desktop	2005-03-07 15:19:27.000000000 +0100
+@@ -33,11 +33,10 @@
+ Name[sk]=Obnoviť nastavenia mixéra
  Name[sl]=Obnovi nastavitve mešalnika
  Name[sr]=Обнови јачине миксете
 -Name[sr@Latn]=Обнови јачине миксете
 +Name[sr@Latn]=Obnovi jačine miksete
  Name[sv]=Återställ mixervolymer
  Name[ta]=ஒன்றுசேர்க்கும் ஒலியளவு மீட்கவும்
- Name[tg]=Аз Нав Захиракунии Баландиҳои Овозии Омехтакунак
+ Name[tr]=Karıştırıcı Seslerini Yenile
+ Name[uk]=Відновити параметри мікшера
+-Name[xx]=xxRestore Mixer Volumesxx
+ Name[zh_CN]=恢复混音器设置
+ 
 diff -urN -x CVS kdemultimedia.orig/krec/kcm_krec.desktop kdemultimedia/krec/kcm_krec.desktop
---- kdemultimedia.orig/krec/kcm_krec.desktop	Sat Sep 25 15:40:54 2004
-+++ kdemultimedia/krec/kcm_krec.desktop	Tue Oct  5 15:20:27 2004
-@@ -61,9 +61,10 @@
- Comment[pt]=Configuração Global
- Comment[pt_BR]=Configuração global
- Comment[ru]=Общие параметры
-+Comment[sk]=Globálne nastavenie
+--- kdemultimedia.orig/krec/kcm_krec.desktop	2005-02-23 06:06:33.000000000 +0100
++++ kdemultimedia/krec/kcm_krec.desktop	2005-03-07 15:19:27.000000000 +0100
+@@ -40,7 +40,6 @@
+ Name[tr]=Evrensel
+ Name[uk]=Глобальні
+ Name[uz]=Глобал
+-Name[xx]=xxGlobalxx
+ Name[zh_CN]=全局
+ Comment=Global Configuration
+ Comment[bg]=Общи настройки
+@@ -73,11 +72,10 @@
+ Comment[sk]=Globálne nastavenie
  Comment[sl]=Splošne nastavitve
  Comment[sr]=Опште подешавање
 -Comment[sr@Latn]=Опште подешавање
 +Comment[sr@Latn]=Opšte podešavanje
  Comment[sv]=Global inställning
  Comment[ta]=KRec இன் உலகலாவிய வடிவமைப்பு
- Comment[tg]=Танзимотҳои Саросарӣ
+ Comment[tr]=Genel Yapılandırma
+ Comment[uk]=Глобальні налаштування
+-Comment[xx]=xxGlobal Configurationxx
+ Comment[zh_CN]=全局配置
+ 
+diff -urN -x CVS kdemultimedia.orig/krec/kcm_krec_files.desktop kdemultimedia/krec/kcm_krec_files.desktop
+--- kdemultimedia.orig/krec/kcm_krec_files.desktop	2005-02-23 06:06:33.000000000 +0100
++++ kdemultimedia/krec/kcm_krec_files.desktop	2005-03-07 15:19:27.000000000 +0100
+@@ -54,7 +54,6 @@
+ Name[uk]=Нові файли
+ Name[uz]=Янги файллар
+ Name[wa]=Noveas fitchîs
+-Name[xx]=xxNew Filesxx
+ Name[zh_CN]=新建文件
+ Comment=Default Properties for New Files
+ Comment[bg]=Настройки на създаване на нови файлове
+@@ -94,6 +93,5 @@
+ Comment[tr]=Yeni Dosyalar İçin Öntanımlı Özellikler
+ Comment[uk]=Типові властивості для нових файлів
+ Comment[uz]=Янги файлларнинг андоза хоссалари
+-Comment[xx]=xxDefault Properties for New Filesxx
+ Comment[zh_CN]=新文件的默认属性
+ 
+diff -urN -x CVS kdemultimedia.orig/krec/krec.desktop kdemultimedia/krec/krec.desktop
+--- kdemultimedia.orig/krec/krec.desktop	2005-02-05 05:17:00.000000000 +0100
++++ kdemultimedia/krec/krec.desktop	2005-03-07 15:19:27.000000000 +0100
+@@ -52,7 +52,6 @@
+ GenericName[ven]=Tshishumiswa tshau rekhoda
+ GenericName[wa]=Usteye eredjîstresse di sons
+ GenericName[xh]=Isixhobo Sokubhala phantsi
+-GenericName[xx]=xxRecording Toolxx
+ GenericName[zh_CN]=录音工具
+ GenericName[zh_TW]=錄製工具
+ GenericName[zu]=Ithuluzi Lokuqopha
+@@ -61,7 +60,6 @@
+ Name[hi]=के-रेक
+ Name[sv]=Krec
+ Name[tg]=KСабт
+-Name[xx]=xxKRecxx
+ X-KDE-StartupNotify=true
+ X-DCOP-ServiceType=Multi
+ Categories=Qt;KDE;AudioVideo;
 diff -urN -x CVS kdemultimedia.orig/krec/krec_exportitem.desktop kdemultimedia/krec/krec_exportitem.desktop
---- kdemultimedia.orig/krec/krec_exportitem.desktop	Tue Aug 31 09:22:07 2004
-+++ kdemultimedia/krec/krec_exportitem.desktop	Mon Oct  4 15:25:33 2004
-@@ -30,7 +30,7 @@
+--- kdemultimedia.orig/krec/krec_exportitem.desktop	2005-02-23 06:06:33.000000000 +0100
++++ kdemultimedia/krec/krec_exportitem.desktop	2005-03-07 15:19:27.000000000 +0100
+@@ -32,14 +32,13 @@
  Comment[sk]=Exportný modul pre KRec
  Comment[sl]=Izvozni vstavek za KRec
  Comment[sr]=KRec-ов прикључак за извоз
@@ -1119,97 +1506,415 @@ diff -urN -x CVS kdemultimedia.orig/krec/krec_exportitem.desktop kdemultimedia/k
  Comment[sv]=Exportinsticksmodul för Krec
  Comment[ta]=KRecற்கான ஏற்றுமதிசொருகுப்பொருள்
  Comment[tg]=Модули содирот барои KСабт
+ Comment[tr]=KRec için aktarma eklentisi
+ Comment[uk]=Втулок експорту для KRec
+ Comment[uz]=KRec учун экспорт плагини
+-Comment[xx]=xxExportplugin for KRecxx
+ Comment[zh_CN]=KRec 导出插件
+ 
+ [PropertyDef::X-KDE-ExportSuffix]
+diff -urN -x CVS kdemultimedia.orig/krec/krec_exportwave.desktop kdemultimedia/krec/krec_exportwave.desktop
+--- kdemultimedia.orig/krec/krec_exportwave.desktop	2005-02-23 06:06:33.000000000 +0100
++++ kdemultimedia/krec/krec_exportwave.desktop	2005-03-07 15:19:27.000000000 +0100
+@@ -38,7 +38,6 @@
+ Name[tr]=Wave Aktarma
+ Name[uk]=Експорт Wave
+ Name[uz]=Wave экспорт
+-Name[xx]=xxWave-Exportxx
+ Name[zh_CN]=声波-导出
+ X-KDE-Library=libkrecexport_wave
+ ServiceTypes=KRec/exportplugin
+diff -urN -x CVS kdemultimedia.orig/krec/mp3_export/krec_exportmp3.desktop kdemultimedia/krec/mp3_export/krec_exportmp3.desktop
+--- kdemultimedia.orig/krec/mp3_export/krec_exportmp3.desktop	2005-02-23 06:06:33.000000000 +0100
++++ kdemultimedia/krec/mp3_export/krec_exportmp3.desktop	2005-03-08 10:28:51.000000000 +0100
+@@ -3,6 +3,7 @@
+ Type=Service
+ Name=MP3-Export
+ Name[bg]=Експорт в MP3
++Name[br]=Ezporzh MP3
+ Name[ca]=Exportació MP3
+ Name[cs]=Export do MP3
+ Name[cy]=Allforio MP3
+@@ -37,7 +38,6 @@
+ Name[tr]=MP3 Aktarımı
+ Name[uk]=Експорт MP3
+ Name[uz]=MP3 экспорт
+-Name[xx]=xxMP3-Exportxx
+ Name[zh_CN]=MP3-导出
+ X-KDE-Library=libkrecexport_mp3
+ ServiceTypes=KRec/exportplugin
+diff -urN -x CVS kdemultimedia.orig/krec/ogg_export/krec_exportogg.desktop kdemultimedia/krec/ogg_export/krec_exportogg.desktop
+--- kdemultimedia.orig/krec/ogg_export/krec_exportogg.desktop	2005-02-23 06:06:34.000000000 +0100
++++ kdemultimedia/krec/ogg_export/krec_exportogg.desktop	2005-03-07 15:19:28.000000000 +0100
+@@ -38,7 +38,6 @@
+ Name[tr]=OGG Aktarımı
+ Name[uk]=Експорт OGG
+ Name[uz]=OGG экспорт
+-Name[xx]=xxOGG-Exportxx
+ Name[zh_CN]=OGG 导出
+ X-KDE-Library=libkrecexport_ogg
+ ServiceTypes=KRec/exportplugin
+diff -urN -x CVS kdemultimedia.orig/kscd/audiocd_play.desktop kdemultimedia/kscd/audiocd_play.desktop
+--- kdemultimedia.orig/kscd/audiocd_play.desktop	2005-02-23 06:06:34.000000000 +0100
++++ kdemultimedia/kscd/audiocd_play.desktop	2005-03-07 15:19:28.000000000 +0100
+@@ -29,7 +29,6 @@
+ Name[sv]=Spela
+ Name[ta]=தொடங்கு
+ Name[uk]=Пуск
+-Name[xx]=xxPlayxx
+ Name[zh_CN]=播放
+ Exec=kscd -s -caption "%c" %i %m %u
+ 
+diff -urN -x CVS kdemultimedia.orig/kscd/kscd.desktop kdemultimedia/kscd/kscd.desktop
+--- kdemultimedia.orig/kscd/kscd.desktop	2005-02-23 06:06:34.000000000 +0100
++++ kdemultimedia/kscd/kscd.desktop	2005-03-07 15:19:28.000000000 +0100
+@@ -53,7 +53,6 @@
+ GenericName[ven]=Tshitambi tsha CD
+ GenericName[wa]=Djoweu di plakes lazer
+ GenericName[xh]=Umdlali We CD
+-GenericName[xx]=xxCD Playerxx
+ GenericName[zh_CN]=CD 播放器
+ GenericName[zh_TW]=CD 播放器
+ GenericName[zu]=Umdlali we CD
+@@ -65,7 +64,6 @@
+ Name[sv]=Kscd
+ Name[ta]=Ksகுறுந்தகடு
+ Name[tg]=KsДиски Фишурда
+-Name[xx]=xxKsCDxx
+ Exec=kscd -caption "%c" %i %m
+ DocPath=kscd/index.html
+ Icon=kscd
+diff -urN -x CVS kdemultimedia.orig/kscd/xmcd.desktop kdemultimedia/kscd/xmcd.desktop
+--- kdemultimedia.orig/kscd/xmcd.desktop	2005-02-23 06:06:34.000000000 +0100
++++ kdemultimedia/kscd/xmcd.desktop	2005-03-07 15:19:28.000000000 +0100
+@@ -58,7 +58,6 @@
+ Comment[ven]=CD ya databeizi ya faela 
+ Comment[wa]=Båze di dnêyes des plakes
+ Comment[xh]=Ifayile yesiseko sedata ye CD
+-Comment[xx]=xxCD Database Filexx
+ Comment[zh_CN]=CD 数据库文件
+ Comment[zh_TW]=CD 資料庫檔案
+ Comment[zu]=Ifayela yesiseko sedata ye CD
+diff -urN -x CVS kdemultimedia.orig/libkcddb/cddb.h kdemultimedia/libkcddb/cddb.h
+--- kdemultimedia.orig/libkcddb/cddb.h	2005-01-07 19:52:32.000000000 +0100
++++ kdemultimedia/libkcddb/cddb.h	2005-03-16 11:12:40.000000000 +0100
+@@ -64,7 +64,7 @@
+       static QString trackOffsetListToId( const TrackOffsetList & );
+ 
+       static QString clientName() { return QString::fromLatin1("libkcddb"); }
+-      static QString clientVersion() { return QString::fromLatin1("0.20"); }
++      static QString clientVersion() { return QString::fromLatin1("0.21"); }
+ 
+     protected:
+       bool parseGreeting( const QString & );
+diff -urN -x CVS kdemultimedia.orig/libkcddb/cdinfo.cpp kdemultimedia/libkcddb/cdinfo.cpp
+--- kdemultimedia.orig/libkcddb/cdinfo.cpp	2004-09-20 19:33:59.000000000 +0200
++++ kdemultimedia/libkcddb/cdinfo.cpp	2005-03-18 16:42:44.000000000 +0100
+@@ -145,7 +145,7 @@
+       }
+       else if ( "DGENRE" == key )
+       {
+-        genre = value;
++        genre += value;
+       }
+       else if ( "TTITLE" == key.left( 6 ) )
+       {
+@@ -199,8 +199,6 @@
+   {
+     QString s;
+ 
+-    // FIXME Check if any line is > 256 chars, and split it if it is
+-
+     if (revision != 0)
+       s += "# Revision: " + QString::number(revision) + "\n";
+ 
+@@ -212,15 +210,14 @@
+     }
+ 
+     s += "DISCID=" + escape( id ) + "\n";
+-    s += "DTITLE=" + escape( artist ) + " / " + escape( title ) + "\n";
++    s += createLine("DTITLE",escape( artist ) + " / " + escape( title ));
+     s += "DYEAR=" + (0 == year ? QString::null : QString::number(year)) + "\n";
+-    s += "DGENRE=" + escape( genre ) + "\n";
++    s += createLine("DGENRE",escape( genre ));
+ 
+     for (uint i = 0; i < trackInfoList.count(); ++i)
+     {
+-      s += QString( "TTITLE%1=%2\n" )
+-                .arg( i )
+-                .arg( escape( trackInfoList[ i ].title ) );
++      s += createLine(QString("TTITLE%1").arg(i), 
++                escape( trackInfoList[ i ].title));
+     }
+ 
+     QStringList extdLines = QStringList::split('\n', extd, true);
+@@ -228,7 +225,7 @@
+       s += QString("EXTD=\n");
+     else
+       for (QStringList::iterator it = extdLines.begin(); it != extdLines.end(); ++it)
+-        s += "EXTD=" + escape( *it ) + "\n";
++        s += createLine("EXTD",escape( *it ));
+ 
+     for (uint i = 0; i < trackInfoList.count(); ++i)
+     {
+@@ -237,9 +234,8 @@
+         s += QString( "EXTT%1=\n" ).arg( i );
+       else
+         for (QStringList::iterator it = lines.begin(); it != lines.end(); ++it)
+-          s += QString( "EXTT%1=%2\n" )
+-                  .arg( i )
+-                  .arg( escape( *it ) );
++          s += createLine(QString("EXTT%1").arg( i ),
++                  escape( *it ) );
+     }
+ 
+     s +="PLAYORDER=\n";
+@@ -247,6 +243,30 @@
+     return s;
+   }
+ 
++  // Creates a line in the form NAME=VALUE, and splits it into several
++  // lines if the line gets longer than 256 chars
++    QString
++  CDInfo::createLine(const QString& name, const QString& value) const
++  {
++    Q_ASSERT(name.length() < 254);
++
++    uint maxLength = 256 - name.length() - 2;
++
++    QString tmpValue = value;
++
++    QString lines;
++
++    while (tmpValue.length() > maxLength)
++      {
++      lines += QString("%1=%2\n").arg(name,tmpValue.left(maxLength));
++      tmpValue = tmpValue.mid(maxLength);
++    }
++
++    lines += QString("%1=%2\n").arg(name,tmpValue);
++
++    return lines;
++  }
++
+     void
+   CDInfo::checkTrack( uint trackNumber )
+   {
+diff -urN -x CVS kdemultimedia.orig/libkcddb/cdinfo.h kdemultimedia/libkcddb/cdinfo.h
+--- kdemultimedia.orig/libkcddb/cdinfo.h	2005-01-08 12:40:58.000000000 +0100
++++ kdemultimedia/libkcddb/cdinfo.h	2005-03-16 11:12:40.000000000 +0100
+@@ -74,7 +74,7 @@
+       // KDE4: Add a member for "PLAYLIST"
+ 
+     protected:
+-
++      QString createLine(const QString& name, const QString& value) const;
+       void checkTrack( uint );
+       static QString escape( const QString & );
+       static QString unescape( const QString & );
 diff -urN -x CVS kdemultimedia.orig/libkcddb/kcmcddb/libkcddb.desktop kdemultimedia/libkcddb/kcmcddb/libkcddb.desktop
---- kdemultimedia.orig/libkcddb/kcmcddb/libkcddb.desktop	Sun Sep 12 15:56:35 2004
-+++ kdemultimedia/libkcddb/kcmcddb/libkcddb.desktop	Tue Oct  5 15:20:29 2004
-@@ -118,8 +118,9 @@
- Comment[pt]=Configurar a Transferência de CDDB
- Comment[pt_BR]=Configurar a recuperação do CDDB
- Comment[ru]=Настройка CDDB
-+Comment[sk]=Nastavenie CDDB
+--- kdemultimedia.orig/libkcddb/kcmcddb/libkcddb.desktop	2005-02-23 06:06:34.000000000 +0100
++++ kdemultimedia/libkcddb/kcmcddb/libkcddb.desktop	2005-03-07 15:19:29.000000000 +0100
+@@ -48,7 +48,6 @@
+ Name[uk]=Звантаження CDDB
+ Name[ven]=U humbula ha CDDB
+ Name[xh]=CDDB Ukukangela
+-Name[xx]=xxCDDB Retrievalxx
+ Name[zh_CN]=CDDB 查询
+ 
+ GenericName=CDDB Configuration
+@@ -100,7 +99,6 @@
+ GenericName[uz]=CDDB мосламаси
+ GenericName[ven]=Nzudzanyo ya CDDB
+ GenericName[wa]=Apontiaedje di CDDB
+-GenericName[xx]=xxCDDB Configurationxx
+ GenericName[zh_CN]=CDDB 配置
+ GenericName[zu]=Uhlanganiso lwe CDDB
+ 
+@@ -132,19 +130,17 @@
+ Comment[sk]=Nastavenie CDDB
+ Comment[sl]=Nastavi pridobivanje CDDB
  Comment[sr]=Подешавање добављања CDDB-а
 -Comment[sr@Latn]=Подешавање добављања CDDB-а
 +Comment[sr@Latn]=Podešavanje dobavljanja CDDB-a
  Comment[sv]=Anpassa hämtning från CDDB
  Comment[ta]=CDDB மீட்டெடுப்பை உள்ளமை
  Comment[tg]=Танзими Бозёбии CDDB
+ Comment[tr]=CDDB Erişimini Yapılandır
+ Comment[uk]=Налаштування звантаження CDDB
+-Comment[xx]=xxConfigure the CDDB Retrievalxx
+ Comment[zh_CN]=配置 CDDB 获取
+ 
+ Keywords=cddb
+ Keywords[bg]=компактдиск, диск, извличане, информация, песен, база, данни, cddb
+ Keywords[hi]=सीडीडीबी
+ Keywords[ta]=குறுந்தகடு தகவல்தளம்
+-Keywords[xx]=xxcddbxx
+ 
+ Categories=Qt;KDE;X-KDE-settings-sound;
+diff -urN -x CVS kdemultimedia.orig/noatun/modules/dcopiface/dcopiface.plugin kdemultimedia/noatun/modules/dcopiface/dcopiface.plugin
+--- kdemultimedia.orig/noatun/modules/dcopiface/dcopiface.plugin	2005-02-23 06:06:35.000000000 +0100
++++ kdemultimedia/noatun/modules/dcopiface/dcopiface.plugin	2005-03-07 15:19:30.000000000 +0100
+@@ -57,7 +57,6 @@
+ Name[uk]=Інтерфейс DCOP
+ Name[uz]=DCOP интерфейси
+ Name[xh]=Ujongano lwe DCOP
+-Name[xx]=xxDCOP Interfacexx
+ Name[zh_CN]=DCOP 接口
+ Name[zh_TW]=DCOP 介面
+ Name[zu]=Uxhumano olubhekeneyo lwe DCOP
+@@ -114,7 +113,6 @@
+ Comment[uz]=Жараёнлараро боғланиш учун DCOP интерфейси
+ Comment[ven]=DCOP Interface ya tshitenwa tsha vhudavhudzani
+ Comment[xh]=Ujongano lwe DCOP-lothungelwano lwangaphakathi oluqhubekayo
+-Comment[xx]=xxDCOP Interface for Inter-Process Communicationxx
+ Comment[zh_CN]=进程间通信的 DCOP 接口
+ Comment[zh_TW]=程序程式間通訊的 DCOP 介面
+ Comment[zu]=Uxhumano olubhekene lwe DCOP-lothungelwano lwangaphakathi oluqhubekayo
+diff -urN -x CVS kdemultimedia.orig/noatun/modules/excellent/excellent.plugin kdemultimedia/noatun/modules/excellent/excellent.plugin
+--- kdemultimedia.orig/noatun/modules/excellent/excellent.plugin	2005-02-05 05:17:01.000000000 +0100
++++ kdemultimedia/noatun/modules/excellent/excellent.plugin	2005-03-07 15:19:30.000000000 +0100
+@@ -44,7 +44,6 @@
+ Name[uk]=Чудовий
+ Name[ven]=Zwavhudi
+ Name[xh]=Hle kwaphela
+-Name[xx]=xxExcellentxx
+ Name[zh_CN]=优秀的
+ Name[zh_TW]=完美的
+ Name[zu]=Kuhle kakhulu
+@@ -100,7 +99,6 @@
+ Comment[uk]=Дуже звичний, і тому дуже зручний, інтерфейс
+ Comment[ven]=Zwithu zwazwo, zwo ralo zwa vhuthogwa, interface
+ Comment[xh]=Eqheleke kakhulu, neluncedo kakhulu, injongano
+-Comment[xx]=xxA very ordinary, and therefore very usable, interfacexx
+ Comment[zh_CN]=非常普通，因而也非常有用的接口
+ Comment[zh_TW]=非常普通但是很實用的介面
+ Comment[zu]=Ejwayelekile ngakhoke esebenzisekayo,uxhumano olubhekeneyo
 diff -urN -x CVS kdemultimedia.orig/noatun/modules/htmlexport/htmlexport.plugin kdemultimedia/noatun/modules/htmlexport/htmlexport.plugin
---- kdemultimedia.orig/noatun/modules/htmlexport/htmlexport.plugin	Sat Sep 25 15:40:57 2004
-+++ kdemultimedia/noatun/modules/htmlexport/htmlexport.plugin	Tue Oct  5 15:20:32 2004
-@@ -25,9 +25,10 @@
- Name[pt]=Exportação de Listas de Músicas em HTML
- Name[pt_BR]=Exportação de listas de reprodução em HTML
- Name[ru]=Экспорт списка песен в HTML
-+Name[sk]=Export playlistu do HTML
+--- kdemultimedia.orig/noatun/modules/htmlexport/htmlexport.plugin	2005-02-23 06:06:35.000000000 +0100
++++ kdemultimedia/noatun/modules/htmlexport/htmlexport.plugin	2005-03-07 15:19:30.000000000 +0100
+@@ -32,12 +32,11 @@
+ Name[sk]=Export playlistu do HTML
  Name[sl]=Izvoz predvajalnega seznama v HTML
  Name[sr]=Извожење листе нумера у HTML
 -Name[sr@Latn]=Извожење листе нумера у HTML
 +Name[sr@Latn]=Izvoženje liste numera u HTML
  Name[sv]=HTML-spellistexport
  Name[ta]=HTML பாடல் பட்டியல் ஏற்றுமதி
- Name[tg]=HTML Содироти Рӯйхати Бозикуниҳо
+ Name[tr]=HTML Çalma Listesi Dışarı Aktarma
+ Name[uk]=Експорт списку композицій до HTML
+-Name[xx]=xxHTML Playlist Exportxx
+ Name[zh_CN]=HTML 播放列表导出
+ Comment=Creates a HTML file from the playlist
+ Comment[af]=Skep 'n Html lêer van die liedjielys
+@@ -93,7 +92,6 @@
+ Comment[uk]=Створює файл HTML зі списку композицій
+ Comment[ven]=Itani faela ya HTML u bva kha mutevhe wa tshitambi
+ Comment[xh]=Yenza ifayile ye HTML kuluhlu lomdlalo
+-Comment[xx]=xxCreates a HTML file from the playlistxx
+ Comment[zh_CN]=从播放列表创建 HTML 文件
+ Comment[zh_TW]=從播放清單建立 HTML 文件檔案
+ Comment[zu]=Yenza ifayela ye HTML kuluhlu lomdlalo
 diff -urN -x CVS kdemultimedia.orig/noatun/modules/infrared/infrared.plugin kdemultimedia/noatun/modules/infrared/infrared.plugin
---- kdemultimedia.orig/noatun/modules/infrared/infrared.plugin	Sat Sep 25 15:40:58 2004
-+++ kdemultimedia/noatun/modules/infrared/infrared.plugin	Tue Oct  5 15:20:32 2004
-@@ -79,9 +79,10 @@
- Comment[pt]=Controle o Noatun com um comando à distância
- Comment[pt_BR]=Controlar o Noatun com seu controle-remoto infravermelho
- Comment[ru]=Управление Noatun с помощью инфракрасного пульта
-+Comment[sk]=Ovládajte Noatun vaším diaľkovým ovládačom
+--- kdemultimedia.orig/noatun/modules/infrared/infrared.plugin	2005-02-05 05:17:02.000000000 +0100
++++ kdemultimedia/noatun/modules/infrared/infrared.plugin	2005-03-07 15:19:31.000000000 +0100
+@@ -55,7 +55,6 @@
+ Name[uk]=Керуванням інфрачервоним зв'язком
+ Name[ven]=Vhulanguli ha Infrared
+ Name[xh]=Ulawulo olwakhelwe ngezantsi
+-Name[xx]=xxInfrared Controlxx
+ Name[zh_CN]=红外线控制
+ Name[zh_TW]=紅外線控制
+ Name[zu]=Ulawulo Olunokubomvu
+@@ -88,10 +87,9 @@
+ Comment[sk]=Ovládajte Noatun vaším diaľkovým ovládačom
  Comment[sl]=Nadzorujte Noatun z vašim infrardečim daljinskim upravljalcem
  Comment[sr]=Контролишите Noatun вашим ИЦ даљинским управљачем
 -Comment[sr@Latn]=Контролишите Noatun вашим ИЦ даљинским управљачем
 +Comment[sr@Latn]=Kontrolišite Noatun vašim IC daljinskim upravljačem
  Comment[sv]=Styr Noatun med en infraröd fjärrkontroll
  Comment[ta]=உங்கள் IR கருவியால் Noatun இனைக் கட்டுப்படுத்தவும்
- Comment[tg]=Идоракунии Noatun бо IR дурдасти шумо
+ Comment[tr]=Kızılötesi Uzaktan Kumanda ile Noatun'u Kontrol Edin
+ Comment[uk]=Керує Noatun з віддаленого інфрачервоного пульта керування
+-Comment[xx]=xxControl Noatun with your IR remotexx
+ Comment[zh_CN]=使用红外线遥控 Noatun
+diff -urN -x CVS kdemultimedia.orig/noatun/modules/kaiman/kaiman.plugin kdemultimedia/noatun/modules/kaiman/kaiman.plugin
+--- kdemultimedia.orig/noatun/modules/kaiman/kaiman.plugin	2005-02-23 06:06:36.000000000 +0100
++++ kdemultimedia/noatun/modules/kaiman/kaiman.plugin	2005-03-07 15:19:31.000000000 +0100
+@@ -54,7 +54,6 @@
+ Name[uz]=Kaiman интерфейси
+ Name[ven]=Interface ya Kaiman
+ Name[xh]=Ujongano lwe Kaiman
+-Name[xx]=xxKaiman Interfacexx
+ Name[zh_CN]=Kaiman 接口
+ Name[zh_TW]=Kaiman 介面
+ Name[zu]=Uxhumano olubhekeneyo lwe Kaiman
+@@ -109,7 +108,6 @@
+ Comment[uk]=Інтерфейс жупанів GQMpeg, перенесено з Kaiman
+ Comment[ven]=Lukanda lwa GQMpeg lu vhonwaho kha Kaiman
+ Comment[xh]=GQMpeg wojongano nolusu olunezibuko olusuka kwi Kaiman
+-Comment[xx]=xxA GQMpeg skin interface ported from Kaimanxx
+ Comment[zh_CN]=从 Kaiman 移植的 GQMpeg 外观
+ Comment[zh_TW]=從 Kaiman 移植的 GQMpeg 外表
+ Comment[zu]=A GQMpeg uxhumano lwesikhumba ported from Kaiman
 diff -urN -x CVS kdemultimedia.orig/noatun/modules/keyz/keyz.plugin kdemultimedia/noatun/modules/keyz/keyz.plugin
---- kdemultimedia.orig/noatun/modules/keyz/keyz.plugin	Sat Sep 25 15:40:58 2004
-+++ kdemultimedia/noatun/modules/keyz/keyz.plugin	Tue Oct  5 15:20:32 2004
-@@ -41,9 +41,10 @@
- Comment[pt]=Atalhos globais para a maioria das operações
- Comment[pt_BR]=Atalhos globais para a maioria das operações
- Comment[ru]=Привязки клавиш для большинства действий
-+Comment[sk]=Globálne skratky pre väčšinu operácií
+--- kdemultimedia.orig/noatun/modules/keyz/keyz.plugin	2005-02-05 05:17:03.000000000 +0100
++++ kdemultimedia/noatun/modules/keyz/keyz.plugin	2005-03-07 15:19:31.000000000 +0100
+@@ -17,7 +17,6 @@
+ Name[sv]=Tangentisar
+ Name[ta]=விசைகள்
+ Name[xh]=Izitshixo
+-Name[xx]=xxKeyzxx
+ Name[zu]=Izikhiye
+ Comment=Global shortcuts for most operations
+ Comment[bg]=Управление чрез бързи клавиши на повечето операции
+@@ -48,10 +47,9 @@
+ Comment[sk]=Globálne skratky pre väčšinu operácií
  Comment[sl]=Globalne bližnjice za večino operacij
  Comment[sr]=Глобалне пречице за већину операција
 -Comment[sr@Latn]=Глобалне пречице за већину операција
 +Comment[sr@Latn]=Globalne prečice za većinu operacija
  Comment[sv]=Globala snabbtangenter för de flesta operationerna
  Comment[ta]=பல செயலுகளுக்கான உலகளாவிய குறுக்குவழிகள்
- Comment[tg]=Миёнбурҳои саросарӣ барои бештари амалиётҳо
-diff -urN -x CVS kdemultimedia.orig/noatun/modules/kjofol-skin/kjfont.cpp kdemultimedia/noatun/modules/kjofol-skin/kjfont.cpp
---- kdemultimedia.orig/noatun/modules/kjofol-skin/kjfont.cpp	Sun Feb  9 20:26:41 2003
-+++ kdemultimedia/noatun/modules/kjofol-skin/kjfont.cpp	Mon Oct 18 15:40:53 2004
-@@ -223,7 +223,8 @@
- //	kdDebug(66666) << k_funcinfo << "pixmap width=" << region.width() << endl;
- 
- 	// draw every char and add spacing in between these chars if defined
--	for ( unsigned int charPos=0; charPos < string.length(); charPos++ )
-+	unsigned int stringLength(string.length());
-+	for ( unsigned int charPos=0; charPos < stringLength; charPos++ )
- 	{
- 		char c = string[charPos]; // the character to be drawn next
- 
+ Comment[tr]=Pek çok İşlemler için Genel Kısayollar
+ Comment[uk]=Глобальні скорочення для більшості дій
+-Comment[xx]=xxGlobal shortcuts for most operationsxx
+ Comment[zh_CN]=大多数操作的全局快捷键
 diff -urN -x CVS kdemultimedia.orig/noatun/modules/kjofol-skin/kjofolui.plugin kdemultimedia/noatun/modules/kjofol-skin/kjofolui.plugin
---- kdemultimedia.orig/noatun/modules/kjofol-skin/kjofolui.plugin	Sat Sep 25 15:40:58 2004
-+++ kdemultimedia/noatun/modules/kjofol-skin/kjofolui.plugin	Tue Oct  5 15:20:32 2004
-@@ -35,9 +35,10 @@
- Comment[pt]=Leitor de aspectos do K-Jofol
- Comment[pt_BR]=Carregador de aparências (skins) para o K-Jofol
- Comment[ru]=Загрузчик образов K-Jofol
-+Comment[sk]=Nahrávanie tém K-Jofol
+--- kdemultimedia.orig/noatun/modules/kjofol-skin/kjofolui.plugin	2005-02-23 06:06:36.000000000 +0100
++++ kdemultimedia/noatun/modules/kjofol-skin/kjofolui.plugin	2005-03-07 15:19:32.000000000 +0100
+@@ -12,7 +12,6 @@
+ Name[pt_BR]=K-Jofol
+ Name[ta]=K-Jofol
+ Name[xh]=K-Jofol
+-Name[xx]=xxK-Jöfolxx
+ Comment=Skin loader for K-Jofol skins
+ Comment[bg]=Зареждане на теми за K-Jofol
+ Comment[bs]=Skin Loader za K-Jofol skinove
+@@ -42,10 +41,9 @@
+ Comment[sk]=Nahrávanie tém K-Jofol
  Comment[sl]=Nalagalnik za preobleke K-Jofol
  Comment[sr]=Учитавач кошуљица за К-Jofol кошуљице
 -Comment[sr@Latn]=Учитавач кошуљица за К-Jofol кошуљице
 +Comment[sr@Latn]=Učitavač košuljica za K-Jofol košuljice
  Comment[sv]=Skalladdare för K-Jofol-skal
  Comment[ta]=கே-ஜோபோல் அலங்கார அமைப்புக்கான ஏற்றி
- Comment[tg]=Боркунандаи намуд барои намудҳои K-Jofol
+ Comment[tr]=K-Jofol arayüzleri için yükleyici
+ Comment[uk]=Завантажувач жупанів для K-Jofol
+-Comment[xx]=xxSkin loader for K-Jofol skinsxx
+ Comment[zh_CN]=K-Jofol 外观载入器
 diff -urN -x CVS kdemultimedia.orig/noatun/modules/marquis/marquis.plugin kdemultimedia/noatun/modules/marquis/marquis.plugin
---- kdemultimedia.orig/noatun/modules/marquis/marquis.plugin	Tue Aug 24 08:30:44 2004
-+++ kdemultimedia/noatun/modules/marquis/marquis.plugin	Mon Oct  4 15:25:39 2004
-@@ -60,7 +60,7 @@
+--- kdemultimedia.orig/noatun/modules/marquis/marquis.plugin	2005-02-23 06:06:36.000000000 +0100
++++ kdemultimedia/noatun/modules/marquis/marquis.plugin	2005-03-07 15:19:32.000000000 +0100
+@@ -17,7 +17,6 @@
+ Name[mk]=Маркиз
+ Name[mt]=Markis
+ Name[ru]=Маркиз
+-Name[xx]=xxMarquisxx
+ Name[zh_CN]=侯爵
+ Name[zh_TW]=侯爵
+ Comment=Plugin to interact with the Session Manager
+@@ -63,7 +62,7 @@
  Comment[sk]=Modul pre spoluprácu so Správcom sedenia
  Comment[sl]=Vstavek za delovanje z Upravljalnikom sej
  Comment[sr]=Прикључак за интеракцију са менаџером сесије
@@ -1218,126 +1923,227 @@ diff -urN -x CVS kdemultimedia.orig/noatun/modules/marquis/marquis.plugin kdemul
  Comment[sv]=Insticksprogram för att samverka med sessionshanteraren
  Comment[ta]=அமர்வு மேலாளருடன் தொடர்பாடும் சொருகுப்பொருள்
  Comment[tg]=Модул барои амали мутақобила бо Мудири Сеанс
-diff -urN -x CVS kdemultimedia.orig/noatun/modules/splitplaylist/playlist.cpp kdemultimedia/noatun/modules/splitplaylist/playlist.cpp
---- kdemultimedia.orig/noatun/modules/splitplaylist/playlist.cpp	Sun Dec 28 17:33:15 2003
-+++ kdemultimedia/noatun/modules/splitplaylist/playlist.cpp	Mon Oct  4 10:58:40 2004
-@@ -80,7 +80,9 @@
- 	}
- 
- 	if (!nextItem) // don't set a null-item as current item
--		return 0;
-+	{
-+		nextItem = static_cast<SafeListViewItem*>(static_cast<SafeListViewItem*>(getFirst().data()));
-+	}
- 
- 	PlaylistItem oldCurrent = currentItem;
- 	setCurrent(nextItem, play);
+@@ -72,7 +71,6 @@
+ Comment[uk]=Втулок для взаємодії з Менеджером сеансів
+ Comment[ven]=U plaga u itela u tangana na mulanguli wa tshitenwa
+ Comment[xh]=Faka iplagi ukusebenza ngaphakathi noMphathi weNtlanganiso
+-Comment[xx]=xxPlugin to interact with the Session Managerxx
+ Comment[zh_CN]=和会话管理器交互的插件
+ Comment[zh_TW]=用來給工作階段管理程式使用的外掛程式
+ Comment[zu]=Faka iplagi ukusebenza ngaphakathi noMphathi weNhlanganiso
+diff -urN -x CVS kdemultimedia.orig/noatun/modules/metatag/metatag.plugin kdemultimedia/noatun/modules/metatag/metatag.plugin
+--- kdemultimedia.orig/noatun/modules/metatag/metatag.plugin	2005-02-23 06:06:36.000000000 +0100
++++ kdemultimedia/noatun/modules/metatag/metatag.plugin	2005-03-07 15:19:32.000000000 +0100
+@@ -50,7 +50,6 @@
+ Name[tr]=İm Okuyucu
+ Name[uk]=Читач етикеток
+ Name[ven]=Muvhali wa Tag
+-Name[xx]=xxTag Readerxx
+ Name[zh_CN]=标签读取程序
+ Name[zh_TW]=標籤閱讀器
+ Name[zu]=Umfundi we Tag
+@@ -101,7 +100,6 @@
+ Comment[tr]=Medya dosyalarındaki imleri okumak ve yazmak için destek
+ Comment[uk]=Підтримка для читання та запису етикеток в медіа-файлах
+ Comment[ven]=Thikhedzo ya u vhala na u nwala u itela u tag kha dzifaela dza media 
+-Comment[xx]=xxSupport for reading and writing to tags in media filesxx
+ Comment[zh_CN]=支持对媒体文件的标签进行读取和写入
+ Comment[zh_TW]=支援讀取或寫入媒體檔案的標籤
+ Comment[zu]=Inxaso yokufunda nokubhala amathegi kumafayela ezezindaba
+diff -urN -x CVS kdemultimedia.orig/noatun/modules/monoscope/monoscope.plugin kdemultimedia/noatun/modules/monoscope/monoscope.plugin
+--- kdemultimedia.orig/noatun/modules/monoscope/monoscope.plugin	2005-02-23 06:06:37.000000000 +0100
++++ kdemultimedia/noatun/modules/monoscope/monoscope.plugin	2005-03-07 15:19:33.000000000 +0100
+@@ -29,7 +29,6 @@
+ Name[tr]=Monoskop
+ Name[uk]=Моноскоп
+ Name[xh]=Isithuba esinye
+-Name[xx]=xxMonoscopexx
+ Name[zh_CN]=单像管
+ Name[zh_TW]=單像管
+ Name[zu]=Isithuba esinye
+@@ -83,7 +82,6 @@
+ Comment[uk]=Гарний аналізатор хвильових меж
+ Comment[ven]=Mugudi neat waveform scope
+ Comment[xh]=Umhlahleli wesithuba wendlela ecocekileyo yamaza
+-Comment[xx]=xxA neat waveform scope analyzerxx
+ Comment[zh_CN]=一个小巧的波形范围分析器
+ Comment[zh_TW]=一個小巧的波形分析器
+ Comment[zu]=Umhaziyi wesithuba wendlela ecehlanzekile
+diff -urN -x CVS kdemultimedia.orig/noatun/modules/net/net.plugin kdemultimedia/noatun/modules/net/net.plugin
+--- kdemultimedia.orig/noatun/modules/net/net.plugin	2005-02-05 05:17:04.000000000 +0100
++++ kdemultimedia/noatun/modules/net/net.plugin	2005-03-07 15:19:33.000000000 +0100
+@@ -58,7 +58,6 @@
+ Name[uz]=Тармоқ интерфейси
+ Name[ven]=Vhukwamani
+ Name[xh]=Ujongano nomsebenzi womnatha
+-Name[xx]=xxNetwork Interfacexx
+ Name[zh_CN]=网络接口
+ Name[zh_TW]=網路介面
+ Name[zu]=Uxhumano Olubhekene loxhumaniso
+@@ -114,7 +113,6 @@
+ Comment[uk]=Дуже простий інтерфейс мережі для зчитування на порту 7539
+ Comment[ven]=Vhukwamani ho leluwaho hau vhala kha port ya 7539
+ Comment[xh]=Ufundo olulula kakhulu-lujongano lomsebenzi womnatha kuphela kwizibuko 7539
+-Comment[xx]=xxA very simple read-only network interface on port 7539xx
+ Comment[zh_CN]=简单的位于 7539 端口的只读网络接口
+ Comment[zh_TW]=一個位於 7539 Port 上唯讀存取的簡易型網路介面
+ Comment[zu]=Okulula ukufunda kuphela kuxhumaniso olubhekeneyo kwi port 7539
+diff -urN -x CVS kdemultimedia.orig/noatun/modules/noatunui/noatunui.plugin kdemultimedia/noatun/modules/noatunui/noatunui.plugin
+--- kdemultimedia.orig/noatun/modules/noatunui/noatunui.plugin	2005-02-05 05:17:04.000000000 +0100
++++ kdemultimedia/noatun/modules/noatunui/noatunui.plugin	2005-03-07 15:19:33.000000000 +0100
+@@ -44,7 +44,6 @@
+ Name[uk]=Молочний шоколад
+ Name[ven]=Tshokholeiti ya mafhi
+ Name[xh]=Ubisi-ichocolate
+-Name[xx]=xxMilk-Chocolatexx
+ Name[zh_CN]=牛奶巧克力
+ Name[zh_TW]=牛奶巧克力
+ Name[zu]=Ushokolade Wobisi
+@@ -99,7 +98,6 @@
+ Comment[uk]=Простий графічний інтерфейс Noatun
+ Comment[ven]=Noatun yo leluwaho ya GUI
+ Comment[xh]=iGUI elula ye Noatun
+-Comment[xx]=xxNoatun's simple GUIxx
+ Comment[zh_CN]=Noatun 的简单界面
+ Comment[zh_TW]=Noatun 簡單圖形界面
+ Comment[zu]=I GUI elula ye Noatun
+diff -urN -x CVS kdemultimedia.orig/noatun/modules/simple/simple.plugin kdemultimedia/noatun/modules/simple/simple.plugin
+--- kdemultimedia.orig/noatun/modules/simple/simple.plugin	2005-02-05 05:17:04.000000000 +0100
++++ kdemultimedia/noatun/modules/simple/simple.plugin	2005-03-07 15:19:34.000000000 +0100
+@@ -55,7 +55,6 @@
+ Name[ven]=Zwoleluwa
+ Name[wa]=Simpe
+ Name[xh]=Lula
+-Name[xx]=xxSimplexx
+ Name[zh_CN]=简单
+ Name[zh_TW]=簡單
+ Name[zu]=Okulula
+@@ -102,7 +101,6 @@
+ Comment[tr]=Basit arayüz (gömülü video)
+ Comment[uk]=Простий інтерфейс (вмонтоване відео)
+ Comment[xh]=GUI Elula (video ebekiweyo)
+-Comment[xx]=xxSimple GUI (embedded video)xx
+ Comment[zh_CN]=简单图形用户界面 (嵌入式视频)
+ Comment[zh_TW]=簡單圖形使用者界面（嵌入式視訊）
+ Comment[zu]=I-GUI Elula (ividiyo ehlanganiselwe)
+diff -urN -x CVS kdemultimedia.orig/noatun/modules/splitplaylist/splitplaylist.plugin kdemultimedia/noatun/modules/splitplaylist/splitplaylist.plugin
+--- kdemultimedia.orig/noatun/modules/splitplaylist/splitplaylist.plugin	2005-02-23 06:06:37.000000000 +0100
++++ kdemultimedia/noatun/modules/splitplaylist/splitplaylist.plugin	2005-03-07 15:19:34.000000000 +0100
+@@ -53,7 +53,6 @@
+ Name[uk]=Розбитий список композицій
+ Name[ven]=Mutevhe wa tshitambi tshau phadalala
+ Name[xh]=Chaka uluhlu lomdlalo
+-Name[xx]=xxSplit Playlistxx
+ Name[zh_CN]=分割播放列表
+ Name[zh_TW]=分割播放清單
+ Name[zu]=Qhekeza uluhlu lomdlalo
+@@ -94,5 +93,4 @@
+ Comment[tg]=Рӯйхати бозикуниҳои бетартибона номгузошташуда
+ Comment[tr]=Düzensiz başlıklı çalma listesi
+ Comment[uk]=Неохайно підписаний список композицій
+-Comment[xx]=xxThe inaccurately titled playlistxx
+ Comment[zh_CN]=命名不确切的播放列表
+diff -urN -x CVS kdemultimedia.orig/noatun/modules/systray/systray.plugin kdemultimedia/noatun/modules/systray/systray.plugin
+--- kdemultimedia.orig/noatun/modules/systray/systray.plugin	2005-02-05 05:17:05.000000000 +0100
++++ kdemultimedia/noatun/modules/systray/systray.plugin	2005-03-07 15:19:34.000000000 +0100
+@@ -29,7 +29,6 @@
+ Name[tr]=Genç Hickory
+ Name[ven]=Hickory mutuku
+ Name[xh]=iHickory encinane
+-Name[xx]=xxYoung Hickoryxx
+ Name[zh_CN]=小胡桃木
+ Name[zh_TW]=小山胡桃
+ Comment=A system tray interface
+@@ -83,7 +82,6 @@
+ Comment[uk]=Інтерфейс системного лотка
+ Comment[ven]=Thirei ya sisitemu
+ Comment[xh]=Ujongano lwendlela yetreyi
+-Comment[xx]=xxA system tray interfacexx
+ Comment[zh_CN]=一个系统托盘界面
+ Comment[zh_TW]=System Tray的介面
+ Comment[zu]=Isistimu yetreyi loxhumano olubhekene
 diff -urN -x CVS kdemultimedia.orig/noatun/modules/voiceprint/voiceprint.plugin kdemultimedia/noatun/modules/voiceprint/voiceprint.plugin
---- kdemultimedia.orig/noatun/modules/voiceprint/voiceprint.plugin	Sat Sep 25 15:40:58 2004
-+++ kdemultimedia/noatun/modules/voiceprint/voiceprint.plugin	Tue Oct  5 15:20:33 2004
-@@ -62,9 +62,10 @@
- Comment[pt]=Um visualizador do comportamento vocal
- Comment[pt_BR]=Um visualizador voiceprint
- Comment[ru]=визуализация voiceprint
-+Comment[sk]=Vizualizátor voiceprint
+--- kdemultimedia.orig/noatun/modules/voiceprint/voiceprint.plugin	2005-01-15 05:59:38.000000000 +0100
++++ kdemultimedia/noatun/modules/voiceprint/voiceprint.plugin	2005-03-07 15:19:35.000000000 +0100
+@@ -35,7 +35,6 @@
+ Name[tr]=Ses Gözlemcisi
+ Name[ven]=U phirintha ha Mukosi
+ Name[xh]=Ushicilelo lelizwi
+-Name[xx]=xxVoiceprintxx
+ Name[zh_CN]=声波纹
+ Name[zh_TW]=聲波紋
+ Name[zu]=Ushicilelo lelizwi
+@@ -68,10 +67,9 @@
+ Comment[sk]=Vizualizátor voiceprint
  Comment[sl]=Predstavitelj glasovnega zapisa
  Comment[sr]=Визуализатор гласовног отиска
 -Comment[sr@Latn]=Визуализатор гласовног отиска
 +Comment[sr@Latn]=Vizualizator glasovnog otiska
  Comment[sv]=En röstavtrycksvisare
  Comment[ta]=குரல் அச்சு படக்காட்சி
- Comment[tg]=Дидорсози voiceprint
-diff -urN -x CVS kdemultimedia.orig/noatun/modules/winskin/vis/visQueue.cpp kdemultimedia/noatun/modules/winskin/vis/visQueue.cpp
---- kdemultimedia.orig/noatun/modules/winskin/vis/visQueue.cpp	Sun Aug 29 23:12:42 2004
-+++ kdemultimedia/noatun/modules/winskin/vis/visQueue.cpp	Mon Oct 18 22:38:29 2004
-@@ -16,23 +16,24 @@
- 
- VISQueue::VISQueue(int elements) {
-   this->elements=elements;
--  int i;
--  visArrayQueue.reserve(elements);
--  for(i=0;i<elements;i++) {
-+  
-+  visArrayQueue = new std::vector<float>*[elements];
-+  for(int i=0;i<elements;i++)
-+  {
-     visArrayQueue[i]=new std::vector<float>;
-   }
- 
- }
- 
- VISQueue::~VISQueue() {
--  int i;
--
--  for(i=0;i<elements;i++) {
-+  for(int i=0;i<elements;i++) {
-     delete visArrayQueue[i];
-   }
-+  delete [] visArrayQueue;
- }
- 
--std::vector<float>* VISQueue::getElement(int i) {
-+std::vector<float>* VISQueue::getElement(int i)
-+{
-   if ( (i < 0) || (i>elements) ) {
-     return visArrayQueue[0];
-   }
-diff -urN -x CVS kdemultimedia.orig/noatun/modules/winskin/vis/visQueue.h kdemultimedia/noatun/modules/winskin/vis/visQueue.h
---- kdemultimedia.orig/noatun/modules/winskin/vis/visQueue.h	Wed Jul 30 06:21:54 2003
-+++ kdemultimedia/noatun/modules/winskin/vis/visQueue.h	Mon Oct 18 22:38:29 2004
-@@ -20,7 +20,7 @@
- class VISQueue {
- 
-   int elements;
--  std::vector< std::vector<float>* > visArrayQueue; 
-+  std::vector<float> **visArrayQueue; 
- 
-  public:
-   VISQueue(int elements);
-diff -urN -x CVS kdemultimedia.orig/noatun/modules/winskin/waSkin.cpp kdemultimedia/noatun/modules/winskin/waSkin.cpp
---- kdemultimedia.orig/noatun/modules/winskin/waSkin.cpp	Sat Jun 12 23:00:11 2004
-+++ kdemultimedia/noatun/modules/winskin/waSkin.cpp	Mon Oct  4 12:25:52 2004
-@@ -59,8 +59,6 @@
- 
- WaSkin::WaSkin() : QWidget(0, "NoatunWinampSkin"), UserInterface()
- {
--    NOATUNPLUGINC(WaSkin);
--
-     mJumpPressed = false;
-     mVolumePressed = false;
-     mBalancePressed = false;
-diff -urN -x CVS kdemultimedia.orig/noatun/modules/winskin/winSkinConfig.cpp kdemultimedia/noatun/modules/winskin/winSkinConfig.cpp
---- kdemultimedia.orig/noatun/modules/winskin/winSkinConfig.cpp	Mon Feb 24 16:04:53 2003
-+++ kdemultimedia/noatun/modules/winskin/winSkinConfig.cpp	Mon Oct  4 12:25:52 2004
-@@ -18,6 +18,7 @@
- #include <kurlrequesterdlg.h>
- #include <qdir.h>
- 
-+#include "waSkin.h"
- #include "waSkinManager.h"
- #include "winSkinConfig.h"
- 
-@@ -64,7 +65,7 @@
-     config->sync();
- 
-     if (skin_list->currentText() != orig_skin) {
--        mWaSkinManager->loadSkin(skin_list->currentText());
-+        _waskin_instance->loadSkin(skin_list->currentText());
-         orig_skin = skin_list->currentText();
-     }
- }
+ Comment[tr]=Ses Dökümü İzleme Programı
+ Comment[uk]=Візуаліатор voiseprint
+-Comment[xx]=xxA voiceprint visualizerxx
+ Comment[zh_CN]=声波纹视觉效果
+diff -urN -x CVS kdemultimedia.orig/noatun/modules/winskin/mimetypes/interface/x-winamp-skin.desktop kdemultimedia/noatun/modules/winskin/mimetypes/interface/x-winamp-skin.desktop
+--- kdemultimedia.orig/noatun/modules/winskin/mimetypes/interface/x-winamp-skin.desktop	2005-02-23 06:06:38.000000000 +0100
++++ kdemultimedia/noatun/modules/winskin/mimetypes/interface/x-winamp-skin.desktop	2005-03-07 15:19:36.000000000 +0100
+@@ -42,5 +42,4 @@
+ Comment[tg]=Намуди Фишурдашудаи Winamp
+ Comment[tr]=Sıkıştırılmış Winamp Teması
+ Comment[uk]=Стиснутий жупан Winamp
+-Comment[xx]=xxCompressed Winamp Skinxx
+ Comment[zh_CN]=压缩的 Winamp 皮肤
 diff -urN -x CVS kdemultimedia.orig/noatun/modules/winskin/winskin.plugin kdemultimedia/noatun/modules/winskin/winskin.plugin
---- kdemultimedia.orig/noatun/modules/winskin/winskin.plugin	Sat Sep 25 15:40:59 2004
-+++ kdemultimedia/noatun/modules/winskin/winskin.plugin	Tue Oct  5 15:20:33 2004
-@@ -82,9 +82,10 @@
- Comment[pt]=Um leitor de aspectos do WinAmp
- Comment[pt_BR]=Um carregador de aparências (skins) do Winamp
- Comment[ru]=Загрузчик тем Winamp
-+Comment[sk]=Načítavač tém WinAmp
+--- kdemultimedia.orig/noatun/modules/winskin/winskin.plugin	2005-02-23 06:06:37.000000000 +0100
++++ kdemultimedia/noatun/modules/winskin/winskin.plugin	2005-03-07 15:19:35.000000000 +0100
+@@ -57,7 +57,6 @@
+ Name[ven]=Interface ya WinAmp
+ Name[wa]=Eterface po WinAmp
+ Name[xh]=Ujongano lwe WinAmp
+-Name[xx]=xxWinAmp Interfacexx
+ Name[zh_CN]=WinAmp 界面
+ Name[zh_TW]=WinAmp 界面
+ Name[zu]=Uxhumano olubhekeneyo lwe WinAmp
+@@ -91,10 +90,9 @@
+ Comment[sk]=Načítavač tém WinAmp
  Comment[sl]=Nalagalnik preoblek Winamp
  Comment[sr]=Учитавач Winamp-ових кошуљица
 -Comment[sr@Latn]=Учитавач Winamp-ових кошуљица
 +Comment[sr@Latn]=Učitavač Winamp-ovih košuljica
  Comment[sv]=Skalladdare för Winamp
  Comment[ta]=வின் ஆம்ப் அலங்கார அமைப்பு ஏற்றி
- Comment[tg]=Боркунандаи намуди Winamp
+ Comment[tr]=Winamp arayüz yükleyici
+ Comment[uk]=Завантажувач жупанів Winamp
+-Comment[xx]=xxA Winamp skin loaderxx
+ Comment[zh_CN]=Winamp 外观载入器
+diff -urN -x CVS kdemultimedia.orig/noatun/noatun.desktop kdemultimedia/noatun/noatun.desktop
+--- kdemultimedia.orig/noatun/noatun.desktop	2005-02-23 06:06:35.000000000 +0100
++++ kdemultimedia/noatun/noatun.desktop	2005-03-07 15:19:29.000000000 +0100
+@@ -6,7 +6,6 @@
+ Name[is]=Nóatún
+ Name[pa]=ਨੌਟੋਮ
+ Name[ta]=நோடன்
+-Name[xx]=xxNoatunxx
+ Exec=noatun %i %m -caption "%c" %U
+ Icon=noatun
+ Type=Application
+@@ -63,7 +62,6 @@
+ GenericName[uz]=Медиа плейер
+ GenericName[ven]=Tshitambi tsha Media
+ GenericName[xh]=Umdlali we Midia
+-GenericName[xx]=xxMedia Playerxx
+ GenericName[zh_CN]=媒体播放器
+ GenericName[zh_TW]=媒體播放器
+ GenericName[zu]=Umdlali Womculo
+diff -urN -x CVS kdemultimedia.orig/xine_artsplugin/tools/thumbnail/videothumbnail.desktop kdemultimedia/xine_artsplugin/tools/thumbnail/videothumbnail.desktop
+--- kdemultimedia.orig/xine_artsplugin/tools/thumbnail/videothumbnail.desktop	2005-02-23 06:06:38.000000000 +0100
++++ kdemultimedia/xine_artsplugin/tools/thumbnail/videothumbnail.desktop	2005-03-07 15:19:37.000000000 +0100
+@@ -50,7 +50,6 @@
+ Name[ven]=Dzifaela dza Video
+ Name[wa]=Fitchîs videyo
+ Name[xh]=Iifayile ze Video
+-Name[xx]=xxVideo Filesxx
+ Name[zh_CN]=视频文件
+ Name[zh_TW]=視訊檔案
+ Name[zu]=Amafayela Evidiyo
