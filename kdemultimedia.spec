@@ -455,7 +455,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libarts_splay.so
 %{_libdir}/libkmidpart.so
 %{_libdir}/libartsmidi.so
-%{_libdir}/libartsmidi.la
 %{_libdir}/libyafcore.so
 %{_libdir}/libworkman.so
 %{_libdir}/libartsgui.so
