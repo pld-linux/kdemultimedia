@@ -12,7 +12,7 @@
 
 %define         _state          snapshots
 %define         _ver		3.2
-%define         _snap		030602
+%define         _snap		030610
 
 %ifarch	sparc sparcv9 sparc64
 %define		_with_esd	1
@@ -29,8 +29,8 @@ License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
-# Source0-md5:	410ca37dc25eab09cb47488c7b33771d
 Source0:        http://www.kernel.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
+# Source0-md5:	73d816dc07e252e7cff153d4f32140a5
 Patch0:		%{name}-timidity.patch
 #Patch1:	http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-video-20030316.patch
 #Patch2:	http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-streaming-20030317.patch
@@ -355,7 +355,7 @@ mkdir linux
 sed -e 's#slots\[CDROM_MAX_SLOTS\]#kde_slots\[CDROM_MAX_SLOTS\]#g' \
 /usr/include/linux/cdrom.h > linux/cdrom.h
 
-%{__make} -f Makefile.cvs
+#%%{__make} -f Makefile.cvs
 
 %configure \
 	--enable-final \
@@ -434,6 +434,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/*.h
 %{_includedir}/arts/*
 %{_includedir}/libkcddb/*
+%{_includedir}/libwm
 %{_includedir}/mpeglib*
 %{_includedir}/noatun
 
