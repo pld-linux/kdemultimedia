@@ -1,30 +1,43 @@
+%define		_ver		3.0.3
+#define		_sub_ver
+%define		_rel		1
+
+%{?_sub_ver:	%define	_version	%{_ver}%{_sub_ver}}
+%{!?_sub_ver:	%define	_version	%{_ver}}
+%{?_sub_ver:	%define	_release	0.%{_sub_ver}.%{_rel}}
+%{!?_sub_ver:	%define	_release	%{_rel}}
+%{!?_sub_ver:	%define	_ftpdir	stable}
+%{?_sub_ver:	%define	_ftpdir	unstable/kde-%{version}%{_sub_ver}}
+
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
-Version:	2.2.2
-Release:	7
-Epoch:		6
+Version:	%{_version}
+Release:	%{_release}
+Epoch:		7
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
-Source0:	ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
+Source0:	ftp://ftp.kde.org/pub/kde/%{_ftpdir}/%{version}/src/%{name}-%{version}.tar.bz2
+# generated from kde-i18n
+Source1:	kde-i18n-%{name}-%{version}.tar.bz2
 Patch0:		%{name}-kmidi-alsa.patch
-Patch1:		%{name}-fix-num-validator.patch
-Patch2:		%{name}-fix-kmidi-layout.patch
 %ifnarch sparc sparc64
 BuildRequires:	alsa-lib-devel
+BuildRequires:	alsa-driver-devel
 %endif
 BuildRequires:	arts-devel
+BuildRequires:	arts-kde-devel
 BuildRequires:	cdparanoia-III-devel
 BuildRequires:	esound-devel
 BuildRequires:	gettext-devel
 BuildRequires:	gtk+-devel
-BuildRequires:	kdelibs-devel
+BuildRequires:	kdelibs-devel = %{version}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libogg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
-BuildRequires:	libvorbis-devel >= 1:1.0
+BuildRequires:	libvorbis-devel
 BuildRequires:	zlib-devel
 Requires:	kdelibs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -36,25 +49,33 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 KDE multimedia applications. Package includes:
- - KMedia - Media player,
+
+ - Aktion - AVI player
+ - Arts - arts tools
+ - Kaboodle - a media player,
  - KMID - MIDI player,
  - KMIDI - software MIDI player,
  - KMIX - audio mixer,
- - KSCD - CD Player.
-
+ - KSCD - CD player.
+ - Noatun - a media player,
 %description -l pl
 Multimedialne aplikacje KDE. Pakiet zawiera:
- - KMedia - Program do odtwarzania plików d¼wiêkowych,
- - KMID - Odtwarzacz MIDI,
- - KMIDI - Programowy odtwarzacz MIDI,
- - KMIX - Mixer audio,
- - KSCD - Odtwarzacz CD.
+
+ - Aktion - odtwarzacz plików avi
+ - Arts - narzêdzia arts
+ - Kaboodle - odtwarzacz plików multimedialnych
+ - KMID - odtwarzacz MIDI,
+ - KMIDI - programowy odtwarzacz MIDI,
+ - KMIX - mixer audio,
+ - KSCD - odtwarzacz CD.
+ - Noatun - odtwarzacz plików multimedialnych
 
 %package arts
 Summary:	Arts
 Summary(pl):	Arts
 Group:		X11/Applications
 Requires:	kdelibs = %{version}
+Requires:	%{name}-mpeglib = %{version}
 
 %description arts
 Arts.
@@ -138,7 +159,7 @@ Summary:	KDE Media Player
 Summary(pl):	KDE Media Player
 Group:		X11/Applications
 Requires:	kdelibs = %{version}
-Requires:	arts = %{version}
+Requires:	arts >= 1.0.0
 
 %description noatun
 KDE Media Player.
@@ -151,7 +172,7 @@ Summary:	MPEG lib
 Summary(pl):	MPEG lib
 Group:		X11/Applications
 Requires:	kdelibs = %{version}
-Requires:	arts = %{version}
+Requires:	arts >= 1.0.0
 
 %description mpeglib
 MPEG lib.
@@ -163,12 +184,10 @@ MPEG lib.
 Summary:	kdemultimedia - headers
 Summary(pl):	kdemultimedia - pliki nag³ówkowe
 Group:		X11/Development/Libraries
-%ifnarch sparc sparc64
-Requires:	alsa-lib-devel
-%endif
-Requires:	kdelibs-devel = %{version}
 Requires:	kdemultimedia-mpeglib = %{version}
 Requires:	kdemultimedia-noatun = %{version}
+Requires:	kdemultimedia-arts = %{version}
+Requires:	kdelibs-devel = %{version}
 
 %description devel
 kdemultimedia - headers.
@@ -176,21 +195,31 @@ kdemultimedia - headers.
 %description devel -l pl
 kdemultimedia - pliki nag³ówkowe.
 
+%package kaboodle
+Summary:	Media player
+Summary(pl):	Odtwarzacz multimedialny
+Group:		X11/Applications
+
+%description kaboodle
+Media player.
+
+%description kaboodle -l pl
+Odtwarzacz multimedialny.
+
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
 
 %build
 kde_htmldir="%{_htmldir}"; export kde_htmldir
 kde_icondir="%{_pixmapsdir}"; export kde_icondir
 
 CFLAGS="%{rpmcflags} -I%{_includedir}"
-export CXXLAGS
-%configure2_13 \
+
+%configure CPPFLAGS="$CPPFLAGS" \
  	--with-pam="yes" \
-	--enable-audio=oss,alsa
+	--enable-final \
+	--enable-audio=oss#,alsa 
 %{__make}
 
 %install
@@ -201,6 +230,29 @@ rm -rf $RPM_BUILD_ROOT
 ALD=$RPM_BUILD_ROOT%{_applnkdir}
 install -d $ALD/Settings/KDE
 mv $ALD/{Settings/Sound,Settings/KDE}
+
+bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
+
+%find_lang aktion	--with-kde
+%find_lang artsbuilder	--with-kde
+%find_lang artscontrol	--with-kde
+cat artsbuilder.lang > arts.lang
+cat artscontrol.lang >> arts.lang
+%find_lang kaboodle	--with-kde
+%find_lang kcmkmix	--with-kde
+%find_lang kmid		--with-kde
+%find_lang kmidi	--with-kde
+%find_lang kmix		--with-kde
+cat kcmkmix.lang >> kmix.lang
+%find_lang kmyapp	--with-kde
+%find_lang koncd	--with-kde
+%find_lang kscd		--with-kde
+%find_lang noatun	--with-kde
+%find_lang kfile_m3u	--with-kde
+%find_lang kfile_mp3	--with-kde
+%find_lang kfile_ogg	--with-kde
+%find_lang kfile_wav	--with-kde
+cat {kfile_m3u,kfile_mp3,kfile_ogg,kfile_wav,kmyapp,koncd}.lang >> %{name}.lang
 
 %post   mpeglib -p /sbin/ldconfig
 %postun mpeglib -p /sbin/ldconfig
@@ -226,13 +278,25 @@ mv $ALD/{Settings/Sound,Settings/KDE}
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%files -f %{name}.lang
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libdummy.so.*.*.*
+%attr(755,root,root) %{_libdir}/libdummy.la
+%attr(755,root,root) %{_libdir}/kde3/kfile_*.??
+%{_datadir}/services/kfile_*.desktop
+%dir %{_datadir}/apps/kconf_update/
+#%attr(755,root,root) %{_datadir}/apps/kconf_update/*.sh
+#%attr(755,root,root) %{_datadir}/apps/kconf_update/*.pl
+%attr(755,root,root) %{_datadir}/apps/kconf_update/noatun20update
+%{_datadir}/apps/kconf_update/*.upd
+
 %files mpeglib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/mpeglibartsplay
 %attr(755,root,root) %{_bindir}/yaf*
 %attr(755,root,root) %{_libdir}/libyaf*.so.*.*.*
 %attr(755,root,root) %{_libdir}/libarts_mpeglib*.so.*.*.*
-%attr(755,root,root) %{_libdir}/libmpeg-*.so.*.*.*
+%attr(755,root,root) %{_libdir}/libmpeg-*.so
 %{_libdir}/libmpeg.la
 %{_libdir}/libyaf*.la
 %{_libdir}/libarts_mpeglib*.la
@@ -244,10 +308,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/mcop/MP3PlayObject.mcopclass
 %{_libdir}/mcop/CDDAPlayObject.mcopclass
 %{_libdir}/mcop/MPGPlayObject.mcopclass
-#%{_includedir}/mpeglib_artsplug
-#%{_includedir}/mpeglib
 
-%files aktion
+%files aktion -f aktion.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/aktion*
 %attr(755,root,root) %{_libdir}/libaktion.so.*.*.*
@@ -257,54 +319,47 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/config/aktionrc
 %{_pixmapsdir}/*/*/apps/aktion.png
 
-%files arts
+%files arts -f arts.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/arts*
 %attr(755,root,root) %{_bindir}/midisend
-%attr(755,root,root) %{_bindir}/so_play
-#%attr(755,root,root) %{_libdir}/libartsbuilder.so.*.*.*
-#%attr(755,root,root) %{_libdir}/libartsmodules.so.*.*.*
-#%attr(755,root,root) %{_libdir}/libarts_splay.so.*.*.*
+%attr(755,root,root) %{_libdir}/libaudiofilearts.??
 %attr(755,root,root) %{_libdir}/libarts[!_]*.so.*.*.*
 %attr(755,root,root) %{_libdir}/libarts[!_]*.la
 %attr(755,root,root) %{_libdir}/libarts_[!m]*.so.*.*.*
 %attr(755,root,root) %{_libdir}/libarts_[!m]*.la
 %attr(755,root,root) %{_libdir}/libarts[!_mgb]*.so
+%{_libdir}/mcop/audiofilearts*
 %{_libdir}/mcop/arts*
 %{_libdir}/mcop/Splay*
 %{_libdir}/mcop/Arts/*
 %{_libdir}/mcop/ExtraStereo.mcopclass
 %{_libdir}/mcop/ExtraStereoGuiFactory.mcopclass
-%{_libdir}/arts*.mcop*
 %{_libdir}/mcop/VoiceRemoval.mcopclass
 %{_libdir}/mcop/RawWriter.mcopclass
-#%{_libdir}/libartsbuilder.so
-#%{_libdir}/libartsbuilder.la
-#%{_libdir}/libartsmodules.so
-#%{_libdir}/libartsmodules.la
 %{_applnkdir}/Multimedia/arts*.desktop
 %{_pixmapsdir}/*/*/apps/arts*
+%{_pixmapsdir}/*/*/actions/artsbuilder*
 %{_datadir}/apps/artsbuilder
 %{_datadir}/apps/artscontrol
-%{_htmldir}/en/artsbuilder
 %{_datadir}/mimelnk/application/*arts*
 
-%files noatun
+%files noatun -f noatun.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/noatun*
 %attr(755,root,root) %{_libdir}/libnoatun*.so.*.*.*
 %attr(755,root,root) %{_libdir}/libnoatun[!.c]*so
-%attr(755,root,root) %{_libdir}/libkjofolui*
-%attr(755,root,root) %{_libdir}/libsplitplaylist*
-%attr(755,root,root) %{_libdir}/libliszt.*
+%attr(755,root,root) %{_libdir}/libwinskinvis.??
 %{_libdir}/libnoatun*.la
+%attr(755,root,root) %{_libdir}/kde3/noatun*.??
 %{_libdir}/mcop/Noatun
 %{_libdir}/mcop/noatun*
+%{_libdir}/mcop/winskinvis*
 %{_applnkdir}/Multimedia/noatun.desktop
-%{_datadir}/apps/noatun
+%{_datadir}/apps/noatun*
 %{_pixmapsdir}/*/*/apps/noatun.png
 
-%files kmid
+%files kmid -f kmid.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kmid
 %attr(755,root,root) %{_libdir}/libkmidpart.so.*.*.*
@@ -312,11 +367,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_applnkdir}/Multimedia/kmid.desktop
 %{_datadir}/apps/kmid
 %{_datadir}/mimelnk/audio/x-karaoke.desktop
-%{_htmldir}/en/kmid
 %{_datadir}/servicetypes/*midi*.desktop
 %{_pixmapsdir}/*/*/apps/kmid.png
 
-%files kmidi
+%files kmidi -f kmidi.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kmidi
 %attr(755,root,root) %{_bindir}/sf2cfg
@@ -324,26 +378,25 @@ rm -rf $RPM_BUILD_ROOT
 %{_applnkdir}/Multimedia/kmidi.desktop
 %{_applnkdir}/Multimedia/timidity.desktop
 %{_datadir}/apps/kmidi
-%{_htmldir}/en/kmidi
 %{_pixmapsdir}/*/*/apps/kmidi.png
 
-%files kmix
+%files kmix -f kmix.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kmix
 %attr(755,root,root) %{_bindir}/kmixctrl
+%attr(755,root,root) %{_libdir}/kmix.??
 %attr(755,root,root) %{_libdir}/kmixctrl.*
-%attr(755,root,root) %{_libdir}/libkcm_kmix.*
-%attr(755,root,root) %{_libdir}/libkmixapplet.so.*.*.*
-%{_libdir}/libkmixapplet.la
+%attr(755,root,root) %{_libdir}/kde3/kcm_kmix.??
+%attr(755,root,root) %{_libdir}/kde3/kmix_panelapplet.so.*.*.*
+%attr(755,root,root) %{_libdir}/kde3/kmix_panelapplet.la
 %{_applnkdir}/Multimedia/kmix.desktop
-%{_applnkdir}/Settings/KDE/Sound/kmix.desktop
+%{_applnkdir}/Settings/KDE/Sound/kmixcfg.desktop
 %{_datadir}/services/kmixctrl_restore.desktop
 %{_datadir}/apps/kmix
 %{_datadir}/apps/kicker/applets/*
-%{_htmldir}/en/kmix
 %{_pixmapsdir}/*/*/apps/kmix.png
 
-%files kscd
+%files kscd -f kscd.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kscd
 %attr(755,root,root) %{_bindir}/workman2cddb.pl
@@ -352,13 +405,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_applnkdir}/Multimedia/kscd.desktop
 %{_datadir}/apps/kscd
 %{_datadir}/mimelnk/text/xmcd.desktop
-%{_htmldir}/en/kscd
 %{_pixmapsdir}/*/*/apps/kscd.png
 
 %files devel
 %defattr(644,root,root,755)
-%{_includedir}/[!a]*
-%{_includedir}/arts/*
+%{_includedir}/*
 %{_libdir}/libarts_mpeglib.so
 %{_libdir}/libnoatuncontrols.so
 %{_libdir}/libartsmidi_idl.so
@@ -368,7 +419,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libartsbuilder.so
 %{_libdir}/libyafxplayer.so
 %{_libdir}/libmpeg.so
-%{_libdir}/libkmixapplet.so
 %{_libdir}/libarts_splay.so
 %{_libdir}/libkmidpart.so
 %{_libdir}/libartsmidi.so
@@ -377,3 +427,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libartsgui.so
 %{_libdir}/libnoatun.so
 %{_libdir}/libaktion.so
+%{_libdir}/libdummy.so
+%{_libdir}/kde3/kmix_panelapplet.so
+
+%files kaboodle -f kaboodle.lang
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/kaboodle
+%attr(755,root,root) %{_libdir}/kaboodle.??
+%attr(755,root,root) %{_libdir}/libkaboodlepart.??
+%{_datadir}/apps/kaboodle
+%{_datadir}/services/kaboodle_component.desktop
+%{_applnkdir}/Multimedia/kaboodle.desktop
+%{_pixmapsdir}/*/*/apps/kaboodle.*
