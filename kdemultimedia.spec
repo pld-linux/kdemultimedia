@@ -2,18 +2,21 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	2.2.2
-Release:	3
+Release:	4
 Epoch:		6
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
 Group(de):	X11/Applikationen
 Group(es):	X11/Aplicaciones
+Group(fr):	X11/Applications
 Group(pl):	X11/Aplikacje
 Group(pt_BR):	X11/Aplicações
 Group(pt):	X11/Aplicações
 Source0:	ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
 Patch0:		%{name}-kmidi-alsa.patch
+Patch2:		%{name}-fix-num-validator.patch
+Patch2:		%{name}-fix-kmidi-layout.patch
 %ifnarch sparc sparc64
 BuildRequires:	alsa-lib-devel
 %endif
@@ -59,6 +62,7 @@ Summary(pl):	Arts
 Group:		X11/Applications
 Group(de):	X11/Applikationen
 Group(es):	X11/Aplicaciones
+Group(fr):	X11/Applications
 Group(pl):	X11/Aplikacje
 Group(pt_BR):	X11/Aplicações
 Group(pt):	X11/Aplicações
@@ -76,6 +80,7 @@ Summary(pl):	Odtwarzacz multimedialny dla KDE
 Group:		X11/Applications
 Group(de):	X11/Applikationen
 Group(es):	X11/Aplicaciones
+Group(fr):	X11/Applications
 Group(pl):	X11/Aplikacje
 Group(pt_BR):	X11/Aplicações
 Group(pt):	X11/Aplicações
@@ -96,6 +101,7 @@ Summary(pl):	Odtwarzacz MIDI dla KDE
 Group:		X11/Applications
 Group(de):	X11/Applikationen
 Group(es):	X11/Aplicaciones
+Group(fr):	X11/Applications
 Group(pl):	X11/Aplikacje
 Group(pt_BR):	X11/Aplicações
 Group(pt):	X11/Aplicações
@@ -115,6 +121,7 @@ Summary(pl):	Programowy odtwarzacz MIDI dla KDE
 Group:		X11/Applications
 Group(de):	X11/Applikationen
 Group(es):	X11/Aplicaciones
+Group(fr):	X11/Applications
 Group(pl):	X11/Aplikacje
 Group(pt_BR):	X11/Aplicações
 Group(pt):	X11/Aplicações
@@ -134,6 +141,7 @@ Summary(pl):	Mixer audio dla KDE
 Group:		X11/Applications
 Group(de):	X11/Applikationen
 Group(es):	X11/Aplicaciones
+Group(fr):	X11/Applications
 Group(pl):	X11/Aplikacje
 Group(pt_BR):	X11/Aplicações
 Group(pt):	X11/Aplicações
@@ -151,6 +159,7 @@ Summary(pl):	Odtwarzacz CD dla KDE
 Group:		X11/Applications
 Group(de):	X11/Applikationen
 Group(es):	X11/Aplicaciones
+Group(fr):	X11/Applications
 Group(pl):	X11/Aplikacje
 Group(pt_BR):	X11/Aplicações
 Group(pt):	X11/Aplicações
@@ -172,6 +181,7 @@ Summary(pl):	KDE Media Player
 Group:		X11/Applications
 Group(de):	X11/Applikationen
 Group(es):	X11/Aplicaciones
+Group(fr):	X11/Applications
 Group(pl):	X11/Aplikacje
 Group(pt_BR):	X11/Aplicações
 Group(pt):	X11/Aplicações
@@ -190,6 +200,7 @@ Summary(pl):	MPEG lib
 Group:		X11/Applications
 Group(de):	X11/Applikationen
 Group(es):	X11/Aplicaciones
+Group(fr):	X11/Applications
 Group(pl):	X11/Aplikacje
 Group(pt_BR):	X11/Aplicações
 Group(pt):	X11/Aplicações
@@ -206,7 +217,7 @@ MPEG lib.
 Summary:	kdemultimedia - headers
 Summary(pl):	kdemultimedia - pliki nag³ówkowe
 Group:		X11/Development/Libraries
-Group(de):	X11/Entwicklung/Libraries
+Group(de):	X11/Entwicklung/Bibliotheken
 Group(es):	X11/Desarrollo/Bibliotecas
 Group(fr):	X11/Development/Librairies
 Group(pl):	X11/Programowanie/Biblioteki
@@ -226,6 +237,8 @@ kdemultimedia - pliki nag³ówkowe.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
+%patch2 -p1
 
 %build
 kde_htmldir="%{_htmldir}"; export kde_htmldir
