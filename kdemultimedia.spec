@@ -1,8 +1,8 @@
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
-Version:	3.0.3
-Release:	5
+Version:	3.0.4
+Release:	1
 Epoch:		7
 License:	GPL
 Vendor:		The KDE Team
@@ -12,6 +12,10 @@ Source0:	ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.
 Source1:	kde-i18n-%{name}-%{version}.tar.bz2
 Patch0:		%{name}-kmidi-alsa.patch
 Patch1:		%{name}-kmix-applet-no-version.patch
+Patch2:		%{name}-fix-arts-builder.patch
+Patch3:		%{name}-fix-artsbuilder-mem-leak.patch
+Patch4:		%{name}-desktop.patch
+Patch5:		%{name}-fix-noatun.patch
 %ifnarch sparc sparc64
 BuildRequires:	alsa-lib-devel
 BuildRequires:	alsa-driver-devel
@@ -202,6 +206,10 @@ Odtwarzacz multimedialny.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
 
 %build
 kde_htmldir="%{_htmldir}"; export kde_htmldir
