@@ -6,7 +6,7 @@ Release:	1
 Copyright:	GPL
 Group:		X11/Applications
 Vendor:		The KDE Team
-Source:		ftp.kde.org/pub/kde/snapshost/current/%{name}-%{version}.tar.bz2
+Source:		ftp://ftp.kde.org/pub/kde/snapshost/current/%{name}-%{version}.tar.bz2
 BuildRequires:	kdelibs-devel
 BuildRequires:	qt-devel >= 2.2.2
 BuildRequires:	XFree86-devel
