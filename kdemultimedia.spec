@@ -236,22 +236,22 @@ bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 
 %find_lang aktion --with-kde
 %find_lang artsbuilder --with-kde
-#%find_lang artscontrol --with-kde
+%find_lang artscontrol --with-kde
 cat artsbuilder.lang > arts.lang
-#cat artscontrol.lang >> arts.lang
-#%find_lang kaboodle --with-kde
+cat artscontrol.lang >> arts.lang
+%find_lang kaboodle --with-kde
 %find_lang kmid --with-kde
 %find_lang kmidi --with-kde
 %find_lang kmix --with-kde
-#%find_lang kcmkmix --with-kde
-#cat kcmkmix.lang >> kmix.lang
+%find_lang kcmkmix --with-kde
+cat kcmkmix.lang >> kmix.lang
 %find_lang kscd --with-kde
 %find_lang noatun --with-kde
-#%find_lang kfile_m3u --with-kde
-#%find_lang kfile_mp3 --with-kde
-#%find_lang kfile_ogg --with-kde
-#%find_lang kfile_wav --with-kde
-#cat kfile_m3u.lang kfile_mp3.lang kfile_ogg.lang kfile_wav.lang >> %{name}.lang
+%find_lang kfile_m3u --with-kde
+%find_lang kfile_mp3 --with-kde
+%find_lang kfile_ogg --with-kde
+%find_lang kfile_wav --with-kde
+cat kfile_m3u.lang kfile_mp3.lang kfile_ogg.lang kfile_wav.lang >> %{name}.lang
 
 %post   mpeglib -p /sbin/ldconfig
 %postun mpeglib -p /sbin/ldconfig
@@ -277,16 +277,15 @@ cat artsbuilder.lang > arts.lang
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%files
-#-f %{name}.lang
+%files -f %{name}.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libdummy.so.*.*.*
 %attr(755,root,root) %{_libdir}/libdummy.la
 %attr(755,root,root) %{_libdir}/kde3/kfile_*.??
 %{_datadir}/services/kfile_*.desktop
 %dir %{_datadir}/apps/kconf_update/
-%attr(755,root,root) %{_datadir}/apps/kconf_update/*.sh
-%attr(755,root,root) %{_datadir}/apps/kconf_update/*.pl
+#%attr(755,root,root) %{_datadir}/apps/kconf_update/*.sh
+#%attr(755,root,root) %{_datadir}/apps/kconf_update/*.pl
 %attr(755,root,root) %{_datadir}/apps/kconf_update/noatun20update
 %{_datadir}/apps/kconf_update/*.upd
 
@@ -430,8 +429,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libdummy.so
 %{_libdir}/kde3/kmix_panelapplet.so
 
-%files kaboodle
-#-f kaboodle.lang
+%files kaboodle -f kaboodle.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kaboodle
 %attr(755,root,root) %{_libdir}/kaboodle.??
