@@ -22,7 +22,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	4
+Release:	4.1
 Epoch:		8
 License:	GPL
 Vendor:		The KDE Team
@@ -364,6 +364,7 @@ echo "Remember to restart artsd !"
 %defattr(644,root,root,755)
 %{_libdir}/libaktion.so
 %{_libdir}/libarts[!e]*.so
+%exclude %{_libdir}/libarts_xine.so
 %{_libdir}/libmpeg.so
 %{_libdir}/libnoatun.so
 %{_libdir}/libnoatun[!a]*.so
@@ -531,8 +532,9 @@ echo "Remember to restart artsd !"
 %if %{?_without_xine:0}%{!?_without_xine:1}
 %files xine
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/kde3/videothumbnail.*
+#%%attr(755,root,root) %{_libdir}/kde3/videothumbnail.*
+%attr(755,root,root) %{_libdir}/*_xine.so
 %{_libdir}/mcop/xinePlayObject.mcopclass
-%{_datadir}/apps/videothumbnail
-%{_datadir}/services/videothumbnail.desktop
+#%%{_datadir}/apps/videothumbnail
+#%%{_datadir}/services/videothumbnail.desktop
 %endif
