@@ -81,7 +81,7 @@ Multimedialne aplikacje KDE. Pakiet zawiera:
  - Kaboodle - odtwarzacz plików multimedialnych
  - KMID - odtwarzacz MIDI,
  - KMIDI - programowy odtwarzacz MIDI,
- - KMIX - mixer audio,
+ - KMIX - mikser audio,
  - KSCD - odtwarzacz CD.
  - Noatun - odtwarzacz plików multimedialnych
 
@@ -91,9 +91,9 @@ Summary(pl):	kdemultimedia - pliki nag³ówkowe
 Group:		X11/Development/Libraries
 Requires:	arts-devel >= 1.0.3
 Requires:	kdelibs-devel >= 8:%{version}
-Requires:	kdemultimedia-arts = %{epoch}:%{version}
-Requires:	kdemultimedia-mpeglib = %{epoch}:%{version}
-Requires:	kdemultimedia-noatun = %{epoch}:%{version}
+Requires:	%{name}-arts = %{epoch}:%{version}
+Requires:	%{name}-mpeglib = %{epoch}:%{version}
+Requires:	%{name}-noatun = %{epoch}:%{version}
 Obsoletes:	kdemultimedia < 3.0.8
 
 %description devel
@@ -121,8 +121,10 @@ WAV.
 Summary:	Arts Tools
 Summary(pl):	Narzêdzia Arts
 Group:		X11/Applications
+Requires(post):	/sbin/ldconfig
 Requires:	kdelibs >= 8:%{version}
 Requires:	%{name}-mpeglib = %{epoch}:%{version}
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description arts
 Arts Tools.
@@ -134,6 +136,7 @@ Narzêdzia Arts.
 Summary:	Media player
 Summary(pl):	Odtwarzacz multimedialny
 Group:		X11/Applications
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description kaboodle
 Media player.
@@ -145,6 +148,7 @@ Odtwarzacz multimedialny.
 Summary:	Audio Creator
 Summary(pl):	Kreator audio
 Group:		X11/Applications
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description kaudiocreator
 CD ripper and sound encoder frontend. Already provides audiocd
@@ -161,7 +165,7 @@ Group:		X11/Development/Libraries
 Obsoletes:	kdemultimedia < 3.0.8
 
 %description kfile
-This package adds a fold to konqueror "file properities" dialog window
+This package adds a fold to konqueror "file properties" dialog window
 with file enhanced informations.
 
 %description kfile -l pl
@@ -173,13 +177,14 @@ Summary:	KDE MIDI Player
 Summary(pl):	Odtwarzacz MIDI dla KDE
 Group:		X11/Applications
 Requires:	kdelibs >= 8:%{version}
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description kmid
 This is a MIDI player for KDE. It uses sound-card synthetizer or other
 hardware connected to MIDI to play MIDI files.
 
 %description kmid -l pl
-Odtwarzacz MIDI dla KDE. Wykorzystuje tylko syntetyzator na karcie
+Odtwarzacz MIDI dla KDE. Wykorzystuje tylko syntezator na karcie
 muzycznej lub inne urz±dzenia MIDI przy³±czone do niej.
 
 %package kmidi
@@ -187,6 +192,7 @@ Summary:	KDE software MIDI Player
 Summary(pl):	Programowy odtwarzacz MIDI dla KDE
 Group:		X11/Applications
 Requires:	kdelibs >= 8:%{version}
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description kmidi
 Software MIDI player. It uses GUS patch files and CPU power to create
@@ -201,6 +207,7 @@ Summary:	KDE audio mixer
 Summary(pl):	Mixer audio dla KDE
 Group:		X11/Applications
 Requires:	kdelibs >= 8:%{version}
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description kmix
 Sound mixer application for KDE.
@@ -214,6 +221,7 @@ Summary(pl):	Rejestrator d¼wiêku dla KDE
 Group:		X11/Applications
 Requires:	%{name}-arts = %{epoch}:%{version}
 Requires:	kdelibs >= 8:%{version}
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description krec
 KDE sound recorder.
@@ -226,9 +234,10 @@ Summary:	KDE CD Player
 Summary(pl):	Odtwarzacz CD dla KDE
 Group:		X11/Applications
 Requires:	kdelibs >= 8:%{version}
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description kscd
-CD Player with CDDB support. It can automaticaly update its CD
+CD Player with CDDB support. It can automatically update its CD
 database with the Internet and show graphical interpretation of played
 sounds.
 
@@ -439,13 +448,13 @@ echo "Remember to restart artsd!"
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/arts*
 %attr(755,root,root) %{_bindir}/midisend
-%{_libdir}/libaudiofilearts.la
 %attr(755,root,root) %{_libdir}/libaudiofilearts.so
-%{_libdir}/libarts[!_]*.la
+%{_libdir}/libaudiofilearts.la
 %attr(755,root,root) %{_libdir}/libartseffects.so
 %attr(755,root,root) %{_libdir}/libarts[!_]*.so.*
-%{_libdir}/libarts_[!mx]*.la
+%{_libdir}/libarts[!_]*.la
 %attr(755,root,root) %{_libdir}/libarts_[!m]*.so.*
+%{_libdir}/libarts_[!mx]*.la
 %{_libdir}/mcop/audiofilearts*
 %{_libdir}/mcop/arts*
 %{_libdir}/mcop/Splay*
@@ -465,10 +474,10 @@ echo "Remember to restart artsd!"
 %files kaboodle -f kaboodle.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kaboodle
-%{_libdir}/kaboodle.la
 %attr(755,root,root) %{_libdir}/kaboodle.so
-%{_libdir}/kde3/libkaboodlepart.la
+%{_libdir}/kaboodle.la
 %attr(755,root,root) %{_libdir}/kde3/libkaboodlepart.so
+%{_libdir}/kde3/libkaboodlepart.la
 %{_datadir}/apps/kaboodle
 %{_datadir}/services/kaboodle_component.desktop
 %{_applnkdir}/Multimedia/kaboodle.desktop
@@ -489,8 +498,8 @@ echo "Remember to restart artsd!"
 
 %files kfile -f kfile.lang
 %defattr(644,root,root,755)
-%{_libdir}/kde3/kfile_*.la
 %attr(755,root,root) %{_libdir}/kde3/kfile_*.so
+%{_libdir}/kde3/kfile_*.la
 %{_datadir}/services/kfile_*.desktop
 
 %files kmid -f kmid.lang
