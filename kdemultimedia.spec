@@ -1,8 +1,7 @@
 #
 # Conditional build:
 %bcond_without	alsa	# build without ALSA support
-%bcond_with	i18n	# w/wo i18n subpackages
-#
+
 %define		_state		snapshots
 %define		_ver		3.2.90
 %define		_snap		040508
@@ -21,8 +20,6 @@ Group:		X11/Applications
 Source0:	http://ep09.pld-linux.org/~%{_packager}/kde/%{name}-%{_snap}.tar.bz2
 #Source0:	%{name}-%{_snap}.tar.bz2
 ##%% Source0-md5:	b2bf6fcd6defd126909810bd5b25e907
-#Source1:	http://ep09.pld-linux.org/~djurban/kde/i18n/kde-i18n-%{name}-%{version}.tar.bz2
-##%% Source1-md5:	f7aeb11765cd23f1719c1d18762fbc47
 Patch0:		%{name}-no_mpeglib_examples.patch
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	audiofile-devel
@@ -395,229 +392,12 @@ KDE Media Player - shared libs.
 %description noatun-libs -l pl
 KDE Media Player - biblioteki wspó³dzielone.
 
-%package i18n
-Summary:	Common internationalization and localization files for kdemultimedia
-Summary(pl):	Wspó³dzielone pliki umiêdzynarodawiaj±ce dla kdemultimedia
-Group:		X11/Applications
-Requires:	kdelibs-i18n >= 9:%{version}
-
-%description i18n
-Common internationalization and localization files for kdemultimedia.
-
-%description i18n -l pl
-Wspó³dzielone pliki umiêdzynarodawiaj±ce dla kdemultimedia.
-
-%package artsbuilder-i18n
-Summary:	Internationalization and localization files for artsbuilder
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla artsbuildera
-Group:		X11/Applications
-Requires:	%{name}-artsbuilder = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	%{name}-arts-i18n = %{epoch}:%{version}-%{release}
-
-%description artsbuilder-i18n
-Internationalization and localization files for artsbuilder.
-
-%description artsbuilder-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla artsbuildera.
-
-%package artscontrol-i18n
-Summary:	Internationalization and localization files for artscontrol
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla artscontrol
-Group:		X11/Applications
-Requires:	%{name}-artscontrol = %{epoch}:%{version}-%{release}
-Requires:	%{name}-arts-i18n = %{epoch}:%{version}-%{release}
-
-%description artscontrol-i18n
-Internationalization and localization files for artscontrol.
-
-%description artscontrol-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla artscontrol.
-
-%package arts-i18n
-Summary:	Internationalization and localization files for arts
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla arts
-Group:		X11/Applications
-Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-
-%description arts-i18n
-Internationalization and localization files for arts.
-
-%description arts-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla arts.
-
-%package juk-i18n
-Summary:	Internationalization and localization files for juk
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla juk
-Group:		X11/Applications
-Requires:	%{name}-juk = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description juk-i18n
-Internationalization and localization files for juk.
-
-%description juk-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla juk.
-
-%package kaboodle-i18n
-Summary:	Internationalization and localization files for kaboodle
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kaboodle
-Group:		X11/Applications
-Requires:	%{name}-kaboodle = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description kaboodle-i18n
-Internationalization and localization files for kaboodle.
-
-%description kaboodle-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla kaboodle.
-
-%package kmid-i18n
-Summary:	Internationalization and localization files for kmid
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kmid
-Group:		X11/Applications
-Requires:	%{name}-kmid = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description kmid-i18n
-Internationalization and localization files for kmid.
-
-%description kmid-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla kmid.
-
-%package kmix-i18n
-Summary:	Internationalization and localization files for kmix
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kmix
-Group:		X11/Applications
-Requires:	%{name}-kmix = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description kmix-i18n
-Internationalization and localization files for kmix.
-
-%description kmix-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla kmix.
-
-%package kscd-i18n
-Summary:	Internationalization and localization files for kscd
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kscd
-Group:		X11/Applications
-Requires:	%{name}-kscd = %{epoch}:%{version}-%{release}
-Requires:	%{name}-libkcddb-i18n = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description kscd-i18n
-Internationalization and localization files for kscd.
-
-%description kscd-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla kscd.
-
-%package krec-i18n
-Summary:	Internationalization and localization files for krec
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla krec
-Group:		X11/Applications
-Requires:	%{name}-krec = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	%{name}-artscontrol-i18n = %{epoch}:%{version}-%{release}
-Requires:	%{name}-kmix-i18n = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description krec-i18n
-Internationalization and localization files for krec.
-
-%description krec-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla krec.
-
-%package noatun-i18n
-Summary:	Internationalization and localization files for noatun
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla noatun
-Group:		X11/Applications
-Requires:	%{name}-noatun = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description noatun-i18n
-Internationalization and localization files for noatun.
-
-%description noatun-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla noatun.
-
-%package kfile-i18n
-Summary:	Internationalization and localization files for kfile
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kfile
-Group:		X11/Applications
-Requires:	%{name}-kfile = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	konqueror-i18n >= 9:%{version}
-
-%description kfile-i18n
-Internationalization and localization files for kfile.
-
-%description kfile-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla kfile.
-
-%package audiocd-i18n
-Summary:	Internationalization and localization files for audiocd
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla audiocd
-Group:		X11/Applications
-Requires:	%{name}-audiocd = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	%{name}-libkcddb-i18n = %{epoch}:%{version}-%{release}
-Requires:	konqueror-i18n >= 9:%{version}
-
-%description audiocd-i18n
-Internationalization and localization files for audiocd.
-
-%description audiocd-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla audiocd.
-
-%package libkcddb-i18n
-Summary:	Internationalization and localization files for libkcddb
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla libkcddb
-Group:		X11/Applications
-Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
-
-%description libkcddb-i18n
-Internationalization and localization files for libkcddb.
-
-%description libkcddb-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla libkcddb.
-
-%package kaudiocreator-i18n
-Summary:	Internationalization and localization files for kaudiocreator
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kaudiocreatora
-Group:		X11/Applications
-Requires:	%{name}-kaudiocreator = %{epoch}:%{version}-%{release}
-Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	%{name}-libkcddb-i18n = %{epoch}:%{version}-%{release}
-
-%description kaudiocreator-i18n
-Internationalization and localization files for kaudiocreator.
-
-%description kaudiocreator-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla kaudiocreatora.
-
 %prep
 %setup -q -n %{name}-%{_snap}
 %patch0 -p1
 
 %build
 cp /usr/share/automake/config.sub admin
-
-#fix="kfile-plugins/ogg/configure.in.in \
-#	mpeglib_artsplug/configure.in.in"
-
-#for i in $fix;
-#do
-#	grep -v AC_REQUIRE $i >> $i.1
-#	mv $i{.1,}
-#done
 
 export UNSERMAKE=/usr/share/unsermake/unsermake
 
@@ -647,65 +427,16 @@ for i in `find . -name index.cache.bz2`; do
 done
 cd -	 
 
-%if %{with i18n}
-if [ -f "%{SOURCE1}" ] ; then
-	bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
-	for f in $RPM_BUILD_ROOT%{_datadir}/locale/*/LC_MESSAGES/*.mo; do
-		if [ "`file $f | sed -e 's/.*,//' -e 's/message.*//'`" -le 1 ] ; then
-			rm -f $f
-		fi
-	done
-else
-	echo "No i18n sources found and building --with i18n. FIXIT!"
-	exit 1
-fi
-%endif
-
 %find_lang artsbuilder	--with-kde
 %find_lang juk		--with-kde
 %find_lang kaboodle	--with-kde
 %find_lang kmid		--with-kde
-# No kmidi
-# %find_lang kmidi	--with-kde
 %find_lang kmix		--with-kde
 %find_lang kmixcfg	--with-kde
 cat kmixcfg.lang >> kmix.lang
 %find_lang krec		--with-kde
 %find_lang kscd		--with-kde
 %find_lang noatun	--with-kde
-
-%if %{with i18n}
-%find_lang desktop_kdemultimedia	--with-kde
-mv desktop_kdemultimedia.lang kdemultimedia.lang
-%find_lang libkcddb			--with-kde
-%find_lang kcmcddb			--with-kde
-cat kcmcddb.lang >> libkcddb.lang
-%find_lang kio_audiocd			--with-kde
-%find_lang kcmaudiocd			--with-kde
-cat kcmaudiocd.lang >> kio_audiocd.lang
-%find_lang kaudiocreator		--with-kde
-%find_lang artscontrol			--with-kde
-%find_lang artsmodules			--with-kde
-mv artsmodules.lang arts.lang
-%find_lang kcmkmix			--with-kde
-cat kcmkmix.lang >> kmix.lang
-
-kfile="\
-	au \
-	avi \
-	flac \
-	m3u \
-	mp3 \
-	ogg \
-	wav"
-
-> kfile.lang
-
-for i in $kfile; do
-	%find_lang kfile_${i} --with-kde
-	cat kfile_${i}.lang >> kfile.lang
-done
-%endif
 
 files="\
 	artsbuilder \
@@ -755,24 +486,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %post	noatun-libs		-p /sbin/ldconfig
 %postun	noatun-libs		-p /sbin/ldconfig
-
-%if %{with i18n}
-%files i18n -f kdemultimedia.lang
-%files artsbuilder-i18n -f artsbuilder.lang
-%files artscontrol-i18n -f artscontrol.lang
-%files arts-i18n -f arts.lang
-%files juk-i18n -f juk.lang
-%files kaboodle-i18n -f kaboodle.lang
-%files kmid-i18n -f kmid.lang
-%files kmix-i18n -f kmix.lang
-%files kscd-i18n -f kscd.lang
-%files krec-i18n -f krec.lang
-%files noatun-i18n -f noatun.lang
-%files kfile-i18n -f kfile.lang
-%files audiocd-i18n -f kio_audiocd.lang
-%files kaudiocreator-i18n -f kaudiocreator.lang
-%files libkcddb-i18n -f libkcddb.lang
-%endif
 
 %files devel
 %defattr(644,root,root,755)
