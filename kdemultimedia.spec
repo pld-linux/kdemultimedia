@@ -1,6 +1,6 @@
 %define		_ver		3.0.1
 #define		_sub_ver
-%define		_rel		1
+%define		_rel		2
 
 %{?_sub_ver:	%define	_version	%{_ver}%{_sub_ver}}
 %{!?_sub_ver:	%define	_version	%{_ver}}
@@ -48,19 +48,26 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
 KDE multimedia applications. Package includes:
- - KMedia - Media player,
+
+ - Aktion - AVI player
+ - Arts - arts tools
+ - Kaboodle - a media player,
  - KMID - MIDI player,
  - KMIDI - software MIDI player,
  - KMIX - audio mixer,
- - KSCD - CD Player.
-
+ - KSCD - CD player.
+ - Noatun - a media player,
 %description -l pl
 Multimedialne aplikacje KDE. Pakiet zawiera:
- - KMedia - Program do odtwarzania plików d¼wiêkowych,
- - KMID - Odtwarzacz MIDI,
- - KMIDI - Programowy odtwarzacz MIDI,
- - KMIX - Mixer audio,
- - KSCD - Odtwarzacz CD.
+
+ - Aktion - odtwarzacz plików avi
+ - Arts - narzêdzia arts
+ - Kaboodle - odtwarzacz plików multimedialnych
+ - KMID - odtwarzacz MIDI,
+ - KMIDI - programowy odtwarzacz MIDI,
+ - KMIX - mixer audio,
+ - KSCD - odtwarzacz CD.
+ - Noatun - odtwarzacz plików multimedialnych
 
 %package arts
 Summary:	Arts
@@ -226,7 +233,22 @@ mv $ALD/{Settings/Sound,Settings/KDE}
 bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 
 %find_lang aktion --with-kde
+%find_lang artsbuilder --with-kde
+%find_lang artscontrol --with-kde
+cat artsbuilder.lang artscontrol.lang >> arts.lang
+%find_lang kaboodle --with-kde
+%find_lang kmid --with-kde
+%find_lang kmidi --with-kde
+%find_lang kmix --with-kde
+%find_lang kcmkmix --with-kde
+cat kcmkmix.lang >> kmix.lang
+%find_lang kscd --with-kde
 %find_lang noatun --with-kde
+%find_lang kfile_m3u --with-kde
+%find_lang kfile_mp3 --with-kde
+%find_lang kfile_ogg --with-kde
+%find_lang kfile_wav --with-kde
+cat kfile_m3u.lang kfile_mp3.lang kfile_ogg.lang kfile_wav.lang >> %{name}.lang
 
 %post   mpeglib -p /sbin/ldconfig
 %postun mpeglib -p /sbin/ldconfig
@@ -252,7 +274,7 @@ bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%files
+%files -f %{name}.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libdummy.so.*.*.*
 %attr(755,root,root) %{_libdir}/libdummy.la
@@ -288,7 +310,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/config/aktionrc
 %{_pixmapsdir}/*/*/apps/aktion.png
 
-%files arts
+%files arts -f arts.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/arts*
 %attr(755,root,root) %{_bindir}/midisend
@@ -311,7 +333,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_pixmapsdir}/*/*/actions/artsbuilder*
 %{_datadir}/apps/artsbuilder
 %{_datadir}/apps/artscontrol
-%{_htmldir}/en/artsbuilder
 %{_datadir}/mimelnk/application/*arts*
 
 %files noatun -f noatun.lang
@@ -330,7 +351,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kconf_update/noatun*
 %{_pixmapsdir}/*/*/apps/noatun.png
 
-%files kmid
+%files kmid -f kmid.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kmid
 %attr(755,root,root) %{_libdir}/libkmidpart.so.*.*.*
@@ -338,11 +359,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_applnkdir}/Multimedia/kmid.desktop
 %{_datadir}/apps/kmid
 %{_datadir}/mimelnk/audio/x-karaoke.desktop
-%{_htmldir}/en/kmid
 %{_datadir}/servicetypes/*midi*.desktop
 %{_pixmapsdir}/*/*/apps/kmid.png
 
-%files kmidi
+%files kmidi -f kmidi.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kmidi
 %attr(755,root,root) %{_bindir}/sf2cfg
@@ -350,10 +370,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_applnkdir}/Multimedia/kmidi.desktop
 %{_applnkdir}/Multimedia/timidity.desktop
 %{_datadir}/apps/kmidi
-%{_htmldir}/en/kmidi
 %{_pixmapsdir}/*/*/apps/kmidi.png
 
-%files kmix
+%files kmix -f kmix.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kmix
 %attr(755,root,root) %{_bindir}/kmixctrl
@@ -367,10 +386,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/kmixctrl_restore.desktop
 %{_datadir}/apps/kmix
 %{_datadir}/apps/kicker/applets/*
-%{_htmldir}/en/kmix
 %{_pixmapsdir}/*/*/apps/kmix.png
 
-%files kscd
+%files kscd -f kscd.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kscd
 %attr(755,root,root) %{_bindir}/workman2cddb.pl
@@ -379,7 +397,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_applnkdir}/Multimedia/kscd.desktop
 %{_datadir}/apps/kscd
 %{_datadir}/mimelnk/text/xmcd.desktop
-%{_htmldir}/en/kscd
 %{_pixmapsdir}/*/*/apps/kscd.png
 
 %files devel
@@ -405,7 +422,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libdummy.so
 %{_libdir}/kde3/kmix_panelapplet.so
 
-%files kaboodle
+%files kaboodle -f kaboodle.lang
 %defattr(644,root,root,755)
 %{_bindir}/kaboodle
 %{_libdir}/kaboodle.??
