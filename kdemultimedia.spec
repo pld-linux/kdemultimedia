@@ -3,7 +3,6 @@
 #			xine-lib to ommit xine plug-in building.
 #
 # --without	alsa	Set this option in case you dont want alsa.
-#			
 #
 # --with	esd	Set this option in case you want esd support.
 #
@@ -406,11 +405,10 @@ echo "Remember to restart artsd !"
 %{_libdir}/libaudiofilearts.la
 %attr(755,root,root) %{_libdir}/libaudiofilearts.so
 %{_libdir}/libarts[!_]*.la
+%attr(755,root,root) %{_libdir}/libartseffects.so
 %attr(755,root,root) %{_libdir}/libarts[!_]*.so.*
 %{_libdir}/libarts_[!mx]*.la
 %attr(755,root,root) %{_libdir}/libarts_[!m]*.so.*
-%{_libdir}/libartseffects.la
-%attr(755,root,root) %{_libdir}/libartseffects.so
 %{_libdir}/mcop/audiofilearts*
 %{_libdir}/mcop/arts*
 %{_libdir}/mcop/Splay*
@@ -504,7 +502,6 @@ echo "Remember to restart artsd !"
 %attr(755,root,root) %{_bindir}/workman2cddb.pl
 %{_libdir}/libworkman.la
 %attr(755,root,root) %{_libdir}/libworkman.so.*
-%{_libdir}/libworkman.la
 %{_applnkdir}/Multimedia/kscd.desktop
 %{_datadir}/apps/kscd
 %{_datadir}/mimelnk/text/xmcd.desktop
