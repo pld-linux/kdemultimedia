@@ -32,6 +32,7 @@ BuildRequires:	libogg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires: 	libmusicbrainz-devel >= 1:2.1.1
+BuildRequires:	libtunepimp-devel
 BuildRequires:	libvorbis-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
 BuildRequires:	taglib-devel >= 0.95.031114
