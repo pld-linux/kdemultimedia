@@ -1,10 +1,11 @@
 #
 # Conditional build:
 %bcond_without	alsa	# build without ALSA support
+%bcond_with     cvs     # use cvs build dirs instead of supplied sources
 
 %define		_state		snapshots
 %define		_ver		3.2.90
-%define		_snap		040525
+%define		_snap		040616
 %define		_packager	adgor
 
 %define		_minlibsevr	9:3.2.90.040524
@@ -19,9 +20,13 @@ Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
+%if ! %{with cvs}
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
 Source0:	http://ep09.pld-linux.org/~%{_packager}/kde/%{name}-%{_snap}.tar.bz2
 ##%% Source0-md5:	b2bf6fcd6defd126909810bd5b25e907
+%else
+Source0:        kdesource.tar.gz
+%endif
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	audiofile-devel
 BuildRequires:	cdparanoia-III-devel
@@ -378,8 +383,25 @@ KDE Media Player - shared libs.
 %description noatun-libs -l pl
 KDE Media Player - biblioteki wspó³dzielone.
 
+%package akode
+Summary:      	TODO. 
+Summary(pl):  	Likewise. 
+Group:          X11/Libraries
+Requires:       %{name}-arts = %{epoch}:%{version}-%{release}
+
+%description akode
+TODO.
+
+%description akode -l pl
+Jak wy¿ej!
+
+
 %prep
-%setup -q -n %{name}-%{_snap}
+%if ! %{with cvs}
+%setup -q -n %{name}-%{_snap} 
+%else
+%setup -q -n %{name} -D
+%endif
 
 %build
 cp /usr/share/automake/config.sub admin
@@ -537,7 +559,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/videothumbnail.so
 %{_libdir}/*_xine.la
 %attr(755,root,root) %{_libdir}/*_xine.so
-%{_libdir}/mcop/xinePlayObject.mcopclass
+%{_libdir}/mcop/xine*PlayObject.mcopclass
 %{_datadir}/apps/videothumbnail
 %{_datadir}/services/videothumbnail.desktop
 
@@ -554,6 +576,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/config.kcfg/audiocd_*_encoder.kcfg
 %{_datadir}/services/audiocd.protocol
 %{_desktopdir}/kde/audiocd.desktop
+
+%files akode
+%defattr(644,root,root,755)
+%{_libdir}/libakode.so.0.0.0
+%{_libdir}/libarts_akode.so
+%{_libdir}/mcop/akode*PlayObject.mcopclass
+%{_libdir}/mcop/akodearts.mcop*
 
 %files cddb
 %defattr(644,root,root,755)
