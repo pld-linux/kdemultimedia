@@ -1,0 +1,110 @@
+Index: channelcfgdlg.h
+===================================================================
+RCS file: /home/kde/kdemultimedia/kmid/channelcfgdlg.h,v
+retrieving revision 1.3
+retrieving revision 1.3.2.1
+diff -u -p -r1.3 -r1.3.2.1
+--- kdemultimedia/kmid/channelcfgdlg.h	2001/04/30 23:33:46	1.3
++++ kdemultimedia/kmid/channelcfgdlg.h	2002/02/03 16:32:06	1.3.2.1
+@@ -24,12 +24,11 @@
+ #ifndef _channelcfgdlg_h_
+ #define _channelcfgdlg_h_
+ 
+-#include <qdialog.h>
++#include <kdialogbase.h>
+ 
+-class QButtonGroup;
+-class QPushButton;
++class QVButtonGroup;
+ class QRadioButton;
+-class ChannelViewConfigDialog : public QDialog
++class ChannelViewConfigDialog : public KDialogBase
+ {
+     Q_OBJECT
+ 
+@@ -38,13 +37,10 @@ public:
+     ChannelViewConfigDialog(QWidget *parent,const char *name);
+     
+ private:
+-    QButtonGroup *qbg;
++    QVButtonGroup *qbg;
+     QRadioButton *rb0;
+     QRadioButton *rb1;
+-    
+-    QPushButton *ok;
+-    QPushButton *cancel;
+-    
++        
+ public slots:
+     void modeselected(int idx);
+ 
+Index: channelcfgdlg.cpp
+===================================================================
+RCS file: /home/kde/kdemultimedia/kmid/channelcfgdlg.cpp,v
+retrieving revision 1.7
+retrieving revision 1.7.2.1
+diff -u -p -r1.7 -r1.7.2.1
+--- kdemultimedia/kmid/channelcfgdlg.cpp	2001/05/04 01:36:57	1.7
++++ kdemultimedia/kmid/channelcfgdlg.cpp	2002/02/03 16:32:06	1.7.2.1
+@@ -1,6 +1,7 @@
+ #include <qpushbutton.h>
+ #include <qbuttongroup.h>
+ #include <qradiobutton.h>
++#include <kdialogbase.h>
+ 
+ #include <kapp.h>
+ #include <klocale.h>
+@@ -8,43 +9,25 @@
+ #include "channelview.h"
+ #include "channelcfgdlg.h"
+ #include "version.h"
++#include <qlayout.h>
++#include <qvbuttongroup.h>
+ 
+-#ifndef MAX
+-#define MAX(a,b) ((a<b)?(b):(a))
+-#endif
+-
+-ChannelViewConfigDialog::ChannelViewConfigDialog(QWidget *parent,const char *name) : QDialog(parent,name,TRUE)
++ChannelViewConfigDialog::ChannelViewConfigDialog(QWidget *parent,const char *name) : KDialogBase(parent,name,TRUE,i18n("Configure Channel View"),Ok|Cancel, Ok)
+ {
+-    setCaption(i18n("Configure Channel View"));
+-    setMinimumSize(300,240);
+-    setMaximumSize(300,240);
+-    ok=new QPushButton(i18n("OK"),this);
+-    ok->setGeometry(80,200,100,30);
+-    connect(ok,SIGNAL(clicked()),SLOT(accept()) );
+-    cancel=new QPushButton(i18n("Cancel"),this);
+-    cancel->setGeometry(190,200,100,30);
+-    connect(cancel,SIGNAL(clicked()),SLOT(reject()) );
++    QWidget *page = new QWidget( this ); 
++    setMainWidget(page);
++    QVBoxLayout *topLayout = new QVBoxLayout( page, 0, spacingHint() );
++    qbg = new QVButtonGroup(i18n("Choose look mode"),page,"qbg");
+     
+-    qbg = new QButtonGroup(i18n("Choose look mode"),this,"qbg");
+-    rb0=new QRadioButton(i18n("3D look"),this,"3d");
+-    rb1=new QRadioButton(i18n("3D - filled"),this,"4d");
+-
+-    rb0->adjustSize();
+-    rb1->adjustSize();
++    rb0=new QRadioButton(i18n("3D look"),qbg,"3d");
++    rb1=new QRadioButton(i18n("3D - filled"),qbg,"4d");
+ 
+-    rb0->move(20,30);
+-    rb1->move(20,70);
+-    
+     qbg->setExclusive(TRUE);
+ 
+-    qbg->setGeometry(5,5,(MAX(rb0->width(),rb1->width()))+20,100);
+-    qbg->insert(rb0);
+-    qbg->insert(rb1);
+-
++    topLayout->addWidget( qbg );
+     ((ChannelView::lookMode()==0)?rb0:rb1)->setChecked(TRUE);
+     
+     connect (qbg, SIGNAL(pressed(int)),this,SLOT(modeselected(int)));
+-
+ };
+ 
+ void ChannelViewConfigDialog::modeselected(int idx)
