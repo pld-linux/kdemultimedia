@@ -6,8 +6,8 @@
 # _with_nas		- build with NAS support
 #
 
-%define         _state          stable
-%define         _ver		3.1.4
+%define		_state		stable
+%define		_ver		3.1.4
 
 %ifarch	sparc sparcv9 sparc64
 %define		_with_esd	1
@@ -34,25 +34,25 @@ Patch2:		%{name}-libtool-sanitize.patch
 %{!?_without_alsa:BuildRequires:	alsa-driver-devel}
 %{?_with_nas:BuildRequires:	nas-devel >= 1.5}
 %{?_with_esd:BuildRequires:	esound-devel}
-BuildRequires:	arts-devel >= 12:1.0.0
-BuildRequires:	arts-kde-devel >= 8:%{version}
+BuildRequires:	arts-devel >= 1.0.0
+BuildRequires:	arts-kde-devel >= %{version}
 BuildRequires:	cdparanoia-III-devel
+BuildRequires:	ed
 BuildRequires:	gettext-devel
 BuildRequires:	gtk+-devel
-BuildRequires:	kdelibs-devel >= 8:%{version}
+BuildRequires:	kdelibs-devel >= %{version}
 BuildRequires:	libart_lgpl-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libogg-devel
 BuildRequires:	libpng-devel >= 1.2.5
 BuildRequires:	libstdc++-devel
 BuildRequires:	libvorbis-devel
-BuildRequires:	sed >= 4.0
 %{!?_without_xine:BuildRequires:	xine-lib-devel >= 1.0b4}
 BuildRequires:	zlib-devel
-Requires:	kdelibs = 8:%{version}
+Requires:	kdelibs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define         _htmldir        /usr/share/doc/kde/HTML
+%define		_htmldir		/usr/share/doc/kde/HTML
 
 %define		no_install_post_chrpath		1
 
@@ -85,11 +85,11 @@ Summary:	kdemultimedia - headers
 Summary(pl):	kdemultimedia - pliki nag³ówkowe
 Group:		X11/Development/Libraries
 Requires:	arts-devel >= 1.0.3
-Requires:	kdelibs-devel >= 8:%{version}
+Requires:	kdelibs-devel >= %{version}
 Requires:	%{name}-arts = %{epoch}:%{version}
 Requires:	%{name}-mpeglib = %{epoch}:%{version}
 Requires:	%{name}-noatun = %{epoch}:%{version}
-Obsoletes:	kdemultimedia < 8:3.0.8
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description devel
 kdemultimedia - headers.
@@ -101,7 +101,7 @@ kdemultimedia - pliki nag³ówkowe.
 Summary:	KDE Media Player
 Summary(pl):	Odtwarzacz multimedialny dla KDE
 Group:		X11/Applications
-Requires:	kdebase-core >= 8:%{version}
+Requires:	kdebase-core >= %{version}
 Obsoletes:	aktion
 
 %description aktion
@@ -117,9 +117,9 @@ Summary:	Arts Tools
 Summary(pl):	Narzêdzia Arts
 Group:		X11/Applications
 Requires(post):	/sbin/ldconfig
-Requires:	kdebase-core >= 8:%{version}
+Requires:	kdebase-core >= %{version}
 Requires:	%{name}-mpeglib = %{epoch}:%{version}
-Obsoletes:	kdemultimedia < 8:3.0.8
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description arts
 Arts Tools.
@@ -131,7 +131,7 @@ Narzêdzia Arts.
 Summary:	Media player
 Summary(pl):	Odtwarzacz multimedialny
 Group:		X11/Applications
-Obsoletes:	kdemultimedia < 8:3.0.8
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description kaboodle
 Media player.
@@ -143,7 +143,7 @@ Odtwarzacz multimedialny.
 Summary:	Audio Creator
 Summary(pl):	Kreator audio
 Group:		X11/Applications
-Obsoletes:	kdemultimedia < 8:3.0.8
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description kaudiocreator
 CD ripper and sound encoder frontend. Already provides audiocd
@@ -157,7 +157,7 @@ audiocd do konquerora.
 Summary:	Audio file formats enhanced information
 Summary(pl):	Rozszerzone informacje o plikach d¼wiêkowych
 Group:		X11/Development/Libraries
-Obsoletes:	kdemultimedia < 8:3.0.8
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description kfile
 This package adds a fold to konqueror "file properties" dialog window
@@ -171,8 +171,8 @@ dodatkow± zak³adkê z rozszerzonymi informacjami o pliku.
 Summary:	KDE MIDI Player
 Summary(pl):	Odtwarzacz MIDI dla KDE
 Group:		X11/Applications
-Requires:	kdebase-core >= 8:%{version}
-Obsoletes:	kdemultimedia < 8:3.0.8
+Requires:	kdebase-core >= %{version}
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description kmid
 This is a MIDI player for KDE. It uses sound-card synthetizer or other
@@ -186,8 +186,8 @@ muzycznej lub inne urz±dzenia MIDI przy³±czone do niej.
 Summary:	KDE software MIDI Player
 Summary(pl):	Programowy odtwarzacz MIDI dla KDE
 Group:		X11/Applications
-Requires:	kdebase-core >= 8:%{version}
-Obsoletes:	kdemultimedia < 8:3.0.8
+Requires:	kdebase-core >= %{version}
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description kmidi
 Software MIDI player. It uses GUS patch files and CPU power to create
@@ -201,9 +201,9 @@ do stworzenia dobrej jako¶ci d¼wiêku.
 Summary:	KDE audio mixer
 Summary(pl):	Mixer audio dla KDE
 Group:		X11/Applications
-Requires:	kdebase-core >= 8:%{version}
-Requires:	kdebase-kicker >= 8:%{version}
-Obsoletes:	kdemultimedia < 8:3.0.8
+Requires:	kdebase-core >= %{version}
+Requires:	kdebase-kicker >= %{version}
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description kmix
 Sound mixer application for KDE.
@@ -216,8 +216,8 @@ Summary:	KDE sound recorder
 Summary(pl):	Rejestrator d¼wiêku dla KDE
 Group:		X11/Applications
 Requires:	%{name}-arts = %{epoch}:%{version}
-Requires:	kdebase-core >= 8:%{version}
-Obsoletes:	kdemultimedia < 8:3.0.8
+Requires:	kdebase-core >= %{version}
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description krec
 KDE sound recorder.
@@ -229,8 +229,8 @@ Rejestrator d¼wiêku dla KDE.
 Summary:	KDE CD Player
 Summary(pl):	Odtwarzacz CD dla KDE
 Group:		X11/Applications
-Requires:	kdebase-core >= 8:%{version}
-Obsoletes:	kdemultimedia < 8:3.0.8
+Requires:	kdebase-core >= %{version}
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description kscd
 CD Player with CDDB support. It can automatically update its CD
@@ -246,9 +246,9 @@ graficzn± interpretacjê granych d¼wiêków.
 Summary:	MPEG lib
 Summary(pl):	MPEG lib
 Group:		X11/Applications
-Requires:	kdebase-core >= 8:%{version}
-Requires:	arts >= 12:1.0.0
-Obsoletes:	kdemultimedia < 8:3.0.8
+Requires:	kdebase-core >= %{version}
+Requires:	arts >= 1.0.0
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description mpeglib
 MPEG lib.
@@ -261,8 +261,8 @@ Summary:	KDE Media Player
 Summary(pl):	KDE Media Player - odtwarzacz plików multimedialnych
 Group:		X11/Applications
 Requires:	kdebase-core >= %{version}
-Requires:	arts >= 12:1.0.0
-Obsoletes:	kdemultimedia < 8:3.0.8
+Requires:	arts >= 1.0.0
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description noatun
 KDE Media Player.
@@ -275,9 +275,9 @@ Summary:	Xine Plug-in
 Summary(pl):	Wtyczka do Xine
 Group:		X11/Applications
 Requires:	kdebase-core >= %{version}
-Requires:	arts >= 12:1.0.0
+Requires:	arts >= 1.0.0
 Requires:	xine-lib >= 1.0b4
-Obsoletes:	kdemultimedia < 8:3.0.8
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description xine
 Xine Plug-in.
@@ -304,9 +304,9 @@ AUDIO=oss,$AUDIO
 %{?_with_esd:AUDIO=esd,$AUDIO}
 AUDIO=${AUDIO%%,}
 
-for plik in `find ./ -name *.desktop` ; do
+for plik in `find ./ -name *.desktop | grep -l '\[nb\]'` ; do
 	echo $plik
-	sed -i -e 's/\[nb\]/\[no\]/g' $plik
+	echo -e ',s/\[nb\]/[no]\n,w' | ed $plik
 done
 
 # bleh, cannot be done (linking with modules not beginning with lib)
@@ -339,10 +339,10 @@ mv -f $ALD/{Multimedia/arts*.desktop,Multimedia/ArtsTools}
 mv -f $ALD/{Settings/[!K]*,Settings/KDE}
 
 echo "[Desktop Entry]\nName=Arts Tools\nIcon=arts\nType=Directory" \
-    > $ALD/Multimedia/ArtsTools/.directory
+	> $ALD/Multimedia/ArtsTools/.directory
 
 cat $ALD/Multimedia/timidity.desktop |sed 's/Exec=timidity/Exec=ktimidity/' \
-    > $ALD/Multimedia/ktimidity.desktop
+	> $ALD/Multimedia/ktimidity.desktop
 
 cd $RPM_BUILD_ROOT%{_datadir}/apps/kmidi/config
 ln -s gravis.cfg GUSpatches
@@ -390,8 +390,8 @@ echo "Remember to restart artsd!"
 %post	kscd	-p /sbin/ldconfig
 %postun	kscd	-p /sbin/ldconfig
 
-%post   mpeglib -p /sbin/ldconfig
-%postun mpeglib -p /sbin/ldconfig
+%post	mpeglib -p /sbin/ldconfig
+%postun	mpeglib -p /sbin/ldconfig
 
 %post	noatun	-p /sbin/ldconfig
 %postun	noatun	-p /sbin/ldconfig
