@@ -45,7 +45,7 @@ BuildRequires:	kdelibs-devel >= %{version}
 BuildRequires:	libart_lgpl-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libogg-devel
-BuildRequires:	libpng-devel
+BuildRequires:	libpng-devel >= 1.2.5
 BuildRequires:	libstdc++-devel
 BuildRequires:	libvorbis-devel
 BuildRequires: 	sed >= 4.0
