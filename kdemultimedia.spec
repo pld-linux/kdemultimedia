@@ -30,10 +30,11 @@ Vendor:		The KDE Team
 Group:		X11/Applications
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
 Source0:        http://team.pld.org.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
+# Source0-md5:	689c73cec637b0d0cd81a9cd701bb2f4
 Patch0:		%{name}-timidity.patch
-#Patch1:		http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-video-20030316.patch
+#Patch1:	http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-video-20030316.patch
 #Patch2:	http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-streaming-20030317.patch
-#Patch2:		%{name}-streaming-fixed.patch 
+#Patch2:	%{name}-streaming-fixed.patch 
 %{?_without_alsa:BuildConflicts:	alsa-driver-devel}
 %{!?_without_alsa:BuildRequires:	alsa-lib-devel}
 %{?_with_nas:BuildRequires:	nas-devel >= 1.5}
