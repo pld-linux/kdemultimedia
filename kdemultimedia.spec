@@ -4,15 +4,15 @@
 
 %define         _state          unstable
 %define         _ver		3.1
-%define         _rcver		rc6
+%define         _rcver		rc7
 %define         _kdever		kde-%{_ver}-%{_rcver}
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
-Version:	%{_ver}%{_rcver}
-Release:	1
-Epoch:		7
+Version:	%{_ver}
+Release:	4
+Epoch:		8
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
@@ -42,9 +42,6 @@ BuildRequires:	zlib-devel
 Requires:	kdelibs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_prefix		/usr/X11R6
-%define         _fontdir        /usr/share/fonts
-%define         _sharedir       %{_prefix}/share
 %define         _htmldir        /usr/share/doc/kde/HTML
 
 %define		no_install_post_chrpath		1
@@ -266,6 +263,7 @@ Plug-in do Xine
 %setup -q
 
 %build
+kde_appsdir="%{_applnkdir}"; export kde_appsdir
 kde_htmldir="%{_htmldir}"; export kde_htmldir
 kde_icondir="%{_pixmapsdir}"; export kde_icondir
 
