@@ -1,0 +1,36 @@
+--- kdemultimedia-3.1/kmidi/config/gravis.cfg~	Thu Nov 27 06:14:03 1997
++++ kdemultimedia-3.1/kmidi/config/gravis.cfg	Sat Jan 18 15:02:58 2003
+@@ -3,6 +3,8 @@
+ # programs. 
+ #
+ 
++dir /usr/share/GUSpatches
++
+ bank 0
+ 
+ 	0 acpiano
+--- kdemultimedia-3.1/kmidi/config/timidity.cfg~	Wed Sep 26 19:48:31 2001
++++ kdemultimedia-3.1/kmidi/config/timidity.cfg	Sat Jan 18 15:05:58 2003
+@@ -36,8 +36,10 @@
+ 
+ bank 0 standard
+ if 1
+-source piano
++source GUSpatches
+ if 2
++source piano
++if 3
+ source guitar
+ else
+ source piano+guitar
+@@ -45,8 +47,9 @@
+ drumset 0 standard
+ source drums
+ 
+-# The above give 3 patchsets which will be shown on KMidi's patchset menu:
++# The above give 4 patchsets which will be shown on KMidi's patchset menu:
+ #	piano+guitar
++#	GUSpatches
+ #	piano
+ #	guitar
+ # These are the names of 3 files in this directory which list which patches
