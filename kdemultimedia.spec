@@ -32,6 +32,7 @@ BuildRequires:	esound-devel
 BuildRequires:	gettext-devel
 BuildRequires:	gtk+-devel
 BuildRequires:	kdelibs-devel = %{version}
+BuildRequires:	libart_lgpl-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libogg-devel
 BuildRequires:	libpng-devel
@@ -273,7 +274,7 @@ kde_icondir="%{_pixmapsdir}"; export kde_icondir
 
 CFLAGS="%{rpmcflags} -I%{_includedir}"
 
-%configure CPPFLAGS="$CPPFLAGS" \
+%configure \
  	--with-pam="yes" \
 	--enable-final \
 %ifnarch sparc sparcv9 sparc64
