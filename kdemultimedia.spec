@@ -21,7 +21,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	1.3
+Release:	2
 Epoch:		8
 License:	GPL
 Vendor:		The KDE Team
@@ -34,12 +34,11 @@ Source1:	ftp://blysk.ds.pg.gda.pl/linux/kde-i18n-package/kde-i18n-%{name}-%{vers
 Patch0:		%{name}-timidity.patch
 %{!?_without_alsa:BuildRequires:	alsa-lib-devel}
 %{!?_without_alsa:BuildRequires:	alsa-driver-devel}
-%{?_with_nas:BuildRequires:	nas-devel >= 1.5}
-%{?_with_esd:BuildRequires:     esound-devel}
 BuildRequires:	arts-devel
 BuildRequires:	arts-kde-devel
 BuildRequires:	cdparanoia-III
 BuildRequires:	cdparanoia-III-devel
+%{?_with_esd:BuildRequires:     esound-devel}
 BuildRequires:	gettext-devel
 BuildRequires:	gtk+-devel
 BuildRequires:	kdelibs-devel >= %{version}
@@ -49,9 +48,10 @@ BuildRequires:	libogg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libvorbis-devel
+%{?_with_nas:BuildRequires:	nas-devel >= 1.5}
+BuildRequires:	perl
 %{!?_without_xine:BuildRequires: xine-lib-devel}
 BuildRequires:	zlib-devel
-BuildRequires:	perl
 Requires:	kdelibs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -315,8 +315,8 @@ done
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
-%{__make} install DESTDIR=$RPM_BUILD_ROOT
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT
 
 mv $RPM_BUILD_ROOT%{_bindir}/{timidity,ktimidity}
 
@@ -338,52 +338,39 @@ cd -
 
 bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 
-#%%find_lang kfile_m3u	--with-kde
-#%%find_lang kfile_mp3	--with-kde
-#%%find_lang kfile_ogg	--with-kde
-#%%find_lang kfile_wav	--with-kde
-
-#cat {kfile_m3u,kfile_mp3,kfile_ogg,kfile_wav,kmyapp,koncd}.lang \
-#    >> kfile.lang
-
 :> kfile.lang
 programs="kfile_au kfile_avi kfile_m3u kfile_mp3 kfile_ogg kfile_wav"
-
 for i in $programs; do
         %find_lang $i --with-kde
         cat $i.lang >> kfile.lang
 done
 
-%find_lang aktion	--with-kde
-%find_lang artsbuilder	--with-kde
-cat artsbuilder.lang > arts.lang
-%find_lang artscontrol	--with-kde
-cat artscontrol.lang >> arts.lang
-%find_lang artsmodules	--with-kde
-cat artsmodules.lang >> arts.lang
-%find_lang desktop_kdemultimedia --with-kde
-cat desktop_kdemultimedia.lang >> arts.lang
+:> arts.lang
+programs="artsbuilder artscontrol artsmodules desktop_kdemultimedia"
+for i in $programs; do
+	%find_lang $i --with-kde
+	cat $i.lang >> arts.lang
+done
 
-%find_lang kaboodle	--with-kde
-%find_lang kmid		--with-kde
-%find_lang kmidi	--with-kde
-%find_lang kmix		--with-kde
-%find_lang kmixcfg	--with-kde
-cat kmixcfg.lang >> kmix.lang
-%find_lang kcmkmix	--with-kde
-cat kcmkmix.lang >> kmix.lang
+%find_lang kmix			--with-kde
+%find_lang kmixcfg		--with-kde
+%find_lang kcmkmix		--with-kde
+cat {kmixcfg,kcmkmix}.lang >> kmix.lang
 
-#%find_lang kmyapp	--with-kde
-#%find_lang koncd	--with-kde
-%find_lang krec		--with-kde
-%find_lang kscd		--with-kde
-%find_lang noatun	--with-kde
+%find_lang kaudiocreator	--with-kde
+%find_lang kcmaudiocd		--with-kde
+%find_lang kio_audiocd		--with-kde
+cat {kcmaudiocd,kio_audiocd}.lang >> kaudiocreator.lang
 
-%find_lang kaudiocreator --with-kde
-%find_lang kcmaudiocd --with-kde
-cat kcmaudiocd.lang >> kaudiocreator.lang
-%find_lang kio_audiocd --with-kde
-cat kio_audiocd.lang >> kaudiocreator.lang
+%find_lang kaboodle		--with-kde
+%find_lang kmid			--with-kde
+%find_lang kmidi		--with-kde
+%find_lang krec			--with-kde
+%find_lang kscd			--with-kde
+%find_lang noatun		--with-kde
+%find_lang aktion		--with-kde
+#%find_lang kmyapp		--with-kde
+#%find_lang koncd		--with-kde
 
 %clean
 rm -rf $RPM_BUILD_ROOT
