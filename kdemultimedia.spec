@@ -267,7 +267,7 @@ muzycznej lub inne urz±dzenia MIDI przy³±czone do niej.
 Summary:	KDE audio mixer
 Summary(pl):	Mixer audio dla KDE
 Group:		X11/Applications
-Requires:       kdebase-kicker >= 9:%{version}
+Requires:       kdebase-core >= 9:%{version}
 
 %description kmix
 Sound mixer application for KDE.
