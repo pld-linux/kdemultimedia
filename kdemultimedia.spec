@@ -48,7 +48,8 @@ BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libvorbis-devel
 %{!?_without_xine:BuildRequires: xine-lib-devel}
-BuildRequires:	zlib-devel
+BuildRequires:	zlib-deve
+BuildRequires:	perll
 Requires:	kdelibs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -299,11 +300,8 @@ AUDIO=${AUDIO%%,}
 # /usr/include/linux/cdrom.h > linux/cdrom.h
 
 for plik in `find ./ -name \*.desktop` ; do
-	if [ -d $plik ]; then
 		echo $plik
-		sed -e "s/[nb]/[no]/g" > $plik.1
-		mv -f $plik.1 $plik
-	fi
+		perl -pi -e "s/\[nb\]/\[no\]/g" $plik
 done
 
 %configure \
@@ -318,7 +316,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
 
-mv $RPM_BUILD_ROOT%{_bindir}/{timidity,ktimidity}    
+mv $RPM_BUILD_ROOT%{_bindir}/{timidity,ktimidity}
 
 ALD=$RPM_BUILD_ROOT%{_applnkdir}
 install -d $ALD/{Settings/KDE,Multimedia/ArtsTools}
