@@ -21,7 +21,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	1.2
+Release:	1.3
 Epoch:		8
 License:	GPL
 Vendor:		The KDE Team
@@ -42,7 +42,7 @@ BuildRequires:	cdparanoia-III
 BuildRequires:	cdparanoia-III-devel
 BuildRequires:	gettext-devel
 BuildRequires:	gtk+-devel
-BuildRequires:	kdelibs-devel = %{version}
+BuildRequires:	kdelibs-devel >= %{version}
 BuildRequires:	libart_lgpl-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libogg-devel
@@ -338,30 +338,52 @@ cd -
 
 bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 
-#%find_lang kfile_m3u	--with-kde
-#%find_lang kfile_mp3	--with-kde
-#%find_lang kfile_ogg	--with-kde
-#%find_lang kfile_wav	--with-kde
+#%%find_lang kfile_m3u	--with-kde
+#%%find_lang kfile_mp3	--with-kde
+#%%find_lang kfile_ogg	--with-kde
+#%%find_lang kfile_wav	--with-kde
+
 #cat {kfile_m3u,kfile_mp3,kfile_ogg,kfile_wav,kmyapp,koncd}.lang \
-#    >> %{name}.lang
+#    >> kfile.lang
+
+:> kfile.lang
+programs="kfile_au kfile_avi kfile_m3u kfile_mp3 kfile_ogg kfile_wav"
+
+for i in $programs; do
+        %find_lang $i --with-kde
+        cat $i.lang >> kfile.lang
+done
+
 %find_lang aktion	--with-kde
 %find_lang artsbuilder	--with-kde
 cat artsbuilder.lang > arts.lang
 %find_lang artscontrol	--with-kde
 cat artscontrol.lang >> arts.lang
+%find_lang artsmodules	--with-kde
+cat artsmodules.lang >> arts.lang
+%find_lang desktop_kdemultimedia --with-kde
+cat desktop_kdemultimedia.lang >> arts.lang
+
 %find_lang kaboodle	--with-kde
 %find_lang kmid		--with-kde
 %find_lang kmidi	--with-kde
 %find_lang kmix		--with-kde
 %find_lang kmixcfg	--with-kde
 cat kmixcfg.lang >> kmix.lang
-#%find_lang kcmkmix	--with-kde
-#cat kcmkmix.lang >> kmix.lang
+%find_lang kcmkmix	--with-kde
+cat kcmkmix.lang >> kmix.lang
+
 #%find_lang kmyapp	--with-kde
 #%find_lang koncd	--with-kde
 %find_lang krec		--with-kde
 %find_lang kscd		--with-kde
 %find_lang noatun	--with-kde
+
+%find_lang kaudiocreator --with-kde
+%find_lang kcmaudiocd --with-kde
+cat kcmaudiocd.lang >> kaudiocreator.lang
+%find_lang kio_audiocd --with-kde
+cat kio_audiocd.lang >> kaudiocreator.lang
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -445,7 +467,7 @@ echo "Remember to restart artsd !"
 %{_applnkdir}/Multimedia/kaboodle.desktop
 %{_pixmapsdir}/*/*/apps/kaboodle.*
 
-%files kaudiocreator
+%files kaudiocreator -f kaudiocreator.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kaudiocreator
 %{_libdir}/kde3/kcm_audiocd.la
@@ -458,7 +480,7 @@ echo "Remember to restart artsd !"
 %{_applnkdir}/Settings/KDE/Sound/audiocd.desktop
 %{_pixmapsdir}/[!l]*/*/*/kaudiocreator.png
 
-%files kfile
+%files kfile -f kfile.lang
 %defattr(644,root,root,755)
 %{_libdir}/kde3/kfile_*.la
 %attr(755,root,root) %{_libdir}/kde3/kfile_*.so
