@@ -287,9 +287,12 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
 
 ALD=$RPM_BUILD_ROOT%{_applnkdir}
-install -d $ALD/Settings/KDE
+install -d $ALD/{Settings/KDE,Multimedia/ArtsTools}
 mv -f $ALD/{Multimedia/More/*.desktop,Multimedia}
+mv -f $ALD/{Multimedia/arts*.desktop,Multimedia/ArtsTools}
 mv -f $ALD/{Settings/[!K]*,Settings/KDE}
+echo "[Desktop Entry]\nName=Arts Tools\nIcon=arts\nType=Directory" \
+    > $ALD/Multimedia/ArtsTools/.directory
 
 #bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 
@@ -379,7 +382,9 @@ echo "Remember to restart artsd !"
 %{_datadir}/apps/artsbuilder
 %{_datadir}/apps/artscontrol
 %{_datadir}/mimelnk/application/*arts*
-%{_applnkdir}/Multimedia/arts*.desktop
+%dir %{_applnkdir}/Multimedia/ArtsTools
+%{_applnkdir}/Multimedia/ArtsTools/.directory
+%{_applnkdir}/Multimedia/ArtsTools/arts*.desktop
 %{_pixmapsdir}/*/*/*/arts*
 
 %files kaboodle -f kaboodle.lang
