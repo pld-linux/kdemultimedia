@@ -4,11 +4,11 @@
 
 %define		_state		snapshots
 %define		_ver		3.2.90
-%define		_snap		040516
+%define		_snap		040525
 %define		_packager	adgor
 
-%define		_minlibsevr	9:3.2.90.040515
-%define		_minbaseevr	9:3.2.90.040515
+%define		_minlibsevr	9:3.2.90.040524
+%define		_minbaseevr	9:3.2.90.040524
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
