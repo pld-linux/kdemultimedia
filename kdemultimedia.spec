@@ -207,6 +207,7 @@ Mikser audio dla KDE.
 Summary:	KDE sound recorder
 Summary(pl):	Rejestrator d¼wiêku dla KDE
 Group:		X11/Applications
+Requires:	%{name}-arts = %{version}
 Requires:	kdelibs >= %{version}
 
 %description krec
