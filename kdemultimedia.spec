@@ -2,7 +2,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	3.0.4
-Release:	1
+Release:	2
 Epoch:		7
 License:	GPL
 Vendor:		The KDE Team
@@ -219,6 +219,7 @@ CFLAGS="%{rpmcflags} -I%{_includedir}"
 
 %configure CPPFLAGS="$CPPFLAGS" \
  	--with-pam="yes" \
+	--disable-rpath \
 	--enable-final \
 %ifnarch sparc sparcv9 sparc64
 	--enable-audio=oss
