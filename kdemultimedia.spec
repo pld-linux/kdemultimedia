@@ -772,8 +772,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libnoatuncontrols.so
 %attr(755,root,root) %{_libdir}/libnoatuntags.so
 %attr(755,root,root) %{_libdir}/libworkman.so
-%attr(755,root,root) %{_libdir}/libyafcore.so
-%attr(755,root,root) %{_libdir}/libyafxplayer.so
 # static-only library, no shared version - so here
 %{_libdir}/libworkmanaudio.a
 %{_includedir}/*.h
@@ -1028,6 +1026,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libarts_mpeglib.so
 %attr(755,root,root) %{_libdir}/libarts_splay.so
 %attr(755,root,root) %{_libdir}/libmpeg.so
+%attr(755,root,root) %{_libdir}/libyafcore.so
+%attr(755,root,root) %{_libdir}/libyafxplayer.so
 %{_includedir}/mpeglib
 %{_includedir}/mpeglib_artsplug
 
