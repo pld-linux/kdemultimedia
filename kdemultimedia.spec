@@ -17,7 +17,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	1
+Release:	1.1
 Epoch:		8
 License:	GPL
 Vendor:		The KDE Team
@@ -25,7 +25,8 @@ Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
 # Source0-md5:	da1e05b8284976359cab32f0abf4b87b
 # generated from kde-i18n
-#Source1:	kde-i18n-%{name}-%{version}.tar.bz2
+Source1:	ftp://blysk.ds.pg.gda.pl/linux/kde-i18n-package/%{version}/kde-i18n-%{name}-%{version}.tar.bz2
+# Source1-md5:	d47d1704df8496cef404d5f253ba102b
 Patch0:		%{name}-timidity.patch
 Patch1:		%{name}-qt-linuxcdrom.patch
 %{!?_without_alsa:BuildRequires:	alsa-lib-devel}
