@@ -15,7 +15,7 @@ Group(pt_BR):	X11/Aplicações
 Group(pt):	X11/Aplicações
 Source0:	ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
 Patch0:		%{name}-kmidi-alsa.patch
-Patch2:		%{name}-fix-num-validator.patch
+Patch1:		%{name}-fix-num-validator.patch
 Patch2:		%{name}-fix-kmidi-layout.patch
 %ifnarch sparc sparc64
 BuildRequires:	alsa-lib-devel
