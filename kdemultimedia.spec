@@ -11,7 +11,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	0.1
+Release:	1
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
@@ -23,7 +23,7 @@ Source0:	http://download.kde.org/%{_state}/%{_ver}/src/%{name}-%{_ver}.tar.bz2
 Source1:        kde-i18n-%{name}-%{version}.tar.bz2
 # Source1-md5:	7934bbaaa3b526b9115b43c4fbb846e1
 %endif
-Patch0:		%{name}-3.2branch.diff
+# Patch0:		%{name}-3.2branch.diff
 # Patch0:		%{name}-no_pedantic.patch
 # Patch1:		%{name}-cdda_check.patch
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
@@ -593,8 +593,6 @@ Pliki umiêdzynarodawiaj±ce dla kaudiocreatora.
 
 %prep
 %setup -q -n %{name}-%{version} 
-#%patch0 -p1
-#%%patch1 -p1
 
 %build
 cp /usr/share/automake/config.sub admin
