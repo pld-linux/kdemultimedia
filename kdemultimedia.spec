@@ -6,13 +6,10 @@
 #
 # --with	nas 	Set this option if you want nas support.
 #
-# --without	xine	Set this option in case You haven't
-#			xine-lib to ommit xine plug-in building.
-#
 
 %define         _state          snapshots
 %define         _ver		3.1.92
-%define         _snap		031006
+%define         _snap		031014
 
 %ifarch	sparc sparcv9 sparc64
 %define		_with_esd	1
@@ -30,7 +27,7 @@ Vendor:		The KDE Team
 Group:		X11/Applications
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
 Source0:        http://www.kernel.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
-# Source0-md5:	19506ad74c297f6c65cc6d0255c5092d
+# Source0-md5:	31e7deb9520a49d6fb34321e5468965c
 Patch0:		%{name}-no_pedantic.patch
 #Patch0:	%{name}-timidity.patch
 #Patch1:	http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-video-20030316.patch
@@ -91,10 +88,9 @@ Summary(pl):	kdemultimedia - pliki nag³ówkowe
 Group:		X11/Development/Libraries
 Requires:	kdelibs-devel >= 9:%{version}
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
-Requires:	%{name}-kscd = %{epoch}:%{version}-%{release}
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
-Requires:	%{name}-mpeglib = %{epoch}:%{version}-%{release}
-Requires:	%{name}-noatun = %{epoch}:%{version}-%{release}
+Requires:	%{name}-libworkman = %{epoch}:%{version}-%{release}
+Requires:	%{name}-noatun-libs = %{epoch}:%{version}-%{release}
 
 %description devel
 kdemultimedia - headers.
@@ -119,8 +115,6 @@ Summary:	Arts Tools
 Summary(pl):	Narzêdzia Arts
 Group:		X11/Applications
 Requires:	kdelibs >= 9:%{version}
-Requires:	%{name}-mpeglib = %{epoch}:%{version}-%{release}
-Obsoletes:	%{name}-aktion
 
 %description arts
 Arts Tools.
@@ -128,14 +122,94 @@ Arts Tools.
 %description arts -l pl
 Narzêdzia Arts.
 
+%package artsbuilder
+Summary:	Arts Tools - builder
+Summary(pl):	Narzêdzia Arts - builder
+Group:		X11/Applications
+Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
+Obsoletes:	%{name}-arts < 9:3.1.92.021012
+
+%description artsbuilder
+Arts Tools - builder.
+
+%description artsbuilder -l pl
+Narzêdzia Arts - builder.
+
+%package artscontrol
+Summary:	Arts Tools - control
+Summary(pl):	Narzêdzia Arts - control
+Group:		X11/Applications
+Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
+Obsoletes:	%{name}-arts < 9:3.1.92.021012
+
+%description artscontrol
+Arts Tools - control.
+
+%description artscontrol -l pl
+Narzêdzia Arts - control.
+
+%package artsplugin-audiofile
+Summary:	Audiofile Plug-in
+Summary(pl):	Wtyczka do Audiofile
+Group:		X11/Applications
+Requires:	audiofile
+Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
+Obsoletes:	%{name}-arts < 9:3.1.92.021012
+
+%description artsplugin-audiofile
+Audiofile Plug-in.
+
+%description artsplugin-audiofile -l pl
+Wtyczka do Audiofile.
+
+%package artsplugin-xine
+Summary:	Xine Plug-in
+Summary(pl):	Wtyczka do Xine
+Group:		X11/Applications
+Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
+Requires:	xine-lib >= 1.0b4
+Obsoletes:	%{name}-xine
+
+%description artsplugin-xine
+Xine Plug-in.
+
+%description artsplugin-xine -l pl
+Wtyczka do Xine.
+
+%package audiocd
+Summary:	Audiocd protocol for konqueror
+Summary(pl):	Protokó³ audiocd dla konquerora
+Group:		X11/Applications
+Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
+Requires:	konqueror >= 9:%{version}
+Obsoletes:	%{name}-kaudiocreator < 9:3.1.92.031014
+
+%description audiocd
+This package provides audiocd protocol for konqueror.
+
+%description audiocd -l pl
+Ten pakiet dostarcza protokó³ audiocd dla konquerora.
+
+%package cddb
+Summary:        cddb library for KDE
+Summary(pl):    Biblioteka cddb pod KDE
+Group:          X11/Applications
+Requires:       kdebase-core >= 9:%{version}
+Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
+Obsoletes:	%{name}-libkcddb < 9:3.1.92.031014
+
+%description cddb
+CDDB control.
+
+%description cddb -l pl
+Sterowanie cddb.
+
 %package juk
 Summary:        A jukebox like program
 Summary(pl):    Program spe³niaj±cy funkcje szafy graj±cej
 Group:          X11/Applications
 Requires:       id3lib
 Requires:       kdebase-core >= 9:%{version}
-Requires:       %{name}-mpeglib = %{epoch}:%{version}-%{release}
-Obsoletes:	%{name}-aktion
 
 %description juk
 JuK (pronounced jook) is a jukebox and music manager for the KDE
@@ -151,7 +225,6 @@ Summary:	Media player
 Summary(pl):	Odtwarzacz multimedialny
 Group:		X11/Applications
 Requires:       kdebase-core >= 9:%{version}
-Obsoletes:	%{name}-aktion
 
 %description kaboodle
 Media player.
@@ -164,15 +237,14 @@ Summary:	Audio Creator
 Summary(pl):	Kreator audio
 Group:		X11/Applications
 Requires:       kdebase-core >= 9:%{version}
-Obsoletes:	%{name}-aktion
+Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
+Requires:	%{name}-libworkman = %{epoch}:%{version}-%{release}
 
 %description kaudiocreator
-CD ripper and sound encoder frontend. Already provides audiocd
-protocol for konqueror.
+CD ripper and sound encoder frontend.
 
 %description kaudiocreator -l pl
-Nak³adka na CD ripper i enkoder d¼wiêku. Dostarcza równie¿ protokó³
-audiocd do konquerora.
+Nak³adka na CD ripper i enkoder d¼wiêku.
 
 %package kfile
 Summary:	Audio file formats enhanced information
@@ -180,7 +252,6 @@ Summary(pl):	Rozszerzone informacje o plikach d¼wiêkowych
 Group:		X11/Development/Libraries
 Requires:	konqueror >= %{version}
 Obsoletes:	kdemultimedia < 8:3.0.8
-Obsoletes:	%{name}-aktion
 
 %description kfile
 This package adds a fold to konqueror "file properties" dialog window
@@ -195,7 +266,6 @@ Summary:	KDE MIDI Player
 Summary(pl):	Odtwarzacz MIDI dla KDE
 Group:		X11/Applications
 Requires:       kdebase-core >= 9:%{version}
-Obsoletes:	%{name}-aktion
 
 %description kmid
 This is a MIDI player for KDE. It uses sound-card synthetizer or other
@@ -205,27 +275,25 @@ hardware connected to MIDI to play MIDI files.
 Odtwarzacz MIDI dla KDE. Wykorzystuje tylko syntezator na karcie
 muzycznej lub inne urz±dzenia MIDI przy³±czone do niej.
 
-%package kmidi
-Summary:	KDE software MIDI Player
-Summary(pl):	Programowy odtwarzacz MIDI dla KDE
-Group:		X11/Applications
-Requires:       kdebase-core >= 9:%{version}
-Obsoletes:	%{name}-aktion
-
-%description kmidi
-Software MIDI player. It uses GUS patch files and CPU power to create
-high-quality sound.
-
-%description kmidi -l pl
-Programowy odtwarzacz MIDI. Wykorzystuje patche z GUSa i moc procesora
-do stworzenia dobrej jako¶ci d¼wiêku.
+#%package kmidi
+#Summary:	KDE software MIDI Player
+#Summary(pl):	Programowy odtwarzacz MIDI dla KDE
+#Group:		X11/Applications
+#Requires:       kdebase-core >= 9:%{version}
+#
+#%description kmidi
+#Software MIDI player. It uses GUS patch files and CPU power to create
+#high-quality sound.
+#
+#%description kmidi -l pl
+#Programowy odtwarzacz MIDI. Wykorzystuje patche z GUSa i moc procesora
+#do stworzenia dobrej jako¶ci d¼wiêku.
 
 %package kmix
 Summary:	KDE audio mixer
 Summary(pl):	Mixer audio dla KDE
 Group:		X11/Applications
 Requires:       kdebase-kicker >= 9:%{version}
-Obsoletes:	%{name}-aktion
 
 %description kmix
 Sound mixer application for KDE.
@@ -238,8 +306,8 @@ Summary:	KDE sound recorder
 Summary(pl):	Rejestrator d¼wiêku dla KDE
 Group:		X11/Applications
 Requires:       kdebase-core >= 9:%{version}
-Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
-Obsoletes:	%{name}-aktion
+Requires:	%{name}-artscontrol = %{epoch}:%{version}-%{release}
+Requires:	%{name}-kmix = %{epoch}:%{version}-%{release}
 
 %description krec
 KDE sound recorder.
@@ -251,8 +319,9 @@ Rejestrator d¼wiêku dla KDE.
 Summary:	KDE CD Player
 Summary(pl):	Odtwarzacz CD dla KDE
 Group:		X11/Applications
-Requires:       kdebase-core >= 9:%{version}
-Obsoletes:	%{name}-aktion
+Requires:	kdebase-core >= 9:%{version}
+Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
+Requires:	%{name}-libworkman = %{epoch}:%{version}-%{release}
 
 %description kscd
 CD Player with CDDB support. It can automatically update its CD
@@ -265,24 +334,35 @@ danych o p³ytach CD z Internetem. Potrafi tak¿e wy¶wietliæ ³adn±
 graficzn± interpretacjê granych d¼wiêków.
 
 %package libkcddb
-Summary:        cddb library for KDE
-Summary(pl):    Biblioteka cddb pod KDE
+Summary:        A kcddb library
+Summary(pl):    Biblioteka kcddb
 Group:          X11/Libraries
-Requires:       kdebase-core >= 9:%{version}
-Obsoletes:	%{name}-aktion
+Requires:       kdelibs >= 9:%{version}
 
 %description libkcddb
-cddb library for KDE.
+A kcddb library.
 
 %description libkcddb -l pl
-Biblioteka cddb pod KDE.
+Biblioteka kcddb.
+
+%package libworkman
+Summary:        A workman library
+Summary(pl):    Biblioteka workman
+Group:          X11/Libraries
+Requires:       kdelibs >= 9:%{version}
+Obsoletes:	%{name}-kscd < 9:3.1.92.031012
+
+%description libworkman
+A workman library.
+
+%description libworkman -l pl
+Biblioteka workman.
 
 %package mpeglib
 Summary:	MPEG lib
 Summary(pl):	MPEG lib
 Group:		X11/Applications
 Requires:	kdelibs >= 9:%{version}
-Obsoletes:	%{name}-aktion
 
 %description mpeglib
 MPEG lib.
@@ -290,12 +370,38 @@ MPEG lib.
 %description mpeglib -l pl
 MPEG lib.
 
+%package mpeglib-devel
+Summary:	MPEG lib
+Summary(pl):	MPEG lib
+Group:		X11/Applications
+Requires:	%{name}-mpeglib-examples = %{epoch}:%{version}-%{release}
+Obsoletes:	%{name}-mpeglib < 9:3.1.92.031012
+
+%description mpeglib-devel
+MPEG lib.
+
+%description mpeglib-devel -l pl
+MPEG lib.
+
+%package mpeglib-examples
+Summary:	MPEG lib
+Summary(pl):	MPEG lib
+Group:		X11/Applications
+Requires:	%{name}-mpeglib = %{epoch}:%{version}-%{release}
+Obsoletes:	%{name}-mpeglib < 9:3.1.92.031012
+
+%description mpeglib-examples
+MPEG lib.
+
+%description mpeglib-examples -l pl
+MPEG lib.
+
 %package noatun
 Summary:	KDE Media Player
 Summary(pl):	KDE Media Player - odtwarzacz plików multimedialnych
 Group:		X11/Applications
 Requires:       kdebase-core >= 9:%{version}
-Obsoletes:	%{name}-aktion
+Requires:	%{name}-noatun-libs = %{epoch}:%{version}-%{release}
 
 %description noatun
 KDE Media Player.
@@ -303,19 +409,18 @@ KDE Media Player.
 %description noatun -l pl
 KDE Media Player - odtwarzacz plików multimedialnych.
 
-%package xine
-Summary:	Xine Plug-in
-Summary(pl):	Wtyczka do Xine
-Group:		X11/Applications
-Requires:	kdelibs >= 9:%{version}
-Requires:	xine-lib >= 1.0b4
-Obsoletes:	%{name}-aktion
+%package noatun-libs
+Summary:	KDE Media Player - shared libs
+Summary(pl):	KDE Media Player - biblioteki wspó³dzielone
+Group:		X11/Libraries
+Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
+Obsoletes:	%{name}-noatun < 9:3.1.92.031012
 
-%description xine
-Xine Plug-in.
+%description noatun-libs
+KDE Media Player - shared libs.
 
-%description xine -l pl
-Wtyczka do Xine.
+%description noatun-libs -l pl
+KDE Media Player - biblioteki wspó³dzielone.
 
 %prep
 %setup -q -n %{name}-%{_snap}
@@ -325,9 +430,8 @@ Wtyczka do Xine.
 
 %build
 
-for plik in `find ./ -name *.desktop` ; do
-	echo $plik
-	sed -i -e "s/\[nb\]/\[no\]/g" $plik
+for f in `find . -name *.desktop` ; do
+	sed -i 's/\[nb\]/\[no\]/g' $f
 done
 
 AUDIO=""
@@ -348,12 +452,13 @@ echo KDE_OPTIONS=nofinal >> juk/Makefile.am
 
 %{__make} -f admin/Makefile.common cvs
 
-%configure --enable-final \
+%configure \
+	--enable-audio=$AUDIO \
+	--enable-final \
 %ifnarch sparc sparcv9 sparc64
 	--with-alsa \
-	--with-arts-alsa \
+	--with-arts-alsa
 %endif
-	--enable-audio=$AUDIO
 
 %{__make}
 
@@ -376,7 +481,6 @@ rm -rf $RPM_BUILD_ROOT
 #cd -
 
 %find_lang artsbuilder	--with-kde
-cat artsbuilder.lang > arts.lang
 %find_lang juk		--with-kde
 %find_lang kaboodle	--with-kde
 %find_lang kmid		--with-kde
@@ -391,25 +495,31 @@ cat kmixcfg.lang >> kmix.lang
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post	arts 		-p /sbin/ldconfig
-%postun	arts		-p /sbin/ldconfig
+%post	arts 			-p /sbin/ldconfig
+%postun	arts			-p /sbin/ldconfig
 
-%post	kscd		-p /sbin/ldconfig
-%postun	kscd		-p /sbin/ldconfig
+%post	libkcddb		-p /sbin/ldconfig
+%postun	libkcddb		-p /sbin/ldconfig
 
-%post	mpeglib		-p /sbin/ldconfig
-%postun	mpeglib		-p /sbin/ldconfig
+%post	libworkman		-p /sbin/ldconfig
+%postun	libworkman		-p /sbin/ldconfig
 
-%post	libkcddb	-p /sbin/ldconfig
-%postun	libkcddb	-p /sbin/ldconfig
+%post	mpeglib			-p /sbin/ldconfig
+%postun	mpeglib			-p /sbin/ldconfig
 
-%post	noatun		-p /sbin/ldconfig
-%postun	noatun		-p /sbin/ldconfig
+%post	mpeglib-examples	-p /sbin/ldconfig
+%postun	mpeglib-examples	-p /sbin/ldconfig
+
+%post	noatun-libs		-p /sbin/ldconfig
+%postun	noatun-libs		-p /sbin/ldconfig
 
 %files devel
 %defattr(644,root,root,755)
-%{_libdir}/libarts_mpeglib.so
-%{_libdir}/libarts_splay.so
+%{_includedir}/*.h
+%{_includedir}/arts/*
+%{_includedir}/libkcddb
+%{_includedir}/libwm
+%{_includedir}/noatun
 %{_libdir}/libartsbuilder.so
 %{_libdir}/libartsgui.so
 %{_libdir}/libartsgui_idl.so
@@ -418,48 +528,116 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libartsmidi.so
 %{_libdir}/libartsmodules*.so
 %{_libdir}/libkcddb.so
-%{_libdir}/libmpeg.so
 %{_libdir}/libnoatun.so
 %{_libdir}/libnoatuncontrols.so
 %{_libdir}/libnoatuntags.so
 %{_libdir}/libworkman.so
 %{_libdir}/libyafcore.so
 %{_libdir}/libyafxplayer.so
-%{_includedir}/*.h
-%{_includedir}/arts/*
-%{_includedir}/libkcddb/*
-%{_includedir}/libwm
-%{_includedir}/mpeglib*
-%{_includedir}/noatun
 
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libworkmanaudio.a
 
-%files arts -f arts.lang
+%files arts
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/arts*
 %attr(755,root,root) %{_bindir}/midisend
+%{_libdir}/libartsbuilder.la
+%attr(755,root,root) %{_libdir}/libartsbuilder.so.*.*.*
+%{_libdir}/libartscontrolapplet.la
+%attr(755,root,root) %{_libdir}/libartscontrolapplet.so.*.*.*
+%{_libdir}/libartscontrolsupport.la
+%attr(755,root,root) %{_libdir}/libartscontrolsupport.so.*.*.*
+%{_libdir}/libartseffects.la
+%attr(755,root,root) %{_libdir}/libartseffects.so
+%{_libdir}/libartsgui.la
+%attr(755,root,root) %{_libdir}/libartsgui.so.*.*.*
+%{_libdir}/libartsgui_idl.la
+%attr(755,root,root) %{_libdir}/libartsgui_idl.so.*.*.*
+%{_libdir}/libartsgui_kde.la
+%attr(755,root,root) %{_libdir}/libartsgui_kde.so.*.*.*
+%{_libdir}/libartsmidi.la
+%attr(755,root,root) %{_libdir}/libartsmidi.so.*.*.*
+%{_libdir}/libartsmidi_idl.la
+%attr(755,root,root) %{_libdir}/libartsmidi_idl.so.*.*.*
+%{_libdir}/libartsmodules.la
+%attr(755,root,root) %{_libdir}/libartsmodules.so.*.*.*
+%{_libdir}/libartsmodulescommon.la
+%attr(755,root,root) %{_libdir}/libartsmodulescommon.so.*.*.*
+%{_libdir}/libartsmoduleseffects.la
+%attr(755,root,root) %{_libdir}/libartsmoduleseffects.so.*.*.*
+%{_libdir}/libartsmodulesmixers.la
+%attr(755,root,root) %{_libdir}/libartsmodulesmixers.so.*.*.*
+%{_libdir}/libartsmodulessynth.la
+%attr(755,root,root) %{_libdir}/libartsmodulessynth.so.*.*.*
+%{_libdir}/mcop/Arts
+%{_libdir}/mcop/artseffects.mcopclass
+%{_libdir}/mcop/artseffects.mcoptype
+%{_libdir}/mcop/artsgui.mcopclass
+%{_libdir}/mcop/artsgui.mcoptype
+%{_libdir}/mcop/artsmidi.mcopclass
+%{_libdir}/mcop/artsmidi.mcoptype
+%{_libdir}/mcop/artsmodules.mcopclass
+%{_libdir}/mcop/artsmodules.mcoptype
+%{_libdir}/mcop/artsmodulescommon.mcopclass
+%{_libdir}/mcop/artsmodulescommon.mcoptype
+%{_libdir}/mcop/artsmoduleseffects.mcopclass
+%{_libdir}/mcop/artsmoduleseffects.mcoptype
+%{_libdir}/mcop/artsmodulesmixers.mcopclass
+%{_libdir}/mcop/artsmodulesmixers.mcoptype
+%{_libdir}/mcop/artsmodulessynth.mcopclass
+%{_libdir}/mcop/artsmodulessynth.mcoptype
+
+%files artsbuilder -f artsbuilder.lang
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/artsbuilder
+%{_libdir}/mcop/artsbuilder.mcopclass
+%{_libdir}/mcop/artsbuilder.mcoptype
+%{_datadir}/apps/artsbuilder
+%{_datadir}/mimelnk/application/x-artsbuilder.desktop
+%{_desktopdir}/kde/artsbuilder.desktop
+%{_iconsdir}/crystalsvg/*/actions/artsbuilderexecute.png
+%{_iconsdir}/crystalsvg/*/apps/artsbuilder.png
+
+%files artscontrol
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/artscontrol
+%{_datadir}/apps/artscontrol
+%{_desktopdir}/kde/artscontrol.desktop
+%{_iconsdir}/crystalsvg/*/apps/artscontrol.png
+
+%files artsplugin-audiofile
+%defattr(644,root,root,755)
 %{_libdir}/libaudiofilearts.la
 %attr(755,root,root) %{_libdir}/libaudiofilearts.so
-%{_libdir}/libarts[!_]*.la
-%attr(755,root,root) %{_libdir}/libartseffects.so
-%attr(755,root,root) %{_libdir}/libarts[!_]*.so.*.*.*
-%{_libdir}/libarts_splay.la
-%attr(755,root,root) %{_libdir}/libarts_splay.so.*.*.*
-%{_libdir}/mcop/audiofilearts*
-%{_libdir}/mcop/arts*
-%{_libdir}/mcop/Splay*
-%{_libdir}/mcop/Arts/*
-%{_libdir}/mcop/ExtraStereo.mcopclass
-%{_libdir}/mcop/ExtraStereoGuiFactory.mcopclass
-%{_libdir}/mcop/VoiceRemoval.mcopclass
-%{_libdir}/mcop/RawWriter.mcopclass
-%{_datadir}/apps/artsbuilder
-%{_datadir}/apps/artscontrol
-%{_datadir}/mimelnk/application/*arts*
-%{_desktopdir}/kde/arts*.desktop
-%{_iconsdir}/*/*/*/arts*
+%{_libdir}/mcop/audiofilearts.mcopclass
+%{_libdir}/mcop/audiofilearts.mcoptype
+
+%files artsplugin-xine
+%defattr(644,root,root,755)
+%{_libdir}/kde3/videothumbnail.la
+%attr(755,root,root) %{_libdir}/kde3/videothumbnail.so
+%{_libdir}/*_xine.la
+%attr(755,root,root) %{_libdir}/*_xine.so
+%{_libdir}/mcop/xinePlayObject.mcopclass
+%{_datadir}/apps/videothumbnail
+%{_datadir}/services/videothumbnail.desktop
+
+%files audiocd
+%defattr(644,root,root,755)
+%{_libdir}/kde3/kcm_audiocd.la
+%attr(755,root,root) %{_libdir}/kde3/kcm_audiocd.so
+%{_libdir}/kde3/kio_audiocd.la
+%attr(755,root,root) %{_libdir}/kde3/kio_audiocd.so
+%{_datadir}/services/audiocd.protocol
+%{_desktopdir}/kde/audiocd.desktop
+
+%files cddb
+%defattr(644,root,root,755)
+%{_libdir}/kde3/kcm_cddb.la
+%attr(755,root,root) %{_libdir}/kde3/kcm_cddb.so
+%{_datadir}/config.kcfg/libkcddb.kcfg
+%{_desktopdir}/kde/libkcddb.desktop
 
 %files juk -f juk.lang
 %defattr(644,root,root,755)
@@ -468,7 +646,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/konqueror/servicemenus/jukservicemenu.desktop
 %{_desktopdir}/kde/juk.desktop
 %{_iconsdir}/*/*/*/juk*.png
-
 
 %files kaboodle -f kaboodle.lang
 %defattr(644,root,root,755)
@@ -486,14 +663,8 @@ rm -rf $RPM_BUILD_ROOT
 %files kaudiocreator
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kaudiocreator
-%{_libdir}/kde3/kcm_audiocd.la
-%attr(755,root,root) %{_libdir}/kde3/kcm_audiocd.so
-%{_libdir}/kde3/kio_audiocd.la
-%attr(755,root,root) %{_libdir}/kde3/kio_audiocd.so
 %{_datadir}/apps/kaudiocreator
-%{_datadir}/services/audiocd.protocol
 %{_desktopdir}/kde/kaudiocreator.desktop
-%{_desktopdir}/kde/audiocd.desktop
 %{_iconsdir}/[!l]*/*/*/kaudiocreator.png
 
 %files kfile
@@ -551,8 +722,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/cddaslave
 %attr(755,root,root) %{_bindir}/kscd
 %attr(755,root,root) %{_bindir}/workman2cddb.pl
-%{_libdir}/libworkman.la
-%attr(755,root,root) %{_libdir}/libworkman.so.*.*.*
 %{_desktopdir}/kde/kscd.desktop
 %{_datadir}/apps/kscd
 %{_datadir}/apps/profiles/kscd.profile.xml
@@ -586,51 +755,69 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kde/krec.desktop
 %{_iconsdir}/*/*/*/krec*
 
-%files mpeglib
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/mpeglibartsplay
-%attr(755,root,root) %{_bindir}/yaf*
-%{_libdir}/libyaf*.la
-%attr(755,root,root) %{_libdir}/libyaf*.so.*.*.*
-%{_libdir}/libarts_mpeglib.la
-%attr(755,root,root) %{_libdir}/libarts_mpeglib-0.3.0.so.*.*.*
-%{_libdir}/libmpeg.la
-%attr(755,root,root) %{_libdir}/libmpeg-0.3.0.so
-# Note that SplayPlayObject.mopclass is *not* here.
-#%%{_libdir}/mcop/VCDPlayObject.mcopclass
-%{_libdir}/mcop/WAVPlayObject.mcopclass
-%{_libdir}/mcop/OGGPlayObject.mcopclass
-%{_libdir}/mcop/NULLPlayObject.mcopclass
-%{_libdir}/mcop/MP3PlayObject.mcopclass
-%{_libdir}/mcop/CDDAPlayObject.mcopclass
-#%%{_libdir}/mcop/MPGPlayObject.mcopclass
-
 %files libkcddb
 %defattr(644,root,root,755)
 %{_libdir}/libkcddb.la
 %attr(755,root,root) %{_libdir}/libkcddb.so.*.*.*
-%{_libdir}/kde3/kcm_cddb.la
-%attr(755,root,root) %{_libdir}/kde3/kcm_cddb.so
-%{_desktopdir}/kde/libkcddb.desktop
+
+%files libworkman
+%defattr(644,root,root,755)
+%{_libdir}/libworkman.la
+%attr(755,root,root) %{_libdir}/libworkman.so.*.*.*
+
+%files mpeglib
+%defattr(644,root,root,755)
+# mpeglib part
+%{_libdir}/libmpeg.la
+%attr(755,root,root) %{_libdir}/libmpeg-0.3.0.so
+# mpeglib_artsplug part
+%attr(755,root,root) %{_bindir}/mpeglibartsplay
+%{_libdir}/libarts_mpeglib.la
+%attr(755,root,root) %{_libdir}/libarts_mpeglib-0.3.0.so.*.*.*
+%{_libdir}/libarts_splay.la
+%attr(755,root,root) %{_libdir}/libarts_splay.so.*.*.*
+%{_libdir}/mcop/CDDAPlayObject.mcopclass
+%{_libdir}/mcop/MP3PlayObject.mcopclass
+%{_libdir}/mcop/NULLPlayObject.mcopclass
+%{_libdir}/mcop/OGGPlayObject.mcopclass
+%{_libdir}/mcop/SplayPlayObject.mcopclass
+%{_libdir}/mcop/WAVPlayObject.mcopclass
+
+%files mpeglib-devel
+%defattr(644,root,root,755)
+%{_includedir}/mpeglib
+%{_includedir}/mpeglib_artsplug
+%{_libdir}/libarts_mpeglib.so
+%{_libdir}/libarts_splay.so
+%{_libdir}/libmpeg.so
+
+%files mpeglib-examples
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/yaf-cdda
+%attr(755,root,root) %{_bindir}/yaf-mpgplay
+%attr(755,root,root) %{_bindir}/yaf-splay
+%attr(755,root,root) %{_bindir}/yaf-tplay
+%attr(755,root,root) %{_bindir}/yaf-vorbis
+%attr(755,root,root) %{_bindir}/yaf-yuv
+%{_libdir}/libyafcore.la
+%attr(755,root,root) %{_libdir}/libyafcore.so.0.0.0
+%{_libdir}/libyafxplayer.la
+%attr(755,root,root) %{_libdir}/libyafxplayer.so.0.0.0
 
 %files noatun -f noatun.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/noatun*
-%{_libdir}/libnoatun.la
-%attr(755,root,root) %{_libdir}/libnoatun.so.*.*.*
-%{_libdir}/libnoatunarts.la
-%attr(755,root,root) %{_libdir}/libnoatunarts.so
-%{_libdir}/libnoatuncontrols.la
-%attr(755,root,root) %{_libdir}/libnoatuncontrols.so.*.*.*
-%{_libdir}/libnoatuntags.la
-%attr(755,root,root) %{_libdir}/libnoatuntags.so.*.*.*
-%{_libdir}/libwinskinvis.la
-%attr(755,root,root) %{_libdir}/libwinskinvis.so
 %{_libdir}/kde3/noatun*.la
 %attr(755,root,root) %{_libdir}/kde3/noatun*.so
 %{_libdir}/mcop/Noatun
-%{_libdir}/mcop/noatun*
-%{_libdir}/mcop/winskinvis*
+%{_libdir}/mcop/ExtraStereo.mcopclass
+%{_libdir}/mcop/ExtraStereoGuiFactory.mcopclass
+%{_libdir}/mcop/RawWriter.mcopclass
+%{_libdir}/mcop/VoiceRemoval.mcopclass
+%{_libdir}/mcop/noatunarts.mcopclass
+%{_libdir}/mcop/noatunarts.mcoptype
+%{_libdir}/mcop/winskinvis.mcopclass
+%{_libdir}/mcop/winskinvis.mcoptype
 %attr(755,root,root) %{_datadir}/apps/kconf_update/noatun20update
 %{_datadir}/apps/kconf_update/*.upd
 %{_datadir}/apps/noatun*
@@ -638,14 +825,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kde/noatun.desktop
 %{_iconsdir}/*/*/*/noatun.png
 
-%if %{?_without_xine:0}%{!?_without_xine:1}
-%files xine
+%files noatun-libs
 %defattr(644,root,root,755)
-%{_libdir}/kde3/videothumbnail.la
-%attr(755,root,root) %{_libdir}/kde3/videothumbnail.so
-%{_libdir}/*_xine.la
-%attr(755,root,root) %{_libdir}/*_xine.so
-%{_libdir}/mcop/xinePlayObject.mcopclass
-%{_datadir}/apps/videothumbnail
-%{_datadir}/services/videothumbnail.desktop
-%endif
+%{_libdir}/libnoatun.la
+%attr(755,root,root) %{_libdir}/libnoatun.so.*.*.*
+%{_libdir}/libnoatuncontrols.la
+%attr(755,root,root) %{_libdir}/libnoatuncontrols.so.*.*.*
+%{_libdir}/libnoatuntags.la
+%attr(755,root,root) %{_libdir}/libnoatuntags.so.*.*.*
+%{_libdir}/libnoatunarts.la
+%attr(755,root,root) %{_libdir}/libnoatunarts.so
+%{_libdir}/libwinskinvis.la
+%attr(755,root,root) %{_libdir}/libwinskinvis.so
