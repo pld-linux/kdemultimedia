@@ -49,7 +49,7 @@ BuildRequires:	libogg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libvorbis-devel
-%{!?_without_xine:BuildRequires: xine-lib-devel}
+%{!?_without_xine:BuildRequires: xine-lib-devel >= 1.0b4}
 BuildRequires:	zlib-devel
 Requires:	kdelibs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -264,6 +264,7 @@ Summary(pl):	Plug-in do Xine
 Group:		X11/Applications
 Requires:	kdelibs >= %{version}
 Requires:	arts >= 1.0.0
+Requires:	xine-lib >= 1.0b4
 
 %description xine
 Xine Plug-in
@@ -368,14 +369,22 @@ echo "Remember to restart artsd !"
 %files devel
 %defattr(644,root,root,755)
 %{_libdir}/libaktion.so
-%{_libdir}/libarts[!e]*.so
-%exclude %{_libdir}/libarts_xine.so
+%{_libdir}/libartsbuilder.so
+%{_libdir}/libartsgui_idl.so
+%{_libdir}/libartsgui_kde.so
+%{_libdir}/libartsgui.so
+%{_libdir}/libartsmidi_idl.so
+%{_libdir}/libartsmidi.so
+%{_libdir}/libartsmodules.so
+%{_libdir}/libarts_mpeglib.so
+%{_libdir}/libarts_splay.so
 %{_libdir}/libmpeg.so
+%{_libdir}/libnoatuncontrols.so
 %{_libdir}/libnoatun.so
-%{_libdir}/libnoatun[!a]*.so
+%{_libdir}/libnoatuntags.so
+%{_libdir}/libworkman.so
 %{_libdir}/libyafcore.so
 %{_libdir}/libyafxplayer.so
-%{_libdir}/libworkman.so
 %{_includedir}/*.h
 %{_includedir}/arts/*
 %{_includedir}/mpeglib*
@@ -384,8 +393,8 @@ echo "Remember to restart artsd !"
 %files aktion -f aktion.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/aktion*
-%attr(755,root,root) %{_libdir}/libaktion.so.*
 %{_libdir}/libaktion.la
+%attr(755,root,root) %{_libdir}/libaktion.so.*
 %{_datadir}/apps/aktion
 %{_datadir}/config/aktionrc
 %{_applnkdir}/Multimedia/aktion.desktop
@@ -395,11 +404,13 @@ echo "Remember to restart artsd !"
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/arts*
 %attr(755,root,root) %{_bindir}/midisend
-%attr(755,root,root) %{_libdir}/libaudiofilearts.*
+%{_libdir}/libaudiofilearts.la
+%attr(755,root,root) %{_libdir}/libaudiofilearts.so
+%{_libdir}/libarts[!_]*.la
 %attr(755,root,root) %{_libdir}/libarts[!_]*.so.*
-%attr(755,root,root) %{_libdir}/libarts[!_]*.la
+%{_libdir}/libarts_[!mx]*.la
 %attr(755,root,root) %{_libdir}/libarts_[!m]*.so.*
-%attr(755,root,root) %{_libdir}/libarts_[!m]*.la
+%{_libdir}/libartseffects.la
 %attr(755,root,root) %{_libdir}/libartseffects.so
 %{_libdir}/mcop/audiofilearts*
 %{_libdir}/mcop/arts*
@@ -420,8 +431,10 @@ echo "Remember to restart artsd !"
 %files kaboodle -f kaboodle.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kaboodle
-%attr(755,root,root) %{_libdir}/kaboodle.*
-%attr(755,root,root) %{_libdir}/kde3/libkaboodlepart.*
+%{_libdir}/kaboodle.la
+%attr(755,root,root) %{_libdir}/kaboodle.so
+%{_libdir}/kde3/libkaboodlepart.la
+%attr(755,root,root) %{_libdir}/kde3/libkaboodlepart.so
 %{_datadir}/apps/kaboodle
 %{_datadir}/services/kaboodle_component.desktop
 %{_applnkdir}/Multimedia/kaboodle.desktop
@@ -430,8 +443,10 @@ echo "Remember to restart artsd !"
 %files kaudiocreator
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kaudiocreator
-%attr(755,root,root) %{_libdir}/kde3/kcm_audiocd.*
-%attr(755,root,root) %{_libdir}/kde3/kio_audiocd.*
+%{_libdir}/kde3/kcm_audiocd.la
+%attr(755,root,root) %{_libdir}/kde3/kcm_audiocd.so
+%{_libdir}/kde3/kio_audiocd.la
+%attr(755,root,root) %{_libdir}/kde3/kio_audiocd.so
 %{_datadir}/apps/kaudiocreator
 %{_datadir}/services/audiocd.protocol
 %{_applnkdir}/Multimedia/kaudiocreator.desktop
@@ -440,13 +455,15 @@ echo "Remember to restart artsd !"
 
 %files kfile
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/kde3/kfile_*.*
+%{_libdir}/kde3/kfile_*.la
+%attr(755,root,root) %{_libdir}/kde3/kfile_*.so
 %{_datadir}/services/kfile_*.desktop
 
 %files kmid -f kmid.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kmid
-%attr(755,root,root) %{_libdir}/kde3/libkmidpart.*
+%{_libdir}/kde3/libkmidpart.la
+%attr(755,root,root) %{_libdir}/kde3/libkmidpart.so
 %{_datadir}/apps/kmid
 %{_datadir}/mimelnk/audio/x-karaoke.desktop
 %{_datadir}/servicetypes/*midi*.desktop
@@ -467,10 +484,14 @@ echo "Remember to restart artsd !"
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kmix
 %attr(755,root,root) %{_bindir}/kmixctrl
-%attr(755,root,root) %{_libdir}/kmix.*
-%attr(755,root,root) %{_libdir}/kmixctrl.*
-%attr(755,root,root) %{_libdir}/kde3/kcm_kmix.*
-%attr(755,root,root) %{_libdir}/kde3/kmix_panelapplet.*
+%{_libdir}/kmix.la
+%attr(755,root,root) %{_libdir}/kmix.so
+%{_libdir}/kmixctrl.la
+%attr(755,root,root) %{_libdir}/kmixctrl.so
+%{_libdir}/kde3/kcm_kmix.la
+%attr(755,root,root) %{_libdir}/kde3/kcm_kmix.so
+%{_libdir}/kde3/kmix_panelapplet.la
+%attr(755,root,root) %{_libdir}/kde3/kmix_panelapplet.so
 %{_applnkdir}/Multimedia/kmix.desktop
 %{_applnkdir}/.hidden/kmixcfg.desktop
 %{_datadir}/services/kmixctrl_restore.desktop
@@ -482,6 +503,7 @@ echo "Remember to restart artsd !"
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kscd
 %attr(755,root,root) %{_bindir}/workman2cddb.pl
+%{_libdir}/libworkman.la
 %attr(755,root,root) %{_libdir}/libworkman.so.*
 %{_libdir}/libworkman.la
 %{_applnkdir}/Multimedia/kscd.desktop
@@ -492,7 +514,8 @@ echo "Remember to restart artsd !"
 %files krec -f krec.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/krec
-%attr(755,root,root) %{_libdir}/krec.*
+%{_libdir}/krec.la
+%attr(755,root,root) %{_libdir}/krec.so
 %{_datadir}/apps/krec
 %{_applnkdir}/Multimedia/krec.desktop
 %{_pixmapsdir}/*/*/*/krec*
@@ -501,12 +524,12 @@ echo "Remember to restart artsd !"
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/mpeglibartsplay
 %attr(755,root,root) %{_bindir}/yaf*
-%attr(755,root,root) %{_libdir}/libyaf*.so.*
-%attr(755,root,root) %{_libdir}/libarts_mpeglib*.so.*
-%attr(755,root,root) %{_libdir}/libmpeg-*.so
-%{_libdir}/libmpeg.la
 %{_libdir}/libyaf*.la
-%{_libdir}/libarts_mpeglib*.la
+%attr(755,root,root) %{_libdir}/libyaf*.so.*
+%{_libdir}/libarts_mpeglib.la
+%attr(755,root,root) %{_libdir}/libarts_mpeglib*.so.*
+%{_libdir}/libmpeg.la
+%attr(755,root,root) %{_libdir}/libmpeg-*.so
 # Note that SplayPlayObject.mopclass is *not* here.
 #%{_libdir}/mcop/VCDPlayObject.mcopclass
 %{_libdir}/mcop/WAVPlayObject.mcopclass
@@ -519,11 +542,13 @@ echo "Remember to restart artsd !"
 %files noatun -f noatun.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/noatun*
+%{_libdir}/libnoatun*.la
 %attr(755,root,root) %{_libdir}/libnoatun*.so.*
 %attr(755,root,root) %{_libdir}/libnoatunarts.so
-%attr(755,root,root) %{_libdir}/libwinskinvis.*
-%{_libdir}/libnoatun*.la
-%attr(755,root,root) %{_libdir}/kde3/noatun*.*
+%{_libdir}/libwinskinvis.la
+%attr(755,root,root) %{_libdir}/libwinskinvis.so
+%{_libdir}/kde3/noatun*.la
+%attr(755,root,root) %{_libdir}/kde3/noatun*.so
 %{_libdir}/mcop/Noatun
 %{_libdir}/mcop/noatun*
 %{_libdir}/mcop/winskinvis*
@@ -538,6 +563,7 @@ echo "Remember to restart artsd !"
 %files xine
 %defattr(644,root,root,755)
 #%%attr(755,root,root) %{_libdir}/kde3/videothumbnail.*
+%{_libdir}/*_xine.la
 %attr(755,root,root) %{_libdir}/*_xine.so
 %{_libdir}/mcop/xinePlayObject.mcopclass
 #%%{_datadir}/apps/videothumbnail
