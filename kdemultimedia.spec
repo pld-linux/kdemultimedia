@@ -526,13 +526,10 @@ kappfinder-data/zynaddsubfx.desktop
 arts/tools/artscontrol.desktop \
 arts/builder/artsbuilder.desktop
 
+for i in `find ./mpeglib/ -name Makefile.am`; do echo KDE_OPTIONS=nofinal >> ${i} ; done
 
 %build
 cp %{_datadir}/automake/config.sub admin
-# unsermake does not link non-C++ files to the resulting binary in --enable-final conditions.
-# so we don't use it for now
-
-for i in `find ./mpeglib/ -name Makefile.am`; do echo KDE_OPTIONS=nofinal >> ${i} ; done
 
 export UNSERMAKE=%{_datadir}/unsermake/unsermake
 
