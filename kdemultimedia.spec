@@ -14,7 +14,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	0.1
+Release:	1
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
@@ -47,6 +47,7 @@ BuildRequires:	speex-devel
 BuildRequires:	flac-devel >= 1.1.2
 BuildRequires:	libmad-devel
 BuildRequires:	zlib-devel
+BuildRequires:	lame-libs-devel
 Obsoletes:	kdemultimedia-libworkman
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
