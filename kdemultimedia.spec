@@ -31,7 +31,8 @@ Group:		X11/Applications
 Source0:        http://team.pld.org.pl/~djurban/kde/%{name}-%{_snap}.tar.bz2
 Patch0:		%{name}-timidity.patch
 Patch1:		http://rambo.its.tudelft.nl/~ewald/xine/kdemultimedia-3.1.1-video-20030316.patch
-Patch2:		http://rambo.its.tudelft.nl/~ewald/xine/kdemultimedia-3.1.1-streaming-20030317.patch
+#Patch2:		http://rambo.its.tudelft.nl/~ewald/xine/kdemultimedia-3.1.1-streaming-20030317.patch
+Patch2:		%{name}-streaming-fixed.patch
 %{!?_without_alsa:BuildRequires:	alsa-lib-devel}
 %{!?_without_alsa:BuildRequires:	alsa-driver-devel}
 %{?_with_nas:BuildRequires:	nas-devel >= 1.5}
@@ -276,6 +277,8 @@ Wtyczka do Xine.
 %prep
 %setup -q -n %{name}-%{_snap}
 %patch0 -p1
+%patch1 -p1
+%patch2 -p1
 
 %build
 kde_appsdir="%{_applnkdir}"; export kde_appsdir
