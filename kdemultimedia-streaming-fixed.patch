@@ -1,0 +1,116 @@
+diff -Pur kdemultimedia-3.1.1-orig/noatun/library/playlist.cpp kdemultimedia-3.1.1/noatun/library/playlist.cpp
+--- kdemultimedia-3.1.1-orig/noatun/library/playlist.cpp	2003-03-17 14:31:36.000000000 +0100
++++ kdemultimedia-3.1.1/noatun/library/playlist.cpp	2003-03-17 14:31:53.000000000 +0100
+@@ -7,6 +7,7 @@
+ #include <kcmdlineargs.h>
+ #include <kfile.h>
+ #include <kmimetype.h>
++#include <kurl.h>
+ #include <qregexp.h>
+ #include <assert.h>
+ #include <qmetaobject.h>
+@@ -40,9 +41,22 @@
+ 
+ 	Arts::TraderQuery query;
+ 	query.supports("Interface","Arts::PlayObject");
+-	query.supports("MimeType", std::string(mimetype()));
+ 
+-	std::vector<Arts::TraderOffer> *offers = query.query();
++	std::vector<Arts::TraderOffer> *offers = 0;
++
++	if (!url().isLocalFile())
++	{
++		Arts::TraderQuery query2;
++		query2.supports("Interface","Arts::PlayObject");
++		query2.supports("Protocol", std::string(url().protocol().latin1()));
++
++		offers = query2.query();
++	}
++	if (!offers || offers->empty())
++	{
++		query.supports("MimeType", std::string(mimetype()));
++		offers = query.query();
++	}
+ 	if (!offers) return "";
+ 	
+ 	if(!offers->empty())
+diff -Pur kdemultimedia-3.1.1-orig/noatun/modules/splitplaylist/Makefile.am kdemultimedia-3.1.1/noatun/modules/splitplaylist/Makefile.am
+--- kdemultimedia-3.1.1-orig/noatun/modules/splitplaylist/Makefile.am	2003-03-17 14:31:36.000000000 +0100
++++ kdemultimedia-3.1.1/noatun/modules/splitplaylist/Makefile.am	2003-03-17 14:32:11.000000000 +0100
+@@ -1,10 +1,10 @@
+-INCLUDES= -I$(top_srcdir)/noatun/library $(all_includes)
++INCLUDES= -I$(top_srcdir)/noatun/library -I$(kde_includes)/arts $(all_includes)
+ kde_module_LTLIBRARIES = noatun_splitplaylist.la
+ 
+ noatun_splitplaylist_la_SOURCES = splitplaylist.cpp playlist.cpp view.cpp find.cpp
+ 
+ noatun_splitplaylist_la_LDFLAGS = $(all_libraries) -module -avoid-version -no-undefined
+-noatun_splitplaylist_la_LIBADD = $(LIB_KIO) $(top_builddir)/noatun/library/libnoatun.la
++noatun_splitplaylist_la_LIBADD = $(LIB_KIO) $(top_builddir)/noatun/library/libnoatun.la -lsoundserver_idl
+ 
+ noatun_splitplaylist_la_METASOURCES = AUTO
+ 
+diff -Pur kdemultimedia-3.1.1-orig/noatun/modules/splitplaylist/view.cpp kdemultimedia-3.1.1/noatun/modules/splitplaylist/view.cpp
+--- kdemultimedia-3.1.1-orig/noatun/modules/splitplaylist/view.cpp	2003-03-17 14:31:36.000000000 +0100
++++ kdemultimedia-3.1.1/noatun/modules/splitplaylist/view.cpp	2003-03-17 14:32:13.000000000 +0100
+@@ -31,6 +31,7 @@
+ #include <kedittoolbar.h>
+ #include <kurldrag.h>
+ #include <kmessagebox.h>
++#include <arts/soundserver.h>
+ 
+ #include <noatun/app.h>
+ #include <noatun/player.h>
+@@ -48,6 +49,20 @@
+ 	addRef();
+ 	setUrl(text);
+ 
++	if (!text.isLocalFile())
++	{
++		Arts::TraderQuery query;
++		query.supports("Interface","Arts::PlayObject");
++		query.supports("Protocol", std::string(text.protocol().latin1()));
++
++		std::vector<Arts::TraderOffer> *offers = query.query();
++		if (offers && !offers->empty())
++		{
++			setProperty("stream_", text.url());
++		}
++		delete offers;
++	}
++
+ 	static_cast<KListView*>(parent)->moveItem(this, 0, after);
+ 	setOn(true);
+ 
+@@ -548,9 +563,9 @@
+ 
+ 	if (
+ 			url.path().right(4).lower()==".m3u"
+-			|| url.path().right(4).lower()==".pls"
++			|| url.path().right(4).lower()==".pls"/*
+ 			|| url.protocol().lower()=="http"
+-		)
++		*/)
+ 	{
+ 		// a playlist is requested
+ 		return importGlobal(url, after);
+--- kdemultimedia-030328/noatun/library/engine.cpp.orig	Tue Dec 10 00:42:33 2002
++++ kdemultimedia-030328/noatun/library/engine.cpp	Fri Mar 28 23:35:39 2003
+@@ -290,8 +290,16 @@
+ 	if (file.isProperty("stream_"))
+ 	{
+ 		// let the factory decide
+-		// d->playobj=factory.createPlayObject(file.property("stream_"), file.mimetype(), false);
+ 		d->playobj=factory.createPlayObject(file.property("stream_"), false);
++
++                if (!d->playobj || d->playobj->isNull())
++                {
++                        // streaming not directly possible, use KIO mechanism
++                        delete d->playobj;
++                        factory.setAllowStreaming(true);
++                        d->playobj=factory.createPlayObject(file.property("stream_"), false);
++                }
++				
+ 	}
+ 	else
+ 	{
