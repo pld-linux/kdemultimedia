@@ -1,6 +1,6 @@
 %define		_ver		3.0.2
 #define		_sub_ver
-%define		_rel		1
+%define		_rel		2
 
 %{?_sub_ver:	%define	_version	%{_ver}%{_sub_ver}}
 %{!?_sub_ver:	%define	_version	%{_ver}}
@@ -24,6 +24,7 @@ Source0:	ftp://ftp.kde.org/pub/kde/%{_ftpdir}/%{version}/src/%{name}-%{version}.
 Patch0:		%{name}-kmidi-alsa.patch
 %ifnarch sparc sparc64
 BuildRequires:	alsa-lib-devel
+BuildRequires:	alsa-driver-devel
 %endif
 BuildRequires:	arts-devel
 BuildRequires:	arts-kde-devel
