@@ -223,7 +223,7 @@ ALD=$RPM_BUILD_ROOT%{_applnkdir}
 install -d $ALD/Settings/KDE
 mv $ALD/{Settings/Sound,Settings/KDE}
 
-bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT%
+bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 
 %find_lang aktion --with-kde
 %find_lang noatun --with-kde
