@@ -1,0 +1,20 @@
+--- kdemultimedia-030918/admin/acinclude.m4.in~	2003-09-17 23:36:07.000000000 +0200
++++ kdemultimedia-030918/admin/acinclude.m4.in	2003-09-20 03:24:33.000000000 +0200
+@@ -2075,7 +2075,7 @@
+ kde_safe_LIBS="$LIBS"
+ LIBS="$LIBS $X_EXTRA_LIBS"
+ if test "$GXX" = "yes"; then
+-CXXFLAGS="$CXXFLAGS -pedantic-errors"
++CXXFLAGS="$CXXFLAGS"
+ fi
+ AC_TRY_COMPILE([
+ $2
+@@ -2882,7 +2882,7 @@
+   if test "$GXX" = "yes" || test "$CXX" = "KCC"; then
+     if test "$kde_use_debug_code" != "no"; then
+       if test "$CXX" = "KCC"; then
+-        CXXFLAGS="+K0 -Wall -pedantic -W -Wpointer-arith -Wwrite-strings $CXXFLAGS"
++        CXXFLAGS="+K0 -Wall -W -Wpointer-arith -Wwrite-strings $CXXFLAGS"
+       else
+         if test "$kde_use_debug_code" = "full"; then
+           CXXFLAGS="-g3 -fno-inline $CXXFLAGS"
