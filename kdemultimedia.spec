@@ -20,7 +20,7 @@ Source0:	http://download.kde.org/%{_state}/%{_ver}/src/%{name}-%{_ver}.tar.bz2
 # Source0-md5:	6e03faa44ff7fdf60fd2fef0d23d5c43
 #Source0:	http://ep09.pld-linux.org/~djurban/kde/%{name}-%{version}.tar.bz2
 %if %{with i18n}
-Source1:        kde-i18n-%{name}-%{version}.tar.bz2
+Source1:	kde-i18n-%{name}-%{version}.tar.bz2
 # Source1-md5:	7934bbaaa3b526b9115b43c4fbb846e1
 %endif
 # Patch0:		%{name}-3.2branch.diff
@@ -598,7 +598,7 @@ Pliki umiêdzynarodawiaj±ce dla kaudiocreatora.
 cp /usr/share/automake/config.sub admin
 
 fix="kfile-plugins/ogg/configure.in.in \
-     mpeglib_artsplug/configure.in.in"
+	mpeglib_artsplug/configure.in.in"
 
 for i in $fix;
 do
@@ -645,7 +645,7 @@ fi
 %find_lang kaboodle	--with-kde
 %find_lang kmid		--with-kde
 # No kmidi
-# %find_lang kmidi        --with-kde
+# %find_lang kmidi	--with-kde
 %find_lang kmix		--with-kde
 %find_lang kmixcfg	--with-kde
 cat kmixcfg.lang >> kmix.lang
@@ -657,20 +657,20 @@ cat kmixcfg.lang >> kmix.lang
 %find_lang desktop_kdemultimedia --with-kde
 mv desktop_kdemultimedia.lang kdemultimedia.lang
 
-%find_lang libkcddb         --with-kde
-%find_lang kcmcddb         --with-kde
+%find_lang libkcddb	--with-kde
+%find_lang kcmcddb	--with-kde
 cat kcmcddb.lang >> libkcddb.lang
 
-%find_lang kio_audiocd         --with-kde
-%find_lang kcmaudiocd         --with-kde
+%find_lang kio_audiocd	--with-kde
+%find_lang kcmaudiocd	--with-kde
 cat kcmaudiocd.lang >> kio_audiocd.lang
 
 %find_lang kaudiocreator --with-kde
-%find_lang artscontrol  --with-kde
-%find_lang artsmodules  --with-kde
+%find_lang artscontrol	--with-kde
+%find_lang artsmodules	--with-kde
 mv artsmodules.lang arts.lang
 
-%find_lang kcmkmix      --with-kde
+%find_lang kcmkmix	--with-kde
 cat kcmkmix.lang >> kmix.lang
 
 kfile="au \
@@ -700,7 +700,7 @@ noatun"
 
 for i in $files; do
 	> ${i}_en.lang
-        echo "%defattr(644,root,root,755)" > ${i}_en.lang
+	echo "%defattr(644,root,root,755)" > ${i}_en.lang
 	grep en\/ ${i}.lang|grep -v apidocs >> ${i}_en.lang
 	grep -v apidocs $i.lang|grep -v en\/ > ${i}.lang.1
 	mv ${i}.lang.1 ${i}.lang
