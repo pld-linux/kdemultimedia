@@ -6,8 +6,8 @@
 %endif
 
 %define         _state          snapshots
-%define         _ver		3.1.92
-%define         _snap		031024
+%define         _ver		3.1.93
+%define         _snap		031105
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
@@ -20,7 +20,7 @@ Vendor:		The KDE Team
 Group:		X11/Applications
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
 Source0:        http://www.kernel.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
-# Source0-md5:	f4a62547234cba0409bc49c30c1b8b62
+# Source0-md5:	632ac50e9464cdf134c55ef5f8a5e57f
 Patch0:		%{name}-no_pedantic.patch
 BuildRequires:	Xaw3d-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
@@ -29,7 +29,8 @@ BuildRequires:	cdparanoia-III-devel
 BuildRequires:	gettext-devel
 # what for?
 #BuildRequires:	gtk+-devel
-BuildRequires:	id3lib-devel
+# No longer needed
+#BuildRequires:	id3lib-devel
 BuildRequires:	kdelibs-devel >= 9:%{version}
 BuildRequires:	libart_lgpl-devel
 BuildRequires:	libjpeg-devel
@@ -38,11 +39,12 @@ BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires: 	libmusicbrainz-devel
 BuildRequires:	libvorbis-devel
+BuildRequires:	rpmbuild(macros) >= 1.129
+BuildRequires:	sed >= 4.0
+BuildRequires:	taglib-devel >= 0.95
 BuildRequires:	xine-lib-devel >= 1:1.0
 BuildRequires:	zlib-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-
-%define		no_install_post_chrpath		1
 
 %description
 KDE multimedia applications. Package includes:
@@ -194,7 +196,7 @@ Sterowanie cddb.
 Summary:        A jukebox like program
 Summary(pl):    Program spe³niaj±cy funkcje szafy graj±cej
 Group:          X11/Applications
-Requires:       id3lib
+Requires:       taglib >= 0.95
 Requires:       kdebase-core >= 9:%{version}
 
 %description juk
@@ -413,6 +415,8 @@ sed -e 's#slots\[CDROM_MAX_SLOTS\]#kde_slots\[CDROM_MAX_SLOTS\]#g' \
 %{__make} -f admin/Makefile.common cvs
 
 %configure \
+	--disable-rpath \
+	--enable-final \
 	--with%{?without_alsa:out}-arts-alsa
 
 %{__make}
@@ -422,7 +426,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
-	kde_htmldir=%{_docdir}/kde/HTML
+	kde_htmldir=%{_kdedocdir}
 
 %find_lang artsbuilder	--with-kde
 %find_lang juk		--with-kde
@@ -740,6 +744,8 @@ rm -rf $RPM_BUILD_ROOT
 %files noatun -f noatun.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/noatun*
+%{_libdir}/libkdeinit_noatun.la
+%attr(755,root,root) %{_libdir}/libkdeinit_noatun.so
 %{_libdir}/kde3/noatun*.la
 %attr(755,root,root) %{_libdir}/kde3/noatun*.so
 %{_libdir}/mcop/Noatun
