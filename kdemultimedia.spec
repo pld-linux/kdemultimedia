@@ -1,12 +1,9 @@
+#
 # Conditional build:
-# --without	xine	Set this option in case You haven't
-#			xine-lib to ommit xine plug-in building.
-#
-# --without	alsa	Set this option in case you dont want alsa.
-#
-# --with	esd	Set this option in case you want esd support.
-#
-# --with	nas 	Set this option if you want nas support.
+# _without_xine		- don't build XINE plugins (which require xine-lib)
+# _without_alsa		- build without ALSA support
+# _with_esd		- build with EsounD support
+# _with_nas		- build with NAS support
 #
 
 %define         _state          stable
@@ -30,17 +27,17 @@ Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.
 # generated from kde-i18n
 #Source1:	kde-i18n-%{name}-%{version}.tar.bz2
 Patch0:		%{name}-timidity.patch
+Patch1:		%{name}-qt-linuxcdrom.patch
 %{!?_without_alsa:BuildRequires:	alsa-lib-devel}
 %{!?_without_alsa:BuildRequires:	alsa-driver-devel}
 %{?_with_nas:BuildRequires:	nas-devel >= 1.5}
 %{?_with_esd:BuildRequires:	esound-devel}
-BuildRequires:	arts-devel
-BuildRequires:	arts-kde-devel
-BuildRequires:	cdparanoia-III
+BuildRequires:	arts-devel >= 12:1.0.0
+BuildRequires:	arts-kde-devel >= 8:%{version}
 BuildRequires:	cdparanoia-III-devel
 BuildRequires:	gettext-devel
 BuildRequires:	gtk+-devel
-BuildRequires:	kdelibs-devel >= %{epoch}:%{version}
+BuildRequires:	kdelibs-devel >= 8:%{version}
 BuildRequires:	libart_lgpl-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libogg-devel
@@ -50,8 +47,7 @@ BuildRequires:	libvorbis-devel
 BuildRequires:	sed >= 4.0
 %{!?_without_xine:BuildRequires:	xine-lib-devel >= 1.0b4}
 BuildRequires:	zlib-devel
-BuildRequires:	xanim
-Requires:	kdelibs = %{version}
+Requires:	kdelibs = 8:%{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define         _htmldir        /usr/share/doc/kde/HTML
@@ -87,10 +83,10 @@ Summary:	kdemultimedia - headers
 Summary(pl):	kdemultimedia - pliki nag³ówkowe
 Group:		X11/Development/Libraries
 Requires:	arts-devel >= 1.0.3
-Requires:	kdelibs-devel >= %{version}
-Requires:	kdemultimedia-arts = %{version}
-Requires:	kdemultimedia-mpeglib = %{version}
-Requires:	kdemultimedia-noatun = %{version}
+Requires:	kdelibs-devel >= 8:%{version}
+Requires:	%{name}-arts = %{epoch}:%{version}
+Requires:	%{name}-mpeglib = %{epoch}:%{version}
+Requires:	%{name}-noatun = %{epoch}:%{version}
 
 %description devel
 kdemultimedia - headers.
@@ -102,7 +98,7 @@ kdemultimedia - pliki nag³ówkowe.
 Summary:	KDE Media Player
 Summary(pl):	Odtwarzacz multimedialny dla KDE
 Group:		X11/Applications
-Requires:	kdebase-core >= %{version}
+Requires:	kdebase-core >= 8:%{version}
 Obsoletes:	aktion
 
 %description aktion
@@ -117,7 +113,8 @@ WAV.
 Summary:	Arts Tools
 Summary(pl):	Narzêdzia Arts
 Group:		X11/Applications
-Requires:	kdebase-core >= %{version}
+Requires(post):	/sbin/ldconfig
+Requires:	kdebase-core >= 8:%{version}
 Requires:	%{name}-mpeglib = %{epoch}:%{version}
 
 %description arts
@@ -168,7 +165,7 @@ dodatkow± zak³adkê z rozszerzonymi informacjami o pliku.
 Summary:	KDE MIDI Player
 Summary(pl):	Odtwarzacz MIDI dla KDE
 Group:		X11/Applications
-Requires:	kdebase-core >= %{version}
+Requires:	kdebase-core >= 8:%{version}
 
 %description kmid
 This is a MIDI player for KDE. It uses sound-card synthetizer or other
@@ -182,7 +179,7 @@ muzycznej lub inne urz±dzenia MIDI przy³±czone do niej.
 Summary:	KDE software MIDI Player
 Summary(pl):	Programowy odtwarzacz MIDI dla KDE
 Group:		X11/Applications
-Requires:	kdebase-core >= %{version}
+Requires:	kdebase-core >= 8:%{version}
 
 %description kmidi
 Software MIDI player. It uses GUS patch files and CPU power to create
@@ -196,8 +193,8 @@ do stworzenia dobrej jako¶ci d¼wiêku.
 Summary:	KDE audio mixer
 Summary(pl):	Mixer audio dla KDE
 Group:		X11/Applications
-Requires:	kdebase-core >= %{version}
-Requires:	kdebase-kicker >= %{version}
+Requires:	kdebase-core >= 8:%{version}
+Requires:	kdebase-kicker >= 8:%{version}
 
 %description kmix
 Sound mixer application for KDE.
@@ -210,7 +207,7 @@ Summary:	KDE sound recorder
 Summary(pl):	Rejestrator d¼wiêku dla KDE
 Group:		X11/Applications
 Requires:	%{name}-arts = %{epoch}:%{version}
-Requires:	kdebase-core >= %{version}
+Requires:	kdebase-core >= 8:%{version}
 
 %description krec
 KDE sound recorder.
@@ -222,7 +219,7 @@ Rejestrator d¼wiêku dla KDE.
 Summary:	KDE CD Player
 Summary(pl):	Odtwarzacz CD dla KDE
 Group:		X11/Applications
-Requires:	kdebase-core >= %{version}
+Requires:	kdebase-core >= 8:%{version}
 
 %description kscd
 CD Player with CDDB support. It can automatically update its CD
@@ -238,8 +235,8 @@ graficzn± interpretacjê granych d¼wiêków.
 Summary:	MPEG lib
 Summary(pl):	MPEG lib
 Group:		X11/Applications
-Requires:	kdebase-core >= %{version}
-Requires:	arts >= 1.0.0
+Requires:	kdebase-core >= 8:%{version}
+Requires:	arts >= 12:1.0.0
 
 %description mpeglib
 MPEG lib.
@@ -252,7 +249,7 @@ Summary:	KDE Media Player
 Summary(pl):	KDE Media Player - odtwarzacz plików multimedialnych
 Group:		X11/Applications
 Requires:	kdebase-core >= %{version}
-Requires:	arts >= 1.0.0
+Requires:	arts >= 12:1.0.0
 
 %description noatun
 KDE Media Player.
@@ -265,7 +262,7 @@ Summary:	Xine Plug-in
 Summary(pl):	Wtyczka do Xine
 Group:		X11/Applications
 Requires:	kdebase-core >= %{version}
-Requires:	arts >= 1.0.0
+Requires:	arts >= 12:1.0.0
 Requires:	xine-lib >= 1.0b4
 
 %description xine
@@ -277,13 +274,12 @@ Wtyczka do Xine.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %build
 kde_appsdir="%{_applnkdir}"; export kde_appsdir
 kde_htmldir="%{_htmldir}"; export kde_htmldir
 kde_icondir="%{_pixmapsdir}"; export kde_icondir
-
-CFLAGS="%{rpmcflags} -I%{_includedir}"
 
 AUDIO=""
 %ifnarch sparc sparcv9 sparc64
@@ -298,13 +294,14 @@ for plik in `find ./ -name *.desktop` ; do
 	sed -i -e 's/\[nb\]/\[no\]/g' $plik
 done
 
-# kdemultimedia includes kernel headers which breaks thins, ugly workaround
-mkdir linux
-sed -e 's#slots\[CDROM_MAX_SLOTS\]#kde_slots\[CDROM_MAX_SLOTS\]#g' \
-/usr/include/linux/cdrom.h > linux/cdrom.h
+# bleh, cannot be done
+#%{__libtoolize}
+#%{__make} -f admin/Makefile.common cvs
 
 %configure \
- 	--with-pam="yes" \
+	CDPARANOIA="/usr/bin/cdparanoia" \
+	aktion_has_xanim="yes" \
+	--with-pam="yes" \
 	--enable-final \
 	--enable-audio=$AUDIO \
 	%{!?_without_alsa:--with-alsa} \
@@ -315,7 +312,8 @@ sed -e 's#slots\[CDROM_MAX_SLOTS\]#kde_slots\[CDROM_MAX_SLOTS\]#g' \
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__make} install DESTDIR=$RPM_BUILD_ROOT
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT
 
 mv $RPM_BUILD_ROOT%{_bindir}/{timidity,ktimidity}
 
@@ -365,31 +363,49 @@ cat kmixcfg.lang >> kmix.lang
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post	aktion	-p /sbin/ldconfig
+%postun	aktion	-p /sbin/ldconfig
+
 %post arts
-echo "Remember to restart artsd !"
+/sbin/ldconfig
+echo "Remember to restart artsd!"
+
+%postun	arts	-p /sbin/ldconfig
+
+%post	kscd	-p /sbin/ldconfig
+%postun	kscd	-p /sbin/ldconfig
 
 %post   mpeglib -p /sbin/ldconfig
 %postun mpeglib -p /sbin/ldconfig
 
+%post	noatun	-p /sbin/ldconfig
+%postun	noatun	-p /sbin/ldconfig
+
 %files devel
 %defattr(644,root,root,755)
-%{_libdir}/libaktion.so
-%{_libdir}/libartsbuilder.so
-%{_libdir}/libartsgui_idl.so
-%{_libdir}/libartsgui_kde.so
-%{_libdir}/libartsgui.so
-%{_libdir}/libartsmidi_idl.so
-%{_libdir}/libartsmidi.so
-%{_libdir}/libartsmodules.so
-%{_libdir}/libarts_mpeglib.so
-%{_libdir}/libarts_splay.so
-%{_libdir}/libmpeg.so
-%{_libdir}/libnoatuncontrols.so
-%{_libdir}/libnoatun.so
-%{_libdir}/libnoatuntags.so
-%{_libdir}/libworkman.so
-%{_libdir}/libyafcore.so
-%{_libdir}/libyafxplayer.so
+# shared libraries
+%attr(755,root,root) %{_libdir}/libworkman.so
+%{_libdir}/libworkman.la
+%attr(755,root,root) %{_libdir}/libnoatun.so
+%{_libdir}/libnoatun.la
+%attr(755,root,root) %{_libdir}/libnoatuncontrols.so
+%{_libdir}/libnoatuncontrols.la
+%attr(755,root,root) %{_libdir}/libnoatuntags.so
+%{_libdir}/libnoatuntags.la
+# shared, possibly (lt_)dlopened libraries (.la in base packages)
+%attr(755,root,root) %{_libdir}/libaktion.so
+%attr(755,root,root) %{_libdir}/libartsbuilder.so
+%attr(755,root,root) %{_libdir}/libartsgui_idl.so
+%attr(755,root,root) %{_libdir}/libartsgui_kde.so
+%attr(755,root,root) %{_libdir}/libartsgui.so
+%attr(755,root,root) %{_libdir}/libartsmidi_idl.so
+%attr(755,root,root) %{_libdir}/libartsmidi.so
+%attr(755,root,root) %{_libdir}/libartsmodules.so
+%attr(755,root,root) %{_libdir}/libarts_mpeglib.so
+%attr(755,root,root) %{_libdir}/libarts_splay.so
+%attr(755,root,root) %{_libdir}/libmpeg.so
+%attr(755,root,root) %{_libdir}/libyafcore.so
+%attr(755,root,root) %{_libdir}/libyafxplayer.so
 %{_includedir}/*.h
 %{_includedir}/arts/*
 %{_includedir}/mpeglib*
@@ -398,8 +414,9 @@ echo "Remember to restart artsd !"
 %files aktion -f aktion.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/aktion*
+# shared, possibly (lt_)dlopened library
+%attr(755,root,root) %{_libdir}/libaktion.so.*.*.*
 %{_libdir}/libaktion.la
-%attr(755,root,root) %{_libdir}/libaktion.so.*
 %{_datadir}/apps/aktion
 %{_datadir}/config/aktionrc
 %{_applnkdir}/Multimedia/aktion.desktop
@@ -409,13 +426,28 @@ echo "Remember to restart artsd !"
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/arts*
 %attr(755,root,root) %{_bindir}/midisend
-%{_libdir}/libaudiofilearts.la
+# shared, possibly (lt_)dlopened libraries
+%attr(755,root,root) %{_libdir}/libartsbuilder.so.*.*.*
+%{_libdir}/libartsbuilder.la
+%attr(755,root,root) %{_libdir}/libartsgui_idl.so.*.*.*
+%{_libdir}/libartsgui_idl.la
+%attr(755,root,root) %{_libdir}/libartsgui_kde.so.*.*.*
+%{_libdir}/libartsgui_kde.la
+%attr(755,root,root) %{_libdir}/libartsgui.so.*.*.*
+%{_libdir}/libartsgui.la
+%attr(755,root,root) %{_libdir}/libartsmidi_idl.so.*.*.*
+%{_libdir}/libartsmidi_idl.la
+%attr(755,root,root) %{_libdir}/libartsmidi.so.*.*.*
+%{_libdir}/libartsmidi.la
+%attr(755,root,root) %{_libdir}/libartsmodules.so.*.*.*
+%{_libdir}/libartsmodules.la
+%attr(755,root,root) %{_libdir}/libarts_splay.so.*.*.*
+%{_libdir}/libarts_splay.la
+# plugins
 %attr(755,root,root) %{_libdir}/libaudiofilearts.so
-%{_libdir}/libarts[!_]*.la
+%{_libdir}/libaudiofilearts.la
 %attr(755,root,root) %{_libdir}/libartseffects.so
-%attr(755,root,root) %{_libdir}/libarts[!_]*.so.*
-%{_libdir}/libarts_[!mx]*.la
-%attr(755,root,root) %{_libdir}/libarts_[!m]*.so.*
+%{_libdir}/libartseffects.la
 %{_libdir}/mcop/audiofilearts*
 %{_libdir}/mcop/arts*
 %{_libdir}/mcop/Splay*
@@ -435,10 +467,12 @@ echo "Remember to restart artsd !"
 %files kaboodle -f kaboodle.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kaboodle
-%{_libdir}/kaboodle.la
+# KDE-style, (lt_)dlopenable binary
 %attr(755,root,root) %{_libdir}/kaboodle.so
-%{_libdir}/kde3/libkaboodlepart.la
+%{_libdir}/kaboodle.la
+# plugin
 %attr(755,root,root) %{_libdir}/kde3/libkaboodlepart.so
+%{_libdir}/kde3/libkaboodlepart.la
 %{_datadir}/apps/kaboodle
 %{_datadir}/services/kaboodle_component.desktop
 %{_datadir}/services/kaboodleengine.desktop
@@ -448,10 +482,10 @@ echo "Remember to restart artsd !"
 %files kaudiocreator
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kaudiocreator
-%{_libdir}/kde3/kcm_audiocd.la
 %attr(755,root,root) %{_libdir}/kde3/kcm_audiocd.so
-%{_libdir}/kde3/kio_audiocd.la
+%{_libdir}/kde3/kcm_audiocd.la
 %attr(755,root,root) %{_libdir}/kde3/kio_audiocd.so
+%{_libdir}/kde3/kio_audiocd.la
 %{_datadir}/apps/kaudiocreator
 %{_datadir}/services/audiocd.protocol
 %{_applnkdir}/Multimedia/kaudiocreator.desktop
@@ -460,15 +494,15 @@ echo "Remember to restart artsd !"
 
 %files kfile
 %defattr(644,root,root,755)
-%{_libdir}/kde3/kfile_*.la
 %attr(755,root,root) %{_libdir}/kde3/kfile_*.so
+%{_libdir}/kde3/kfile_*.la
 %{_datadir}/services/kfile_*.desktop
 
 %files kmid -f kmid.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kmid
-%{_libdir}/kde3/libkmidpart.la
 %attr(755,root,root) %{_libdir}/kde3/libkmidpart.so
+%{_libdir}/kde3/libkmidpart.la
 %{_datadir}/apps/kmid
 %{_datadir}/mimelnk/audio/x-karaoke.desktop
 %{_datadir}/servicetypes/*midi*.desktop
@@ -489,14 +523,16 @@ echo "Remember to restart artsd !"
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kmix
 %attr(755,root,root) %{_bindir}/kmixctrl
-%{_libdir}/kmix.la
+# KDE-style (lt_)dlopenable binaries
 %attr(755,root,root) %{_libdir}/kmix.so
-%{_libdir}/kmixctrl.la
+%{_libdir}/kmix.la
 %attr(755,root,root) %{_libdir}/kmixctrl.so
-%{_libdir}/kde3/kcm_kmix.la
+%{_libdir}/kmixctrl.la
+# plugins
 %attr(755,root,root) %{_libdir}/kde3/kcm_kmix.so
-%{_libdir}/kde3/kmix_panelapplet.la
+%{_libdir}/kde3/kcm_kmix.la
 %attr(755,root,root) %{_libdir}/kde3/kmix_panelapplet.so
+%{_libdir}/kde3/kmix_panelapplet.la
 %{_applnkdir}/Multimedia/kmix.desktop
 %{_applnkdir}/.hidden/kmixcfg.desktop
 %{_datadir}/services/kmixctrl_restore.desktop
@@ -508,8 +544,8 @@ echo "Remember to restart artsd !"
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kscd
 %attr(755,root,root) %{_bindir}/workman2cddb.pl
-%{_libdir}/libworkman.la
-%attr(755,root,root) %{_libdir}/libworkman.so.*
+# shared library (.la in -devel)
+%attr(755,root,root) %{_libdir}/libworkman.so.*.*.*
 %{_applnkdir}/Multimedia/kscd.desktop
 %{_datadir}/apps/kscd
 %{_datadir}/mimelnk/text/xmcd.desktop
@@ -518,8 +554,9 @@ echo "Remember to restart artsd !"
 %files krec -f krec.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/krec
-%{_libdir}/krec.la
+# KDE-style (lt_)dlopenable binary
 %attr(755,root,root) %{_libdir}/krec.so
+%{_libdir}/krec.la
 %{_datadir}/apps/krec
 %{_applnkdir}/Multimedia/krec.desktop
 %{_pixmapsdir}/*/*/*/krec*
@@ -528,12 +565,13 @@ echo "Remember to restart artsd !"
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/mpeglibartsplay
 %attr(755,root,root) %{_bindir}/yaf*
-%{_libdir}/libyaf*.la
-%attr(755,root,root) %{_libdir}/libyaf*.so.*
+# shared, possibly (lt_)dlopened libraries
+%attr(755,root,root) %{_libdir}/libarts_mpeglib-*.so.*.*.*
 %{_libdir}/libarts_mpeglib.la
-%attr(755,root,root) %{_libdir}/libarts_mpeglib*.so.*
-%{_libdir}/libmpeg.la
 %attr(755,root,root) %{_libdir}/libmpeg-*.so
+%{_libdir}/libmpeg.la
+%attr(755,root,root) %{_libdir}/libyaf*.so.*.*.*
+%{_libdir}/libyaf*.la
 # Note that SplayPlayObject.mopclass is *not* here.
 #%%{_libdir}/mcop/VCDPlayObject.mcopclass
 %{_libdir}/mcop/WAVPlayObject.mcopclass
@@ -546,13 +584,17 @@ echo "Remember to restart artsd !"
 %files noatun -f noatun.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/noatun*
-%{_libdir}/libnoatun*.la
-%attr(755,root,root) %{_libdir}/libnoatun*.so.*
+# shared libraries (.la in -devel)
+%attr(755,root,root) %{_libdir}/libnoatun.so.*.*.*
+%attr(755,root,root) %{_libdir}/libnoatuncontrols.so.*.*.*
+%attr(755,root,root) %{_libdir}/libnoatuntags.so.*.*.*
+# plugins
 %attr(755,root,root) %{_libdir}/libnoatunarts.so
-%{_libdir}/libwinskinvis.la
+%{_libdir}/libnoatunarts.la
 %attr(755,root,root) %{_libdir}/libwinskinvis.so
-%{_libdir}/kde3/noatun*.la
+%{_libdir}/libwinskinvis.la
 %attr(755,root,root) %{_libdir}/kde3/noatun*.so
+%{_libdir}/kde3/noatun*.la
 %{_libdir}/mcop/Noatun
 %{_libdir}/mcop/noatun*
 %{_libdir}/mcop/winskinvis*
