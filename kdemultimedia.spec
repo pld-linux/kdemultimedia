@@ -1,23 +1,23 @@
-%define		REV	20000418
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
-Version:	2.0
-Release:	1.pre_%{REV}
+Version:	2.0.1
+Release:	1
 Copyright:	GPL
-Group:		X11/KDE/Multimedia
-Group(pl):	X11/KDE/Multimedia
+Group:		X11/Applications
 Vendor:		The KDE Team
-Source:		ftp.kde.org/pub/kde/snapshost/current/%{name}-%{REV}.tar.bz2
+Source:		ftp.kde.org/pub/kde/snapshost/current/%{name}-%{version}.tar.bz2
 BuildRequires:	kdelibs-devel
-BuildRequires:	qt-devel >= 2.1
+BuildRequires:	qt-devel >= 2.2.2
 BuildRequires:	XFree86-devel
 BuildRequires:	libstdc++-devel
-Requires:	qt >= 2.1
-Requires:	kdelibs
+Requires:	kdelibs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define _prefix	/usr/X11R6/
+%define		_prefix		/usr/X11R6/
+%define         _fontdir        /usr/share/fonts
+%define         _sharedir       %{_prefix}/share
+%define         _htmldir        %{_sharedir}/doc/kde/HTML
 
 %description
 KDE multimedia applications.
@@ -37,26 +37,34 @@ Pakiet zawiera:
   KMIX - Mixer audio
   KSCD - Odtwarzacz CD
 
-%package kmedia
+%package arts
+Summary:	Arts
+Summary(pl):	Arts
+Group:		X11/Applications
+Requires:	kdelibs = %{version} 
+
+%description arts
+
+%description -l pl arts
+
+%package aktion
 Summary:	KDE Media Player
 Summary(pl):	Odtwarzacz multimedialny dla KDE
-Group:		X11/KDE/Multimedia
-Requires:	qt >= 1.44
+Group:		X11/Applications
 Requires:	kdelibs = %{version}
 
-%description kmedia
+%description aktion
 This is a media player for KDE.
 Currently it can be only used to play WAV files.
 
-%description -l pl kmedia
+%description -l pl aktion
 Odtwarzacz multimedialny dla KDE.
 W tej chwili obs³uguje tylko pliki WAV.
 
 %package kmid
 Summary:	KDE MIDI Player	
 Summary(pl):	Odtwarzacz MIDI dla KDE
-Group:		X11/KDE/Multimedia
-Requires:	qt >= 1.44
+Group:		X11/Applications
 Requires:	kdelibs = %{version}
 
 %description kmid
@@ -72,8 +80,7 @@ przy³±czone do niej.
 %package kmidi
 Summary:	KDE software MIDI Player	
 Summary(pl):	Programowy odtwarzacz MIDI dla KDE
-Group:		X11/KDE/Multimedia
-Requires:	qt >= 1.44
+Group:		X11/Applications
 Requires:	kdelibs = %{version}
 
 %description kmidi
@@ -87,8 +94,7 @@ stworzenia dobrej jako¶ci d¼wiêku.
 %package kmix 
 Summary:	KDE audio mixer
 Summary(pl):	Mixer audio dla KDE
-Group:		X11/KDE/Multimedia
-Requires:	qt >= 1.44
+Group:		X11/Applications
 Requires:	kdelibs = %{version}
 
 %description kmix
@@ -100,8 +106,7 @@ Mikser audio dla KDE.
 %package kscd
 Summary:	KDE CD Player	
 Summary(pl):	Odtwarzacz CD dla KDE
-Group:		X11/KDE/Multimedia
-Requires:	qt >= 1.44
+Group:		X11/Applications
 Requires:	kdelibs = %{version} 
 
 %description kscd
@@ -113,142 +118,166 @@ Odtwarzacz CD z obs³ug± CDDB. Automatycznie uaktualnia swoj± bazê danych
 o p³ytach CD z Internetem. Potrafi tak¿e wy¶wietliæ ³adn± graficzn±
 interpretacjê granych d¼wiêków.
 
-%prep
-%setup -q -n %{name}
+%package kaiman
+Summary:	KDE Media Player
+Summary(pl):	KDE Media Player
+Group:		X11/Applications
+Requires:	kdelibs = %{version} 
 
+%description kaiman
+
+%description -l pl kaiman
+
+%package mpeglib
+Summary:	MPEG lib
+Summary(pl):	MPEG lib
+Group:		X11/Applications
+Requires:	kdelibs = %{version} 
+
+%description mpeglib
+
+%description -l pl mpeglib
+
+%prep
+%setup -q
 %build
-%{__make} -f Makefile.cvs
-KDEDIR=%{_prefix}
-CXXFLAGS="$RPM_OPT_FLAGS -Wall" 
-CFLAGS="$RPM_OPT_FLAGS -Wall" 
-export KDEDIR CXXFLAGS CFLAGS
+kde_htmldir="%{_htmldir}"; export kde_htmldir
+kde_icondir="%{_pixmapsdir}"; export kde_icondir
+
 %configure \
-	--prefix=$KDEDIR \
- 	--with-install-root=$RPM_BUILD_ROOT \
-	--with-qt-dir=%{_prefix} \
  	--with-pam="yes"
-%{__make} KDEDIR=$KDEDIR
+%{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-export KDEDIR=%{_prefix}
-%{__make} DESTDIR=$RPM_BUILD_ROOT install
+%{__make} install DESTDIR=$RPM_BUILD_ROOT
 
-%find_lang kmedia
-%find_lang kmix
-%find_lang kscd
-%find_lang kmid
-%find_lang kmidi
+
+%post mpeglib -p /sbin/ldconfig
+%postun mpeglib -p /sbin/ldconfig
+
+%post aktion -p /sbin/ldconfig
+%postun aktion -p /sbin/ldconfig
+
+%post arts -p /sbin/ldconfig
+%postun arts -p /sbin/ldconfig
+
+%post kmid -p /sbin/ldconfig
+%postun kmid -p /sbin/ldconfig
+
+%post kmix -p /sbin/ldconfig
+%postun kmix -p /sbin/ldconfig
+
+%post kscd -p /sbin/ldconfig
+%postun kscd -p /sbin/ldconfig
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-#################################################
-#             KMEDIA
-#################################################
+%files mpeglib
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/mpeglibartsplay
+%attr(755,root,root) %{_bindir}/yaf*
+%attr(755,root,root) %{_libdir}/libyaf*.so.*.*.*
+%attr(755,root,root) %{_libdir}/libarts_mpeglib*.so.*.*.*
+%attr(755,root,root) %{_libdir}/libmpeg-*.so.*.*.*
+%{_libdir}/libmpeg.so
+%{_libdir}/libmpeg.la
+%{_libdir}/libyaf*.so
+%{_libdir}/libyaf*.la
+%{_libdir}/libarts_mpeglib*.so
+%{_libdir}/libarts_mpeglib*.la
+%{_includedir}/mpeglib_artsplug
+%{_includedir}/mpeglib
 
-%files kmedia -f kmedia.lang
-%defattr(644, root, root, 755)
+%files aktion
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/aktion*
+%attr(755,root,root) %{_libdir}/libaktion.so.*.*.*
+%{_libdir}/libaktion.so
+%{_libdir}/libaktion.la
+%{_applnkdir}/Multimedia/aktion.desktop
+%{_datadir}/apps/aktion
+%{_datadir}/config/aktionrc
+%{_pixmapsdir}/locolor/*x*/apps/aktion.png
 
-%{_datadir}/kde/apps/kmedia
+%files arts
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/arts*
+%attr(755,root,root) %{_bindir}/midisend
+%attr(755,root,root) %{_libdir}/libartsbuilder.so.*.*.*
+%attr(755,root,root) %{_libdir}/libartsmodules.so.*.*.*
+%{_libdir}/mcop/artsmodules.*
+%{_libdir}/mcop/Arts/*
+%{_libdir}/libartsbuilder.so
+%{_libdir}/libartsbuilder.la
+%{_libdir}/libartsmodules.so
+%{_libdir}/libartsmodules.la
+%{_applnkdir}/Multimedia/arts*.desktop
+%{_datadir}/apps/artsbuilder
+%{_datadir}/apps/artscontrol
+%{_datadir}/doc/kde/HTML/en/artsbuilder
 
-%lang(en) %{_datadir}/kde/doc/HTML/en/kmedia
+%files kaiman
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/kaiman
+%{_applnkdir}/Multimedia/kaiman.desktop
+%{_datadir}/apps/kaiman
+%{_pixmapsdir}/locolor/*x*/apps/kaiman.png
+%{_pixmapsdir}/hicolor/*x*/apps/kaiman.png
 
-%{_datadir}/kde/icons/mini/kmedia.xpm
-%{_datadir}/kde/icons/kmedia.xpm
-
-%config(missingok) /etc/X11/kde/applnk/Multimedia/KMedia.kdelnk
-
-%attr(755,root,root) %{_bindir}/kmedia
-
-#################################################
-#             KMID
-#################################################
-
-%files kmid -f kmid.lang
-%defattr(644, root, root, 755)
-
-%config /etc/X11/kde/mimelnk/audio/x-karaoke.kdelnk
-
-%config(missingok) /etc/X11/kde/applnk/Multimedia/kmid.kdelnk
-
-%{_datadir}/kde/apps/kmid
-
-%{_datadir}/kde/icons/mini/kmid.xpm
-%{_datadir}/kde/icons/kmid.xpm
-
-%lang(en) %{_datadir}/kde/doc/HTML/en/kmid
-%lang(es) %{_datadir}/kde/doc/HTML/es/kmid
-
+%files kmid
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kmid
+%attr(755,root,root) %{_libdir}/libkmidpart.so.*.*.*
+%{_libdir}/libkmidpart.so
+%{_applnkdir}/Multimedia/kmid.desktop
+%{_datadir}/apps/kmid
+%{_datadir}/mimelnk/audio/x-karaoke.desktop
+%{_datadir}/doc/kde/HTML/en/kmid
+%{_pixmapsdir}/locolor/*x*/apps/kmid.png
+%{_pixmapsdir}/hicolor/*x*/apps/kmid.png
 
-#################################################
-#             KMIDI
-#################################################
-
-%files kmidi -f kmidi.lang
-%defattr(644, root, root, 755)
-
-%config(missingok) /etc/X11/kde/applnk/Multimedia/KMidi.kdelnk
-%config %{_datadir}/kde/apps/kmidi/config/*.cfg
-
+%files kmidi
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kmidi
+%attr(755,root,root) %{_bindir}/sf2cfg
+%attr(755,root,root) %{_bindir}/timidity
+%{_applnkdir}/Multimedia/kmidi.desktop
+%{_applnkdir}/Multimedia/timidity.desktop
+%{_datadir}/apps/kmidi
+%{_datadir}/doc/kde/HTML/en/kmidi
+%{_pixmapsdir}/locolor/*x*/apps/kmidi.png
+%{_pixmapsdir}/hicolor/*x*/apps/kmidi.png
 
-%{_datadir}/kde/icons/mini/kmidi.xpm
-%{_datadir}/kde/icons/kmidi.xpm
-
-%dir %{_datadir}/kde/apps/kmidi
-%dir %{_datadir}/kde/apps/kmidi/config
-
-%{_datadir}/kde/apps/kmidi/config/chaos12-voices
-%{_datadir}/kde/apps/kmidi/config/chaos8-voices
-%{_datadir}/kde/apps/kmidi/config/megadrum
-%{_datadir}/kde/apps/kmidi/config/megainst
-%{_datadir}/kde/apps/kmidi/config/pila-voices
-%{_datadir}/kde/apps/kmidi/config/sound-canvas-drums
-%{_datadir}/kde/apps/kmidi/config/patch/
-%{_datadir}/kde/apps/kmidi/pics/
-
-%lang(en) %{_datadir}/kde/doc/HTML/en/kmidi
-%lang(de) %{_datadir}/kde/doc/HTML/de/kmidi
-
-#################################################
-#             KMIX
-#################################################
-
-%files kmix -f kmix.lang
-%defattr(644, root, root, 755)
-
-%config(missingok) /etc/X11/kde/applnk/Multimedia/KMix.kdelnk
-
+%files kmix
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kmix
+%attr(755,root,root) %{_bindir}/kmixctrl
+%attr(755,root,root) %{_libdir}/kmixctrl.*
+%attr(755,root,root) %{_libdir}/libkcm_kmix.*
+%attr(755,root,root) %{_libdir}/libkmixapplet.so.*.*.*
+%{_libdir}/libkmixapplet.so
+%{_applnkdir}/Multimedia/kmix.desktop
+%{_applnkdir}/Settings/Sound/kmix.desktop
+%{_datadir}/services/kmixctrl_restore.desktop
+%{_datadir}/apps/kmix
+%{_datadir}/apps/kicker/applets/*
+%{_datadir}/doc/kde/HTML/en/kmix
+%{_pixmapsdir}/locolor/*x*/apps/kmix.png
+%{_pixmapsdir}/hicolor/*x*/apps/kmix.png
 
-%{_datadir}/kde/icons/mini/kmix.xpm
-%{_datadir}/kde/icons/kmix.xpm
-%{_datadir}/kde/apps/kmix
-
-%lang(en) %{_datadir}/kde/doc/HTML/en/kmix
-
-#################################################
-#             KSCD
-#################################################
-
-%files kscd -f kscd.lang
-%defattr(644, root, root, 755)
-
-%config(missingok) /etc/X11/kde/applnk/Multimedia/kscd.kdelnk
-%config /etc/X11/kde/mimelnk/text/xmcd.kdelnk
-
-%attr(755,root,root) %{_bindir}/kscdmagic
+%files kscd
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kscd
-%attr(755,root,root) %{_bindir}/cddaslave
 %attr(755,root,root) %{_bindir}/workman2cddb.pl
-
-%{_datadir}/kde/apps/kscd
-
-%{_datadir}/kde/icons/mini/kscd.xpm
-%{_datadir}/kde/icons/kscd.xpm
-%{_datadir}/kde/icons/cd.xpm
-
-%lang(en) %{_datadir}/kde/doc/HTML/en/kscd
+%attr(755,root,root) %{_libdir}/libworkman.so.*.*.*
+%{_libdir}/libworkman.so
+%{_libdir}/libworkman.la
+%{_applnkdir}/Multimedia/kscd.desktop
+%{_datadir}/apps/kscd
+%{_datadir}/mimelnk/text/xmcd.desktop
+%{_datadir}/doc/kde/HTML/en/kscd
+%{_pixmapsdir}/locolor/*x*/apps/kscd.png
+%{_pixmapsdir}/hicolor/*x*/apps/kscd.png
