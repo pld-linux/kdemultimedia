@@ -1,6 +1,6 @@
 %define		_ver		3.0
 #define		_sub_ver
-%define		_rel		1
+%define		_rel		2
 
 %{?_sub_ver:	%define	_version	%{_ver}%{_sub_ver}}
 %{!?_sub_ver:	%define	_version	%{_ver}}
@@ -147,7 +147,7 @@ Summary:	KDE Media Player
 Summary(pl):	KDE Media Player
 Group:		X11/Applications
 Requires:	kdelibs = %{version}
-Requires:	arts = %{version}
+Requires:	arts >= 1.0.0
 
 %description noatun
 KDE Media Player.
@@ -160,7 +160,7 @@ Summary:	MPEG lib
 Summary(pl):	MPEG lib
 Group:		X11/Applications
 Requires:	kdelibs = %{version}
-Requires:	arts = %{version}
+Requires:	arts >= 1.0.0
 
 %description mpeglib
 MPEG lib.
