@@ -362,6 +362,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libarts_[!m]*.so.*.*.*
 %attr(755,root,root) %{_libdir}/libarts[!_mgb]*.so
 %attr(755,root,root) %{_libdir}/libartsmidi.la
+%attr(755,root,root) %{_libdir}/libartseffects.la
+%attr(755,root,root) %{_libdir}/libaudiofilearts.la
 %{_libdir}/mcop/audiofilearts*
 %{_libdir}/mcop/arts*
 %{_libdir}/mcop/Splay*
@@ -381,8 +383,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/noatun*
 %attr(755,root,root) %{_libdir}/libnoatun*.so.*.*.*
-%attr(755,root,root) %{_libdir}/libnoatun[!.c]*so
-%attr(755,root,root) %{_libdir}/libwinskinvis.so
+%attr(755,root,root) %{_libdir}/libnoatun[!.c]*.??
+%attr(755,root,root) %{_libdir}/libwinskinvis.??
 %attr(755,root,root) %{_libdir}/kde3/noatun*.??
 %{_libdir}/mcop/Noatun
 %{_libdir}/mcop/noatun*
@@ -443,25 +445,24 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(644,root,root,755)
-%{_libdir}/libarts_mpeglib.so
-%{_libdir}/libnoatuncontrols.so
-%{_libdir}/libartsmidi_idl.so
-%{_libdir}/libartsmodules.so
-%{_libdir}/libartsgui_kde.so
-%{_libdir}/libartsgui_idl.so
-%{_libdir}/libartsbuilder.so
-%{_libdir}/libyafxplayer.so
-%{_libdir}/libmpeg.so
-%{_libdir}/libarts_splay.so
-%{_libdir}/libkmidpart.so
-%{_libdir}/libartsmidi.so
-%{_libdir}/libyafcore.so
-%{_libdir}/libworkman.so
-%{_libdir}/libartsgui.so
-%{_libdir}/libnoatun.so
-%{_libdir}/libaktion.so
-%{_libdir}/libdummy.so
-%attr(755,root,root) %{_libdir}/lib*.la %except %{_libdir}/libartsmidi.la
+%attr(755,root,root) %{_libdir}/libaktion.??
+%attr(755,root,root) %{_libdir}/libartsbuilder.??
+%attr(755,root,root) %{_libdir}/libartsgui_idl.??
+%attr(755,root,root) %{_libdir}/libartsgui_kde.??
+%attr(755,root,root) %{_libdir}/libartsgui.??
+%attr(755,root,root) %{_libdir}/libartsmidi_idl.??
+%attr(755,root,root) %{_libdir}/libartsmidi.??
+%attr(755,root,root) %{_libdir}/libartsmodules.??
+%attr(755,root,root) %{_libdir}/libarts_mpeglib.??
+%attr(755,root,root) %{_libdir}/libarts_splay.??
+%attr(755,root,root) %{_libdir}/libdummy.??
+%attr(755,root,root) %{_libdir}/libkmidpart.??
+%attr(755,root,root) %{_libdir}/libmpeg.??
+%attr(755,root,root) %{_libdir}/libnoatuncontrols.??
+%attr(755,root,root) %{_libdir}/libnoatun.??
+%attr(755,root,root) %{_libdir}/libworkman.??
+%attr(755,root,root) %{_libdir}/libyafcore.??
+%attr(755,root,root) %{_libdir}/libyafxplayer.??
 %{_includedir}/*.h
 %{_includedir}/arts/*
 %{_includedir}/mpeglib*
@@ -471,7 +472,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kaboodle
 %attr(755,root,root) %{_libdir}/kaboodle.so
-%attr(755,root,root) %{_libdir}/libkaboodlepart.so
+%attr(755,root,root) %{_libdir}/libkaboodlepart.??
 %{_datadir}/apps/kaboodle
 %{_datadir}/services/kaboodle_component.desktop
 %{_applnkdir}/Multimedia/kaboodle.desktop
