@@ -403,6 +403,7 @@ KDE Media Player - biblioteki wspó³dzielone.
 #%%patch1 -p1
 
 %build
+cp /usr/share/automake/config.sub admin
 for f in `find . -name \*.desktop | xargs grep -l '\[nb\]'` ; do
 	echo -e ',s/\[nb\]=/[no]=/\n,w' | ed $f 2>/dev/null
 done
@@ -432,6 +433,7 @@ export CDPARANOIA=%{_bindir}/cdparanoia
 %configure \
 	--disable-rpath \
 	--enable-final \
+	--with-qt-libraries=%{_libdir} \
 	--with%{?without_alsa:out}-arts-alsa
 
 %{__make}
