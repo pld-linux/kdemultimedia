@@ -1,12 +1,8 @@
-
-%bcond_without 	alsa	# disables ALSA support
-
-%ifarch	sparc sparcv9 sparc64
-%undefine with_alsa
-%endif
-
-%bcond_without  i18n	# dont build i18n per module subpackages
-
+#
+# Conditional build:
+%bcond_without	alsa	# build without ALSA support
+%bcond_without	i18n	# don't build i18n per module subpackages
+#
 %define		_state		stable
 %define		_ver		3.2.0
 #%efine		_snap		040110
@@ -15,7 +11,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	1
+Release:	2
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
@@ -34,12 +30,7 @@ BuildRequires:	audiofile-devel
 BuildRequires:	cdparanoia-III-devel
 BuildRequires:	ed
 BuildRequires:	gettext-devel
-# what for?
-#BuildRequires:	gtk+-devel
-# No longer needed
-#BuildRequires:	id3lib-devel
 BuildRequires:	kdelibs-devel >= 9:%{version}
-BuildRequires:	libart_lgpl-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libogg-devel
 BuildRequires:	libpng-devel
@@ -67,49 +58,38 @@ KDE multimedia applications. Package includes:
 %description -l pl
 Multimedialne aplikacje KDE. Pakiet zawiera:
 
- - Aktion - odtwarzacz plików avi
- - Arts - narzêdzia arts
- - Kaboodle - odtwarzacz plików multimedialnych
+ - Aktion - odtwarzacz plików avi,
+ - Arts - narzêdzia arts,
+ - Kaboodle - odtwarzacz plików multimedialnych,
  - KMID - odtwarzacz MIDI,
  - KMIDI - programowy odtwarzacz MIDI,
  - KMIX - mikser audio,
- - KSCD - odtwarzacz CD.
- - Noatun - odtwarzacz plików multimedialnych
+ - KSCD - odtwarzacz CD,
+ - Noatun - odtwarzacz plików multimedialnych.
 
 %package devel
-Summary:	kdemultimedia - headers
-Summary(pl):	kdemultimedia - pliki nag³ówkowe
+Summary:	Header files for kdemultimedia libraries
+Summary(pl):	Pliki nag³ówkowe bibliotek kdemultimedia
 Group:		X11/Development/Libraries
 Requires:	kdelibs-devel >= 9:%{version}
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
 Requires:	%{name}-libworkman = %{epoch}:%{version}-%{release}
 Requires:	%{name}-noatun-libs = %{epoch}:%{version}-%{release}
+Obsoletes:	kdemultimedia-static
 
 %description devel
-kdemultimedia - headers.
+Header files for kdemultimedia libraries.
 
 %description devel -l pl
-kdemultimedia - pliki nag³ówkowe.
-
-%package static
-Summary:	kdemultimedia - static libraries
-Summary(pl):	kdemultimedia - biblioteki statyczne
-Group:		X11/Development/Libraries
-Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
-
-%description static
-kdemultimedia - static libraries.
-
-%description static -l pl
-kdemultimedia - biblioteki statyczne.
+Pliki nag³ówkowe bibliotek kdemultimedia
 
 %package arts
 Summary:	Arts extensions
 Summary(pl):	Rozszerzenia Arts
 Group:		X11/Applications
 Requires:	kdelibs >= 9:%{version}
-Obsoletes:	%{name}-artsplugin-audiofile
+Obsoletes:	kdemultimedia-artsplugin-audiofile
 
 %description arts
 Arts extensions.
@@ -122,7 +102,7 @@ Summary:	Arts Tools - builder
 Summary(pl):	Narzêdzia Arts - builder
 Group:		X11/Applications
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
-Obsoletes:	%{name}-arts < 9:3.1.92.021012
+Obsoletes:	kdemultimedia-arts < 9:3.1.92.021012
 
 %description artsbuilder
 Arts Tools - builder.
@@ -135,7 +115,7 @@ Summary:	Arts Tools - control
 Summary(pl):	Narzêdzia Arts - control
 Group:		X11/Applications
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
-Obsoletes:	%{name}-arts < 9:3.1.92.021012
+Obsoletes:	kdemultimedia-arts < 9:3.1.92.021012
 
 %description artscontrol
 Arts Tools - control.
@@ -148,7 +128,7 @@ Narzêdzia Arts - control.
 #Summary(pl):	Wtyczka do Audiofile
 #Group:		X11/Applications
 #Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
-#Obsoletes:	%{name}-arts < 9:3.1.92.021012
+#Obsoletes:	kdemultimedia-arts < 9:3.1.92.021012
 
 #%description artsplugin-audiofile
 #Audiofile Plug-in.
@@ -238,7 +218,7 @@ Requires:	%{name}-libworkman = %{epoch}:%{version}-%{release}
 CD ripper and sound encoder frontend.
 
 %description kaudiocreator -l pl
-Nak³adka na CD ripper i enkoder d¼wiêku.
+Nak³adka na CD ripper i koder d¼wiêku.
 
 %package kfile
 Summary:	Audio file formats enhanced information
@@ -271,7 +251,7 @@ muzycznej lub inne urz±dzenia MIDI przy³±czone do niej.
 
 %package kmix
 Summary:	KDE audio mixer
-Summary(pl):	Mixer audio dla KDE
+Summary(pl):	Mikser d¼wiêku dla KDE
 Group:		X11/Applications
 Requires:	kdebase-core >= 9:%{version}
 
@@ -279,7 +259,7 @@ Requires:	kdebase-core >= 9:%{version}
 Sound mixer application for KDE.
 
 %description kmix -l pl
-Mikser audio dla KDE.
+Mikser d¼wiêku dla KDE.
 
 %package krec
 Summary:	KDE sound recorder
@@ -330,7 +310,7 @@ Summary:	workman library
 Summary(pl):	Biblioteka workman
 Group:		X11/Libraries
 Requires:	kdelibs >= 9:%{version}
-Obsoletes:	%{name}-kscd < 9:3.1.92.031012
+Obsoletes:	kdemultimedia-kscd < 9:3.1.92.031012
 
 %description libworkman
 workman library.
@@ -355,7 +335,7 @@ Summary:	MPEG libraries - development files
 Summary(pl):	Biblioteki obs³ugi MPEG - pliki dla programistów
 Group:		X11/Applications
 Requires:	%{name}-mpeglib-examples = %{epoch}:%{version}-%{release}
-Obsoletes:	%{name}-mpeglib < 9:3.1.92.031012
+Obsoletes:	kdemultimedia-mpeglib < 9:3.1.92.031012
 
 %description mpeglib-devel
 MPEG libraries - development files.
@@ -368,7 +348,7 @@ Summary:	MPEG libraries - examples
 Summary(pl):	Biblioteki obs³ugi MPEG - przyk³ady
 Group:		X11/Applications
 Requires:	%{name}-mpeglib = %{epoch}:%{version}-%{release}
-Obsoletes:	%{name}-mpeglib < 9:3.1.92.031012
+Obsoletes:	kdemultimedia-mpeglib < 9:3.1.92.031012
 
 %description mpeglib-examples
 MPEG libraries - examples.
@@ -394,7 +374,7 @@ Summary:	KDE Media Player - shared libs
 Summary(pl):	KDE Media Player - biblioteki wspó³dzielone
 Group:		X11/Libraries
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
-Obsoletes:	%{name}-noatun < 9:3.1.92.031012
+Obsoletes:	kdemultimedia-noatun < 9:3.1.92.031012
 
 %description noatun-libs
 KDE Media Player - shared libs.
@@ -402,10 +382,22 @@ KDE Media Player - shared libs.
 %description noatun-libs -l pl
 KDE Media Player - biblioteki wspó³dzielone.
 
+%package i18n
+Summary:	Common internationalization and localization files for kdemultimedia
+Summary(pl):	Wspó³dzielone pliki umiêdzynarodawiaj±ce dla kdemultimedia
+Group:		X11/Applications
+Requires:	kdelibs-i18n >= 9:%{version}
+
+%description i18n
+Common internationalization and localization files for kdemultimedia.
+
+%description i18n -l pl
+Wspó³dzielone pliki umiêdzynarodawiaj±ce dla kdemultimedia.
+
 %package artsbuilder-i18n
 Summary:	Internationalization and localization files for artsbuilder
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla artsbuilder
-Group:	X11/Applications
+Summary(pl):	Pliki umiêdzynarodawiaj±ce dla artsbuildera
+Group:		X11/Applications
 Requires:	%{name}-artsbuilder = %{epoch}:%{version}-%{release}
 Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	%{name}-arts-i18n = %{epoch}:%{version}-%{release}
@@ -413,40 +405,39 @@ Requires:	%{name}-arts-i18n = %{epoch}:%{version}-%{release}
 %description artsbuilder-i18n
 Internationalization and localization files for artsbuilder.
 
-%description -l pl artsbuilder-i18n
-Pliki umiêdzynarodawiaj±ce dla artsbuilder.
-
+%description artsbuilder-i18n -l pl
+Pliki umiêdzynarodawiaj±ce dla artsbuildera.
 
 %package artscontrol-i18n
 Summary:	Internationalization and localization files for artscontrol
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla artscontrol
-Group:	X11/Applications
+Group:		X11/Applications
 Requires:	%{name}-artscontrol = %{epoch}:%{version}-%{release}
 Requires:	%{name}-arts-i18n = %{epoch}:%{version}-%{release}
 
 %description artscontrol-i18n
 Internationalization and localization files for artscontrol.
 
-%description -l pl artscontrol-i18n
+%description artscontrol-i18n -l pl
 Pliki umiêdzynarodawiaj±ce dla artscontrol.
 
 %package arts-i18n
 Summary:	Internationalization and localization files for arts
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla arts
-Group:	X11/Applications
+Group:		X11/Applications
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 
 %description arts-i18n
 Internationalization and localization files for arts.
 
-%description -l pl arts-i18n
+%description arts-i18n -l pl
 Pliki umiêdzynarodawiaj±ce dla arts.
 
 %package juk-i18n
 Summary:	Internationalization and localization files for juk
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla juk
-Group:	X11/Applications
+Group:		X11/Applications
 Requires:	%{name}-juk = %{epoch}:%{version}-%{release}
 Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
@@ -454,25 +445,13 @@ Requires:	kdebase-core-i18n >= 9:%{version}
 %description juk-i18n
 Internationalization and localization files for juk.
 
-%description -l pl juk-i18n
+%description juk-i18n -l pl
 Pliki umiêdzynarodawiaj±ce dla juk.
-
-%package i18n
-Summary:	Common internationalization and localization files for kdemultimedia
-Summary(pl):	Wspó³dzielone pliki umiêdzynarodawiaj±ce dla kdemultimedia
-Group:	X11/Applications
-Requires:	kdelibs-i18n >= 9:%{version}
-
-%description i18n
-Common internationalization and localization files for kdemultimedia.
-
-%description -l pl i18n
-Wspó³dzielone pliki umiêdzynarodawiaj±ce dla kdemultimedia.
 
 %package kaboodle-i18n
 Summary:	Internationalization and localization files for kaboodle
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kaboodle
-Group:	X11/Applications
+Group:		X11/Applications
 Requires:	%{name}-kaboodle = %{epoch}:%{version}-%{release}
 Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
@@ -480,13 +459,13 @@ Requires:	kdebase-core-i18n >= 9:%{version}
 %description kaboodle-i18n
 Internationalization and localization files for kaboodle.
 
-%description -l pl kaboodle-i18n
+%description kaboodle-i18n -l pl
 Pliki umiêdzynarodawiaj±ce dla kaboodle.
 
 %package kmid-i18n
 Summary:	Internationalization and localization files for kmid
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kmid
-Group:	X11/Applications
+Group:		X11/Applications
 Requires:	%{name}-kmid = %{epoch}:%{version}-%{release}
 Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
@@ -494,13 +473,13 @@ Requires:	kdebase-core-i18n >= 9:%{version}
 %description kmid-i18n
 Internationalization and localization files for kmid.
 
-%description -l pl kmid-i18n
+%description kmid-i18n -l pl
 Pliki umiêdzynarodawiaj±ce dla kmid.
 
 %package kmix-i18n
 Summary:	Internationalization and localization files for kmix
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kmix
-Group:	X11/Applications
+Group:		X11/Applications
 Requires:	%{name}-kmix = %{epoch}:%{version}-%{release}
 Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
@@ -508,13 +487,13 @@ Requires:	kdebase-core-i18n >= 9:%{version}
 %description kmix-i18n
 Internationalization and localization files for kmix.
 
-%description -l pl kmix-i18n
+%description kmix-i18n -l pl
 Pliki umiêdzynarodawiaj±ce dla kmix.
 
 %package kscd-i18n
 Summary:	Internationalization and localization files for kscd
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kscd
-Group:	X11/Applications
+Group:		X11/Applications
 Requires:	%{name}-kscd = %{epoch}:%{version}-%{release}
 Requires:	%{name}-libkcddb-i18n = %{epoch}:%{version}-%{release}
 Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
@@ -523,13 +502,13 @@ Requires:	kdebase-core-i18n >= 9:%{version}
 %description kscd-i18n
 Internationalization and localization files for kscd.
 
-%description -l pl kscd-i18n
+%description kscd-i18n -l pl
 Pliki umiêdzynarodawiaj±ce dla kscd.
 
 %package krec-i18n
 Summary:	Internationalization and localization files for krec
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla krec
-Group:	X11/Applications
+Group:		X11/Applications
 Requires:	%{name}-krec = %{epoch}:%{version}-%{release}
 Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	%{name}-artscontrol-i18n = %{epoch}:%{version}-%{release}
@@ -539,13 +518,13 @@ Requires:	kdebase-core-i18n >= 9:%{version}
 %description krec-i18n
 Internationalization and localization files for krec.
 
-%description -l pl krec-i18n
+%description krec-i18n -l pl
 Pliki umiêdzynarodawiaj±ce dla krec.
 
 %package noatun-i18n
 Summary:	Internationalization and localization files for noatun
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla noatun
-Group:	X11/Applications
+Group:		X11/Applications
 Requires:	%{name}-noatun = %{epoch}:%{version}-%{release}
 Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core-i18n >= 9:%{version}
@@ -553,13 +532,13 @@ Requires:	kdebase-core-i18n >= 9:%{version}
 %description noatun-i18n
 Internationalization and localization files for noatun.
 
-%description -l pl noatun-i18n
+%description noatun-i18n -l pl
 Pliki umiêdzynarodawiaj±ce dla noatun.
 
 %package kfile-i18n
 Summary:	Internationalization and localization files for kfile
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kfile
-Group:	X11/Applications
+Group:		X11/Applications
 Requires:	%{name}-kfile = %{epoch}:%{version}-%{release}
 Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	konqueror-i18n >= 9:%{version}
@@ -567,41 +546,40 @@ Requires:	konqueror-i18n >= 9:%{version}
 %description kfile-i18n
 Internationalization and localization files for kfile.
 
-%description -l pl kfile-i18n
+%description kfile-i18n -l pl
 Pliki umiêdzynarodawiaj±ce dla kfile.
 
 %package audiocd-i18n
 Summary:	Internationalization and localization files for audiocd
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla audiocd
-Group:	X11/Applications
+Group:		X11/Applications
 Requires:	%{name}-audiocd = %{epoch}:%{version}-%{release}
 Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
-Requires:	konqueror-i18n >= 9:%{version}
 Requires:	%{name}-libkcddb-i18n = %{epoch}:%{version}-%{release}
+Requires:	konqueror-i18n >= 9:%{version}
 
 %description audiocd-i18n
 Internationalization and localization files for audiocd.
 
-%description -l pl audiocd-i18n
+%description audiocd-i18n -l pl
 Pliki umiêdzynarodawiaj±ce dla audiocd.
 
 %package libkcddb-i18n
 Summary:	Internationalization and localization files for libkcddb
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla libkcddb
-Group:	X11/Applications
+Group:		X11/Applications
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
-Obsoletes:	kde-i18n
 
 %description libkcddb-i18n
 Internationalization and localization files for libkcddb.
 
-%description -l pl libkcddb-i18n
+%description libkcddb-i18n -l pl
 Pliki umiêdzynarodawiaj±ce dla libkcddb.
 
 %package kaudiocreator-i18n
 Summary:	Internationalization and localization files for kaudiocreator
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kaudiocreator
-Group:	X11/Applications
+Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kaudiocreatora
+Group:		X11/Applications
 Requires:	%{name}-kaudiocreator = %{epoch}:%{version}-%{release}
 Requires:	%{name}-i18n = %{epoch}:%{version}-%{release}
 Requires:	%{name}-libkcddb-i18n = %{epoch}:%{version}-%{release}
@@ -609,8 +587,8 @@ Requires:	%{name}-libkcddb-i18n = %{epoch}:%{version}-%{release}
 %description kaudiocreator-i18n
 Internationalization and localization files for kaudiocreator.
 
-%description -l pl kaudiocreator-i18n
-Pliki umiêdzynarodawiaj±ce dla kaudiocreator.
+%description kaudiocreator-i18n -l pl
+Pliki umiêdzynarodawiaj±ce dla kaudiocreatora.
 
 %prep
 %setup -q -n %{name}-%{version} 
@@ -661,7 +639,6 @@ else
 	echo "No i18n sources found and building --with i18n. FIXIT!"
 	exit 1
 fi
-
 %endif
 
 %find_lang artsbuilder	--with-kde
@@ -685,7 +662,6 @@ mv desktop_kdemultimedia.lang kdemultimedia.lang
 %find_lang kcmcddb         --with-kde
 cat kcmcddb.lang >> libkcddb.lang
 
-
 %find_lang kio_audiocd         --with-kde
 %find_lang kcmaudiocd         --with-kde
 cat kcmaudiocd.lang >> kio_audiocd.lang
@@ -697,7 +673,6 @@ mv artsmodules.lang arts.lang
 
 %find_lang kcmkmix      --with-kde
 cat kcmkmix.lang >> kmix.lang
-
 
 kfile="au \
 avi \
@@ -723,7 +698,6 @@ kmix \
 krec \
 kscd \
 noatun"
-
 
 for i in $files; do
 	> ${i}_en.lang
@@ -755,6 +729,7 @@ rm -rf $RPM_BUILD_ROOT
 %postun	noatun-libs		-p /sbin/ldconfig
 
 %if %{with i18n}
+%files i18n -f kdemultimedia.lang
 %files artsbuilder-i18n -f artsbuilder.lang
 %files artscontrol-i18n -f artscontrol.lang
 %files arts-i18n -f arts.lang
@@ -765,7 +740,6 @@ rm -rf $RPM_BUILD_ROOT
 %files kscd-i18n -f kscd.lang
 %files krec-i18n -f krec.lang
 %files noatun-i18n -f noatun.lang
-%files i18n -f kdemultimedia.lang
 %files kfile-i18n -f kfile.lang
 %files audiocd-i18n -f kio_audiocd.lang
 %files kaudiocreator-i18n -f kaudiocreator.lang
@@ -774,29 +748,28 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libartsbuilder.so
+%attr(755,root,root) %{_libdir}/libartsgui.so
+%attr(755,root,root) %{_libdir}/libartsgui_idl.so
+%attr(755,root,root) %{_libdir}/libartsgui_kde.so
+%attr(755,root,root) %{_libdir}/libartsmidi_idl.so
+%attr(755,root,root) %{_libdir}/libartsmidi.so
+%attr(755,root,root) %{_libdir}/libartsmodules*.so
+%attr(755,root,root) %{_libdir}/libkcddb.so
+%attr(755,root,root) %{_libdir}/libnoatun.so
+%attr(755,root,root) %{_libdir}/libnoatuncontrols.so
+%attr(755,root,root) %{_libdir}/libnoatuntags.so
+%attr(755,root,root) %{_libdir}/libworkman.so
+%attr(755,root,root) %{_libdir}/libyafcore.so
+%attr(755,root,root) %{_libdir}/libyafxplayer.so
+# static-only library, no shared version - so here
+%{_libdir}/libworkmanaudio.a
 %{_includedir}/*.h
-%{_includedir}/arts/*
+%{_includedir}/arts/*.h
+%{_includedir}/arts/*.idl
 %{_includedir}/libkcddb
 %{_includedir}/libwm
 %{_includedir}/noatun
-%{_libdir}/libartsbuilder.so
-%{_libdir}/libartsgui.so
-%{_libdir}/libartsgui_idl.so
-%{_libdir}/libartsgui_kde.so
-%{_libdir}/libartsmidi_idl.so
-%{_libdir}/libartsmidi.so
-%{_libdir}/libartsmodules*.so
-%{_libdir}/libkcddb.so
-%{_libdir}/libnoatun.so
-%{_libdir}/libnoatuncontrols.so
-%{_libdir}/libnoatuntags.so
-%{_libdir}/libworkman.so
-%{_libdir}/libyafcore.so
-%{_libdir}/libyafxplayer.so
-
-%files static
-%defattr(644,root,root,755)
-%{_libdir}/libworkmanaudio.a
 
 %files arts
 %defattr(644,root,root,755)
@@ -1040,11 +1013,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %files mpeglib-devel
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libarts_mpeglib.so
+%attr(755,root,root) %{_libdir}/libarts_splay.so
+%attr(755,root,root) %{_libdir}/libmpeg.so
 %{_includedir}/mpeglib
 %{_includedir}/mpeglib_artsplug
-%{_libdir}/libarts_mpeglib.so
-%{_libdir}/libarts_splay.so
-%{_libdir}/libmpeg.so
 
 %files mpeglib-examples
 %defattr(644,root,root,755)
