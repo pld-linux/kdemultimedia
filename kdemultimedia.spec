@@ -1,19 +1,30 @@
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
-Version:	2.0.1
-Release:	1
+Version:	2.2
+Release:	0.1
 Epoch:		6
 License:	GPL
 Group:		X11/Applications
 Group(de):	X11/Applikationen
 Group(pl):	X11/Aplikacje
 Vendor:		The KDE Team
-Source0:	ftp://ftp.kde.org/pub/kde/snapshost/current/%{name}-%{version}.tar.bz2
+Source0:	ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
+Patch0:		%{name}-kmidi-alsa.patch
 BuildRequires:	kdelibs-devel
 BuildRequires:	qt-devel >= 2.2.2
 BuildRequires:	XFree86-devel
 BuildRequires:	libstdc++-devel
+BuildRequires:	zlib-devel
+BuildRequires:	gettext-devel
+BuildRequires:	libjpeg-devel
+BuildRequires:	libpng-devel
+BuildRequires:	alsa-lib-devel
+BuildRequires:	esound-devel
+BuildRequires:	gtk+-devel
+BuildRequires:	cdparanoia-III-devel
+BuildRequires:	libogg-devel
+BuildRequires:	libvorbis-devel
 Requires:	kdelibs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -156,12 +167,15 @@ Requires:	kdelibs = %{version}
 
 %prep
 %setup -q
+%patch0 -p1
+
 %build
 kde_htmldir="%{_htmldir}"; export kde_htmldir
 kde_icondir="%{_pixmapsdir}"; export kde_icondir
 
-%configure \
- 	--with-pam="yes"
+%configure2_13 \
+ 	--with-pam="yes" \
+	--enable-audio=oss,alsa
 %{__make}
 
 %install
