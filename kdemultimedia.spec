@@ -2,7 +2,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	3.0.3
-Release:	3
+Release:	4
 Epoch:		7
 License:	GPL
 Vendor:		The KDE Team
@@ -250,6 +250,10 @@ cat kcmkmix.lang >> kmix.lang
 %find_lang kfile_wav	--with-kde
 cat {kfile_m3u,kfile_mp3,kfile_ogg,kfile_wav,kmyapp,koncd}.lang >> %{name}.lang
 
+cd $RPM_BUILD_ROOT%{_libdir}/kde3
+ln -sf kmix_panelapplet.so.1.0.0 kmix_panelapplet.so.1
+cd -
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -382,7 +386,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kmix.??
 %attr(755,root,root) %{_libdir}/kmixctrl.*
 %attr(755,root,root) %{_libdir}/kde3/kcm_kmix.??
-%attr(755,root,root) %{_libdir}/kde3/kmix_panelapplet.so.*.*.*
+%attr(755,root,root) %{_libdir}/kde3/kmix_panelapplet.so.*
 %attr(755,root,root) %{_libdir}/kde3/kmix_panelapplet.la
 %{_applnkdir}/Multimedia/kmix.desktop
 %{_applnkdir}/Settings/KDE/Sound/kmixcfg.desktop
