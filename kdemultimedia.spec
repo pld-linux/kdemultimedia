@@ -11,8 +11,8 @@
 #
 
 %define         _state          snapshots
-%define         _ver		3.2
-%define         _snap		030613
+%define         _ver		3.1.90
+%define         _snap		030618
 
 %ifarch	sparc sparcv9 sparc64
 %define		_with_esd	1
@@ -22,15 +22,15 @@
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
-Version:	%{_ver}
-Release:	0.%{_snap}.1
-Epoch:		8
+Version:	%{_ver}.%{_snap}
+Release:	1
+Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
 Source0:        http://www.kernel.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
-# Source0-md5:	49d9c8add27454d2212117de87d5941d
+# Source0-md5:	f95fb6102382b6ddf80d1ab6253df733
 Patch0:		%{name}-timidity.patch
 #Patch1:	http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-video-20030316.patch
 #Patch2:	http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-streaming-20030317.patch
@@ -48,7 +48,7 @@ BuildRequires:	gettext-devel
 # what for?
 #BuildRequires:	gtk+-devel
 BuildRequires:	id3lib-devel
-BuildRequires:	kdelibs-devel = %{version}
+BuildRequires:	kdelibs-devel >= %{version}
 BuildRequires:	libart_lgpl-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libogg-devel
@@ -57,7 +57,6 @@ BuildRequires:	libstdc++-devel
 BuildRequires:	libvorbis-devel
 %{!?_without_xine:BuildRequires: xine-lib-devel >= 1.0b4}
 BuildRequires:	zlib-devel
-Requires:	kdelibs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define         _htmldir        %{_docdir}/kde/HTML
@@ -93,13 +92,13 @@ Multimedialne aplikacje KDE. Pakiet zawiera:
 Summary:	kdemultimedia - headers
 Summary(pl):	kdemultimedia - pliki nag³ówkowe
 Group:		X11/Development/Libraries
-Requires:	arts-devel >= 1.0.3
+Requires:	arts-devel >= 1.2.0
 Requires:	kdelibs-devel >= %{version}
-Requires:	%{name}-arts = %{version}
-Requires:	%{name}-kscd = %{version}
-Requires:	%{name}-libkcddb = %{version}
-Requires:	%{name}-mpeglib = %{version}
-Requires:	%{name}-noatun = %{version}
+Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
+Requires:	%{name}-kscd = %{epoch}:%{version}-%{release}
+Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
+Requires:	%{name}-mpeglib = %{epoch}:%{version}-%{release}
+Requires:	%{name}-noatun = %{epoch}:%{version}-%{release}
 
 %description devel
 kdemultimedia - headers.
@@ -111,7 +110,7 @@ kdemultimedia - pliki nag³ówkowe.
 Summary:	kdemultimedia - static libraries
 Summary(pl):	kdemultimedia - biblioteki statyczne
 Group:		X11/Development/Libraries
-Requires:	%{name}-devel = %{version}
+Requires:	%{name}-devel = %{epoch}:%{version}-%{release}
 
 %description static
 kdemultimedia - static libraries.
@@ -124,7 +123,7 @@ Summary:	Arts Tools
 Summary(pl):	Narzêdzia Arts
 Group:		X11/Applications
 Requires:	kdelibs >= %{version}
-Requires:	%{name}-mpeglib = %{version}
+Requires:	%{name}-mpeglib = %{epoch}:%{version}-%{release}
 Obsoletes:	%{name}-aktion
 
 %description arts
@@ -139,7 +138,7 @@ Summary(pl):    Program spe³niaj±cy funkcje szafy graj±cej
 Group:          X11/Applications
 Requires:       id3lib
 Requires:       kdebase-core >= %{version}
-Requires:       %{name}-mpeglib = %{version}
+Requires:       %{name}-mpeglib = %{epoch}:%{version}-%{release}
 Obsoletes:	%{name}-aktion
 
 %description juk
@@ -184,7 +183,7 @@ Summary:	Audio file formats enhanced information
 Summary(pl):	Rozszerzone informacje o plikach d¼wiêkowych
 Group:		X11/Development/Libraries
 Requires:	konqueror >= %{version}
-Obsoletes:	kdemultimedia < 3.0.8
+Obsoletes:	kdemultimedia < 8:3.0.8
 Obsoletes:	%{name}-aktion
 
 %description kfile
@@ -243,7 +242,7 @@ Summary:	KDE sound recorder
 Summary(pl):	Rejestrator d¼wiêku dla KDE
 Group:		X11/Applications
 Requires:       kdebase-core >= %{version}
-Requires:	%{name}-arts = %{version}
+Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 Obsoletes:	%{name}-aktion
 
 %description krec
@@ -274,7 +273,7 @@ Summary:        cddb library for KDE
 Summary(pl):    Biblioteka cddb pod KDE
 Group:          X11/Libraries
 Requires:       kdebase-core >= %{version}
-Requires:       arts >= 1.0.0
+Requires:       arts >= 1.2.0
 Obsoletes:	%{name}-aktion
 
 %description libkcddb
@@ -288,7 +287,7 @@ Summary:	MPEG lib
 Summary(pl):	MPEG lib
 Group:		X11/Applications
 Requires:	kdelibs >= %{version}
-Requires:	arts >= 1.0.0
+Requires:	arts >= 1.2.0
 Obsoletes:	%{name}-aktion
 
 %description mpeglib
@@ -302,7 +301,7 @@ Summary:	KDE Media Player
 Summary(pl):	KDE Media Player - odtwarzacz plików multimedialnych
 Group:		X11/Applications
 Requires:       kdebase-core >= %{version}
-Requires:	arts >= 1.0.0
+Requires:	arts >= 1.2.0
 Obsoletes:	%{name}-aktion
 
 %description noatun
@@ -316,7 +315,7 @@ Summary:	Xine Plug-in
 Summary(pl):	Wtyczka do Xine
 Group:		X11/Applications
 Requires:	kdelibs >= %{version}
-Requires:	arts >= 1.0.0
+Requires:	arts >= 1.2.0
 Requires:	xine-lib >= 1.0b4
 Obsoletes:	%{name}-aktion
 
@@ -356,7 +355,7 @@ mkdir linux
 sed -e 's#slots\[CDROM_MAX_SLOTS\]#kde_slots\[CDROM_MAX_SLOTS\]#g' \
 /usr/include/linux/cdrom.h > linux/cdrom.h
 
-#%%{__make} -f Makefile.cvs
+%{__make} -f Makefile.cvs
 
 %configure \
 	--enable-final \
