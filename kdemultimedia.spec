@@ -18,7 +18,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	0.3
+Release:	0.4
 Epoch:		8
 License:	GPL
 Vendor:		The KDE Team
@@ -28,6 +28,8 @@ Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.
 # generated from kde-i18n
 Source1:	ftp://blysk.ds.pg.gda.pl/linux/kde-i18n-package/%{version}/kde-i18n-%{name}-%{version}.tar.bz2
 # Source1-md5:	a8eeb928cdcd0082d337a2888a22340c
+Source2:	%{name}-extra_icons.tar.bz2
+# Source2-md5:	0d921c84c2c814c2976b4be73b801259
 Patch0:		%{name}-timidity.patch
 Patch1:		%{name}-qt-linuxcdrom.patch
 Patch2:		%{name}-libtool-sanitize.patch
@@ -146,6 +148,7 @@ Odtwarzacz multimedialny.
 Summary:	Audio Creator
 Summary(pl):	Kreator audio
 Group:		X11/Applications
+Requires:	kdebase-core >= 8:%{version}
 Obsoletes:	kdemultimedia < 3.0.8
 
 %description kaudiocreator
@@ -355,6 +358,11 @@ cd $RPM_BUILD_ROOT%{_datadir}/apps/kmidi/config
 ln -s gravis.cfg GUSpatches
 cd -
 
+bzip2 -dc %{SOURCE2} | tar xf - -C $RPM_BUILD_ROOT%{_pixmapsdir}
+for i in {kmid,kmidi,kmix,kscd,noatun}.png; do
+	ln -s crystalsvg/48x48/apps/$i $RPM_BUILD_ROOT%{_pixmapsdir}/$i
+done
+
 bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 
 %find_lang	kfile_au	--with-kde
@@ -448,6 +456,7 @@ echo "Remember to restart artsd!"
 %{_datadir}/config/aktionrc
 %{_applnkdir}/Multimedia/aktion.desktop
 %{_pixmapsdir}/*/*/apps/aktion.png
+%{_pixmapsdir}/aktion.png
 
 %files arts -f arts.lang
 %defattr(644,root,root,755)
@@ -504,7 +513,7 @@ echo "Remember to restart artsd!"
 %{_datadir}/services/kaboodle_component.desktop
 %{_datadir}/services/kaboodleengine.desktop
 %{_applnkdir}/Multimedia/kaboodle.desktop
-%{_pixmapsdir}/*/*/apps/kaboodle.*
+%{_pixmapsdir}/*/*/apps/kaboodle.png
 
 %files kaudiocreator -f kaudiocreator.lang
 %defattr(644,root,root,755)
@@ -518,6 +527,7 @@ echo "Remember to restart artsd!"
 %{_applnkdir}/Multimedia/kaudiocreator.desktop
 %{_applnkdir}/Settings/KDE/Sound/audiocd.desktop
 %{_pixmapsdir}/[!l]*/*/*/kaudiocreator.png
+%{_pixmapsdir}/kaudiocreator.png
 
 %files kfile -f kfile.lang
 %defattr(644,root,root,755)
@@ -535,6 +545,7 @@ echo "Remember to restart artsd!"
 %{_datadir}/servicetypes/*midi*.desktop
 %{_applnkdir}/Multimedia/kmid.desktop
 %{_pixmapsdir}/*/*/*/kmid.png
+%{_pixmapsdir}/kmid.png
 
 %files kmidi -f kmidi.lang
 %defattr(644,root,root,755)
@@ -545,6 +556,7 @@ echo "Remember to restart artsd!"
 %{_applnkdir}/Multimedia/ktimidity.desktop
 %{_datadir}/apps/kmidi
 %{_pixmapsdir}/*/*/*/kmidi.png
+%{_pixmapsdir}/kmidi.png
 
 %files kmix -f kmix.lang
 %defattr(644,root,root,755)
@@ -566,6 +578,18 @@ echo "Remember to restart artsd!"
 %{_datadir}/apps/kmix
 %{_datadir}/apps/kicker/applets/*
 %{_pixmapsdir}/*/*/*/kmix.png
+%{_pixmapsdir}/kmix.png
+
+%files krec -f krec.lang
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/krec
+# KDE-style (lt_)dlopenable binary
+%attr(755,root,root) %{_libdir}/krec.so
+%{_libdir}/krec.la
+%{_datadir}/apps/krec
+%{_applnkdir}/Multimedia/krec.desktop
+%{_pixmapsdir}/*/*/*/krec*.png
+%{_pixmapsdir}/krec.png
 
 %files kscd -f kscd.lang
 %defattr(644,root,root,755)
@@ -577,16 +601,7 @@ echo "Remember to restart artsd!"
 %{_datadir}/apps/kscd
 %{_datadir}/mimelnk/text/xmcd.desktop
 %{_pixmapsdir}/*/*/*/kscd.png
-
-%files krec -f krec.lang
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/krec
-# KDE-style (lt_)dlopenable binary
-%attr(755,root,root) %{_libdir}/krec.so
-%{_libdir}/krec.la
-%{_datadir}/apps/krec
-%{_applnkdir}/Multimedia/krec.desktop
-%{_pixmapsdir}/*/*/*/krec*
+%{_pixmapsdir}/kscd.png
 
 %files mpeglib
 %defattr(644,root,root,755)
@@ -631,6 +646,7 @@ echo "Remember to restart artsd!"
 %{_datadir}/mimelnk/interface/x-winamp-skin.desktop
 %{_applnkdir}/Multimedia/noatun.desktop
 %{_pixmapsdir}/*/*/*/noatun.png
+%{_pixmapsdir}/noatun.png
 
 %if %{?_without_xine:0}%{!?_without_xine:1}
 %files xine
