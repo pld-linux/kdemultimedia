@@ -295,7 +295,7 @@ AUDIO=${AUDIO%%,}
 
 for plik in `find ./ -name *.desktop` ; do
 	echo $plik
-	sed -ie 's/\[nb\]/\[no\]/g' $plik
+	sed -i -e 's/\[nb\]/\[no\]/g' $plik
 done
 
 # kdemultimedia includes kernel headers which breaks thins, ugly workaround
