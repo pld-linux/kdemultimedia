@@ -5,22 +5,22 @@
 %undefine with_alsa
 %endif
 
-%define		_state		snapshots
-%define		_ver		3.1.94
+%define		_state		unstable
+%define		_ver		3.1.95
 %define		_snap		040110
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
-Version:	%{_ver}.%{_snap}
-Release:	2
+Version:	%{_ver}
+Release:	0.1
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
-#Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
-Source0:	http://ep09.pld-linux.org/~djurban/kde/%{name}-%{_snap}.tar.bz2
-# Source0-md5:	c7e6af256c06d45a80621bf69d12d8db
+Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
+# Source0-md5:	aacca6ca02326a4f2a8846fd170e017a
+#Source0:	http://ep09.pld-linux.org/~djurban/kde/%{name}-%{version}.tar.bz2
 # Patch0:		%{name}-no_pedantic.patch
 # Patch1:		%{name}-cdda_check.patch
 BuildRequires:	Xaw3d-devel
@@ -398,7 +398,7 @@ KDE Media Player - shared libs.
 KDE Media Player - biblioteki wspó³dzielone.
 
 %prep
-%setup -q -n %{name}-%{_snap} 
+%setup -q -n %{name}-%{version} 
 #%%patch0 -p1
 #%%patch1 -p1
 
