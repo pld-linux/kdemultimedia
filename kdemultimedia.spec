@@ -4,13 +4,13 @@
 # 
 
 %define         _state          unstable
-%define         _kdever         kde-3.1-beta1
+%define         _kdever         kde-3.1-beta2
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	3.0.8
-Release:	2
+Release:	1
 Epoch:		7
 License:	GPL
 Vendor:		The KDE Team
@@ -322,7 +322,7 @@ cat kmixcfg.lang >> kmix.lang
 %find_lang noatun	--with-kde
 
 %clean
-%{!?_without_clean:rm -rf $RPM_BUILD_ROOT}
+rm -rf $RPM_BUILD_ROOT
 
 %post arts
 echo "Remember to restart artsd !"
