@@ -23,13 +23,13 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	0.%{_snap}.1
+Release:	0.%{_snap}.2
 Epoch:		8
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
-Source0:        http://team.pld.org.pl/~djurban/kde/%{name}-%{_snap}.tar.bz2
+Source0:        http://team.pld.org.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
 Patch0:		%{name}-timidity.patch
 Patch1:		http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-video-20030316.patch
 #Patch2:	http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-streaming-20030317.patch
@@ -93,10 +93,12 @@ Summary(pl):	kdemultimedia - pliki nag³ówkowe
 Group:		X11/Development/Libraries
 Requires:	arts-devel >= 1.0.3
 Requires:	kdelibs-devel >= %{version}
-Requires:	kdemultimedia-arts = %{version}
-Requires:	kdemultimedia-mpeglib = %{version}
-Requires:	kdemultimedia-noatun = %{version}
+Requires:	%{name}-aktion = %{version}
+Requires:	%{name}-arts = %{version}
+Requires:	%{name}-kscd = %{version}
 Requires:	%{name}-libkcddb = %{version}
+Requires:	%{name}-mpeglib = %{version}
+Requires:	%{name}-noatun = %{version}
 
 %description devel
 kdemultimedia - headers.
@@ -109,7 +111,6 @@ Summary:	KDE Media Player
 Summary(pl):	Odtwarzacz multimedialny dla KDE
 Group:		X11/Applications
 Requires:	kdelibs >= %{version}
-Obsoletes:	aktion
 
 %description aktion
 This is a media player for KDE. Currently it can be only used to play
@@ -394,18 +395,19 @@ echo "Remember to restart artsd !"
 %files devel
 %defattr(644,root,root,755)
 %{_libdir}/libaktion.so
-%{_libdir}/libartsbuilder.so
-%{_libdir}/libartsgui_idl.so
-%{_libdir}/libartsgui_kde.so
-%{_libdir}/libartsgui.so
-%{_libdir}/libartsmidi_idl.so
-%{_libdir}/libartsmidi.so
-%{_libdir}/libartsmodules.so
 %{_libdir}/libarts_mpeglib.so
 %{_libdir}/libarts_splay.so
+%{_libdir}/libartsbuilder.so
+%{_libdir}/libartsgui.so
+%{_libdir}/libartsgui_idl.so
+%{_libdir}/libartsgui_kde.so
+%{_libdir}/libartsmidi_idl.so
+%{_libdir}/libartsmidi.so
+%{_libdir}/libartsmodules*.so
+%{_libdir}/libkcddb.so
 %{_libdir}/libmpeg.so
-%{_libdir}/libnoatuncontrols.so
 %{_libdir}/libnoatun.so
+%{_libdir}/libnoatuncontrols.so
 %{_libdir}/libnoatuntags.so
 %{_libdir}/libworkman.so
 %{_libdir}/libyafcore.so
