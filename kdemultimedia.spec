@@ -2,7 +2,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	2.2.2
-Release:	2
+Release:	3
 Epoch:		6
 License:	GPL
 Vendor:		The KDE Team
@@ -237,6 +237,9 @@ mv $ALD/{Settings/Sound,Settings/KDE}
 
 %post   kscd -p /sbin/ldconfig
 %postun kscd -p /sbin/ldconfig
+
+%post   noatun -p /sbin/ldconfig
+%postun noatun -p /sbin/ldconfig
 
 %clean
 rm -rf $RPM_BUILD_ROOT
