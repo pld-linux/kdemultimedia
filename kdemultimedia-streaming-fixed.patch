@@ -1,3 +1,30 @@
+--- kdemultimedia-030403/noatun/library/engine.cpp~	Tue Dec 10 00:42:33 2002
++++ kdemultimedia-030403/noatun/library/engine.cpp	Thu Apr  3 21:19:05 2003
+@@ -285,13 +285,22 @@
+ 
+ 	KDE::PlayObjectFactory factory(d->server);
+ 
+-	factory.setAllowStreaming(file.isProperty("stream_"));
++	factory.setAllowStreaming(false);
+ 
+ 	if (file.isProperty("stream_"))
+ 	{
+ 		// let the factory decide
+-		// d->playobj=factory.createPlayObject(file.property("stream_"), file.mimetype(), false);
++		d->playobj=factory.createPlayObject(file.property("stream_"), file.mimetype(), false);
+ 		d->playobj=factory.createPlayObject(file.property("stream_"), false);
++
++		if (!d->playobj || d->playobj->isNull())
++		{
++			// streaming not directly possible, use KIO mechanism
++			delete d->playobj;
++			factory.setAllowStreaming(true);
++			d->playobj=factory.createPlayObject(file.property("stream_"), false);
++		}
++		
+ 	}
+ 	else
+ 	{
 diff -Pur kdemultimedia-3.1.1-orig/noatun/library/playlist.cpp kdemultimedia-3.1.1/noatun/library/playlist.cpp
 --- kdemultimedia-3.1.1-orig/noatun/library/playlist.cpp	2003-03-17 14:31:36.000000000 +0100
 +++ kdemultimedia-3.1.1/noatun/library/playlist.cpp	2003-03-17 14:31:53.000000000 +0100
@@ -94,23 +121,3 @@ diff -Pur kdemultimedia-3.1.1-orig/noatun/modules/splitplaylist/view.cpp kdemult
  	{
  		// a playlist is requested
  		return importGlobal(url, after);
---- kdemultimedia-030328/noatun/library/engine.cpp.orig	Tue Dec 10 00:42:33 2002
-+++ kdemultimedia-030328/noatun/library/engine.cpp	Fri Mar 28 23:35:39 2003
-@@ -290,8 +290,16 @@
- 	if (file.isProperty("stream_"))
- 	{
- 		// let the factory decide
--		// d->playobj=factory.createPlayObject(file.property("stream_"), file.mimetype(), false);
- 		d->playobj=factory.createPlayObject(file.property("stream_"), false);
-+
-+                if (!d->playobj || d->playobj->isNull())
-+                {
-+                        // streaming not directly possible, use KIO mechanism
-+                        delete d->playobj;
-+                        factory.setAllowStreaming(true);
-+                        d->playobj=factory.createPlayObject(file.property("stream_"), false);
-+                }
-+				
- 	}
- 	else
- 	{
