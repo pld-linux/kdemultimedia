@@ -1,0 +1,15 @@
+--- kdemultimedia-3.3.0/mpeglib/lib/input/cdromAccess.cpp.orig	2004-05-22 20:56:58.000000000 +0000
++++ kdemultimedia-3.3.0/mpeglib/lib/input/cdromAccess.cpp	2004-08-24 18:58:55.000000000 +0000
+@@ -25,11 +25,9 @@
+ #ifdef OS_Linux
+   #include <linux/version.h>
+   #include <sys/types.h>
+-  #ifndef __u64
+-  #if LINUX_VERSION_CODE >= KERNEL_VERSION(2,5,70)
++  #if !defined(LIBC_HEADERS_VERSION) && (LINUX_VERSION_CODE >= KERNEL_VERSION(2,5,70))
+   typedef unsigned long long __u64;
+   #endif
+-  #endif
+   #include "cdromAccess_Linux.cpp"
+ #endif
+ 
