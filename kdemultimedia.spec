@@ -325,10 +325,10 @@ Wtyczka do Xine.
 
 %build
 
-#for plik in `find ./ -name *.desktop` ; do
-#	echo $plik
-#	sed -i -e "s/\[nb\]/\[no\]/g" $plik
-#done
+for plik in `find ./ -name *.desktop` ; do
+	echo $plik
+	sed -i -e "s/\[nb\]/\[no\]/g" $plik
+done
 
 AUDIO=""
 %ifnarch sparc sparcv9 sparc64
@@ -346,7 +346,7 @@ sed -e 's#slots\[CDROM_MAX_SLOTS\]#kde_slots\[CDROM_MAX_SLOTS\]#g' \
 
 echo KDE_OPTIONS=nofinal >> juk/Makefile.am
 
-%%{__make} -f admin/Makefile.common cvs
+%{__make} -f admin/Makefile.common cvs
 
 %configure --enable-final \
 %ifnarch sparc sparcv9 sparc64
