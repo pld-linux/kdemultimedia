@@ -111,6 +111,7 @@ Summary:	KDE Media Player
 Summary(pl):	Odtwarzacz multimedialny dla KDE
 Group:		X11/Applications
 Requires:	kdelibs >= %{version}
+Obsoletes:	aktion
 
 %description aktion
 This is a media player for KDE. Currently it can be only used to play
