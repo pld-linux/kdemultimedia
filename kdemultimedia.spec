@@ -3,11 +3,11 @@
 %bcond_without	alsa	# build without ALSA support
 %bcond_without	xine	# build without xine support
 
-%define		_state		stable
-%define		_ver		3.3.2
+%define		_state		unstable
+%define		_ver		3.3.91
 
-%define		_minlibsevr	9:3.3.2
-%define		_minbaseevr	9:3.3.2
+%define		_minlibsevr	9:3.3.91
+%define		_minbaseevr	9:3.3.91
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
@@ -19,7 +19,7 @@ License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{_ver}.tar.bz2
-# Source0-md5:	2f393da809542dab5bf75bf7a91d1ec0
+# Source0-md5:	73da4e0f9c5c25b441092305b867bb1e
 Patch0:		%{name}-llh.patch
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	arts-qt-devel
