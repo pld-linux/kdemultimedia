@@ -10,6 +10,7 @@
 %define		_ver		3.1.4
 
 %ifarch	sparc sparcv9 sparc64
+%define		_without_alsa	1
 %define		_with_esd	1
 %endif
 
@@ -44,14 +45,15 @@ BuildRequires:	kdelibs-devel >= %{version}
 BuildRequires:	libart_lgpl-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libogg-devel
-BuildRequires:	libpng-devel >= 1.2.5
+BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libvorbis-devel
-%{!?_without_xine:BuildRequires:	xine-lib-devel >= 1.0b4}
+%{!?_without_xine:BuildRequires:	xine-lib-devel}
 BuildRequires:	zlib-devel
 Requires:	kdelibs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
+%define		_prefix		/usr/X11R6
 %define		_htmldir		/usr/share/doc/kde/HTML
 
 %define		no_install_post_chrpath		1
