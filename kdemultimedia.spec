@@ -1,14 +1,19 @@
 Summary:     K Desktop Environment - multimedia applications
 Summary(pl): K Desktop Environment - aplikacje multimedialne
 Name:        kdemultimedia
-Version:     1.0
-Release:     7
+Version:     1.1.1
+Release:     2
 Copyright:   GPL
 Group:       X11/KDE/Multimedia
+Group(pl):   X11/KDE/Multimedia
 Vendor:	     The KDE Team
-Source:      ftp://ftp.kde.org/pub/kde/stable/%{version}/distribution/tar/generic/source/%{name}-%{version}.tar.gz
-Requires:    qt >= 1.40, kdelibs = %{version}
-BuildRoot:	/tmp/%{name}-%{version}-root
+#ftp:	     ftp.kde.org
+#patch:	     /pub/kde/stable/%{version}/distribution/tar/generic/source/
+Source:      %{name}-%{version}.tar.bz2
+Requires:    qt >= 1.44, kdelibs = %{version}
+BuildRoot:   /tmp/%{name}-%{version}-root
+
+%define _prefix	/usr/X11R6/
 
 %description
 KDE multimedia applications.
@@ -28,73 +33,73 @@ Pakiet zawiera:
   KMIX - Mixer audio
   KSCD - Odtwarzacz CD
 
-%package -n kmedia
+%package kmedia
 Summary:     KDE Media Player
 Summary(pl): Odgrywarka multimedialna KDE
 Group:       X11/KDE/Multimedia
 Requires:    qt >= 1.40, kdelibs = %{version}
 
-%description -n kmedia
+%description kmedia
 This is a media player for KDE.
 Currently it can be only used to play WAV files.
 
-%description -l pl -n kmedia
+%description -l pl kmedia
 Odgrywarka multimedialna dla KDE.
 W tej chwili obs³uguje tylko pliki WAV.
 
-%package -n kmid
+%package kmid
 Summary:     KDE MIDI Player	
 Summary(pl): Odgrywarka MIDI dla KDE
 Group:       X11/KDE/Multimedia
 Requires:    qt >= 1.40, kdelibs = %{version}
 
-%description -n kmid
+%description kmid
 This is a MIDI player for KDE.
 It uses sound-card synthetizer or other hardware connected to MIDI to play MIDI
 files.
 
-%description -n kmid -l pl
+%description kmid -l pl
 Odgrywarka MIDI dla KDE.
 Wykorzystuje tylko syntetyzator na karcie muzycznej lub inne urz±dzenia MIDI
 po³±czone do niej.
 
-%package -n kmidi
+%package kmidi
 Summary:     KDE software MIDI Player	
 Summary(pl): Programowa odgrywarka MIDI dla KDE
 Group:       X11/KDE/Multimedia
 Requires:    qt >= 1.40, kdelibs = %{version}
 
-%description -n kmidi
+%description kmidi
 Software MIDI player. It uses GUS patch files and CPU power to create
 high-quality sound.
 
-%description -n kmidi -l pl
+%description kmidi -l pl
 Programowa odgrywarka MIDI. Wykorzystuje patche z GUSa i moc procesora do
 stworzenia dobrej jako¶ci d¼wiêku.
 
-%package -n kmix 
+%package kmix 
 Summary:     KDE audio mixer
 Summary(pl): Mixer audio dla KDE
 Group:       X11/KDE/Multimedia
 Requires:    qt >= 1.40, kdelibs = %{version}
 
-%description -n kmix
+%description kmix
 Sound mixer application for KDE.
 
-%description -n kmix -l pl
+%description kmix -l pl
 Mikser audio dla KDE.
 
-%package -n kscd
+%package kscd
 Summary:     KDE CD Player	
 Summary(pl): Odtwarzacz CD dla KDE
 Group:       X11/KDE/Multimedia
 Requires:    qt >= 1.40, kdelibs = %{version} 
 
-%description -n kscd
+%description kscd
 CD Player with CDDB support. It can automaticaly update its CD database with
 the Internet and show graphical interpretation of played sounds.
 
-%description -n kscd -l pl
+%description kscd -l pl
 Odtwarzacz CD z obs³ug± CDDB. Automatycznie uaktualnia swoj± bazê danych
 o p³ytach CD z Internetem. Potrafi tak¿e wy¶wietliæ ³adn± graficzn±
 interpretacjê granych d¼wiêków.
@@ -103,8 +108,9 @@ interpretacjê granych d¼wiêków.
 %setup -q
 
 %build
-export KDEDIR=/usr/X11R6
-CXXFLAGS="$RPM_OPT_FLAGS -Wall" CFLAGS="$RPM_OPT_FLAGS -Wall" \
+export KDEDIR=%{_prefix}
+CXXFLAGS="$RPM_OPT_FLAGS -Wall -fno-rtti -fno-exceptions" \
+CFLAGS="$RPM_OPT_FLAGS -Wall" \
 ./configure %{_target} \
 	--prefix=$KDEDIR \
  	--with-install-root=$RPM_BUILD_ROOT \
@@ -114,19 +120,14 @@ make KDEDIR=$KDEDIR
 %install
 rm -rf $RPM_BUILD_ROOT
 
-export KDEDIR=/usr/X11R6
+export KDEDIR=%{_prefix}
 make RUN_KAPPFINDER=no prefix=$RPM_BUILD_ROOT$KDEDIR install
 
-# create wmconfig files
-install -d $RPM_BUILD_ROOT/etc/X11/wmconfig
-DIR=$PWD
-cd $RPM_BUILD_ROOT/etc/X11/kde/applnk
-for kdelnk in `find . -name "*.kdelnk"` ; do
-  PKG=kde`basename $kdelnk|sed -e "s/\.kdelnk$//"`;
-  SECT=`dirname $kdelnk|sed -e "s/^\.\/*//"`;
-  kdelnk2wmconfig $PKG $kdelnk $RPM_BUILD_ROOT/etc/X11/wmconfig/$PKG KDE/$SECT pl
-done
-cd $DIR
+%find_lang kmedia
+%find_lang kmix
+%find_lang kscd
+%find_lang kmid
+%find_lang kmidi
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -135,143 +136,117 @@ rm -rf $RPM_BUILD_ROOT
 #             KMEDIA
 #################################################
 
-%files -n kmedia
-%defattr(644,root,root,755)
-/usr/X11R6/share/kde/apps/kmedia
-%lang(en) /usr/X11R6/share/kde/doc/HTML/en/kmedia
-%lang(cs) /usr/X11R6/share/locale/cs/LC_MESSAGES/kmedia.mo
-%lang(de) /usr/X11R6/share/locale/de/LC_MESSAGES/kmedia.mo
-%lang(fr) /usr/X11R6/share/locale/fr/LC_MESSAGES/kmedia.mo
-%lang(pl) /usr/X11R6/share/locale/pl/LC_MESSAGES/kmedia.mo
-%lang(fi) /usr/X11R6/share/locale/fi/LC_MESSAGES/kmedia.mo
-%lang(es) /usr/X11R6/share/locale/es/LC_MESSAGES/kmedia.mo
-%lang(pt) /usr/X11R6/share/locale/pt/LC_MESSAGES/kmedia.mo
-%lang(ro) /usr/X11R6/share/locale/ro/LC_MESSAGES/kmedia.mo
-%lang(it) /usr/X11R6/share/locale/it/LC_MESSAGES/kmedia.mo
-%lang(zh) /usr/X11R6/share/locale/zh_*/LC_MESSAGES/kmedia.mo
-%lang(hr) /usr/X11R6/share/locale/hr/LC_MESSAGES/kmedia.mo
-%lang(sk) /usr/X11R6/share/locale/sk/LC_MESSAGES/kmedia.mo
-%lang(nl) /usr/X11R6/share/locale/nl/LC_MESSAGES/kmedia.mo
-%lang(no) /usr/X11R6/share/locale/no/LC_MESSAGES/kmedia.mo
-%lang(pt) /usr/X11R6/share/locale/pt_*/LC_MESSAGES/kmedia.mo
-%lang(sv) /usr/X11R6/share/locale/sv/LC_MESSAGES/kmedia.mo
+%files kmedia -f kmedia.lang
+%defattr(644, root, root, 755)
 
-/usr/X11R6/share/kde/icons/mini/kmedia.xpm
-/usr/X11R6/share/kde/icons/kmedia.xpm
+%{_datadir}/kde/apps/kmedia
+
+%lang(en) %{_datadir}/kde/doc/HTML/en/kmedia
+
+%{_datadir}/kde/icons/mini/kmedia.xpm
+%{_datadir}/kde/icons/kmedia.xpm
 
 %config(missingok) /etc/X11/kde/applnk/Multimedia/KMedia.kdelnk
-%config(missingok) /etc/X11/wmconfig/kdeKMedia
-%attr(755,root,root) /usr/X11R6/bin/kmedia
+
+%attr(755,root,root) %{_bindir}/kmedia
 
 #################################################
 #             KMID
 #################################################
 
-%files -n kmid
-%defattr(644,root,root,755)
+%files kmid -f kmid.lang
+%defattr(644, root, root, 755)
+
 %config /etc/X11/kde/mimelnk/audio/x-karaoke.kdelnk
+
 %config(missingok) /etc/X11/kde/applnk/Multimedia/kmid.kdelnk
-%config(missingok) /etc/X11/wmconfig/kdekmid
-/usr/X11R6/share/kde/apps/kmid
-/usr/X11R6/share/kde/icons/mini/kmid.xpm
-/usr/X11R6/share/kde/icons/kmid.xpm
-%lang(en) /usr/X11R6/share/kde/doc/HTML/en/kmid
-%lang(es) /usr/X11R6/share/kde/doc/HTML/es/kmid
-%lang(cs) /usr/X11R6/share/locale/cs/LC_MESSAGES/kmid.mo
-%lang(pl) /usr/X11R6/share/locale/pl/LC_MESSAGES/kmid.mo
-%lang(fi) /usr/X11R6/share/locale/fi/LC_MESSAGES/kmid.mo
-%lang(es) /usr/X11R6/share/locale/es/LC_MESSAGES/kmid.mo
-%lang(pt) /usr/X11R6/share/locale/pt/LC_MESSAGES/kmid.mo
-%lang(zh) /usr/X11R6/share/locale/zh_*/LC_MESSAGES/kmid.mo
-%lang(hr) /usr/X11R6/share/locale/hr/LC_MESSAGES/kmid.mo
-%lang(sk) /usr/X11R6/share/locale/sk/LC_MESSAGES/kmid.mo
-%lang(no) /usr/X11R6/share/locale/no/LC_MESSAGES/kmid.mo
-%lang(sv) /usr/X11R6/share/locale/sv/LC_MESSAGES/kmid.mo
-%attr(755,root,root) /usr/X11R6/bin/kmid
+
+%{_datadir}/kde/apps/kmid
+
+%{_datadir}/kde/icons/mini/kmid.xpm
+%{_datadir}/kde/icons/kmid.xpm
+
+%lang(en) %{_datadir}/kde/doc/HTML/en/kmid
+%lang(es) %{_datadir}/kde/doc/HTML/es/kmid
+
+%attr(755,root,root) %{_bindir}/kmid
 
 #################################################
 #             KMIDI
 #################################################
 
-%files -n kmidi
-%defattr(644,root,root,755)
+%files kmidi -f kmidi.lang
+%defattr(644, root, root, 755)
+
 %config(missingok) /etc/X11/kde/applnk/Multimedia/KMidi.kdelnk
-%config(missingok) /etc/X11/wmconfig/kdeKMidi
-%config /usr/X11R6/share/kde/apps/kmidi/config/*.cfg
-%attr(755,root,root) /usr/X11R6/bin/kmidi
-/usr/X11R6/share/kde/icons/mini/kmidi.xpm
-/usr/X11R6/share/kde/icons/kmidi.xpm
-%dir /usr/X11R6/share/kde/apps/kmidi
-%dir /usr/X11R6/share/kde/apps/kmidi/config
-/usr/X11R6/share/kde/apps/kmidi/config/chaos12-voices
-/usr/X11R6/share/kde/apps/kmidi/config/chaos8-voices
-/usr/X11R6/share/kde/apps/kmidi/config/megadrum
-/usr/X11R6/share/kde/apps/kmidi/config/megainst
-/usr/X11R6/share/kde/apps/kmidi/config/pila-voices
-/usr/X11R6/share/kde/apps/kmidi/config/sound-canvas-drums
-/usr/X11R6/share/kde/apps/kmidi/config/patch/
-/usr/X11R6/share/kde/apps/kmidi/pics/
-%lang(en) /usr/X11R6/share/kde/doc/HTML/en/kmidi
-%lang(de) /usr/X11R6/share/kde/doc/HTML/de/kmidi
+%config %{_datadir}/kde/apps/kmidi/config/*.cfg
+
+%attr(755,root,root) %{_bindir}/kmidi
+
+%{_datadir}/kde/icons/mini/kmidi.xpm
+%{_datadir}/kde/icons/kmidi.xpm
+
+%dir %{_datadir}/kde/apps/kmidi
+%dir %{_datadir}/kde/apps/kmidi/config
+
+%{_datadir}/kde/apps/kmidi/config/chaos12-voices
+%{_datadir}/kde/apps/kmidi/config/chaos8-voices
+%{_datadir}/kde/apps/kmidi/config/megadrum
+%{_datadir}/kde/apps/kmidi/config/megainst
+%{_datadir}/kde/apps/kmidi/config/pila-voices
+%{_datadir}/kde/apps/kmidi/config/sound-canvas-drums
+%{_datadir}/kde/apps/kmidi/config/patch/
+%{_datadir}/kde/apps/kmidi/pics/
+
+%lang(en) %{_datadir}/kde/doc/HTML/en/kmidi
+%lang(de) %{_datadir}/kde/doc/HTML/de/kmidi
 
 #################################################
 #             KMIX
 #################################################
 
-%files -n kmix
-%defattr(644,root,root,755)
+%files kmix -f kmix.lang
+%defattr(644, root, root, 755)
+
 %config(missingok) /etc/X11/kde/applnk/Multimedia/KMix.kdelnk
-%config(missingok) /etc/X11/wmconfig/kdeKMix
-%attr(755,root,root) /usr/X11R6/bin/kmix
-/usr/X11R6/share/kde/icons/mini/kmix.xpm
-/usr/X11R6/share/kde/icons/kmix.xpm
-/usr/X11R6/share/kde/apps/kmix
-%lang(en) /usr/X11R6/share/kde/doc/HTML/en/kmix
-%lang(cs) /usr/X11R6/share/locale/cs/LC_MESSAGES/kmix.mo
-%lang(de) /usr/X11R6/share/locale/de/LC_MESSAGES/kmix.mo
-%lang(pl) /usr/X11R6/share/locale/pl/LC_MESSAGES/kmix.mo
-%lang(fi) /usr/X11R6/share/locale/fi/LC_MESSAGES/kmix.mo
-%lang(es) /usr/X11R6/share/locale/es/LC_MESSAGES/kmix.mo
-%lang(pt) /usr/X11R6/share/locale/pt/LC_MESSAGES/kmix.mo
-%lang(ro) /usr/X11R6/share/locale/ro/LC_MESSAGES/kmix.mo
-%lang(it) /usr/X11R6/share/locale/it/LC_MESSAGES/kmix.mo
-%lang(zh) /usr/X11R6/share/locale/zh_*/LC_MESSAGES/kmix.mo
-%lang(hr) /usr/X11R6/share/locale/hr/LC_MESSAGES/kmix.mo
-%lang(sk) /usr/X11R6/share/locale/sk/LC_MESSAGES/kmix.mo
-%lang(no) /usr/X11R6/share/locale/no/LC_MESSAGES/kmix.mo
-%lang(pt) /usr/X11R6/share/locale/pt_*/LC_MESSAGES/kmix.mo
-%lang(sv) /usr/X11R6/share/locale/sv/LC_MESSAGES/kmix.mo
+
+%attr(755,root,root) %{_bindir}/kmix
+
+%{_datadir}/kde/icons/mini/kmix.xpm
+%{_datadir}/kde/icons/kmix.xpm
+%{_datadir}/kde/apps/kmix
+
+%lang(en) %{_datadir}/kde/doc/HTML/en/kmix
 
 #################################################
 #             KSCD
 #################################################
 
-%files -n kscd
-%defattr(644,root,root,755)
+%files kscd -f kscd.lang
+%defattr(644, root, root, 755)
+
 %config(missingok) /etc/X11/kde/applnk/Multimedia/kscd.kdelnk
-%config(missingok) /etc/X11/wmconfig/kdekscd
 %config /etc/X11/kde/mimelnk/text/xmcd.kdelnk
-%attr(755,root,root) /usr/X11R6/bin/kscdmagic
-%attr(755,root,root) /usr/X11R6/bin/kscd
-%attr(755,root,root) /usr/X11R6/bin/cddaslave
-%attr(755,root,root) /usr/X11R6/bin/workman2cddb.pl
-/usr/X11R6/share/kde/apps/kscd
-/usr/X11R6/share/kde/icons/mini/kscd.xpm
-/usr/X11R6/share/kde/icons/kscd.xpm
-/usr/X11R6/share/kde/icons/cd.xpm
-%lang(en) /usr/X11R6/share/kde/doc/HTML/en/kscd
-%lang(cs) /usr/X11R6/share/locale/cs/LC_MESSAGES/kscd.mo
-%lang(de) /usr/X11R6/share/locale/de/LC_MESSAGES/kscd.mo
-%lang(pl) /usr/X11R6/share/locale/pl/LC_MESSAGES/kscd.mo
-%lang(fi) /usr/X11R6/share/locale/fi/LC_MESSAGES/kscd.mo
-%lang(pt) /usr/X11R6/share/locale/pt/LC_MESSAGES/kscd.mo
-%lang(zh) /usr/X11R6/share/locale/zh_*/LC_MESSAGES/kscd.mo
-%lang(hr) /usr/X11R6/share/locale/hr/LC_MESSAGES/kscd.mo
-%lang(sk) /usr/X11R6/share/locale/sk/LC_MESSAGES/kscd.mo
-%lang(nl) /usr/X11R6/share/locale/nl/LC_MESSAGES/kscd.mo
-%lang(no) /usr/X11R6/share/locale/no/LC_MESSAGES/kscd.mo
+
+%attr(755,root,root) %{_bindir}/kscdmagic
+%attr(755,root,root) %{_bindir}/kscd
+%attr(755,root,root) %{_bindir}/cddaslave
+%attr(755,root,root) %{_bindir}/workman2cddb.pl
+
+%{_datadir}/kde/apps/kscd
+
+%{_datadir}/kde/icons/mini/kscd.xpm
+%{_datadir}/kde/icons/kscd.xpm
+%{_datadir}/kde/icons/cd.xpm
+
+%lang(en) %{_datadir}/kde/doc/HTML/en/kscd
 
 %changelog
+* Thu May 27 1999 Wojciech "Sas" Ciêciwa <cieciwa@alpha.zarz.agh.edu.pl>
+  [1.1.1-2]
+- updates package to version 1.1.1,
+- fixes problem with locala files,
+
 * Wed Dec  8 1998 Tomasz K³oczko <kloczek@rudy.mif.pg.gda.pl>
   [1.0-7]
 - recompiled against libstdc++.so.2.9.
