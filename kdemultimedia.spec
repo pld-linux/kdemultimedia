@@ -46,7 +46,7 @@ BuildRequires:	gettext-devel
 # what for?
 #BuildRequires:	gtk+-devel
 BuildRequires:	id3lib-devel
-BuildRequires:	kdelibs-devel >= %{version}
+BuildRequires:	kdelibs-devel >= 9:%{version}
 BuildRequires:	libart_lgpl-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libogg-devel
