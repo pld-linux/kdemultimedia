@@ -6,21 +6,21 @@
 %endif
 
 %define		_state		snapshots
-%define		_ver		3.1.93
-%define		_snap		031114
+%define		_ver		3.1.94
+%define		_snap		031204
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}.%{_snap}
-Release:	2
+Release:	0.1
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
 Source0:	http://www.kernel.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
-# Source0-md5:	fcc77afd559787c22128d9a8c6d6a84e
+# Source0-md5:	6ba045c7d203a3c0c70f68e35c0c612c
 Patch0:		%{name}-no_pedantic.patch
 Patch1:		%{name}-cdda_check.patch
 BuildRequires:	Xaw3d-devel
@@ -399,8 +399,8 @@ KDE Media Player - biblioteki wspó³dzielone.
 
 %prep
 %setup -q -n %{name}-%{_snap}
-%patch0 -p1
-%patch1 -p1
+#%patch0 -p1
+#%patch1 -p1
 
 %build
 for f in `find . -name \*.desktop | xargs grep -l '\[nb\]'` ; do
@@ -408,13 +408,13 @@ for f in `find . -name \*.desktop | xargs grep -l '\[nb\]'` ; do
 done
 
 # kdemultimedia includes kernel headers which breaks things, ugly workaround
-rm -rf linux
-mkdir linux
-sed -e 's#slots\[CDROM_MAX_SLOTS\]#kde_slots[CDROM_MAX_SLOTS]#g' \
-/usr/include/linux/cdrom.h > linux/cdrom.h
+#rm -rf linux
+#mkdir linux
+#sed -e 's#slots\[CDROM_MAX_SLOTS\]#kde_slots[CDROM_MAX_SLOTS]#g' \
+#/usr/include/linux/cdrom.h > linux/cdrom.h
 
-sed -i 's/#include <asm\/byteorder.h>/#include <asm\/types.h>\n#include <endian.h>/' \
-	linux/cdrom.h
+#sed -i 's/#include <asm\/byteorder.h>/#include <asm\/types.h>\n#include <endian.h>/' \
+#	linux/cdrom.h
 
 %{__make} -f admin/Makefile.common cvs
 
