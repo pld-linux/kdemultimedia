@@ -5,9 +5,9 @@
 %undefine with_alsa
 %endif
 
-%define         _state          snapshots
-%define         _ver		3.1.93
-%define         _snap		031114
+%define		_state		snapshots
+%define		_ver		3.1.93
+%define		_snap		031114
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
@@ -19,13 +19,14 @@ License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
-Source0:        http://www.kernel.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
+Source0:	http://www.kernel.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
 # Source0-md5:	fcc77afd559787c22128d9a8c6d6a84e
 Patch0:		%{name}-no_pedantic.patch
 BuildRequires:	Xaw3d-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	audiofile-devel
 BuildRequires:	cdparanoia-III-devel
+BuildRequires:	ed
 BuildRequires:	gettext-devel
 # what for?
 #BuildRequires:	gtk+-devel
@@ -40,7 +41,6 @@ BuildRequires:	libstdc++-devel
 BuildRequires: 	libmusicbrainz-devel
 BuildRequires:	libvorbis-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
-BuildRequires:	sed >= 4.0
 BuildRequires:	taglib-devel >= 0.95.031114
 BuildRequires:	xine-lib-devel >= 1:1.0
 BuildRequires:	zlib-devel
@@ -100,7 +100,7 @@ kdemultimedia - biblioteki statyczne.
 
 %package arts
 Summary:	Arts extensions
-Summary(pl):	Rozszerzania Arts
+Summary(pl):	Rozszerzenia Arts
 Group:		X11/Applications
 Requires:	kdelibs >= 9:%{version}
 Obsoletes:	%{name}-artsplugin-audiofile
@@ -179,10 +179,10 @@ This package provides audiocd protocol for konqueror.
 Ten pakiet dostarcza protokó³ audiocd dla konquerora.
 
 %package cddb
-Summary:        cddb library for KDE
-Summary(pl):    Biblioteka cddb pod KDE
-Group:          X11/Applications
-Requires:       kdebase-core >= 9:%{version}
+Summary:	cddb library for KDE
+Summary(pl):	Biblioteka cddb pod KDE
+Group:		X11/Applications
+Requires:	kdebase-core >= 9:%{version}
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
 Obsoletes:	%{name}-libkcddb < 9:3.1.92.031014
 
@@ -193,11 +193,11 @@ CDDB control.
 Sterowanie cddb.
 
 %package juk
-Summary:        A jukebox like program
-Summary(pl):    Program spe³niaj±cy funkcje szafy graj±cej
-Group:          X11/Applications
-Requires:       taglib >= 0.95.031114
-Requires:       kdebase-core >= 9:%{version}
+Summary:	A jukebox like program
+Summary(pl):	Program spe³niaj±cy funkcjê szafy graj±cej
+Group:		X11/Applications
+Requires:	taglib >= 0.95.031114
+Requires:	kdebase-core >= 9:%{version}
 
 %description juk
 JuK (pronounced jook) is a jukebox and music manager for the KDE
@@ -212,7 +212,7 @@ dla KDE podobny do iTunes(r) lub RealOne(r).
 Summary:	Media player
 Summary(pl):	Odtwarzacz multimedialny
 Group:		X11/Applications
-Requires:       kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= 9:%{version}
 
 %description kaboodle
 Media player.
@@ -224,7 +224,7 @@ Odtwarzacz multimedialny.
 Summary:	Audio Creator
 Summary(pl):	Kreator audio
 Group:		X11/Applications
-Requires:       kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= 9:%{version}
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
 Requires:	%{name}-libworkman = %{epoch}:%{version}-%{release}
 
@@ -253,7 +253,7 @@ dodatkow± zak³adkê z rozszerzonymi informacjami o pliku.
 Summary:	KDE MIDI Player
 Summary(pl):	Odtwarzacz MIDI dla KDE
 Group:		X11/Applications
-Requires:       kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= 9:%{version}
 
 %description kmid
 This is a MIDI player for KDE. It uses sound-card synthetizer or other
@@ -267,7 +267,7 @@ muzycznej lub inne urz±dzenia MIDI przy³±czone do niej.
 Summary:	KDE audio mixer
 Summary(pl):	Mixer audio dla KDE
 Group:		X11/Applications
-Requires:       kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= 9:%{version}
 
 %description kmix
 Sound mixer application for KDE.
@@ -279,7 +279,7 @@ Mikser audio dla KDE.
 Summary:	KDE sound recorder
 Summary(pl):	Rejestrator d¼wiêku dla KDE
 Group:		X11/Applications
-Requires:       kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= 9:%{version}
 Requires:	%{name}-artscontrol = %{epoch}:%{version}-%{release}
 Requires:	%{name}-kmix = %{epoch}:%{version}-%{release}
 
@@ -308,73 +308,73 @@ danych o p³ytach CD z Internetem. Potrafi tak¿e wy¶wietliæ ³adn±
 graficzn± interpretacjê granych d¼wiêków.
 
 %package libkcddb
-Summary:        A kcddb library
-Summary(pl):    Biblioteka kcddb
-Group:          X11/Libraries
-Requires:       kdelibs >= 9:%{version}
+Summary:	kcddb library
+Summary(pl):	Biblioteka kcddb
+Group:		X11/Libraries
+Requires:	kdelibs >= 9:%{version}
 
 %description libkcddb
-A kcddb library.
+kcddb library.
 
 %description libkcddb -l pl
 Biblioteka kcddb.
 
 %package libworkman
-Summary:        A workman library
-Summary(pl):    Biblioteka workman
-Group:          X11/Libraries
-Requires:       kdelibs >= 9:%{version}
+Summary:	workman library
+Summary(pl):	Biblioteka workman
+Group:		X11/Libraries
+Requires:	kdelibs >= 9:%{version}
 Obsoletes:	%{name}-kscd < 9:3.1.92.031012
 
 %description libworkman
-A workman library.
+workman library.
 
 %description libworkman -l pl
 Biblioteka workman.
 
 %package mpeglib
-Summary:	MPEG lib
-Summary(pl):	MPEG lib
+Summary:	MPEG libraries
+Summary(pl):	Biblioteki obs³ugi MPEG
 Group:		X11/Applications
 Requires:	kdelibs >= 9:%{version}
 
 %description mpeglib
-MPEG lib.
+MPEG libraries.
 
 %description mpeglib -l pl
-MPEG lib.
+Biblioteki obs³ugi MPEG.
 
 %package mpeglib-devel
-Summary:	MPEG lib
-Summary(pl):	MPEG lib
+Summary:	MPEG libraries - development files
+Summary(pl):	Biblioteki obs³ugi MPEG - pliki dla programistów
 Group:		X11/Applications
 Requires:	%{name}-mpeglib-examples = %{epoch}:%{version}-%{release}
 Obsoletes:	%{name}-mpeglib < 9:3.1.92.031012
 
 %description mpeglib-devel
-MPEG lib.
+MPEG libraries - development files.
 
 %description mpeglib-devel -l pl
-MPEG lib.
+Biblioteki obs³ugi MPEG - pliki dla programistów.
 
 %package mpeglib-examples
-Summary:	MPEG lib
-Summary(pl):	MPEG lib
+Summary:	MPEG libraries - examples
+Summary(pl):	Biblioteki obs³ugi MPEG - przyk³ady
 Group:		X11/Applications
 Requires:	%{name}-mpeglib = %{epoch}:%{version}-%{release}
 Obsoletes:	%{name}-mpeglib < 9:3.1.92.031012
 
 %description mpeglib-examples
-MPEG lib.
+MPEG libraries - examples.
 
 %description mpeglib-examples -l pl
-MPEG lib.
+Biblioteki obs³ugi MPEG - przyk³ady.
 
 %package noatun
 Summary:	KDE Media Player
 Summary(pl):	KDE Media Player - odtwarzacz plików multimedialnych
 Group:		X11/Applications
-Requires:       kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= 9:%{version}
 Requires:	%{name}-noatun-libs = %{epoch}:%{version}-%{release}
 
 %description noatun
@@ -401,15 +401,14 @@ KDE Media Player - biblioteki wspó³dzielone.
 %patch0 -p1
 
 %build
-
-for f in `find . -name *.desktop` ; do
-	sed -i 's/\[nb\]/\[no\]/g' $f
+for f in `find . -name \*.desktop | xargs grep -l '\[nb\]'` ; do
+	echo -e ',s/\[nb\]=/[no]=/\n,w' | ed $f 2>/dev/null
 done
 
-# kdemultimedia includes kernel headers which breaks thins, ugly workaround
+# kdemultimedia includes kernel headers which breaks things, ugly workaround
 rm -rf linux
 mkdir linux
-sed -e 's#slots\[CDROM_MAX_SLOTS\]#kde_slots\[CDROM_MAX_SLOTS\]#g' \
+sed -e 's#slots\[CDROM_MAX_SLOTS\]#kde_slots[CDROM_MAX_SLOTS]#g' \
 /usr/include/linux/cdrom.h > linux/cdrom.h
 
 %{__make} -f admin/Makefile.common cvs
@@ -534,7 +533,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/mcop/artsmodulesmixers.mcoptype
 %{_libdir}/mcop/artsmodulessynth.mcopclass
 %{_libdir}/mcop/artsmodulessynth.mcoptype
-# artsplugin-audiofile files  - arts crashes
+# artsplugin-audiofile files - arts crashes
 # without libaudiofilearts.so installed - so
 # separating them has no sense at this moment
 %{_libdir}/libaudiofilearts.la
