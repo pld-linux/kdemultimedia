@@ -1,28 +1,29 @@
-# Conditional build:
-# --without	xine	Set this option in case You haven't
-#			xine-lib to ommit xine plug-in building.
 #
-# --without	alsa	Set this option in case you dont want alsa.
+# Conditional build:
+# --without	alsa	Set this option in case you don't want alsa.
 #
 # --with	esd	Set this option in case you want esd support.
 #
 # --with	nas 	Set this option if you want nas support.
 #
+# --without	xine	Set this option in case You haven't
+#			xine-lib to ommit xine plug-in building.
+#
 
 %define         _state          snapshots
 %define         _ver		3.2
-%define         _snap		030329
+%define         _snap		030330
 
 %ifarch	sparc sparcv9 sparc64
 %define		_with_esd	1
+%define		_without_alsa	1
 %endif
-##%define		_without_alsa	1
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	0.%{_snap}.2.1
+Release:	0.%{_snap}.1
 Epoch:		8
 License:	GPL
 Vendor:		The KDE Team
@@ -30,19 +31,22 @@ Group:		X11/Applications
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
 Source0:        http://team.pld.org.pl/~djurban/kde/%{name}-%{_snap}.tar.bz2
 Patch0:		%{name}-timidity.patch
-Patch1:		http://rambo.its.tudelft.nl/~ewald/xine/kdemultimedia-3.1.1-video-20030316.patch
-#Patch2:		http://rambo.its.tudelft.nl/~ewald/xine/kdemultimedia-3.1.1-streaming-20030317.patch
+Patch1:		http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-video-20030316.patch
+#Patch2:	http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-streaming-20030317.patch
 Patch2:		%{name}-streaming-fixed.patch 
+%{?_without_alsa:BuildConflicts:	alsa-driver-devel}
 %{!?_without_alsa:BuildRequires:	alsa-lib-devel}
-%{!?_without_alsa:BuildRequires:	alsa-driver-devel}
 %{?_with_nas:BuildRequires:	nas-devel >= 1.5}
 %{?_with_esd:BuildRequires:     esound-devel}
+BuildRequires:	Xaw3d-devel
 BuildRequires:	arts-devel
 BuildRequires:	arts-kde-devel
 BuildRequires:	cdparanoia-III
 BuildRequires:	cdparanoia-III-devel
 BuildRequires:	gettext-devel
-BuildRequires:	gtk+-devel
+# what for?
+#BuildRequires:	gtk+-devel
+BuildRequires:	id3lib-devel
 BuildRequires:	kdelibs-devel = %{version}
 BuildRequires:	libart_lgpl-devel
 BuildRequires:	libjpeg-devel
@@ -55,7 +59,7 @@ BuildRequires:	zlib-devel
 Requires:	kdelibs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define         _htmldir        /usr/share/doc/kde/HTML
+%define         _htmldir        %{_docdir}/kde/HTML
 
 %define		no_install_post_chrpath		1
 
@@ -325,12 +329,12 @@ AUDIO=""
 %ifnarch sparc sparcv9 sparc64
 AUDIO=oss,$AUDIO
 %endif
-%{!?_without_alsa:AUDIO=alsa,$AUDIO}
-%{?_with_nas:AUDIO=nas,$AUDIO}
 %{?_with_esd:AUDIO=esd,$AUDIO}
+%{?_with_nas:AUDIO=nas,$AUDIO}
 AUDIO=${AUDIO%%,}
 
 # kdemultimedia includes kernel headers which breaks thins, ugly workaround
+rm -rf linux
 mkdir linux
 sed -e 's#slots\[CDROM_MAX_SLOTS\]#kde_slots\[CDROM_MAX_SLOTS\]#g' \
 /usr/include/linux/cdrom.h > linux/cdrom.h
@@ -341,7 +345,7 @@ sed -e 's#slots\[CDROM_MAX_SLOTS\]#kde_slots\[CDROM_MAX_SLOTS\]#g' \
  	--with-pam="yes" \
 	--enable-final \
 	--enable-audio=$AUDIO
-
+	
 %{__make}
 
 %install
@@ -351,33 +355,21 @@ rm -rf $RPM_BUILD_ROOT
 
 mv $RPM_BUILD_ROOT%{_bindir}/{timidity,ktimidity}    
 
-ALD=$RPM_BUILD_ROOT%{_desktopdir}
 install -d $RPM_BUILD_ROOT%{_applnkdir}/Settings/KDE
-#mv -f $ALD/{Multimedia/More/*.desktop,Multimedia}
-#mv -f $ALD/{Multimedia/arts*.desktop,Multimedia/ArtsTools}
 mv -f $RPM_BUILD_ROOT%{_applnkdir}/{Settings/Sound,Settings/KDE/}
 
-cat $ALD/timidity.desktop |sed 's/Exec=timidity/Exec=ktimidity/' \
-    > $ALD/ktimidity.desktop
-echo "Hidden=true" >>  $ALD/timidity.desktop
+cd $RPM_BUILD_ROOT%{_desktopdir}
+cat timidity.desktop |sed 's/Exec=timidity/Exec=ktimidity/' \
+    > ktimidity.desktop
+cd -
 
 cd $RPM_BUILD_ROOT%{_datadir}/apps/kmidi/config
 ln -s gravis.cfg GUSpatches
 cd -
 
-#bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
-
-#%find_lang kfile_m3u	--with-kde
-#%find_lang kfile_mp3	--with-kde
-#%find_lang kfile_ogg	--with-kde
-#%find_lang kfile_wav	--with-kde
-#cat {kfile_m3u,kfile_mp3,kfile_ogg,kfile_wav,kmyapp,koncd}.lang \
-#    >> %{name}.lang
 %find_lang aktion	--with-kde
 %find_lang artsbuilder	--with-kde
 cat artsbuilder.lang > arts.lang
-#%find_lang artscontrol	--with-kde
-#cat artscontrol.lang >> arts.lang
 %find_lang juk		--with-kde
 %find_lang kaboodle	--with-kde
 %find_lang kmid		--with-kde
@@ -385,10 +377,6 @@ cat artsbuilder.lang > arts.lang
 %find_lang kmix		--with-kde
 %find_lang kmixcfg	--with-kde
 cat kmixcfg.lang >> kmix.lang
-#%find_lang kcmkmix	--with-kde
-#cat kcmkmix.lang >> kmix.lang
-#%find_lang kmyapp	--with-kde
-#%find_lang koncd	--with-kde
 %find_lang krec		--with-kde
 %find_lang kscd		--with-kde
 %find_lang noatun	--with-kde
@@ -466,6 +454,7 @@ echo "Remember to restart artsd !"
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/juk
 %{_datadir}/apps/juk
+%{_datadir}/apps/konqueror/servicemenus/jukservicemenu.desktop
 %{_desktopdir}/juk.desktop
 %{_pixmapsdir}/*/*/*/juk.png
 
