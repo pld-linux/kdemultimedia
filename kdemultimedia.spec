@@ -2,7 +2,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	2.2
-Release:	0.1
+Release:	1
 Epoch:		6
 License:	GPL
 Group:		X11/Applications
@@ -28,7 +28,7 @@ BuildRequires:	libvorbis-devel
 Requires:	kdelibs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_prefix		/usr/X11R6/
+%define		_prefix		/usr/X11R6
 %define         _fontdir        /usr/share/fonts
 %define         _sharedir       %{_prefix}/share
 %define         _htmldir        %{_sharedir}/doc/kde/HTML
@@ -141,17 +141,18 @@ Odtwarzacz CD z obs³ug± CDDB. Automatycznie uaktualnia swoj± bazê
 danych o p³ytach CD z Internetem. Potrafi tak¿e wy¶wietliæ ³adn±
 graficzn± interpretacjê granych d¼wiêków.
 
-%package kaiman
+%package noatun
 Summary:	KDE Media Player
 Summary(pl):	KDE Media Player
 Group:		X11/Applications
 Group(de):	X11/Applikationen
 Group(pl):	X11/Aplikacje
 Requires:	kdelibs = %{version} 
+Requires:	arts = %{version} 
 
-%description kaiman
+%description noatun
 
-%description -l pl kaiman
+%description -l pl noatun
 
 %package mpeglib
 Summary:	MPEG lib
@@ -160,10 +161,23 @@ Group:		X11/Applications
 Group(de):	X11/Applikationen
 Group(pl):	X11/Aplikacje
 Requires:	kdelibs = %{version} 
+Requires:	arts = %{version} 
 
 %description mpeglib
 
 %description -l pl mpeglib
+
+%package devel
+Summary:	kdemultimedia - headers
+Summary(pl):	kdemultimedia - pliki nag³ówkowe
+Group:		X11/KDE/Development/Libraries
+Requires:	kdemultimedia = %{version} 
+
+%description devel
+kdemultimedia - headers.
+
+%description -l pl devel
+kdemultimedia - pliki nag³ówkowe.
 
 %prep
 %setup -q
@@ -173,6 +187,8 @@ Requires:	kdelibs = %{version}
 kde_htmldir="%{_htmldir}"; export kde_htmldir
 kde_icondir="%{_pixmapsdir}"; export kde_icondir
 
+CFLAGS='-I/usr/X11R6/include'
+export CXXLAGS
 %configure2_13 \
  	--with-pam="yes" \
 	--enable-audio=oss,alsa
@@ -183,6 +199,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
 
+ALD=$RPM_BUILD_ROOT%{_applnkdir}
+install -d $ALD/Settings/KDE
+mv $ALD/{Settings/Sound,Settings/KDE}
 
 %post   mpeglib -p /sbin/ldconfig
 %postun mpeglib -p /sbin/ldconfig
@@ -212,62 +231,89 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libyaf*.so.*.*.*
 %attr(755,root,root) %{_libdir}/libarts_mpeglib*.so.*.*.*
 %attr(755,root,root) %{_libdir}/libmpeg-*.so.*.*.*
-%{_libdir}/libmpeg.so
 %{_libdir}/libmpeg.la
-%{_libdir}/libyaf*.so
 %{_libdir}/libyaf*.la
-%{_libdir}/libarts_mpeglib*.so
 %{_libdir}/libarts_mpeglib*.la
-%{_includedir}/mpeglib_artsplug
-%{_includedir}/mpeglib
+# Note that SplayPlayObject.mopclass is *not* here.
+%{_libdir}/mcop/VCDPlayObject.mcopclass
+%{_libdir}/mcop/WAVPlayObject.mcopclass
+%{_libdir}/mcop/OGGPlayObject.mcopclass
+%{_libdir}/mcop/NULLPlayObject.mcopclass
+%{_libdir}/mcop/MP3PlayObject.mcopclass
+%{_libdir}/mcop/CDDAPlayObject.mcopclass
+%{_libdir}/mcop/MPGPlayObject.mcopclass
+#%{_includedir}/mpeglib_artsplug
+#%{_includedir}/mpeglib
 
 %files aktion
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/aktion*
 %attr(755,root,root) %{_libdir}/libaktion.so.*.*.*
-%{_libdir}/libaktion.so
 %{_libdir}/libaktion.la
 %{_applnkdir}/Multimedia/aktion.desktop
 %{_datadir}/apps/aktion
 %{_datadir}/config/aktionrc
-%{_pixmapsdir}/locolor/*x*/apps/aktion.png
+%{_pixmapsdir}/*/*/apps/aktion.png
 
 %files arts
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/arts*
 %attr(755,root,root) %{_bindir}/midisend
-%attr(755,root,root) %{_libdir}/libartsbuilder.so.*.*.*
-%attr(755,root,root) %{_libdir}/libartsmodules.so.*.*.*
-%{_libdir}/mcop/artsmodules.*
+%attr(755,root,root) %{_bindir}/so_play
+#%attr(755,root,root) %{_libdir}/libartsbuilder.so.*.*.*
+#%attr(755,root,root) %{_libdir}/libartsmodules.so.*.*.*
+#%attr(755,root,root) %{_libdir}/libarts_splay.so.*.*.*
+%attr(755,root,root) %{_libdir}/libarts[!_]*.so.*.*.*
+%attr(755,root,root) %{_libdir}/libarts[!_]*.la
+%attr(755,root,root) %{_libdir}/libarts_[!m]*.so.*.*.*
+%attr(755,root,root) %{_libdir}/libarts_[!m]*.la
+%attr(755,root,root) %{_libdir}/libarts[!_mgb]*.so
+%{_libdir}/mcop/arts*
+%{_libdir}/mcop/Splay*
 %{_libdir}/mcop/Arts/*
-%{_libdir}/libartsbuilder.so
-%{_libdir}/libartsbuilder.la
-%{_libdir}/libartsmodules.so
-%{_libdir}/libartsmodules.la
+%{_libdir}/mcop/ExtraStereo.mcopclass
+%{_libdir}/mcop/ExtraStereoGuiFactory.mcopclass
+%{_libdir}/arts*.mcop*
+%{_libdir}/mcop/VoiceRemoval.mcopclass
+%{_libdir}/mcop/RawWriter.mcopclass
+#%{_libdir}/libartsbuilder.so
+#%{_libdir}/libartsbuilder.la
+#%{_libdir}/libartsmodules.so
+#%{_libdir}/libartsmodules.la
 %{_applnkdir}/Multimedia/arts*.desktop
+%{_pixmapsdir}/*/*/apps/arts*
 %{_datadir}/apps/artsbuilder
 %{_datadir}/apps/artscontrol
 %{_datadir}/doc/kde/HTML/en/artsbuilder
+%{_datadir}/mimelnk/application/*arts*
 
-%files kaiman
+%files noatun
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/kaiman
-%{_applnkdir}/Multimedia/kaiman.desktop
-%{_datadir}/apps/kaiman
-%{_pixmapsdir}/locolor/*x*/apps/kaiman.png
-%{_pixmapsdir}/hicolor/*x*/apps/kaiman.png
+%attr(755,root,root) %{_bindir}/noatun*
+%attr(755,root,root) %{_libdir}/libnoatun*.so.*.*.*
+%attr(755,root,root) %{_libdir}/libnoatun[!.c]*so
+%attr(755,root,root) %{_libdir}/libkjofolui*
+%attr(755,root,root) %{_libdir}/libsplitplaylist*
+%attr(755,root,root) %{_libdir}/libliszt.*
+%attr(755,root,root) %{_libdir}/noatun.*
+%{_libdir}/libnoatun*.la
+%{_libdir}/mcop/Noatun
+%{_libdir}/mcop/noatun*
+%{_applnkdir}/Multimedia/noatun.desktop
+%{_datadir}/apps/noatun
+%{_pixmapsdir}/*/*/apps/noatun.png
 
 %files kmid
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kmid
 %attr(755,root,root) %{_libdir}/libkmidpart.so.*.*.*
-%{_libdir}/libkmidpart.so
+%{_libdir}/libkmidpart.la
 %{_applnkdir}/Multimedia/kmid.desktop
 %{_datadir}/apps/kmid
 %{_datadir}/mimelnk/audio/x-karaoke.desktop
 %{_datadir}/doc/kde/HTML/en/kmid
-%{_pixmapsdir}/locolor/*x*/apps/kmid.png
-%{_pixmapsdir}/hicolor/*x*/apps/kmid.png
+%{_datadir}/servicetypes/*midi*.desktop
+%{_pixmapsdir}/*/*/apps/kmid.png
 
 %files kmidi
 %defattr(644,root,root,755)
@@ -278,8 +324,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_applnkdir}/Multimedia/timidity.desktop
 %{_datadir}/apps/kmidi
 %{_datadir}/doc/kde/HTML/en/kmidi
-%{_pixmapsdir}/locolor/*x*/apps/kmidi.png
-%{_pixmapsdir}/hicolor/*x*/apps/kmidi.png
+%{_pixmapsdir}/*/*/apps/kmidi.png
 
 %files kmix
 %defattr(644,root,root,755)
@@ -288,26 +333,45 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kmixctrl.*
 %attr(755,root,root) %{_libdir}/libkcm_kmix.*
 %attr(755,root,root) %{_libdir}/libkmixapplet.so.*.*.*
-%{_libdir}/libkmixapplet.so
+%{_libdir}/libkmixapplet.la
 %{_applnkdir}/Multimedia/kmix.desktop
-%{_applnkdir}/Settings/Sound/kmix.desktop
+%{_applnkdir}/Settings/KDE/Sound/kmix.desktop
 %{_datadir}/services/kmixctrl_restore.desktop
 %{_datadir}/apps/kmix
 %{_datadir}/apps/kicker/applets/*
 %{_datadir}/doc/kde/HTML/en/kmix
-%{_pixmapsdir}/locolor/*x*/apps/kmix.png
-%{_pixmapsdir}/hicolor/*x*/apps/kmix.png
+%{_pixmapsdir}/*/*/apps/kmix.png
 
 %files kscd
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kscd
 %attr(755,root,root) %{_bindir}/workman2cddb.pl
 %attr(755,root,root) %{_libdir}/libworkman.so.*.*.*
-%{_libdir}/libworkman.so
 %{_libdir}/libworkman.la
 %{_applnkdir}/Multimedia/kscd.desktop
 %{_datadir}/apps/kscd
 %{_datadir}/mimelnk/text/xmcd.desktop
 %{_datadir}/doc/kde/HTML/en/kscd
-%{_pixmapsdir}/locolor/*x*/apps/kscd.png
-%{_pixmapsdir}/hicolor/*x*/apps/kscd.png
+%{_pixmapsdir}/*/*/apps/kscd.png
+
+%files devel
+%defattr(644,root,root,755)
+%{_includedir}/*
+%{_libdir}/libarts_mpeglib.so
+%{_libdir}/libnoatuncontrols.so
+%{_libdir}/libartsmidi_idl.so
+%{_libdir}/libartsmodules.so
+%{_libdir}/libartsgui_kde.so
+%{_libdir}/libartsgui_idl.so
+%{_libdir}/libartsbuilder.so
+%{_libdir}/libyafxplayer.so
+%{_libdir}/libmpeg.so
+%{_libdir}/libkmixapplet.so
+%{_libdir}/libarts_splay.so
+%{_libdir}/libkmidpart.so
+%{_libdir}/libartsmidi.so
+%{_libdir}/libyafcore.so
+%{_libdir}/libworkman.so
+%{_libdir}/libartsgui.so
+%{_libdir}/libnoatun.so
+%{_libdir}/libaktion.so
