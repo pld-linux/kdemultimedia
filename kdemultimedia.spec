@@ -1,6 +1,6 @@
 %define		_ver		3.0.3
 #define		_sub_ver
-%define		_rel		0.1
+%define		_rel		1
 
 %{?_sub_ver:	%define	_version	%{_ver}%{_sub_ver}}
 %{!?_sub_ver:	%define	_version	%{_ver}}
@@ -32,7 +32,7 @@ BuildRequires:	cdparanoia-III-devel
 BuildRequires:	esound-devel
 BuildRequires:	gettext-devel
 BuildRequires:	gtk+-devel
-BuildRequires:	kdelibs-devel
+BuildRequires:	kdelibs-devel = %{version}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libogg-devel
 BuildRequires:	libpng-devel
@@ -214,14 +214,12 @@ Odtwarzacz multimedialny.
 kde_htmldir="%{_htmldir}"; export kde_htmldir
 kde_icondir="%{_pixmapsdir}"; export kde_icondir
 
-if [ -f %{_pkgconfigdir}/libpng12.pc ] ; then
-        CPPFLAGS="`pkg-config libpng12 --cflags`"
-fi
 CFLAGS="%{rpmcflags} -I%{_includedir}"
 
 %configure CPPFLAGS="$CPPFLAGS" \
  	--with-pam="yes" \
-	--enable-audio=oss#,alsa
+	--enable-final \
+	--enable-audio=oss#,alsa 
 %{__make}
 
 %install
@@ -235,24 +233,26 @@ mv $ALD/{Settings/Sound,Settings/KDE}
 
 bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 
-%find_lang aktion --with-kde
-%find_lang artsbuilder --with-kde
-%find_lang artscontrol --with-kde
+%find_lang aktion	--with-kde
+%find_lang artsbuilder	--with-kde
+%find_lang artscontrol	--with-kde
 cat artsbuilder.lang > arts.lang
 cat artscontrol.lang >> arts.lang
-%find_lang kaboodle --with-kde
-%find_lang kmid --with-kde
-%find_lang kmidi --with-kde
-%find_lang kmix --with-kde
-%find_lang kcmkmix --with-kde
+%find_lang kaboodle	--with-kde
+%find_lang kcmkmix	--with-kde
+%find_lang kmid		--with-kde
+%find_lang kmidi	--with-kde
+%find_lang kmix		--with-kde
 cat kcmkmix.lang >> kmix.lang
-%find_lang kscd --with-kde
-%find_lang noatun --with-kde
-%find_lang kfile_m3u --with-kde
-%find_lang kfile_mp3 --with-kde
-%find_lang kfile_ogg --with-kde
-%find_lang kfile_wav --with-kde
-cat kfile_m3u.lang kfile_mp3.lang kfile_ogg.lang kfile_wav.lang >> %{name}.lang
+%find_lang kmyapp	--with-kde
+%find_lang koncd	--with-kde
+%find_lang kscd		--with-kde
+%find_lang noatun	--with-kde
+%find_lang kfile_m3u	--with-kde
+%find_lang kfile_mp3	--with-kde
+%find_lang kfile_ogg	--with-kde
+%find_lang kfile_wav	--with-kde
+cat kfile_m3u.lang kfile_mp3.lang kfile_ogg.lang kfile_wav.lang kmyapp koncd >> %{name}.lang
 
 %post   mpeglib -p /sbin/ldconfig
 %postun mpeglib -p /sbin/ldconfig
