@@ -310,9 +310,8 @@ AUDIO=oss,$AUDIO
 %{?_with_esd:AUDIO=esd,$AUDIO}
 AUDIO=${AUDIO%%,}
 
-for plik in `find ./ -name *.desktop | grep -l '\[nb\]'` ; do
-	echo $plik
-	echo -e ',s/\[nb\]/[no]\n,w' | ed $plik
+for plik in `find . -name \*.desktop -o -name \*.plugin | xargs grep -l '\[nb\]'` ; do
+	echo -e ',s/\[nb\]=/[no]=\n,w' | ed $plik 2>/dev/null
 done
 
 # bleh, cannot be done (linking with modules not beginning with lib)
