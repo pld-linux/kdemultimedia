@@ -83,7 +83,7 @@ Multimedialne aplikacje KDE. Pakiet zawiera:
  - Kaboodle - odtwarzacz plików multimedialnych
  - KMID - odtwarzacz MIDI,
  - KMIDI - programowy odtwarzacz MIDI,
- - KMIX - mixer audio,
+ - KMIX - mikser audio,
  - KSCD - odtwarzacz CD.
  - Noatun - odtwarzacz plików multimedialnych
 
@@ -183,7 +183,7 @@ This package adds a fold to konqueror "file properties" dialog window
 with file enhanced informations.
 
 %description kfile -l pl
-Ten pakiet dodaje do okna dialogowego "w³asciwo¶ci pliku" konquerora
+Ten pakiet dodaje do okna dialogowego "w³a¶ciwo¶ci pliku" konquerora
 dodatkow± zak³adkê z rozszerzonymi informacjami o pliku.
 
 %package kmid
