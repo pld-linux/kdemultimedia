@@ -5,7 +5,7 @@
 #
 %define		_state		snapshots
 %define		_ver		3.2.90
-%define		_snap		040216
+%define		_snap		040225
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
@@ -72,7 +72,7 @@ Group:		X11/Development/Libraries
 Requires:	kdelibs-devel >= 9:%{version}
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
-Requires:	%{name}-libworkman = %{epoch}:%{version}-%{release}
+#Requires:	%{name}-libworkman = %{epoch}:%{version}-%{release}
 Requires:	%{name}-noatun-libs = %{epoch}:%{version}-%{release}
 Obsoletes:	kdemultimedia-static
 
@@ -181,7 +181,7 @@ Summary:	A jukebox like program
 Summary(pl):	Program spe³niaj±cy funkcjê szafy graj±cej
 Group:		X11/Applications
 Requires:	taglib >= 0.95.031114
-Requires:	kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= 9:%{_ver}
 
 %description juk
 JuK (pronounced jook) is a jukebox and music manager for the KDE
@@ -196,7 +196,7 @@ dla KDE podobny do iTunes(r) lub RealOne(r).
 Summary:	Media player
 Summary(pl):	Odtwarzacz multimedialny
 Group:		X11/Applications
-Requires:	kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= 9:%{_ver}
 
 %description kaboodle
 Media player.
@@ -208,9 +208,9 @@ Odtwarzacz multimedialny.
 Summary:	Audio Creator
 Summary(pl):	Kreator audio
 Group:		X11/Applications
-Requires:	kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= 9:%{_ver}
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
-Requires:	%{name}-libworkman = %{epoch}:%{version}-%{release}
+#Requires:	%{name}-libworkman = %{epoch}:%{version}-%{release}
 
 %description kaudiocreator
 CD ripper and sound encoder frontend.
@@ -222,7 +222,7 @@ Nak³adka na CD ripper i koder d¼wiêku.
 Summary:	Audio file formats enhanced information
 Summary(pl):	Rozszerzone informacje o plikach d¼wiêkowych
 Group:		X11/Development/Libraries
-Requires:	konqueror >= %{version}
+Requires:	konqueror >= %{_ver}
 Obsoletes:	kdemultimedia < 8:3.0.8
 
 %description kfile
@@ -237,7 +237,7 @@ dodatkow± zak³adkê z rozszerzonymi informacjami o pliku.
 Summary:	KDE MIDI Player
 Summary(pl):	Odtwarzacz MIDI dla KDE
 Group:		X11/Applications
-Requires:	kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= 9:%{_ver}
 
 %description kmid
 This is a MIDI player for KDE. It uses sound-card synthetizer or other
@@ -251,7 +251,7 @@ muzycznej lub inne urz±dzenia MIDI przy³±czone do niej.
 Summary:	KDE audio mixer
 Summary(pl):	Mikser d¼wiêku dla KDE
 Group:		X11/Applications
-Requires:	kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= 9:%{_ver}
 
 %description kmix
 Sound mixer application for KDE.
@@ -263,7 +263,7 @@ Mikser d¼wiêku dla KDE.
 Summary:	KDE sound recorder
 Summary(pl):	Rejestrator d¼wiêku dla KDE
 Group:		X11/Applications
-Requires:	kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= 9:%{_ver}
 Requires:	%{name}-artscontrol = %{epoch}:%{version}-%{release}
 Requires:	%{name}-kmix = %{epoch}:%{version}-%{release}
 
@@ -277,9 +277,9 @@ Rejestrator d¼wiêku dla KDE.
 Summary:	KDE CD Player
 Summary(pl):	Odtwarzacz CD dla KDE
 Group:		X11/Applications
-Requires:	kdebase-core >= 9:%{version}
+Requires:	kdebase-core >= 9:%{_ver}
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
-Requires:	%{name}-libworkman = %{epoch}:%{version}-%{release}
+#Requires:	%{name}-libworkman = %{epoch}:%{version}-%{release}
 
 %description kscd
 CD Player with CDDB support. It can automatically update its CD
@@ -722,8 +722,8 @@ rm -rf $RPM_BUILD_ROOT
 %post	libkcddb		-p /sbin/ldconfig
 %postun	libkcddb		-p /sbin/ldconfig
 
-%post	libworkman		-p /sbin/ldconfig
-%postun	libworkman		-p /sbin/ldconfig
+#%post	libworkman		-p /sbin/ldconfig
+#%postun	libworkman		-p /sbin/ldconfig
 
 %post	mpeglib			-p /sbin/ldconfig
 %postun	mpeglib			-p /sbin/ldconfig
@@ -765,14 +765,14 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libnoatun.so
 %attr(755,root,root) %{_libdir}/libnoatuncontrols.so
 %attr(755,root,root) %{_libdir}/libnoatuntags.so
-%attr(755,root,root) %{_libdir}/libworkman.so
+#%attr(755,root,root) %{_libdir}/libworkman.so
 # static-only library, no shared version - so here
-%{_libdir}/libworkmanaudio.a
+#%{_libdir}/libworkmanaudio.a
 %{_includedir}/*.h
 %{_includedir}/arts/*.h
 %{_includedir}/arts/*.idl
 %{_includedir}/libkcddb
-%{_includedir}/libwm
+#%{_includedir}/libwm
 %{_includedir}/noatun
 
 %files arts
@@ -938,15 +938,16 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/kmix.so
 %{_libdir}/kde3/kmixctrl.la
 %attr(755,root,root) %{_libdir}/kde3/kmixctrl.so
-%{_libdir}/kde3/kcm_kmix.la
-%attr(755,root,root) %{_libdir}/kde3/kcm_kmix.so
+#%{_libdir}/kde3/kcm_kmix.la
+#%attr(755,root,root) %{_libdir}/kde3/kcm_kmix.so
 %{_libdir}/kde3/kmix_panelapplet.la
 %attr(755,root,root) %{_libdir}/kde3/kmix_panelapplet.so
-%{_desktopdir}/kde/kmix.desktop
-%{_desktopdir}/kde/kmixcfg.desktop
-%{_datadir}/services/kmixctrl_restore.desktop
-%{_datadir}/apps/kmix
 %{_datadir}/apps/kicker/applets/kmixapplet.desktop
+%{_datadir}/apps/kmix
+%{_datadir}/autostart/restore_kmix_volumes.desktop
+%{_datadir}/services/kmixctrl_restore.desktop
+%{_desktopdir}/kde/kmix.desktop
+#%{_desktopdir}/kde/kmixcfg.desktop
 %{_iconsdir}/*/*/*/kmix.png
 
 %files kscd -f kscd_en.lang
@@ -993,10 +994,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libkcddb.la
 %attr(755,root,root) %{_libdir}/libkcddb.so.*.*.*
 
-%files libworkman
-%defattr(644,root,root,755)
-%{_libdir}/libworkman.la
-%attr(755,root,root) %{_libdir}/libworkman.so.*.*.*
+#%files libworkman
+#%defattr(644,root,root,755)
+#%{_libdir}/libworkman.la
+#%attr(755,root,root) %{_libdir}/libworkman.so.*.*.*
 
 %files mpeglib
 %defattr(644,root,root,755)
