@@ -10,7 +10,7 @@
 #
 
 %define         _state          stable
-%define         _ver		3.1.2
+%define         _ver		3.1.3
 
 %ifarch	sparc sparcv9 sparc64
 %define		_with_esd	1
@@ -21,13 +21,13 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	1.1
+Release:	0.1
 Epoch:		8
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
-# Source0-md5:	63ffa8b3c6b3151acdaaa22afd7e55ea
+# Source0-md5:	da1e05b8284976359cab32f0abf4b87b
 # generated from kde-i18n
 #Source1:	kde-i18n-%{name}-%{version}.tar.bz2
 Patch0:		%{name}-timidity.patch
