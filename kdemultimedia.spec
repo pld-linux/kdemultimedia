@@ -19,6 +19,7 @@ Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_kdever}/src/%{name}-%{version}.tar.bz2
 # generated from kde-i18n
 #Source1:	kde-i18n-%{name}-%{version}.tar.bz2
+Patch0:		%{name}-timidity.patch
 %ifnarch sparc sparc64
 BuildRequires:	alsa-lib-devel
 BuildRequires:	alsa-driver-devel
@@ -261,6 +262,7 @@ Plug-in do Xine
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 kde_appsdir="%{_applnkdir}"; export kde_appsdir
@@ -285,13 +287,23 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
 
+mv $RPM_BUILD_ROOT%{_bindir}/{timidity,ktimidity}    
+
 ALD=$RPM_BUILD_ROOT%{_applnkdir}
 install -d $ALD/{Settings/KDE,Multimedia/ArtsTools}
 mv -f $ALD/{Multimedia/More/*.desktop,Multimedia}
 mv -f $ALD/{Multimedia/arts*.desktop,Multimedia/ArtsTools}
 mv -f $ALD/{Settings/[!K]*,Settings/KDE}
+
 echo "[Desktop Entry]\nName=Arts Tools\nIcon=arts\nType=Directory" \
     > $ALD/Multimedia/ArtsTools/.directory
+
+cat $ALD/Multimedia/timidity.desktop |sed 's/Exec=timidity/Exec=ktimidity/' \
+    > $ALD/Multimedia/ktimidity.desktop
+
+cd $RPM_BUILD_ROOT%{_datadir}/apps/kmidi/config
+ln -s gravis.cfg GUSpatches
+cd -
 
 #bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 
@@ -420,9 +432,9 @@ echo "Remember to restart artsd !"
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kmidi
 %attr(755,root,root) %{_bindir}/sf2cfg
-%attr(755,root,root) %{_bindir}/timidity
+%attr(755,root,root) %{_bindir}/ktimidity
 %{_applnkdir}/Multimedia/kmidi.desktop
-%{_applnkdir}/Multimedia/timidity.desktop
+%{_applnkdir}/Multimedia/ktimidity.desktop
 %{_datadir}/apps/kmidi
 %{_pixmapsdir}/*/*/*/kmidi.png
 
