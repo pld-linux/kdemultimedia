@@ -2,7 +2,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	2.2.2
-Release:	5
+Release:	6
 Epoch:		6
 License:	GPL
 Vendor:		The KDE Team
@@ -354,7 +354,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(644,root,root,755)
-%{_includedir}/*
+%{_includedir}/[!a]*
+%{_includedir}/arts/*
 %{_libdir}/libarts_mpeglib.so
 %{_libdir}/libnoatuncontrols.so
 %{_libdir}/libartsmidi_idl.so
