@@ -12,7 +12,7 @@
 
 %define         _state          snapshots
 %define         _ver		3.2
-%define         _snap		030330
+%define         _snap		030403
 
 %ifarch	sparc sparcv9 sparc64
 %define		_with_esd	1
@@ -23,7 +23,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	0.%{_snap}.2
+Release:	0.%{_snap}.1
 Epoch:		8
 License:	GPL
 Vendor:		The KDE Team
