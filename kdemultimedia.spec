@@ -393,11 +393,58 @@ KDE Media Player - biblioteki wspó³dzielone.
 %prep
 %setup -q -D
 
+%{__sed} -i -e 's/Categories=.*/Categories=Audio;Player;/' \
+juk/juk.desktop \
+kscd/kscd.desktop
+
+%{__sed} -i -e 's/Categories=.*/Categories=Audio;Midi;/' \
+kmid/kmid.desktop \
+kappfinder-data/meterbridge.desktop
+
+%{__sed} -i -e 's/Categories=.*/Categories=AudioVideo;Player;/' \
+noatun/noatun.desktop \
+kaboodle/kaboodle.desktop
+
+%{__sed} -i -e 's/Categories=.*/Categories=Audio;Mixer;/' \
+kmix/kmix.desktop
+
+%{__sed} -i -e 's/Categories=.*/Categories=Audio;Recorder;/' \
+krec/krec.desktop \
+kappfinder-data/galan.desktop \
+kaudiocreator/kaudiocreator.desktop \
+kappfinder-data/mixxx.desktop \
+kappfinder-data/rezound.desktop
+
+%{__sed} -i -e 's/Categories=.*/Categories=Audio;Sequencer;/' \
+kappfinder-data/hydrogen.desktop
+
+%{__sed} -i -e 's/Categories=.*/Categories=Audio;/' \
+kappfinder-data/ecamegapedal.desktop \
+kappfinder-data/freebirth.desktop \
+kappfinder-data/amsynth.desktop \
+kappfinder-data/vkeybd.desktop \
+kappfinder-data/jack-rack.desktop \
+kappfinder-data/jamin.desktop \
+kappfinder-data/ardour.desktop \
+kappfinder-data/qsynth.desktop \
+kappfinder-data/qjackctl.desktop \
+kappfinder-data/muse.desktop \
+kappfinder-data/freqtweak.desktop \
+kappfinder-data/djplay.desktop \
+kappfinder-data/ams.desktop \
+kappfinder-data/zynaddsubfx.desktop  \
+arts/tools/artscontrol.desktop \
+arts/builder/artsbuilder.desktop
+
+
 %build
 cp /usr/share/automake/config.sub admin
 # unsermake does not link non-C++ files to the resulting binary in --enable-final conditions.
 # so we don't use it for now
-#export UNSERMAKE=%{_datadir}/unsermake/unsermake
+
+for i in `find ./mpeglib/ -name Makefile.am`; do echo KDE_OPTIONS=nofinal >> ${i} ; done
+
+export UNSERMAKE=%{_datadir}/unsermake/unsermake
 
 %{__make} -f admin/Makefile.common cvs
 
@@ -416,7 +463,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
-	kde_htmldir=%{_kdedocdir}
+	kde_htmldir=%{_kdedocdir} \
+	kde_libs_htmldir=%{_kdedocdir}
 
 %find_lang artsbuilder	--with-kde
 %find_lang juk		--with-kde
@@ -619,6 +667,7 @@ rm -rf $RPM_BUILD_ROOT
 #%{_datadir}/config/kaudiocreatorrc
 %{_datadir}/config.kcfg/kaudiocreator.kcfg
 %{_datadir}/config.kcfg/kaudiocreator_encoders.kcfg
+%{_datadir}/apps/kconf_update/upgrade-kaudiocreator-metadata.sh
 %{_desktopdir}/kde/kaudiocreator.desktop
 %{_iconsdir}/[!l]*/*/*/kaudiocreator.png
 
