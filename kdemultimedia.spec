@@ -136,7 +136,7 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 
 %files -n kmedia
-%defattr(644, root, root, 755)
+%defattr(644,root,root,755)
 /usr/X11R6/share/kde/apps/kmedia
 %lang(en) /usr/X11R6/share/kde/doc/HTML/en/kmedia
 %lang(cs) /usr/X11R6/share/locale/cs/LC_MESSAGES/kmedia.mo
@@ -168,7 +168,7 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 
 %files -n kmid
-%defattr(644, root, root, 755)
+%defattr(644,root,root,755)
 %config /etc/X11/kde/mimelnk/audio/x-karaoke.kdelnk
 %config(missingok) /etc/X11/kde/applnk/Multimedia/kmid.kdelnk
 %config(missingok) /etc/X11/wmconfig/kdekmid
@@ -194,7 +194,7 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 
 %files -n kmidi
-%defattr(644, root, root, 755)
+%defattr(644,root,root,755)
 %config(missingok) /etc/X11/kde/applnk/Multimedia/KMidi.kdelnk
 %config(missingok) /etc/X11/wmconfig/kdeKMidi
 %config /usr/X11R6/share/kde/apps/kmidi/config/*.cfg
@@ -219,7 +219,7 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 
 %files -n kmix
-%defattr(644, root, root, 755)
+%defattr(644,root,root,755)
 %config(missingok) /etc/X11/kde/applnk/Multimedia/KMix.kdelnk
 %config(missingok) /etc/X11/wmconfig/kdeKMix
 %attr(755,root,root) /usr/X11R6/bin/kmix
@@ -247,7 +247,7 @@ rm -rf $RPM_BUILD_ROOT
 #################################################
 
 %files -n kscd
-%defattr(644, root, root, 755)
+%defattr(644,root,root,755)
 %config(missingok) /etc/X11/kde/applnk/Multimedia/kscd.kdelnk
 %config(missingok) /etc/X11/wmconfig/kdekscd
 %config /etc/X11/kde/mimelnk/text/xmcd.kdelnk
