@@ -21,14 +21,14 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	1
+Release:	1.1
 Epoch:		8
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
 # generated from kde-i18n
-#Source1:	kde-i18n-%{name}-%{version}.tar.bz2
+Source1:	kde-i18n-%{name}-%{version}.tar.bz2
 Patch0:		%{name}-timidity.patch
 %{!?_without_alsa:BuildRequires:	alsa-lib-devel}
 %{!?_without_alsa:BuildRequires:	alsa-driver-devel}
@@ -334,7 +334,7 @@ cd $RPM_BUILD_ROOT%{_datadir}/apps/kmidi/config
 ln -s gravis.cfg GUSpatches
 cd -
 
-#bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
+bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 
 #%find_lang kfile_m3u	--with-kde
 #%find_lang kfile_mp3	--with-kde
@@ -345,8 +345,8 @@ cd -
 %find_lang aktion	--with-kde
 %find_lang artsbuilder	--with-kde
 cat artsbuilder.lang > arts.lang
-#%find_lang artscontrol	--with-kde
-#cat artscontrol.lang >> arts.lang
+%find_lang artscontrol	--with-kde
+cat artscontrol.lang >> arts.lang
 %find_lang kaboodle	--with-kde
 %find_lang kmid		--with-kde
 %find_lang kmidi	--with-kde
