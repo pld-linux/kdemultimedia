@@ -183,7 +183,7 @@ Group(pl):	X11/Programowanie/Biblioteki
 Group(pt_BR):	X11/Desenvolvimento/Bibliotecas
 Group(ru):	X11/Разработка/Библиотеки
 Group(uk):	X11/Розробка/Б╕бл╕отеки
-Requires:	kdemultimedia = %{version} 
+Requires:	kdemultimedia-mpeglib = %{version} 
 Requires:	kdelibs-devel = %{version}
 
 %description devel
