@@ -2,7 +2,7 @@ Summary:     K Desktop Environment - multimedia applications
 Summary(pl): K Desktop Environment - aplikacje multimedialne
 Name:        kdemultimedia
 Version:     1.0
-Release:     4
+Release:     7
 Copyright:   GPL
 Group:       X11/KDE/Multimedia
 Vendor:	     The KDE Team
@@ -271,6 +271,10 @@ rm -rf $RPM_BUILD_ROOT
 %lang(no) /usr/X11R6/share/locale/no/LC_MESSAGES/kscd.mo
 
 %changelog
+* Wed Dec  8 1998 Tomasz K³oczko <kloczek@rudy.mif.pg.gda.pl>
+  [1.0-7]
+- recompiled against libstdc++.so.2.9.
+
 * Sat Oct 10 1998 Jacek Konieczny <jajcus@zeus.polsl.gliwice.pl>
   [1.0-4]
 - created new spec based on kdebase.spec.
