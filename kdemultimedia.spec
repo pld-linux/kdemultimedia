@@ -39,7 +39,7 @@ BuildRequires:	libtunepimp-devel
 BuildRequires:	libvorbis-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
 BuildRequires:	taglib-devel >= 0.95.031114
-BuildRequires:	unsermake >= 040511
+#BuildRequires:	unsermake >= 040511
 %{?with_xine:BuildRequires:	xine-lib-devel >= 1:1.0}
 BuildRequires:	speex-devel
 BuildRequires:	flac-devel
