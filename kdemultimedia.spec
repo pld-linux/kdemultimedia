@@ -484,7 +484,7 @@ KDE Media Player - biblioteki wspó³dzielone.
 	-e 's/Terminal=0/Terminal=false/' \
 	juk/juk.desktop \
 	kscd/kscd.desktop
-%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Midi;/' \
+%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Midi;Player;/' \
 	-e 's/Terminal=0/Terminal=false/' \
 	kmid/kmid.desktop
 %{__sed} -i -e 's/Categories=.*/Categories=Audio;Midi;/' \
