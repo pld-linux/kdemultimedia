@@ -119,7 +119,7 @@ Summary:	Arts Tools
 Summary(pl):	Narzêdzia Arts
 Group:		X11/Applications
 Requires:	kdebase-core >= %{version}
-Requires:	%{name}-mpeglib = %{version}
+Requires:	%{name}-mpeglib = %{epoch}:%{version}
 
 %description arts
 Arts Tools.
@@ -210,7 +210,7 @@ Mikser audio dla KDE.
 Summary:	KDE sound recorder
 Summary(pl):	Rejestrator d¼wiêku dla KDE
 Group:		X11/Applications
-Requires:	%{name}-arts = %{version}
+Requires:	%{name}-arts = %{epoch}:%{version}
 Requires:	kdebase-core >= %{version}
 
 %description krec
