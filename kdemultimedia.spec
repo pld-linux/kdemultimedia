@@ -10,7 +10,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	3.1
-Release:	2
+Release:	3
 Epoch:		7
 License:	GPL
 Vendor:		The KDE Team
@@ -410,7 +410,7 @@ echo "Remember to restart artsd !"
 %{_datadir}/services/audiocd.protocol
 %{_applnkdir}/Multimedia/kaudiocreator.desktop
 %{_applnkdir}/Settings/KDE/Sound/audiocd.desktop
-%{_pixmapsdir}/*/*/*/kaudiocreator.png
+%{_pixmapsdir}/[!l]*/*/*/kaudiocreator.png
 
 %files kfile
 %defattr(644,root,root,755)
