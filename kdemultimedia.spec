@@ -185,6 +185,7 @@ Summary(pl):	kdemultimedia - pliki nag³ówkowe
 Group:		X11/Development/Libraries
 Requires:	kdemultimedia-mpeglib = %{version}
 Requires:	kdemultimedia-noatun = %{version}
+Requires:	kdemultimedia-arts = %{version}
 Requires:	kdelibs-devel = %{version}
 
 %description devel
