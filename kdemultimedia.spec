@@ -163,9 +163,12 @@ MPEG lib.
 Summary:	kdemultimedia - headers
 Summary(pl):	kdemultimedia - pliki nag³ówkowe
 Group:		X11/Development/Libraries
+%ifnarch sparc sparc64
+Requires:	alsa-lib-devel
+%endif
+Requires:	kdelibs-devel = %{version}
 Requires:	kdemultimedia-mpeglib = %{version}
 Requires:	kdemultimedia-noatun = %{version}
-Requires:	kdelibs-devel = %{version}
 
 %description devel
 kdemultimedia - headers.
