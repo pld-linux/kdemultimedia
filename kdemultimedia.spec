@@ -1,6 +1,6 @@
 %define		_ver		3.0.2
 #define		_sub_ver
-%define		_rel		3
+%define		_rel		4
 
 %{?_sub_ver:	%define	_version	%{_ver}%{_sub_ver}}
 %{!?_sub_ver:	%define	_version	%{_ver}}
@@ -284,6 +284,11 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libdummy.la
 %attr(755,root,root) %{_libdir}/kde3/kfile_*.??
 %{_datadir}/services/kfile_*.desktop
+%dir %{_datadir}/apps/kconf_update/
+%attr(755,root,root) %{_datadir}/apps/kconf_update/*.sh
+%attr(755,root,root) %{_datadir}/apps/kconf_update/*.pl
+%attr(755,root,root) %{_datadir}/apps/kconf_update/noatun20update
+%{_datadir}/apps/kconf_update/*.upd
 
 %files mpeglib
 %defattr(644,root,root,755)
@@ -352,7 +357,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/mcop/winskinvis*
 %{_applnkdir}/Multimedia/noatun.desktop
 %{_datadir}/apps/noatun*
-%{_datadir}/apps/kconf_update/noatun*
 %{_pixmapsdir}/*/*/apps/noatun.png
 
 %files kmid -f kmid.lang
