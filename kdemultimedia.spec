@@ -7,12 +7,6 @@ Epoch:		6
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
-Group(de):	X11/Applikationen
-Group(es):	X11/Aplicaciones
-Group(fr):	X11/Applications
-Group(pl):	X11/Aplikacje
-Group(pt_BR):	X11/Aplicações
-Group(pt):	X11/Aplicações
 Source0:	ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
 Patch0:		%{name}-kmidi-alsa.patch
 Patch1:		%{name}-fix-num-validator.patch
@@ -60,12 +54,6 @@ Multimedialne aplikacje KDE. Pakiet zawiera:
 Summary:	Arts
 Summary(pl):	Arts
 Group:		X11/Applications
-Group(de):	X11/Applikationen
-Group(es):	X11/Aplicaciones
-Group(fr):	X11/Applications
-Group(pl):	X11/Aplikacje
-Group(pt_BR):	X11/Aplicações
-Group(pt):	X11/Aplicações
 Requires:	kdelibs = %{version} 
 
 %description arts
@@ -78,12 +66,6 @@ Arts.
 Summary:	KDE Media Player
 Summary(pl):	Odtwarzacz multimedialny dla KDE
 Group:		X11/Applications
-Group(de):	X11/Applikationen
-Group(es):	X11/Aplicaciones
-Group(fr):	X11/Applications
-Group(pl):	X11/Aplikacje
-Group(pt_BR):	X11/Aplicações
-Group(pt):	X11/Aplicações
 Requires:	kdelibs = %{version}
 Obsoletes:	aktion
 
@@ -99,12 +81,6 @@ WAV.
 Summary:	KDE MIDI Player	
 Summary(pl):	Odtwarzacz MIDI dla KDE
 Group:		X11/Applications
-Group(de):	X11/Applikationen
-Group(es):	X11/Aplicaciones
-Group(fr):	X11/Applications
-Group(pl):	X11/Aplikacje
-Group(pt_BR):	X11/Aplicações
-Group(pt):	X11/Aplicações
 Requires:	kdelibs = %{version}
 
 %description kmid
@@ -119,12 +95,6 @@ muzycznej lub inne urz±dzenia MIDI przy³±czone do niej.
 Summary:	KDE software MIDI Player	
 Summary(pl):	Programowy odtwarzacz MIDI dla KDE
 Group:		X11/Applications
-Group(de):	X11/Applikationen
-Group(es):	X11/Aplicaciones
-Group(fr):	X11/Applications
-Group(pl):	X11/Aplikacje
-Group(pt_BR):	X11/Aplicações
-Group(pt):	X11/Aplicações
 Requires:	kdelibs = %{version}
 
 %description kmidi
@@ -139,12 +109,6 @@ do stworzenia dobrej jako¶ci d¼wiêku.
 Summary:	KDE audio mixer
 Summary(pl):	Mixer audio dla KDE
 Group:		X11/Applications
-Group(de):	X11/Applikationen
-Group(es):	X11/Aplicaciones
-Group(fr):	X11/Applications
-Group(pl):	X11/Aplikacje
-Group(pt_BR):	X11/Aplicações
-Group(pt):	X11/Aplicações
 Requires:	kdelibs = %{version}
 
 %description kmix
@@ -157,12 +121,6 @@ Mikser audio dla KDE.
 Summary:	KDE CD Player	
 Summary(pl):	Odtwarzacz CD dla KDE
 Group:		X11/Applications
-Group(de):	X11/Applikationen
-Group(es):	X11/Aplicaciones
-Group(fr):	X11/Applications
-Group(pl):	X11/Aplikacje
-Group(pt_BR):	X11/Aplicações
-Group(pt):	X11/Aplicações
 Requires:	kdelibs = %{version} 
 
 %description kscd
@@ -179,12 +137,6 @@ graficzn± interpretacjê granych d¼wiêków.
 Summary:	KDE Media Player
 Summary(pl):	KDE Media Player
 Group:		X11/Applications
-Group(de):	X11/Applikationen
-Group(es):	X11/Aplicaciones
-Group(fr):	X11/Applications
-Group(pl):	X11/Aplikacje
-Group(pt_BR):	X11/Aplicações
-Group(pt):	X11/Aplicações
 Requires:	kdelibs = %{version} 
 Requires:	arts = %{version} 
 
@@ -198,12 +150,6 @@ KDE Media Player.
 Summary:	MPEG lib
 Summary(pl):	MPEG lib
 Group:		X11/Applications
-Group(de):	X11/Applikationen
-Group(es):	X11/Aplicaciones
-Group(fr):	X11/Applications
-Group(pl):	X11/Aplikacje
-Group(pt_BR):	X11/Aplicações
-Group(pt):	X11/Aplicações
 Requires:	kdelibs = %{version} 
 Requires:	arts = %{version} 
 
@@ -217,13 +163,6 @@ MPEG lib.
 Summary:	kdemultimedia - headers
 Summary(pl):	kdemultimedia - pliki nag³ówkowe
 Group:		X11/Development/Libraries
-Group(de):	X11/Entwicklung/Bibliotheken
-Group(es):	X11/Desarrollo/Bibliotecas
-Group(fr):	X11/Development/Librairies
-Group(pl):	X11/Programowanie/Biblioteki
-Group(pt_BR):	X11/Desenvolvimento/Bibliotecas
-Group(ru):	X11/òÁÚÒÁÂÏÔËÁ/âÉÂÌÉÏÔÅËÉ
-Group(uk):	X11/òÏÚÒÏÂËÁ/â¦ÂÌ¦ÏÔÅËÉ
 Requires:	kdemultimedia-mpeglib = %{version} 
 Requires:	kdemultimedia-noatun = %{version} 
 Requires:	kdelibs-devel = %{version}
