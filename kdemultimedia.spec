@@ -5,7 +5,7 @@
 #
 %define		_state		snapshots
 %define		_ver		3.2.90
-%define		_snap		040424
+%define		_snap		040506
 %define		_packager	adgor
 
 Summary:	K Desktop Environment - multimedia applications
@@ -18,8 +18,9 @@ License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
-Source0:	http://ep09.pld-linux.org/~%{_packager}/kde/%{name}-%{_snap}.tar.bz2
-##%% Source0-md5:	870592f2d0edc64cbea603e393be7f28
+#Source0:	http://ep09.pld-linux.org/~%{_packager}/kde/%{name}-%{_snap}.tar.bz2
+Source0:	%{name}-%{_snap}.tar.bz2
+# Source0-md5:	b2bf6fcd6defd126909810bd5b25e907
 #Source1:	http://ep09.pld-linux.org/~djurban/kde/i18n/kde-i18n-%{name}-%{version}.tar.bz2
 ##%% Source1-md5:	f7aeb11765cd23f1719c1d18762fbc47
 Patch0:		%{name}-no_mpeglib_examples.patch
