@@ -201,8 +201,11 @@ Odtwarzacz multimedialny.
 kde_htmldir="%{_htmldir}"; export kde_htmldir
 kde_icondir="%{_pixmapsdir}"; export kde_icondir
 
+if [ -f %{_pkgconfigdir}/libpng12.pc ] ; then
+        CPPFLAGS="`pkg-config libpng12 --cflags`"
+fi
 CFLAGS="%{rpmcflags} -I%{_includedir}"
-export CXXLAGS
+
 %configure2_13 \
  	--with-pam="yes" \
 	--enable-audio=oss,alsa
