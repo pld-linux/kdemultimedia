@@ -140,11 +140,13 @@ Requires:       kdelibs >= %{version}
 Requires:       %{name}-mpeglib = %{version}
 
 %description juk
-JuK (pronounced jook) is a jukebox and music manager for the KDE desktop similar to jukebox software on other platforms such as iTunes (r) or RealOne (r). 
+JuK (pronounced jook) is a jukebox and music manager for the KDE
+desktop similar to jukebox software on other platforms such as
+iTunes(r) or RealOne(r). 
 
 %description juk -l pl
-Juk (czyt. juk) to szafa grajaca i zarz±dca muzyki pod KDE podobny do iTunes lub RealJukebox.
-
+Juk (czyt. d¿uk, jak w Jukebox) to szafa graj±ca i zarz±dca muzyki
+dla KDE podobny do iTunes(r) lub RealOne(r).
 
 %package kaboodle
 Summary:	Media player
@@ -177,7 +179,7 @@ Group:		X11/Development/Libraries
 Obsoletes:	kdemultimedia < 3.0.8
 
 %description kfile
-This package adds a fold to konqueror "file properities" dialog window
+This package adds a fold to konqueror "file properties" dialog window
 with file enhanced informations.
 
 %description kfile -l pl
@@ -195,7 +197,7 @@ This is a MIDI player for KDE. It uses sound-card synthetizer or other
 hardware connected to MIDI to play MIDI files.
 
 %description kmid -l pl
-Odtwarzacz MIDI dla KDE. Wykorzystuje tylko syntetyzator na karcie
+Odtwarzacz MIDI dla KDE. Wykorzystuje tylko syntezator na karcie
 muzycznej lub inne urz±dzenia MIDI przy³±czone do niej.
 
 %package kmidi
@@ -244,7 +246,7 @@ Group:		X11/Applications
 Requires:	kdelibs >= %{version}
 
 %description kscd
-CD Player with CDDB support. It can automaticaly update its CD
+CD Player with CDDB support. It can automatically update its CD
 database with the Internet and show graphical interpretation of played
 sounds.
 
@@ -265,7 +267,6 @@ cddb library for KDE.
 
 %description libkcddb -l pl
 Biblioteka cddb pod KDE.
-
 
 %package mpeglib
 Summary:	MPEG lib
