@@ -23,6 +23,7 @@ BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libvorbis-devel
 BuildRequires:	zlib-devel
+BuildRequires:	arts-devel
 Requires:	kdelibs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
