@@ -54,12 +54,12 @@ Multimedialne aplikacje KDE. Pakiet zawiera:
 Summary:	Arts
 Summary(pl):	Arts
 Group:		X11/Applications
-Requires:	kdelibs = %{version} 
+Requires:	kdelibs = %{version}
 
 %description arts
 Arts.
 
-%description -l pl arts
+%description arts -l pl
 Arts.
 
 %package aktion
@@ -73,12 +73,12 @@ Obsoletes:	aktion
 This is a media player for KDE. Currently it can be only used to play
 WAV files.
 
-%description -l pl aktion
+%description aktion -l pl
 Odtwarzacz multimedialny dla KDE. W tej chwili obs³uguje tylko pliki
 WAV.
 
 %package kmid
-Summary:	KDE MIDI Player	
+Summary:	KDE MIDI Player
 Summary(pl):	Odtwarzacz MIDI dla KDE
 Group:		X11/Applications
 Requires:	kdelibs = %{version}
@@ -92,7 +92,7 @@ Odtwarzacz MIDI dla KDE. Wykorzystuje tylko syntetyzator na karcie
 muzycznej lub inne urz±dzenia MIDI przy³±czone do niej.
 
 %package kmidi
-Summary:	KDE software MIDI Player	
+Summary:	KDE software MIDI Player
 Summary(pl):	Programowy odtwarzacz MIDI dla KDE
 Group:		X11/Applications
 Requires:	kdelibs = %{version}
@@ -105,7 +105,7 @@ high-quality sound.
 Programowy odtwarzacz MIDI. Wykorzystuje patche z GUSa i moc procesora
 do stworzenia dobrej jako¶ci d¼wiêku.
 
-%package kmix 
+%package kmix
 Summary:	KDE audio mixer
 Summary(pl):	Mixer audio dla KDE
 Group:		X11/Applications
@@ -118,10 +118,10 @@ Sound mixer application for KDE.
 Mikser audio dla KDE.
 
 %package kscd
-Summary:	KDE CD Player	
+Summary:	KDE CD Player
 Summary(pl):	Odtwarzacz CD dla KDE
 Group:		X11/Applications
-Requires:	kdelibs = %{version} 
+Requires:	kdelibs = %{version}
 
 %description kscd
 CD Player with CDDB support. It can automaticaly update its CD
@@ -137,40 +137,40 @@ graficzn± interpretacjê granych d¼wiêków.
 Summary:	KDE Media Player
 Summary(pl):	KDE Media Player
 Group:		X11/Applications
-Requires:	kdelibs = %{version} 
-Requires:	arts = %{version} 
+Requires:	kdelibs = %{version}
+Requires:	arts = %{version}
 
 %description noatun
 KDE Media Player.
 
-%description -l pl noatun
+%description noatun -l pl
 KDE Media Player.
 
 %package mpeglib
 Summary:	MPEG lib
 Summary(pl):	MPEG lib
 Group:		X11/Applications
-Requires:	kdelibs = %{version} 
-Requires:	arts = %{version} 
+Requires:	kdelibs = %{version}
+Requires:	arts = %{version}
 
 %description mpeglib
 MPEG lib.
 
-%description -l pl mpeglib
+%description mpeglib -l pl
 MPEG lib.
 
 %package devel
 Summary:	kdemultimedia - headers
 Summary(pl):	kdemultimedia - pliki nag³ówkowe
 Group:		X11/Development/Libraries
-Requires:	kdemultimedia-mpeglib = %{version} 
-Requires:	kdemultimedia-noatun = %{version} 
+Requires:	kdemultimedia-mpeglib = %{version}
+Requires:	kdemultimedia-noatun = %{version}
 Requires:	kdelibs-devel = %{version}
 
 %description devel
 kdemultimedia - headers.
 
-%description -l pl devel
+%description devel -l pl
 kdemultimedia - pliki nag³ówkowe.
 
 %prep
