@@ -1,7 +1,7 @@
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
-Version:	2.2
+Version:	2.2.1
 Release:	1
 Epoch:		6
 License:	GPL
@@ -307,7 +307,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libkjofolui*
 %attr(755,root,root) %{_libdir}/libsplitplaylist*
 %attr(755,root,root) %{_libdir}/libliszt.*
-%attr(755,root,root) %{_libdir}/noatun.*
 %{_libdir}/libnoatun*.la
 %{_libdir}/mcop/Noatun
 %{_libdir}/mcop/noatun*
