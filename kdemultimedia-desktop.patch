@@ -1,0 +1,32 @@
+--- kdemultimedia-3.0.2/kmix/control/kmixcfg.desktop.than	2002-07-16 15:01:59.000000000 +0200
++++ kdemultimedia-3.0.2/kmix/control/kmixcfg.desktop	2002-08-08 12:24:06.000000000 +0200
+@@ -2,7 +2,7 @@
+ Encoding=UTF-8
+ Icon=kmix
+ Type=Application
+-Exec=kcmshell Sound/kmix
++Exec=kcmshell Sound/kde-kmixcfg
+ 
+ X-KDE-ModuleType=Library
+ X-KDE-Library=kmix
+--- kdemultimedia-3.0.2/kmid/kmid.desktop.orig	2002-07-10 21:07:14.000000000 +0200
++++ kdemultimedia-3.0.2/kmid/kmid.desktop	2002-07-10 21:07:22.000000000 +0200
+@@ -23,7 +23,6 @@
+ GenericName[eu]=Midi/Karaoke Jolea
+ GenericName[fi]=Midi/Karaokesoittaja
+ GenericName[fr]=Platine MIDI/Karaoké
+-GenericName[he]=נגן מידי\קריוקי
+ GenericName[hu]=MIDI/Karaoke-lejátszó
+ GenericName[is]=MIDI/Karaoke spilari
+ GenericName[it]=Lettore MIDI/Karaoke
+--- kdemultimedia-3.0.2/koncd/src/optiondialog.cpp.than	2002-08-08 12:46:34.000000000 +0200
++++ kdemultimedia-3.0.2/koncd/src/optiondialog.cpp	2002-08-08 12:46:58.000000000 +0200
+@@ -697,7 +697,7 @@
+ }
+ 
+ void COptionDialog::slotUser1( void ){
+-  KRun::runCommand( "kcmshell audiocd" );
++  KRun::runCommand( "kcmshell kde-audiocd" );
+ }
+ 
+ void COptionDialog::slotOk( void ){
