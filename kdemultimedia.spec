@@ -10,7 +10,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	0.1
+Release:	1
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
@@ -377,6 +377,7 @@ KDE Media Player - biblioteki wspó³dzielone.
 %prep
 %setup -q -n %{name}-%{version} 
 %patch100 -p1
+echo "KDE_OPTIONS=nofinal" >> mpeglib/lib/mpegplay/Makefile.am
 
 %build
 fix="kfile-plugins/ogg/configure.in.in \
@@ -639,8 +640,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kicker/applets/kmixapplet.desktop
 %{_iconsdir}/*/*/*/kmix.png
 %{_kdedocdir}/en/kmix
+%{_kdedocdir}/en/kcontrol/kmixcfg
 
-%files kscd -f kscd_en.lang
+%files kscd 
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/cddaslave
 %attr(755,root,root) %{_bindir}/kscd
