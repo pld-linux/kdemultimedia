@@ -6,8 +6,8 @@
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
-Version:	3.0.4
-Release:	7
+Version:	3.0.5a
+Release:	0.2
 Epoch:		7
 License:	GPL
 Vendor:		The KDE Team
@@ -424,6 +424,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kmixctrl.so
 %attr(755,root,root) %{_libdir}/kde3/kcm_kmix.??
 %attr(755,root,root) %{_libdir}/kde3/kmix_panelapplet.??
+%{_libdir}/kmix.la
+%{_libdir}/kmixctrl.la
 %{_applnkdir}/Multimedia/kmix.desktop
 %{_applnkdir}/Settings/KDE/Sound/kmixcfg.desktop
 %{_datadir}/services/kmixctrl_restore.desktop
@@ -473,6 +475,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kaboodle
 %attr(755,root,root) %{_libdir}/kaboodle.so
 %attr(755,root,root) %{_libdir}/libkaboodlepart.??
+%{_libdir}/kaboodle.la
 %{_datadir}/apps/kaboodle
 %{_datadir}/services/kaboodle_component.desktop
 %{_applnkdir}/Multimedia/kaboodle.desktop
