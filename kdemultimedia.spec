@@ -579,8 +579,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %files akode
 %defattr(644,root,root,755)
-%{_libdir}/libakode.so.0.0.0
-%{_libdir}/libarts_akode.so
+%attr(755,root,root) %{_libdir}/libakode.so.0.0.0
+%attr(755,root,root) %{_libdir}/libarts_akode.so
+%{_libdir}/libarts_akode.la
 %{_libdir}/mcop/akode*PlayObject.mcopclass
 %{_libdir}/mcop/akodearts.mcop*
 
