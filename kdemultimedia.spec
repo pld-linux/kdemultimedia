@@ -77,7 +77,7 @@ Multimedialne aplikacje KDE. Pakiet zawiera:
  - Kaboodle - odtwarzacz plików multimedialnych
  - KMID - odtwarzacz MIDI,
  - KMIDI - programowy odtwarzacz MIDI,
- - KMIX - mixer audio,
+ - KMIX - mikser audio,
  - KSCD - odtwarzacz CD.
  - Noatun - odtwarzacz plików multimedialnych
 
@@ -156,11 +156,11 @@ Group:		X11/Development/Libraries
 Obsoletes:	kdemultimedia < 3.0.8
 
 %description kfile
-This package adds a fold to konqueror "file properities" dialog window
+This package adds a fold to konqueror "file properties" dialog window
 with file enhanced informations.
 
 %description kfile -l pl
-Ten pakiet dodaje do okna dialogowego "w³asciwo¶ci pliku" konquerora
+Ten pakiet dodaje do okna dialogowego "w³a¶ciwo¶ci pliku" konquerora
 dodatkow± zak³adkê z rozszerzonymi informacjami o pliku.
 
 %package kmid
@@ -174,7 +174,7 @@ This is a MIDI player for KDE. It uses sound-card synthetizer or other
 hardware connected to MIDI to play MIDI files.
 
 %description kmid -l pl
-Odtwarzacz MIDI dla KDE. Wykorzystuje tylko syntetyzator na karcie
+Odtwarzacz MIDI dla KDE. Wykorzystuje tylko syntezator na karcie
 muzycznej lub inne urz±dzenia MIDI przy³±czone do niej.
 
 %package kmidi
@@ -223,7 +223,7 @@ Group:		X11/Applications
 Requires:	kdelibs >= %{version}
 
 %description kscd
-CD Player with CDDB support. It can automaticaly update its CD
+CD Player with CDDB support. It can automatically update its CD
 database with the Internet and show graphical interpretation of played
 sounds.
 
