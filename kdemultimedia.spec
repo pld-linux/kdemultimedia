@@ -75,6 +75,7 @@ Summary:	Arts
 Summary(pl):	Arts
 Group:		X11/Applications
 Requires:	kdelibs = %{version}
+Requires:	%{name}-mpeglib = %{version}
 
 %description arts
 Arts.
