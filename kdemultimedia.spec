@@ -1,6 +1,7 @@
 #
 # Conditional build:
 %bcond_without	alsa	# build without ALSA support
+%bcond_without	xine	# build without xine support
 
 %define		_state		stable
 %define		_ver		3.3.1
@@ -38,7 +39,7 @@ BuildRequires:	libvorbis-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
 BuildRequires:	taglib-devel >= 0.95.031114
 BuildRequires:	unsermake >= 040511
-BuildRequires:	xine-lib-devel >= 1:1.0
+%{?with_xine:BuildRequires:	xine-lib-devel >= 1:1.0}
 BuildRequires:	speex-devel
 BuildRequires:	flac-devel
 BuildRequires:	libmad-devel
@@ -700,6 +701,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_iconsdir}/crystalsvg/*/apps/artscontrol.png
 %{_iconsdir}/crystalsvg/*/apps/artscontrol.svg
 
+%if %{with xine}
 %files artsplugin-xine
 %defattr(644,root,root,755)
 %{_libdir}/kde3/videothumbnail.la
@@ -709,6 +711,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/mcop/xine*PlayObject.mcopclass
 %{_datadir}/apps/videothumbnail
 %{_datadir}/services/videothumbnail.desktop
+%endif
 
 %files audiocd
 %defattr(644,root,root,755)
