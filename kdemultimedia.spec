@@ -580,6 +580,9 @@ cat kmixcfg.lang >> kmix.lang
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post	akode			-p /sbin/ldconfig
+%postun	akode			-p /sbin/ldconfig
+
 %post	arts			-p /sbin/ldconfig
 %postun	arts			-p /sbin/ldconfig
 
