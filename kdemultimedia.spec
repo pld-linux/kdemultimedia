@@ -4,10 +4,10 @@
 %bcond_without	xine	# build without xine support
 
 %define		_state		unstable
-%define		_ver		3.3.91
+%define		_ver		3.3.92
 
-%define		_minlibsevr	9:3.3.91
-%define		_minbaseevr	9:3.3.91
+%define		_minlibsevr	9:3.3.92
+%define		_minbaseevr	9:3.3.92
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
@@ -19,9 +19,8 @@ License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{_ver}.tar.bz2
-# Source0-md5:	73da4e0f9c5c25b441092305b867bb1e
+# Source0-md5:	cf278fa074fa17695eb5f7045e7b1325
 Patch0:		%{name}-llh.patch
-Patch1:		%{name}-akode_includes.patch
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	arts-qt-devel
 BuildRequires:	audiofile-devel
@@ -478,7 +477,6 @@ KDE Media Player - biblioteki wspó³dzielone.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Player;/' \
 	-e 's/Terminal=0/Terminal=false/' \
