@@ -11,7 +11,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}.%{_snap}
-Release:	1
+Release:	2
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
@@ -33,13 +33,14 @@ BuildRequires:	libjpeg-devel
 BuildRequires:	libogg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
-BuildRequires: 	libmusicbrainz-devel
+BuildRequires: 	libmusicbrainz-devel >= 1:2.1.1
 BuildRequires:	libvorbis-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
 BuildRequires:	taglib-devel >= 0.95.031114
 BuildRequires:	unsermake
 BuildRequires:	xine-lib-devel >= 1:1.0
 BuildRequires:	zlib-devel
+
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -205,6 +206,18 @@ Media player.
 %description kaboodle -l pl
 Odtwarzacz multimedialny.
 
+%package kappfinder
+Summary:	Kappfinder multimedia data
+Summary(pl):	Dane o aplikacjach multimedialnych dla kappfindera
+Group:		X11/Applications
+Requires:	kdebase-kappfinder
+
+%description kappfinder
+Kappfinder multimedia data.
+
+%description -l pl kappfinder
+Dane o aplikacjach multimedialnych dla kappfindera.
+
 %package kaudiocreator
 Summary:	Audio Creator
 Summary(pl):	Kreator audio
@@ -333,7 +346,7 @@ Biblioteki obs³ugi MPEG.
 Summary:	MPEG libraries - development files
 Summary(pl):	Biblioteki obs³ugi MPEG - pliki dla programistów
 Group:		X11/Applications
-Requires:	%{name}-mpeglib-examples = %{epoch}:%{version}-%{release}
+##Requires:	%{name}-mpeglib-examples = %{epoch}:%{version}-%{release}
 Obsoletes:	kdemultimedia-mpeglib < 9:3.1.92.031012
 
 %description mpeglib-devel
@@ -870,6 +883,11 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/kcm_audiocd.so
 %{_libdir}/kde3/kio_audiocd.la
 %attr(755,root,root) %{_libdir}/kde3/kio_audiocd.so
+%{_libdir}/kde3/libaudiocd_encoder*.la
+%attr(755,root,root) %{_libdir}/kde3/libaudiocd_encoder*.so
+%{_libdir}/libaudiocdplugins.la
+%attr(755,root,root) %{_libdir}/libaudiocdplugins.so*
+%{_datadir}/config.kcfg/audiocd_*_encoder.kcfg
 %{_datadir}/services/audiocd.protocol
 %{_desktopdir}/kde/audiocd.desktop
 
@@ -901,6 +919,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kde/kaboodle.desktop
 %{_iconsdir}/*/*/apps/kaboodle.*
 
+%files kappfinder
+%defattr(644,root,root,755)
+%{_datadir}/apps/kappfinder/apps/Multimedia/*
+
 %files kaudiocreator
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kaudiocreator
@@ -921,6 +943,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kmid
 %{_libdir}/kde3/libkmidpart.la
 %attr(755,root,root) %{_libdir}/kde3/libkmidpart.so
+%{_libdir}/libkmidlib.la
+%attr(755,root,root) %{_libdir}/libkmidlib.so*
 %{_datadir}/apps/kmid
 %{_datadir}/mimelnk/audio/x-karaoke.desktop
 %{_datadir}/servicetypes/*midi*.desktop
