@@ -22,13 +22,13 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	4.2
+Release:	4.3
 Epoch:		8
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
-Source1:	http://rambo.its.tudelft.nl/~ewald/xine/xine_artsplugin-20030216-1_0_0.tar.bz2
+Source1:	http://rambo.its.tudelft.nl/~ewald/xine/xine_artsplugin-20030220-1_0_0.tar.bz2
 # generated from kde-i18n
 #Source1:	kde-i18n-%{name}-%{version}.tar.bz2
 Patch0:		%{name}-timidity.patch
@@ -561,10 +561,11 @@ echo "Remember to restart artsd !"
 %if %{?_without_xine:0}%{!?_without_xine:1}
 %files xine
 %defattr(644,root,root,755)
-#%%attr(755,root,root) %{_libdir}/kde3/videothumbnail.*
+%{_libdir}/kde3/videothumbnail.la
+%attr(755,root,root) %{_libdir}/kde3/videothumbnail.so
 %{_libdir}/*_xine.la
 %attr(755,root,root) %{_libdir}/*_xine.so
 %{_libdir}/mcop/xinePlayObject.mcopclass
-#%%{_datadir}/apps/videothumbnail
-#%%{_datadir}/services/videothumbnail.desktop
+%{_datadir}/apps/videothumbnail
+%{_datadir}/services/videothumbnail.desktop
 %endif
