@@ -11,6 +11,7 @@ Source0:	ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.
 # generated from kde-i18n
 Source1:	kde-i18n-%{name}-%{version}.tar.bz2
 Patch0:		%{name}-kmidi-alsa.patch
+Patch1:		%{name}-kmix-applet-no-version.patch
 %ifnarch sparc sparc64
 BuildRequires:	alsa-lib-devel
 BuildRequires:	alsa-driver-devel
@@ -200,6 +201,7 @@ Odtwarzacz multimedialny.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %build
 kde_htmldir="%{_htmldir}"; export kde_htmldir
@@ -249,10 +251,6 @@ cat kcmkmix.lang >> kmix.lang
 %find_lang kfile_ogg	--with-kde
 %find_lang kfile_wav	--with-kde
 cat {kfile_m3u,kfile_mp3,kfile_ogg,kfile_wav,kmyapp,koncd}.lang >> %{name}.lang
-
-cd $RPM_BUILD_ROOT%{_libdir}/kde3
-ln -sf kmix_panelapplet.so.1.0.0 kmix_panelapplet.so.1
-cd -
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -386,8 +384,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kmix.??
 %attr(755,root,root) %{_libdir}/kmixctrl.*
 %attr(755,root,root) %{_libdir}/kde3/kcm_kmix.??
-%attr(755,root,root) %{_libdir}/kde3/kmix_panelapplet.so.*
-%attr(755,root,root) %{_libdir}/kde3/kmix_panelapplet.la
+%attr(755,root,root) %{_libdir}/kde3/kmix_panelapplet.??
 %{_applnkdir}/Multimedia/kmix.desktop
 %{_applnkdir}/Settings/KDE/Sound/kmixcfg.desktop
 %{_datadir}/services/kmixctrl_restore.desktop
