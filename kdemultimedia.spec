@@ -15,7 +15,6 @@
 %ifarch	sparc sparcv9 sparc64
 %define		_with_esd	1
 %endif
-%define		_without_alsa	1
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
@@ -290,7 +289,6 @@ AUDIO=""
 %ifnarch sparc sparcv9 sparc64
 AUDIO=oss,$AUDIO
 %endif
-%{!?_without_alsa:AUDIO=alsa,$AUDIO}
 %{?_with_nas:AUDIO=nas,$AUDIO}
 %{?_with_esd:AUDIO=esd,$AUDIO}
 AUDIO=${AUDIO%%,}
@@ -308,8 +306,10 @@ sed -e 's#slots\[CDROM_MAX_SLOTS\]#kde_slots\[CDROM_MAX_SLOTS\]#g' \
 %configure \
  	--with-pam="yes" \
 	--enable-final \
-	--enable-audio=$AUDIO
-
+	--enable-audio=$AUDIO \
+	%{!?_without_alsa:--with-alsa} \
+	%{!?_without_alsa:--with-arts-alsa}
+	
 %{__make}
 
 %install
