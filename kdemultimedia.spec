@@ -2,7 +2,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	2.2.1
-Release:	1
+Release:	2
 Epoch:		6
 License:	GPL
 Vendor:		The KDE Team
@@ -69,6 +69,7 @@ Group:		X11/Applications
 Group(de):	X11/Applikationen
 Group(pl):	X11/Aplikacje
 Requires:	kdelibs = %{version}
+Obsoletes:	aktion
 
 %description aktion
 This is a media player for KDE. Currently it can be only used to play
