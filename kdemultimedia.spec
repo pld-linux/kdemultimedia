@@ -12,7 +12,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}.%{_snap}
-Release:	1
+Release:	2
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
@@ -639,6 +639,13 @@ rm -rf *.lang
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
 	kde_htmldir=%{_kdedocdir}
+
+# Workaround for doc caches (unsermake bug?)
+cd doc
+for i in `find . -name index.cache.bz2`; do
+	install -c -p -m 644 $i $RPM_BUILD_ROOT%{_kdedocdir}/en/$i
+done
+cd -	 
 
 %if %{with i18n}
 if [ -f "%{SOURCE1}" ] ; then
