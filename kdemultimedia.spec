@@ -309,7 +309,7 @@ sed -e 's#slots\[CDROM_MAX_SLOTS\]#kde_slots\[CDROM_MAX_SLOTS\]#g' \
 	--enable-audio=$AUDIO \
 	%{!?_without_alsa:--with-alsa} \
 	%{!?_without_alsa:--with-arts-alsa}
-	
+
 %{__make}
 
 %install
