@@ -10,8 +10,9 @@
 #
 
 %define         _state          stable
-%define         _ver		3.1.3
+%define         _ver		3.1.1
 
+%define		_without_alsa	1
 %ifarch	sparc sparcv9 sparc64
 %define		_with_esd	1
 %endif
@@ -20,40 +21,41 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	1
+Release:	2
 Epoch:		8
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
-# Source0-md5:	da1e05b8284976359cab32f0abf4b87b
+# Source0-md5:	bdd53d23d13adf2419554e995417178e
 # generated from kde-i18n
-#Source1:	kde-i18n-%{name}-%{version}.tar.bz2
+Source1:	ftp://blysk.ds.pg.gda.pl/linux/kde-i18n-package/kde-i18n-%{name}-%{version}.tar.bz2
+# Source1-md5:	83b0712b82e44be9bfedd9d78ddaf4f1
 Patch0:		%{name}-timidity.patch
 %{!?_without_alsa:BuildRequires:	alsa-lib-devel}
 %{!?_without_alsa:BuildRequires:	alsa-driver-devel}
-%{?_with_nas:BuildRequires:	nas-devel >= 1.5}
-%{?_with_esd:BuildRequires:	esound-devel}
 BuildRequires:	arts-devel
 BuildRequires:	arts-kde-devel
 BuildRequires:	cdparanoia-III
 BuildRequires:	cdparanoia-III-devel
+%{?_with_esd:BuildRequires:     esound-devel}
 BuildRequires:	gettext-devel
 BuildRequires:	gtk+-devel
-BuildRequires:	kdelibs-devel >= %{epoch}:%{version}
+BuildRequires:	kdelibs-devel >= %{version}
 BuildRequires:	libart_lgpl-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libogg-devel
-BuildRequires:	libpng-devel >= 1.2.5
+BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libvorbis-devel
-BuildRequires:	sed >= 4.0
-%{!?_without_xine:BuildRequires:	xine-lib-devel >= 1.0b4}
+%{?_with_nas:BuildRequires:	nas-devel >= 1.5}
+BuildRequires:	perl
+%{!?_without_xine:BuildRequires: xine-lib-devel}
 BuildRequires:	zlib-devel
-BuildRequires:	xanim
 Requires:	kdelibs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
+%define		_prefix		/usr/X11R6
 %define         _htmldir        /usr/share/doc/kde/HTML
 
 %define		no_install_post_chrpath		1
@@ -78,7 +80,7 @@ Multimedialne aplikacje KDE. Pakiet zawiera:
  - Kaboodle - odtwarzacz plików multimedialnych
  - KMID - odtwarzacz MIDI,
  - KMIDI - programowy odtwarzacz MIDI,
- - KMIX - mikser audio,
+ - KMIX - mixer audio,
  - KSCD - odtwarzacz CD.
  - Noatun - odtwarzacz plików multimedialnych
 
@@ -102,7 +104,7 @@ kdemultimedia - pliki nag³ówkowe.
 Summary:	KDE Media Player
 Summary(pl):	Odtwarzacz multimedialny dla KDE
 Group:		X11/Applications
-Requires:	kdebase-core >= %{version}
+Requires:	kdelibs >= %{version}
 Obsoletes:	aktion
 
 %description aktion
@@ -117,8 +119,8 @@ WAV.
 Summary:	Arts Tools
 Summary(pl):	Narzêdzia Arts
 Group:		X11/Applications
-Requires:	kdebase-core >= %{version}
-Requires:	%{name}-mpeglib = %{epoch}:%{version}
+Requires:	kdelibs >= %{version}
+Requires:	%{name}-mpeglib = %{version}
 
 %description arts
 Arts Tools.
@@ -157,32 +159,32 @@ Group:		X11/Development/Libraries
 Obsoletes:	kdemultimedia < 3.0.8
 
 %description kfile
-This package adds a fold to konqueror "file properties" dialog window
+This package adds a fold to konqueror "file properities" dialog window
 with file enhanced informations.
 
 %description kfile -l pl
-Ten pakiet dodaje do okna dialogowego "w³a¶ciwo¶ci pliku" konquerora
+Ten pakiet dodaje do okna dialogowego "w³asciwo¶ci pliku" konquerora
 dodatkow± zak³adkê z rozszerzonymi informacjami o pliku.
 
 %package kmid
 Summary:	KDE MIDI Player
 Summary(pl):	Odtwarzacz MIDI dla KDE
 Group:		X11/Applications
-Requires:	kdebase-core >= %{version}
+Requires:	kdelibs >= %{version}
 
 %description kmid
 This is a MIDI player for KDE. It uses sound-card synthetizer or other
 hardware connected to MIDI to play MIDI files.
 
 %description kmid -l pl
-Odtwarzacz MIDI dla KDE. Wykorzystuje tylko syntezator na karcie
+Odtwarzacz MIDI dla KDE. Wykorzystuje tylko syntetyzator na karcie
 muzycznej lub inne urz±dzenia MIDI przy³±czone do niej.
 
 %package kmidi
 Summary:	KDE software MIDI Player
 Summary(pl):	Programowy odtwarzacz MIDI dla KDE
 Group:		X11/Applications
-Requires:	kdebase-core >= %{version}
+Requires:	kdelibs >= %{version}
 
 %description kmidi
 Software MIDI player. It uses GUS patch files and CPU power to create
@@ -196,8 +198,7 @@ do stworzenia dobrej jako¶ci d¼wiêku.
 Summary:	KDE audio mixer
 Summary(pl):	Mixer audio dla KDE
 Group:		X11/Applications
-Requires:	kdebase-core >= %{version}
-Requires:	kdebase-kicker >= %{version}
+Requires:	kdelibs >= %{version}
 
 %description kmix
 Sound mixer application for KDE.
@@ -209,8 +210,8 @@ Mikser audio dla KDE.
 Summary:	KDE sound recorder
 Summary(pl):	Rejestrator d¼wiêku dla KDE
 Group:		X11/Applications
-Requires:	%{name}-arts = %{epoch}:%{version}
-Requires:	kdebase-core >= %{version}
+Requires:	%{name}-arts = %{version}
+Requires:	kdelibs >= %{version}
 
 %description krec
 KDE sound recorder.
@@ -222,10 +223,10 @@ Rejestrator d¼wiêku dla KDE.
 Summary:	KDE CD Player
 Summary(pl):	Odtwarzacz CD dla KDE
 Group:		X11/Applications
-Requires:	kdebase-core >= %{version}
+Requires:	kdelibs >= %{version}
 
 %description kscd
-CD Player with CDDB support. It can automatically update its CD
+CD Player with CDDB support. It can automaticaly update its CD
 database with the Internet and show graphical interpretation of played
 sounds.
 
@@ -238,7 +239,7 @@ graficzn± interpretacjê granych d¼wiêków.
 Summary:	MPEG lib
 Summary(pl):	MPEG lib
 Group:		X11/Applications
-Requires:	kdebase-core >= %{version}
+Requires:	kdelibs >= %{version}
 Requires:	arts >= 1.0.0
 
 %description mpeglib
@@ -251,7 +252,7 @@ MPEG lib.
 Summary:	KDE Media Player
 Summary(pl):	KDE Media Player - odtwarzacz plików multimedialnych
 Group:		X11/Applications
-Requires:	kdebase-core >= %{version}
+Requires:	kdelibs >= %{version}
 Requires:	arts >= 1.0.0
 
 %description noatun
@@ -264,9 +265,9 @@ KDE Media Player - odtwarzacz plików multimedialnych.
 Summary:	Xine Plug-in
 Summary(pl):	Wtyczka do Xine
 Group:		X11/Applications
-Requires:	kdebase-core >= %{version}
+Requires:	kdelibs >= %{version}
 Requires:	arts >= 1.0.0
-Requires:	xine-lib >= 1.0b4
+Requires:	xine-lib
 
 %description xine
 Xine Plug-in.
@@ -289,33 +290,33 @@ AUDIO=""
 %ifnarch sparc sparcv9 sparc64
 AUDIO=oss,$AUDIO
 %endif
+%{!?_without_alsa:AUDIO=alsa,$AUDIO}
 %{?_with_nas:AUDIO=nas,$AUDIO}
 %{?_with_esd:AUDIO=esd,$AUDIO}
 AUDIO=${AUDIO%%,}
 
-for plik in `find ./ -name *.desktop` ; do
-	echo $plik
-	sed -i -e 's/\[nb\]/\[no\]/g' $plik
-done
-
-# kdemultimedia includes kernel headers which breaks thins, ugly workaround
+# kdemultimedia includes kernel headers which breaks things
+# with PLD kernels 2.4.x, below workaround  by misiek
 mkdir linux
 sed -e 's#slots\[CDROM_MAX_SLOTS\]#kde_slots\[CDROM_MAX_SLOTS\]#g' \
 /usr/include/linux/cdrom.h > linux/cdrom.h
 
+for plik in `find ./ -name \*.desktop` ; do
+		echo $plik
+		perl -pi -e "s/\[nb\]/\[no\]/g" $plik
+done
+
 %configure \
  	--with-pam="yes" \
 	--enable-final \
-	--enable-audio=$AUDIO \
-	%{!?_without_alsa:--with-alsa} \
-	%{!?_without_alsa:--with-arts-alsa}
+	--enable-audio=$AUDIO
 
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
-%{__make} install DESTDIR=$RPM_BUILD_ROOT
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT
 
 mv $RPM_BUILD_ROOT%{_bindir}/{timidity,ktimidity}
 
@@ -335,32 +336,41 @@ cd $RPM_BUILD_ROOT%{_datadir}/apps/kmidi/config
 ln -s gravis.cfg GUSpatches
 cd -
 
-#bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
+bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 
-#%find_lang kfile_m3u	--with-kde
-#%find_lang kfile_mp3	--with-kde
-#%find_lang kfile_ogg	--with-kde
-#%find_lang kfile_wav	--with-kde
-#cat {kfile_m3u,kfile_mp3,kfile_ogg,kfile_wav,kmyapp,koncd}.lang \
-#    >> %{name}.lang
-%find_lang aktion	--with-kde
-%find_lang artsbuilder	--with-kde
-cat artsbuilder.lang > arts.lang
-#%find_lang artscontrol	--with-kde
-#cat artscontrol.lang >> arts.lang
-%find_lang kaboodle	--with-kde
-%find_lang kmid		--with-kde
-%find_lang kmidi	--with-kde
-%find_lang kmix		--with-kde
-%find_lang kmixcfg	--with-kde
-cat kmixcfg.lang >> kmix.lang
-#%find_lang kcmkmix	--with-kde
-#cat kcmkmix.lang >> kmix.lang
-#%find_lang kmyapp	--with-kde
-#%find_lang koncd	--with-kde
-%find_lang krec		--with-kde
-%find_lang kscd		--with-kde
-%find_lang noatun	--with-kde
+:> kfile.lang
+programs="kfile_au kfile_avi kfile_m3u kfile_mp3 kfile_ogg kfile_wav"
+for i in $programs; do
+        %find_lang $i --with-kde
+        cat $i.lang >> kfile.lang
+done
+
+:> arts.lang
+programs="artsbuilder artscontrol artsmodules desktop_kdemultimedia"
+for i in $programs; do
+	%find_lang $i --with-kde
+	cat $i.lang >> arts.lang
+done
+
+%find_lang kmix			--with-kde
+%find_lang kmixcfg		--with-kde
+%find_lang kcmkmix		--with-kde
+cat {kmixcfg,kcmkmix}.lang >> kmix.lang
+
+%find_lang kaudiocreator	--with-kde
+%find_lang kcmaudiocd		--with-kde
+%find_lang kio_audiocd		--with-kde
+cat {kcmaudiocd,kio_audiocd}.lang >> kaudiocreator.lang
+
+%find_lang kaboodle		--with-kde
+%find_lang kmid			--with-kde
+%find_lang kmidi		--with-kde
+%find_lang krec			--with-kde
+%find_lang kscd			--with-kde
+%find_lang noatun		--with-kde
+%find_lang aktion		--with-kde
+#%find_lang kmyapp		--with-kde
+#%find_lang koncd		--with-kde
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -441,11 +451,10 @@ echo "Remember to restart artsd !"
 %attr(755,root,root) %{_libdir}/kde3/libkaboodlepart.so
 %{_datadir}/apps/kaboodle
 %{_datadir}/services/kaboodle_component.desktop
-%{_datadir}/services/kaboodleengine.desktop
 %{_applnkdir}/Multimedia/kaboodle.desktop
 %{_pixmapsdir}/*/*/apps/kaboodle.*
 
-%files kaudiocreator
+%files kaudiocreator -f kaudiocreator.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kaudiocreator
 %{_libdir}/kde3/kcm_audiocd.la
@@ -458,7 +467,7 @@ echo "Remember to restart artsd !"
 %{_applnkdir}/Settings/KDE/Sound/audiocd.desktop
 %{_pixmapsdir}/[!l]*/*/*/kaudiocreator.png
 
-%files kfile
+%files kfile -f kfile.lang
 %defattr(644,root,root,755)
 %{_libdir}/kde3/kfile_*.la
 %attr(755,root,root) %{_libdir}/kde3/kfile_*.so
