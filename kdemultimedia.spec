@@ -13,7 +13,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	1
+Release:	2
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
@@ -294,6 +294,7 @@ Summary:	Audio Creator
 Summary(pl):	Kreator audio
 Group:		X11/Applications
 Requires:	kdebase-core >= %{_minbaseevr}
+Requires:	kdemultimedia-audiocd >= %{_ver}
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
 
 %description kaudiocreator
