@@ -272,7 +272,8 @@ Xine Plug-in.
 Wtyczka do Xine.
 
 %prep
-%setup -q -a1
+%setup -q
+
 %patch0 -p1
 
 %build
