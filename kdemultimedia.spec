@@ -20,6 +20,7 @@ Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{_ver}.tar.bz2
 #Source0:	http://ep09.pld-linux.org/~djurban/kde/%{name}-%{version}.tar.bz2
 Patch100:	%{name}-branch.diff
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
+BuildRequires:	arts-qt-devel
 BuildRequires:	audiofile-devel
 BuildRequires:	cdparanoia-III-devel
 BuildRequires:	gettext-devel
