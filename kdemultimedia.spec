@@ -156,10 +156,12 @@ Zaawansowane narzêdzie konfiguracyjne dla arts, zawiera: okno zakresu
 FFT, listê obs³ugiwanych typów plików, modu³y zarz±dzania klientami,
 midi oraz ¶rodowiskiem, a tak¿e monitor stanu serwera d¼wiêku.
 
-#%package artsplugin-audiofile #Summary: Audiofile Plug-in
-#Summary(pl): Wtyczka do Audiofile #Group: X11/Applications #Requires:
-%{name}-arts = %{epoch}:%{version}-%{release} #Obsoletes:
-kdemultimedia-arts < 9:3.1.92.021012
+#%package artsplugin-audiofile 
+#Summary: Audiofile Plug-in
+#Summary(pl): Wtyczka do Audiofile 
+#Group: X11/Applications 
+#Requires: %{name}-arts = %{epoch}:%{version}-%{release} 
+#Obsoletes:kdemultimedia-arts < 9:3.1.92.021012
 
 #%description artsplugin-audiofile #Audiofile Plug-in.
 
