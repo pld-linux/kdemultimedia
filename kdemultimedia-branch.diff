@@ -1,0 +1,16 @@
+diff -urN -x CVS kdemultimedia.orig/juk/filerenamer.cpp kdemultimedia/juk/filerenamer.cpp
+--- kdemultimedia.orig/juk/filerenamer.cpp	Sun Nov  2 01:23:01 2003
++++ kdemultimedia/juk/filerenamer.cpp	Sun Jun  6 15:47:57 2004
+@@ -138,8 +138,11 @@
+         value.replace(QDir::separator(), "");
+     }
+ 
++    if((type == Track) && needValue && (value.toUInt() == 0))
++        return QString::null;
++
+     if((needValue) && value.isEmpty())
+-        return QString();
++        return QString::null;
+ 
+     token.replace("%s", value);
+     return token;
