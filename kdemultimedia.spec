@@ -98,7 +98,7 @@ formats:
 - ogg vorbis (.ogg)
 - flac
 - speex
-- wav
+- WAV
 
 
 %description akode -l pl
@@ -109,7 +109,7 @@ formatów:
 - ogg vorbis (.ogg)
 - flac
 - speex
-- wav
+- WAV
 
 
 %package arts
@@ -314,12 +314,12 @@ Obsoletes:	kdemultimedia < 8:3.0.8
 %description kfile
 This package adds a fold to konqueror "file properties" dialog window
 with file enhanced informations for avi, au, flac, m3u, MP3, mpc, ogg,
-sid and wav files.
+sid and WAV files.
 
 %description kfile -l pl
 Ten pakiet dodaje do okna dialogowego "w³a¶ciwo¶ci pliku" konquerora
 dodatkow± zak³adkê z rozszerzonymi informacjami o plikach avi, au,
-flac, MP3, m3u, mpc, ogg, sid and wav.
+flac, MP3, m3u, mpc, ogg, sid and WAV.
 
 %package kmid
 Summary:	KDE MIDI Player
