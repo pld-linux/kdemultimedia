@@ -87,6 +87,7 @@ Requires:	kdelibs-devel >= 8:%{version}
 Requires:	%{name}-arts = %{epoch}:%{version}
 Requires:	%{name}-mpeglib = %{epoch}:%{version}
 Requires:	%{name}-noatun = %{epoch}:%{version}
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description devel
 kdemultimedia - headers.
@@ -116,6 +117,7 @@ Group:		X11/Applications
 Requires(post):	/sbin/ldconfig
 Requires:	kdebase-core >= 8:%{version}
 Requires:	%{name}-mpeglib = %{epoch}:%{version}
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description arts
 Arts Tools.
@@ -127,6 +129,7 @@ Narzêdzia Arts.
 Summary:	Media player
 Summary(pl):	Odtwarzacz multimedialny
 Group:		X11/Applications
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description kaboodle
 Media player.
@@ -138,6 +141,7 @@ Odtwarzacz multimedialny.
 Summary:	Audio Creator
 Summary(pl):	Kreator audio
 Group:		X11/Applications
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description kaudiocreator
 CD ripper and sound encoder frontend. Already provides audiocd
@@ -166,6 +170,7 @@ Summary:	KDE MIDI Player
 Summary(pl):	Odtwarzacz MIDI dla KDE
 Group:		X11/Applications
 Requires:	kdebase-core >= 8:%{version}
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description kmid
 This is a MIDI player for KDE. It uses sound-card synthetizer or other
@@ -180,6 +185,7 @@ Summary:	KDE software MIDI Player
 Summary(pl):	Programowy odtwarzacz MIDI dla KDE
 Group:		X11/Applications
 Requires:	kdebase-core >= 8:%{version}
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description kmidi
 Software MIDI player. It uses GUS patch files and CPU power to create
@@ -195,6 +201,7 @@ Summary(pl):	Mixer audio dla KDE
 Group:		X11/Applications
 Requires:	kdebase-core >= 8:%{version}
 Requires:	kdebase-kicker >= 8:%{version}
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description kmix
 Sound mixer application for KDE.
@@ -208,6 +215,7 @@ Summary(pl):	Rejestrator d¼wiêku dla KDE
 Group:		X11/Applications
 Requires:	%{name}-arts = %{epoch}:%{version}
 Requires:	kdebase-core >= 8:%{version}
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description krec
 KDE sound recorder.
@@ -220,6 +228,7 @@ Summary:	KDE CD Player
 Summary(pl):	Odtwarzacz CD dla KDE
 Group:		X11/Applications
 Requires:	kdebase-core >= 8:%{version}
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description kscd
 CD Player with CDDB support. It can automatically update its CD
@@ -237,6 +246,7 @@ Summary(pl):	MPEG lib
 Group:		X11/Applications
 Requires:	kdebase-core >= 8:%{version}
 Requires:	arts >= 12:1.0.0
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description mpeglib
 MPEG lib.
@@ -250,6 +260,7 @@ Summary(pl):	KDE Media Player - odtwarzacz plików multimedialnych
 Group:		X11/Applications
 Requires:	kdebase-core >= %{version}
 Requires:	arts >= 12:1.0.0
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description noatun
 KDE Media Player.
@@ -264,6 +275,7 @@ Group:		X11/Applications
 Requires:	kdebase-core >= %{version}
 Requires:	arts >= 12:1.0.0
 Requires:	xine-lib >= 1.0b4
+Obsoletes:	kdemultimedia < 3.0.8
 
 %description xine
 Xine Plug-in.
