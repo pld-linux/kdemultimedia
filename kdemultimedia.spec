@@ -25,6 +25,7 @@ BuildRequires:	audiofile-devel
 BuildRequires:	cdparanoia-III-devel
 BuildRequires:	gettext-devel
 BuildRequires:	kdelibs-devel >= 9:%{version}
+BuildRequires:	lame-libs-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libogg-devel
 BuildRequires:	libpng-devel
