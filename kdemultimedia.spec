@@ -142,7 +142,7 @@ Summary(pl):	Wtyczka do Xine
 Group:		X11/Applications
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 Requires:	xine-lib >= 1:1.0
-Obsoletes:	%{name}-xine
+Obsoletes:	kdemultimedia-xine
 
 %description artsplugin-xine
 Xine Plug-in.
@@ -156,7 +156,7 @@ Summary(pl):	Protokó³ audiocd dla konquerora
 Group:		X11/Applications
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
 Requires:	konqueror >= 9:%{version}
-Obsoletes:	%{name}-kaudiocreator < 9:3.1.92.031014
+Obsoletes:	kdemultimedia-kaudiocreator < 9:3.1.92.031014
 
 %description audiocd
 This package provides audiocd protocol for konqueror.
@@ -170,7 +170,7 @@ Summary(pl):	Biblioteka cddb pod KDE
 Group:		X11/Applications
 Requires:	kdebase-core >= 9:%{version}
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
-Obsoletes:	%{name}-libkcddb < 9:3.1.92.031014
+Obsoletes:	kdemultimedia-libkcddb < 9:3.1.92.031014
 
 %description cddb
 CDDB control.
@@ -224,7 +224,7 @@ Nak³adka na CD ripper i koder d¼wiêku.
 Summary:	Audio file formats enhanced information
 Summary(pl):	Rozszerzone informacje o plikach d¼wiêkowych
 Group:		X11/Development/Libraries
-Requires:	konqueror >= %{version}
+Requires:	konqueror >= 9:%{version}
 Obsoletes:	kdemultimedia < 8:3.0.8
 
 %description kfile
@@ -382,18 +382,6 @@ KDE Media Player - shared libs.
 %description noatun-libs -l pl
 KDE Media Player - biblioteki wspó³dzielone.
 
-%package i18n
-Summary:	Common internationalization and localization files for kdemultimedia
-Summary(pl):	Wspó³dzielone pliki umiêdzynarodawiaj±ce dla kdemultimedia
-Group:		X11/Applications
-Requires:	kdelibs-i18n >= 9:%{version}
-
-%description i18n
-Common internationalization and localization files for kdemultimedia.
-
-%description i18n -l pl
-Wspó³dzielone pliki umiêdzynarodawiaj±ce dla kdemultimedia.
-
 %package artsbuilder-i18n
 Summary:	Internationalization and localization files for artsbuilder
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla artsbuildera
@@ -425,6 +413,7 @@ Summary:	Internationalization and localization files for arts
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla arts
 Group:		X11/Applications
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
+Requires:	kdelibs-i18n >= 9:%{version}
 
 %description arts-i18n
 Internationalization and localization files for arts.
@@ -558,6 +547,7 @@ Summary:	Internationalization and localization files for libkcddb
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla libkcddb
 Group:		X11/Applications
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
+Requires:	kdelibs-i18n >= 9:%{version}
 
 %description libkcddb-i18n
 Internationalization and localization files for libkcddb.
