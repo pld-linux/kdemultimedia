@@ -12,9 +12,9 @@
 %define         _state          stable
 %define         _ver		3.1.1
 
+%define		_without_alsa	1
 %ifarch	sparc sparcv9 sparc64
 %define		_with_esd	1
-%define		_without_alsa	1
 %endif
 
 Summary:	K Desktop Environment - multimedia applications
@@ -291,13 +291,6 @@ AUDIO=oss,$AUDIO
 %{?_with_esd:AUDIO=esd,$AUDIO}
 AUDIO=${AUDIO%%,}
 
-# kdemultimedia includes kernel headers which breaks thins, ugly workaround
-mkdir linux
-sed -e 's#slots\[CDROM_MAX_SLOTS\]#kde_slots\[CDROM_MAX_SLOTS\]#g' \
-/usr/include/linux/cdrom.h > linux/cdrom.h
-
-# echo $AUDIO
-%{__make} -f Makefile.cvs
 %configure \
  	--with-pam="yes" \
 	--enable-final \
@@ -558,11 +551,11 @@ echo "Remember to restart artsd !"
 %if %{?_without_xine:0}%{!?_without_xine:1}
 %files xine
 %defattr(644,root,root,755)
-%{_libdir}/kde3/videothumbnail.la
-%attr(755,root,root) %{_libdir}/kde3/videothumbnail.so
+#%{_libdir}/kde3/videothumbnail.la
+#%attr(755,root,root) %{_libdir}/kde3/videothumbnail.so
 %{_libdir}/*_xine.la
 %attr(755,root,root) %{_libdir}/*_xine.so
 %{_libdir}/mcop/xinePlayObject.mcopclass
-%{_datadir}/apps/videothumbnail
-%{_datadir}/services/videothumbnail.desktop
+#%{_datadir}/apps/videothumbnail
+#%{_datadir}/services/videothumbnail.desktop
 %endif
