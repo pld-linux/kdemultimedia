@@ -1,3 +1,7 @@
+# Conditional build:
+# --without	xine	Set this option in case You haven't
+#			xine-lib to ommit xine plug-in building.
+# 
 
 %define         _state          unstable
 %define         _kdever         kde-3.1-beta1
@@ -32,6 +36,7 @@ BuildRequires:	libogg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libvorbis-devel
+%{!?_without_xine:BuildRequires: xine-lib-devel}
 BuildRequires:	zlib-devel
 Requires:	kdelibs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -240,6 +245,19 @@ KDE Media Player.
 
 %description noatun -l pl
 KDE Media Player.
+
+%package xine
+Summary:	Xine Plug-in
+Summary(pl):	Plug-in do Xine
+Group:		X11/Applications
+Requires:	kdelibs = %{version}
+Requires:	arts >= 1.0.0
+
+%description xine
+Xine Plug-in
+
+%description xine -l pl
+Plug-in do Xine
 
 %prep
 %setup -q
@@ -479,3 +497,12 @@ echo "Remember to restart artsd !"
 %{_datadir}/apps/noatun*
 %{_pixmapsdir}/*/*/*/noatun.png
 %{_applnkdir}/Multimedia/noatun.desktop
+
+%if %{?_without_xine:0}%{!?_without_xine:1}
+%files xine
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/kde3/videothumbnail.*
+%{_libdir}/mcop/xinePlayObject.mcopclass
+%{_datadir}/apps/videothumbnail
+%{_datadir}/services/videothumbnail.desktop
+%endif
