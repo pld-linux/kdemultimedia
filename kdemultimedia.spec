@@ -17,7 +17,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	1.1
+Release:	1.2
 Epoch:		8
 License:	GPL
 Vendor:		The KDE Team
@@ -26,7 +26,7 @@ Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.
 # Source0-md5:	da1e05b8284976359cab32f0abf4b87b
 # generated from kde-i18n
 Source1:	ftp://blysk.ds.pg.gda.pl/linux/kde-i18n-package/%{version}/kde-i18n-%{name}-%{version}.tar.bz2
-# Source1-md5:	d47d1704df8496cef404d5f253ba102b
+# Source1-md5:	bf74bdf16415c1e71cf77339756bc64d
 Patch0:		%{name}-timidity.patch
 Patch1:		%{name}-qt-linuxcdrom.patch
 %{!?_without_alsa:BuildRequires:	alsa-lib-devel}
@@ -346,7 +346,7 @@ cd $RPM_BUILD_ROOT%{_datadir}/apps/kmidi/config
 ln -s gravis.cfg GUSpatches
 cd -
 
-#bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
+bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 
 #%find_lang kfile_m3u	--with-kde
 #%find_lang kfile_mp3	--with-kde
