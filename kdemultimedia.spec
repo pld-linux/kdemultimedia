@@ -12,7 +12,7 @@
 
 %define         _state          snapshots
 %define         _ver		3.2
-%define         _snap		030403
+%define         _snap		030406
 
 %ifarch	sparc sparcv9 sparc64
 %define		_with_esd	1
@@ -105,6 +105,18 @@ kdemultimedia - headers.
 
 %description devel -l pl
 kdemultimedia - pliki nag³ówkowe.
+
+%package static
+Summary:	kdemultimedia - static libraries
+Summary(pl):	kdemultimedia - biblioteki statyczne
+Group:		X11/Development/Libraries
+Requires:	%{name}-devel = %{version}
+
+%description static
+kdemultimedia - static libraries.
+
+%description static -l pl
+kdemultimedia - biblioteki statyczne.
 
 %package aktion
 Summary:	KDE Media Player
@@ -418,6 +430,10 @@ echo "Remember to restart artsd !"
 %{_includedir}/libkcddb/*
 %{_includedir}/mpeglib*
 %{_includedir}/noatun
+
+%files static
+%defattr(644,root,root,755)
+%{_libdir}/libworkmanaudio.a
 
 %files aktion -f aktion.lang
 %defattr(644,root,root,755)
