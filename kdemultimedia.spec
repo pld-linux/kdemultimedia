@@ -556,6 +556,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libaudiofilearts.so
 %{_libdir}/mcop/audiofilearts.mcopclass
 %{_libdir}/mcop/audiofilearts.mcoptype
+%{_iconsdir}/crystalsvg/*/actions/arts[!bc]*.png
+%{_iconsdir}/crystalsvg/*/actions/arts[!bc]*.svg
 
 %files artsbuilder -f artsbuilder.lang
 %defattr(644,root,root,755)
@@ -575,6 +577,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kicker/applets/artscontrolapplet.desktop
 %{_desktopdir}/kde/artscontrol.desktop
 %{_iconsdir}/crystalsvg/*/apps/artscontrol.png
+%{_iconsdir}/crystalsvg/*/apps/artscontrol.svg
 
 %files artsplugin-xine
 %defattr(644,root,root,755)
@@ -674,7 +677,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files kscd -f kscd.lang
 %defattr(644,root,root,755)
-#%%attr(755,root,root) %{_bindir}/cddaslave
+%attr(755,root,root) %{_bindir}/cddaslave
 %attr(755,root,root) %{_bindir}/kscd
 %attr(755,root,root) %{_bindir}/workman2cddb.pl
 %{_desktopdir}/kde/kscd.desktop
