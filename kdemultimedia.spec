@@ -482,7 +482,7 @@ Pliki umiêdzynarodawiaj±ce dla artsbuilder.
 Summary:	Internationalization and localization files for artscontrol
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla artscontrol
 Group:	X11/Applications
-Requires:	%{name}-artsbuilder = %{epoch}:%{version}-%{release}
+Requires:	%{name}-artscontrol = %{epoch}:%{version}-%{release}
 Obsoletes:	kde-i18n-Affrikaans
 Obsoletes:	kde-i18n-Afrikaans
 Obsoletes:	kde-i18n-Arabic
@@ -557,7 +557,7 @@ Pliki umiêdzynarodawiaj±ce dla artscontrol.
 Summary:	Internationalization and localization files for arts
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla arts
 Group:	X11/Applications
-Requires:	%{name}-artsbuilder = %{epoch}:%{version}-%{release}
+Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 Obsoletes:	kde-i18n-Affrikaans
 Obsoletes:	kde-i18n-Afrikaans
 Obsoletes:	kde-i18n-Arabic
@@ -627,10 +627,6 @@ Internationalization and localization files for arts.
 
 %description -l pl arts-i18n
 Pliki umiêdzynarodawiaj±ce dla arts.
-
-
-
-
 
 %package juk-i18n
 Summary:	Internationalization and localization files for juk
@@ -711,7 +707,6 @@ Pliki umiêdzynarodawiaj±ce dla juk.
 Summary:	Common internationalization and localization files for kdemultimedia
 Summary(pl):	Wspó³dzielone pliki umiêdzynarodawiaj±ce dla kdemultimedia
 Group:	X11/Applications
-Requires:	%{name}-artsbuilder = %{epoch}:%{version}-%{release}
 Obsoletes:	kde-i18n-Affrikaans
 Obsoletes:	kde-i18n-Afrikaans
 Obsoletes:	kde-i18n-Arabic
@@ -1238,7 +1233,7 @@ Pliki umiêdzynarodawiaj±ce dla noatun.
 Summary:	Internationalization and localization files for kfile
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kfile
 Group:	X11/Applications
-Requires:	%{name}-noatun = %{epoch}:%{version}-%{release}
+Requires:	%{name}-kfile = %{epoch}:%{version}-%{release}
 Obsoletes:	kde-i18n-Affrikaans
 Obsoletes:	kde-i18n-Afrikaans
 Obsoletes:	kde-i18n-Arabic
@@ -1313,7 +1308,7 @@ Pliki umiêdzynarodawiaj±ce dla kfile.
 Summary:	Internationalization and localization files for audiocd
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla audiocd
 Group:	X11/Applications
-Requires:	%{name}-noatun = %{epoch}:%{version}-%{release}
+Requires:	%{name}-audiocd = %{epoch}:%{version}-%{release}
 Obsoletes:	kde-i18n-Affrikaans
 Obsoletes:	kde-i18n-Afrikaans
 Obsoletes:	kde-i18n-Arabic
@@ -1388,7 +1383,7 @@ Pliki umiêdzynarodawiaj±ce dla audiocd.
 Summary:	Internationalization and localization files for libkcddb
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla libkcddb
 Group:	X11/Applications
-Requires:	%{name}-artsbuilder = %{epoch}:%{version}-%{release}
+Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
 Obsoletes:	kde-i18n-Affrikaans
 Obsoletes:	kde-i18n-Afrikaans
 Obsoletes:	kde-i18n-Arabic
@@ -1463,7 +1458,7 @@ Pliki umiêdzynarodawiaj±ce dla libkcddb.
 Summary:	Internationalization and localization files for kaudiocreator
 Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kaudiocreator
 Group:	X11/Applications
-Requires:	%{name}-artsbuilder = %{epoch}:%{version}-%{release}
+Requires:	%{name}-kaudiocreator = %{epoch}:%{version}-%{release}
 Obsoletes:	kde-i18n-Affrikaans
 Obsoletes:	kde-i18n-Afrikaans
 Obsoletes:	kde-i18n-Arabic
