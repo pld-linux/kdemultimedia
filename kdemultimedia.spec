@@ -12,7 +12,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	3
+Release:	4
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
@@ -480,53 +480,52 @@ KDE Media Player - biblioteki wspó³dzielone.
 %patch0 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Player;/' \
-juk/juk.desktop \
-kscd/kscd.desktop
-
+	-e 's/Terminal=0/Terminal=false/' \
+	juk/juk.desktop \
+	kscd/kscd.desktop
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Midi;/' \
-kmid/kmid.desktop \
-
+	-e 's/Terminal=0/Terminal=false/' \
+	kmid/kmid.desktop
 %{__sed} -i -e 's/Categories=.*/Categories=Audio;Midi;/' \
-kappfinder-data/meterbridge.desktop
-
+	kappfinder-data/meterbridge.desktop
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;AudioVideo;Player;/' \
-noatun/noatun.desktop \
-kaboodle/kaboodle.desktop
-
+	-e 's/Terminal=0/Terminal=false/' \
+	noatun/noatun.desktop \
+	kaboodle/kaboodle.desktop
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Mixer;/' \
-kmix/kmix.desktop
-
+	-e 's/Terminal=0/Terminal=false/' \
+	kmix/kmix.desktop
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Recorder;/' \
-krec/krec.desktop \
-kaudiocreator/kaudiocreator.desktop 
-
+	-e '/\[Desktop Entry\]/aEncoding=UTF-8' -e 's/Terminal=0/Terminal=false/' \
+	krec/krec.desktop
+%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Recorder;/' \
+	-e 's/Terminal=0/Terminal=false/' \
+	kaudiocreator/kaudiocreator.desktop 
 %{__sed} -i -e 's/Categories=.*/Categories=Audio;Recorder;/' \
-kappfinder-data/galan.desktop \
-kappfinder-data/mixxx.desktop \
-kappfinder-data/rezound.desktop
-
+	kappfinder-data/galan.desktop \
+	kappfinder-data/mixxx.desktop \
+	kappfinder-data/rezound.desktop
 %{__sed} -i -e 's/Categories=.*/Categories=Audio;Sequencer;/' \
-kappfinder-data/hydrogen.desktop
-
+	kappfinder-data/hydrogen.desktop
 %{__sed} -i -e 's/Categories=.*/Categories=Audio;/' \
-kappfinder-data/ecamegapedal.desktop \
-kappfinder-data/freebirth.desktop \
-kappfinder-data/amsynth.desktop \
-kappfinder-data/vkeybd.desktop \
-kappfinder-data/jack-rack.desktop \
-kappfinder-data/jamin.desktop \
-kappfinder-data/ardour.desktop \
-kappfinder-data/qsynth.desktop \
-kappfinder-data/qjackctl.desktop \
-kappfinder-data/muse.desktop \
-kappfinder-data/freqtweak.desktop \
-kappfinder-data/djplay.desktop \
-kappfinder-data/ams.desktop \
-kappfinder-data/zynaddsubfx.desktop  
-
+	kappfinder-data/ecamegapedal.desktop \
+	kappfinder-data/freebirth.desktop \
+	kappfinder-data/amsynth.desktop \
+	kappfinder-data/vkeybd.desktop \
+	kappfinder-data/jack-rack.desktop \
+	kappfinder-data/jamin.desktop \
+	kappfinder-data/ardour.desktop \
+	kappfinder-data/qsynth.desktop \
+	kappfinder-data/qjackctl.desktop \
+	kappfinder-data/muse.desktop \
+	kappfinder-data/freqtweak.desktop \
+	kappfinder-data/djplay.desktop \
+	kappfinder-data/ams.desktop \
+	kappfinder-data/zynaddsubfx.desktop  
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;/' \
-arts/tools/artscontrol.desktop \
-arts/builder/artsbuilder.desktop
+	-e 's/Terminal=0/Terminal=false/' \
+	arts/tools/artscontrol.desktop \
+	arts/builder/artsbuilder.desktop
 
 for i in `find ./mpeglib/ -name Makefile.am`; do echo KDE_OPTIONS=nofinal >> ${i} ; done
 
