@@ -292,6 +292,12 @@ AUDIO=oss,$AUDIO
 %{?_with_esd:AUDIO=esd,$AUDIO}
 AUDIO=${AUDIO%%,}
 
+# kdemultimedia includes kernel headers which breaks things
+# with PLD kernels 2.4.x, below workaround  by misiek
+# mkdir linux
+# sed -e 's#slots\[CDROM_MAX_SLOTS\]#kde_slots\[CDROM_MAX_SLOTS\]#g' \
+# /usr/include/linux/cdrom.h > linux/cdrom.h
+
 %configure \
  	--with-pam="yes" \
 	--enable-final \
