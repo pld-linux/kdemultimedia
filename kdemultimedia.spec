@@ -29,7 +29,6 @@ Source1:        http://ep09.pld-linux.org/~djurban/kde/i18n/kde-i18n-%{name}-%{v
 %endif
 # Patch0:		%{name}-no_pedantic.patch
 # Patch1:		%{name}-cdda_check.patch
-BuildRequires:	Xaw3d-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	audiofile-devel
 BuildRequires:	cdparanoia-III-devel
