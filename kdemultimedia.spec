@@ -1,6 +1,6 @@
 
-%define         _state          unstable                                        
-%define         _kdever         kde-3.1-beta1  
+%define         _state          unstable
+%define         _kdever         kde-3.1-beta1
 %define         _debug	        full
 
 Summary:	K Desktop Environment - multimedia applications
@@ -126,12 +126,12 @@ Summary(pl):	Kreator audio
 Group:		X11/Applications
 
 %description kaudiocreator
-CD ripper and sound encoder frontend.
-Already provides audiocd protocol for konqueror.
+CD ripper and sound encoder frontend. Already provides audiocd
+protocol for konqueror.
 
 %description kaudiocreator -l pl
-Nak³adka na CD ripper i enkoder d¼wiêku.
-Dostarcza równie¿ protokó³ audiocd do konquerora.
+Nak³adka na CD ripper i enkoder d¼wiêku. Dostarcza równie¿ protokó³
+audiocd do konquerora.
 
 %package kfile
 Summary:	Audio file formats enhanced information
@@ -140,13 +140,12 @@ Group:		X11/Development/Libraries
 Obsoletes:	kdemultimedia < 3.0.8
 
 %description kfile
-This package adds a fold to konqueror "file properities"
-dialog window with file enhanced informations. 
+This package adds a fold to konqueror "file properities" dialog window
+with file enhanced informations.
 
 %description kfile -l pl
-Ten pakiet dodaje do okna dialogowego "w³asciwo¶ci pliku" 
-konquerora dodatkow± zak³adkê z rozszerzonymi informacjami
-o pliku.
+Ten pakiet dodaje do okna dialogowego "w³asciwo¶ci pliku" konquerora
+dodatkow± zak³adkê z rozszerzonymi informacjami o pliku.
 
 %package kmid
 Summary:	KDE MIDI Player
