@@ -1,17 +1,16 @@
 #
 # Conditional build:
 %bcond_without	alsa	# build without ALSA support
-%bcond_without	i18n	# don't build i18n per module subpackages
 %bcond_without	xine	# build without xine support
 #
 %define		_state		stable
-%define		_ver		3.2.2
+%define		_ver		3.2.3
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	2
+Release:	0.1
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
@@ -19,11 +18,7 @@ Group:		X11/Applications
 Source0:	http://download.kde.org/%{_state}/%{_ver}/src/%{name}-%{_ver}.tar.bz2
 # Source0-md5:	062249563cbf66d77e61b41e5126f806
 #Source0:	http://ep09.pld-linux.org/~djurban/kde/%{name}-%{version}.tar.bz2
-%if %{with i18n}
-Source1:	kde-i18n-%{name}-%{version}.tar.bz2
-# Source1-md5:	70b3e8e15eea6e5c40df1b35c62aa8a5
-%endif
-# Patch0:		%{name}-3.2branch.diff
+Patch100:		%{name}-branch.diff
 # Patch0:		%{name}-no_pedantic.patch
 # Patch1:		%{name}-cdda_check.patch
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
@@ -47,7 +42,6 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %description
 KDE multimedia applications. Package includes:
 
- - Aktion - AVI player
  - Arts - arts tools
  - Kaboodle - a media player,
  - KMID - MIDI player,
@@ -59,7 +53,6 @@ KDE multimedia applications. Package includes:
 %description -l pl
 Multimedialne aplikacje KDE. Pakiet zawiera:
 
- - Aktion - odtwarzacz plików avi,
  - Arts - narzêdzia arts,
  - Kaboodle - odtwarzacz plików multimedialnych,
  - KMID - odtwarzacz MIDI,
@@ -187,9 +180,7 @@ Requires:	taglib >= 0.95.031114
 Requires:	kdebase-core >= 9:%{version}
 
 %description juk
-JuK (pronounced jook) is a jukebox and music manager for the KDE
-desktop similar to jukebox software on other platforms such as
-iTunes(r) or RealOne(r).
+JuK (pronounced jook) is a jukebox and music manager for the KDE desktop similar to jukebox software on other platforms such asiTunes(r) or RealOne(r).  As is typical with many jukebox applications, JuK allows you to edit the "tags" of the audio files, and manage your collection and playlists. 
 
 %description juk -l pl
 Juk (czyt. d¿uk, jak w Jukebox) to szafa graj±ca i zarz±dca muzyki
@@ -383,198 +374,11 @@ KDE Media Player - shared libs.
 %description noatun-libs -l pl
 KDE Media Player - biblioteki wspó³dzielone.
 
-%package artsbuilder-i18n
-Summary:	Internationalization and localization files for artsbuilder
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla artsbuildera
-Group:		X11/Applications
-Requires:	%{name}-artsbuilder = %{epoch}:%{version}-%{release}
-Requires:	%{name}-arts-i18n = %{epoch}:%{version}-%{release}
-
-%description artsbuilder-i18n
-Internationalization and localization files for artsbuilder.
-
-%description artsbuilder-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla artsbuildera.
-
-%package artscontrol-i18n
-Summary:	Internationalization and localization files for artscontrol
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla artscontrol
-Group:		X11/Applications
-Requires:	%{name}-artscontrol = %{epoch}:%{version}-%{release}
-Requires:	%{name}-arts-i18n = %{epoch}:%{version}-%{release}
-
-%description artscontrol-i18n
-Internationalization and localization files for artscontrol.
-
-%description artscontrol-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla artscontrol.
-
-%package arts-i18n
-Summary:	Internationalization and localization files for arts
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla arts
-Group:		X11/Applications
-Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
-Requires:	kdelibs-i18n >= 9:%{version}
-
-%description arts-i18n
-Internationalization and localization files for arts.
-
-%description arts-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla arts.
-
-%package juk-i18n
-Summary:	Internationalization and localization files for juk
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla juk
-Group:		X11/Applications
-Requires:	%{name}-juk = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description juk-i18n
-Internationalization and localization files for juk.
-
-%description juk-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla juk.
-
-%package kaboodle-i18n
-Summary:	Internationalization and localization files for kaboodle
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kaboodle
-Group:		X11/Applications
-Requires:	%{name}-kaboodle = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description kaboodle-i18n
-Internationalization and localization files for kaboodle.
-
-%description kaboodle-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla kaboodle.
-
-%package kmid-i18n
-Summary:	Internationalization and localization files for kmid
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kmid
-Group:		X11/Applications
-Requires:	%{name}-kmid = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description kmid-i18n
-Internationalization and localization files for kmid.
-
-%description kmid-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla kmid.
-
-%package kmix-i18n
-Summary:	Internationalization and localization files for kmix
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kmix
-Group:		X11/Applications
-Requires:	%{name}-kmix = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description kmix-i18n
-Internationalization and localization files for kmix.
-
-%description kmix-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla kmix.
-
-%package kscd-i18n
-Summary:	Internationalization and localization files for kscd
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kscd
-Group:		X11/Applications
-Requires:	%{name}-kscd = %{epoch}:%{version}-%{release}
-Requires:	%{name}-libkcddb-i18n = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description kscd-i18n
-Internationalization and localization files for kscd.
-
-%description kscd-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla kscd.
-
-%package krec-i18n
-Summary:	Internationalization and localization files for krec
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla krec
-Group:		X11/Applications
-Requires:	%{name}-krec = %{epoch}:%{version}-%{release}
-Requires:	%{name}-artscontrol-i18n = %{epoch}:%{version}-%{release}
-Requires:	%{name}-kmix-i18n = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description krec-i18n
-Internationalization and localization files for krec.
-
-%description krec-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla krec.
-
-%package noatun-i18n
-Summary:	Internationalization and localization files for noatun
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla noatun
-Group:		X11/Applications
-Requires:	%{name}-noatun = %{epoch}:%{version}-%{release}
-Requires:	kdebase-core-i18n >= 9:%{version}
-
-%description noatun-i18n
-Internationalization and localization files for noatun.
-
-%description noatun-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla noatun.
-
-%package kfile-i18n
-Summary:	Internationalization and localization files for kfile
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kfile
-Group:		X11/Applications
-Requires:	%{name}-kfile = %{epoch}:%{version}-%{release}
-Requires:	konqueror-i18n >= 9:%{version}
-
-%description kfile-i18n
-Internationalization and localization files for kfile.
-
-%description kfile-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla kfile.
-
-%package audiocd-i18n
-Summary:	Internationalization and localization files for audiocd
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla audiocd
-Group:		X11/Applications
-Requires:	%{name}-audiocd = %{epoch}:%{version}-%{release}
-Requires:	%{name}-libkcddb-i18n = %{epoch}:%{version}-%{release}
-Requires:	konqueror-i18n >= 9:%{version}
-
-%description audiocd-i18n
-Internationalization and localization files for audiocd.
-
-%description audiocd-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla audiocd.
-
-%package libkcddb-i18n
-Summary:	Internationalization and localization files for libkcddb
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla libkcddb
-Group:		X11/Applications
-Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
-Requires:	kdelibs-i18n >= 9:%{version}
-
-%description libkcddb-i18n
-Internationalization and localization files for libkcddb.
-
-%description libkcddb-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla libkcddb.
-
-%package kaudiocreator-i18n
-Summary:	Internationalization and localization files for kaudiocreator
-Summary(pl):	Pliki umiêdzynarodawiaj±ce dla kaudiocreatora
-Group:		X11/Applications
-Requires:	%{name}-kaudiocreator = %{epoch}:%{version}-%{release}
-Requires:	%{name}-libkcddb-i18n = %{epoch}:%{version}-%{release}
-
-%description kaudiocreator-i18n
-Internationalization and localization files for kaudiocreator.
-
-%description kaudiocreator-i18n -l pl
-Pliki umiêdzynarodawiaj±ce dla kaudiocreatora.
-
 %prep
 %setup -q -n %{name}-%{version} 
+%patch100 -p1
 
 %build
-cp /usr/share/automake/config.sub admin
-
 fix="kfile-plugins/ogg/configure.in.in \
 	mpeglib_artsplug/configure.in.in"
 
@@ -584,6 +388,10 @@ do
 	mv $i{.1,}
 done
 
+cp %{_datadir}/automake/config.sub admin
+export kde_htmldir=%{_kdedocdir}
+export kde_libs_htmldir=%{_kdedocdir}
+export UNSERMAKE=%{_datadir}/unsermake/unsermake
 %{__make} -f admin/Makefile.common cvs
 
 export CDPARANOIA=%{_bindir}/cdparanoia
@@ -598,100 +406,11 @@ export CDPARANOIA=%{_bindir}/cdparanoia
 
 %install
 rm -rf $RPM_BUILD_ROOT
-rm -rf *.lang
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
-	kde_htmldir=%{_kdedocdir}
-
-%if %{with i18n}
-if [ -f "%{SOURCE1}" ] ; then
-	bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
-	for f in $RPM_BUILD_ROOT%{_datadir}/locale/*/LC_MESSAGES/*.mo; do
-		if [ "`file $f | sed -e 's/.*,//' -e 's/message.*//'`" -le 1 ] ; then
-			rm -f $f
-		fi
-	done
-else
-	echo "No i18n sources found and building --with i18n. FIXIT!"
-	exit 1
-fi
-%endif
-
-%find_lang artsbuilder	--with-kde
-%find_lang juk		--with-kde
-%find_lang kaboodle	--with-kde
-%find_lang kmid		--with-kde
-# No kmidi
-# %find_lang kmidi	--with-kde
-%find_lang kmix		--with-kde
-%find_lang kmixcfg	--with-kde
-cat kmixcfg.lang >> kmix.lang
-%find_lang krec		--with-kde
-%find_lang kscd		--with-kde
-%find_lang noatun	--with-kde
-
-%if %{with i18n}
-
-%find_lang libkcddb	--with-kde
-%find_lang kcmcddb	--with-kde
-cat kcmcddb.lang >> libkcddb.lang
-
-%find_lang kio_audiocd	--with-kde
-%find_lang kcmaudiocd	--with-kde
-cat kcmaudiocd.lang >> kio_audiocd.lang
-
-%find_lang kaudiocreator --with-kde
-%find_lang artscontrol	--with-kde
-%find_lang artsmodules	--with-kde
-mv artsmodules.lang arts.lang
-
-%find_lang kcmkmix	--with-kde
-cat kcmkmix.lang >> kmix.lang
-
-kfile="au \
-avi \
-flac \
-m3u \
-mp3 \
-ogg \
-wav"
-> kfile.lang
-
-for i in $kfile;
-do
-	%find_lang kfile_${i} --with-kde
-	cat kfile_${i}.lang >> kfile.lang
-done
-%endif
-
-files="artsbuilder \
-juk \
-kaboodle \
-kmid \
-kmix \
-krec \
-kscd \
-noatun"
-
-for i in $files; do
-	> ${i}_en.lang
-	echo "%defattr(644,root,root,755)" > ${i}_en.lang
-	grep en\/ ${i}.lang|grep -v apidocs >> ${i}_en.lang
-	grep -v apidocs $i.lang|grep -v en\/ > ${i}.lang.1
-	mv ${i}.lang.1 ${i}.lang
-done
-
-durne=`ls -1 *.lang|grep -v _en`
-
-for i in $durne; 
-do
-	echo $i >> control
-	grep -v en\/ $i|grep -v apidocs >> ${i}.1
-	if [ -f ${i}.1 ] ; then
-		mv ${i}.1 ${i}
-	fi
-done
+	kde_htmldir=%{_kdedocdir} \
+	kde_libs_htmldir=%{_kdedocdir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -713,23 +432,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %post	noatun-libs		-p /sbin/ldconfig
 %postun	noatun-libs		-p /sbin/ldconfig
-
-%if %{with i18n}
-%files artsbuilder-i18n -f artsbuilder.lang
-%files artscontrol-i18n -f artscontrol.lang
-%files arts-i18n -f arts.lang
-%files juk-i18n -f juk.lang
-%files kaboodle-i18n -f kaboodle.lang
-%files kmid-i18n -f kmid.lang
-%files kmix-i18n -f kmix.lang
-%files kscd-i18n -f kscd.lang
-%files krec-i18n -f krec.lang
-%files noatun-i18n -f noatun.lang
-%files kfile-i18n -f kfile.lang
-%files audiocd-i18n -f kio_audiocd.lang
-%files kaudiocreator-i18n -f kaudiocreator.lang
-%files libkcddb-i18n -f libkcddb.lang
-%endif
 
 %files devel
 %defattr(644,root,root,755)
@@ -812,7 +514,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_iconsdir}/crystalsvg/*/actions/arts[!bc]*.png
 %{_iconsdir}/crystalsvg/*/actions/arts[!bc]*.svg
 
-%files artsbuilder -f artsbuilder_en.lang
+%files artsbuilder 
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/artsbuilder
 %{_libdir}/mcop/artsbuilder.mcopclass
@@ -822,6 +524,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kde/artsbuilder.desktop
 %{_iconsdir}/crystalsvg/*/actions/artsbuilderexecute.png
 %{_iconsdir}/crystalsvg/*/apps/artsbuilder.png
+%{_kdedocdir}/en/artsbuilder
 
 %files artscontrol 
 %defattr(644,root,root,755)
@@ -831,6 +534,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kde/artscontrol.desktop
 %{_iconsdir}/crystalsvg/*/apps/artscontrol.png
 %{_iconsdir}/crystalsvg/*/apps/artscontrol.svg
+##%{_kdedocdir}/en/artscontrol
 
 %if %{with xine}
 %files artsplugin-xine
@@ -860,15 +564,16 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/config.kcfg/libkcddb.kcfg
 %{_desktopdir}/kde/libkcddb.desktop
 
-%files juk -f juk_en.lang
+%files juk 
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/juk
 %{_datadir}/apps/juk
 %{_datadir}/apps/konqueror/servicemenus/jukservicemenu.desktop
 %{_desktopdir}/kde/juk.desktop
 %{_iconsdir}/*/*/*/juk*.png
+%{_kdedocdir}/en/juk
 
-%files kaboodle -f kaboodle_en.lang
+%files kaboodle 
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kaboodle
 #%{_libdir}/kaboodle.la
@@ -880,6 +585,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/kaboodleengine.desktop
 %{_desktopdir}/kde/kaboodle.desktop
 %{_iconsdir}/*/*/apps/kaboodle.*
+%{_kdedocdir}/en/kaboodle
 
 %files kaudiocreator
 %defattr(644,root,root,755)
@@ -896,7 +602,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/kfile_*.so
 %{_datadir}/services/kfile_*.desktop
 
-%files kmid -f kmid_en.lang
+%files kmid 
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kmid
 %{_libdir}/kde3/libkmidpart.la
@@ -908,8 +614,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_iconsdir}/*/*/*/kmid.png
 %{_libdir}/libkmidlib.la
 %{_libdir}/libkmidlib.so.0.0.0
+%{_kdedocdir}/en/kmid
 
-%files kmix -f kmix_en.lang
+%files kmix 
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kmix
 %attr(755,root,root) %{_bindir}/kmixctrl
@@ -931,6 +638,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kmix
 %{_datadir}/apps/kicker/applets/kmixapplet.desktop
 %{_iconsdir}/*/*/*/kmix.png
+%{_kdedocdir}/en/kmix
 
 %files kscd -f kscd_en.lang
 %defattr(644,root,root,755)
@@ -942,8 +650,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/profiles/kscd.profile.xml
 %{_datadir}/mimelnk/text/xmcd.desktop
 %{_iconsdir}/*/*/*/kscd.png
+%{_kdedocdir}/en/kscd
 
-%files krec -f krec_en.lang
+%files krec 
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/krec
 %{_libdir}/libkdeinit_krec.la
@@ -969,6 +678,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/servicetypes/krec_exportitem.desktop
 %{_desktopdir}/kde/krec.desktop
 %{_iconsdir}/*/*/*/krec*
+%{_kdedocdir}/en/krec
 
 %files libkcddb
 %defattr(644,root,root,755)
@@ -1021,7 +731,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libyafxplayer.la
 %attr(755,root,root) %{_libdir}/libyafxplayer.so.0.0.0
 
-%files noatun -f noatun_en.lang
+%files noatun 
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/noatun*
 %{_libdir}/libkdeinit_noatun.la
@@ -1043,6 +753,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mimelnk/interface/x-winamp-skin.desktop
 %{_desktopdir}/kde/noatun.desktop
 %{_iconsdir}/*/*/*/noatun.png
+%{_kdedocdir}/en/noatun
 
 %files noatun-libs
 %defattr(644,root,root,755)
