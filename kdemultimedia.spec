@@ -206,7 +206,7 @@ if [ -f %{_pkgconfigdir}/libpng12.pc ] ; then
 fi
 CFLAGS="%{rpmcflags} -I%{_includedir}"
 
-%configure \
+%configure CPPFLAGS="$CPPFLAGS" \
  	--with-pam="yes" \
 	--enable-audio=oss,alsa
 %{__make}
