@@ -4,12 +4,12 @@
 # 
 
 %define         _state          unstable
-%define         _kdever         kde-3.1-beta2
+%define         _kdever         kde-3.1-rc1
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
-Version:	3.0.8
+Version:	3.0.9
 Release:	1
 Epoch:		7
 License:	GPL
@@ -26,6 +26,7 @@ BuildRequires:	alsa-driver-devel
 %endif
 BuildRequires:	arts-devel
 BuildRequires:	arts-kde-devel
+BuildRequires:	cdparanoia-III
 BuildRequires:	cdparanoia-III-devel
 BuildRequires:	esound-devel
 BuildRequires:	gettext-devel
@@ -264,7 +265,7 @@ Plug-in do Xine
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
+#%patch1 -p1
 
 %build
 kde_htmldir="%{_htmldir}"; export kde_htmldir
@@ -336,6 +337,7 @@ echo "Remember to restart artsd !"
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libdummy.so.*
 %attr(755,root,root) %{_libdir}/libdummy.la
+%attr(755,root,root) %{_datadir}/mimelnk/interface/x-winamp-skin.desktop
 
 %files devel
 %defattr(644,root,root,755)
@@ -407,7 +409,7 @@ echo "Remember to restart artsd !"
 %{_datadir}/apps/kaudiocreator
 %{_datadir}/services/audiocd.protocol
 %{_applnkdir}/Multimedia/kaudiocreator.desktop
-%{_applnkdir}/Settings/KDE/FileBrowsing/audiocd.desktop
+%{_applnkdir}/Settings/KDE/Sound/audiocd.desktop
 %{_pixmapsdir}/*/*/*/kaudiocreator.png
 
 %files kfile
@@ -444,7 +446,7 @@ echo "Remember to restart artsd !"
 %attr(755,root,root) %{_libdir}/kde3/kcm_kmix.*
 %attr(755,root,root) %{_libdir}/kde3/kmix_panelapplet.*
 %{_applnkdir}/Multimedia/kmix.desktop
-%{_applnkdir}/Settings/KDE/Sound/kmixcfg.desktop
+%{_applnkdir}/.hidden/kmixcfg.desktop
 %{_datadir}/services/kmixctrl_restore.desktop
 %{_datadir}/apps/kmix
 %{_datadir}/apps/kicker/applets/*
