@@ -1,6 +1,7 @@
 
 %define         _state          unstable                                        
 %define         _kdever         kde-3.1-beta1  
+%define         _debug	        full
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
@@ -14,6 +15,7 @@ Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_kdever}/src/%{name}-%{version}.tar.bz2
 # generated from kde-i18n
 #Source1:	kde-i18n-%{name}-%{version}.tar.bz2
+Patch0:		%{name}-kscd.patch
 %ifnarch sparc sparc64
 BuildRequires:	alsa-lib-devel
 BuildRequires:	alsa-driver-devel
@@ -119,15 +121,32 @@ Media player.
 Odtwarzacz multimedialny.
 
 %package kaudiocreator
-Summary:	Audio file editor
-Summary(pl):	Edytor plików d¼wiekowych
+Summary:	Audio Creator
+Summary(pl):	Kreator audio
 Group:		X11/Applications
 
 %description kaudiocreator
-Audio file editor.
+CD ripper and sound encoder frontend.
+Already provides audiocd protocol for konqueror.
 
 %description kaudiocreator -l pl
-Edytor plików d¼wiêkowych.
+Nak³adka na CD ripper i enkoder d¼wiêku.
+Dostarcza równie¿ protokó³ audiocd do konquerora.
+
+%package kfile
+Summary:	Audio file formats enhanced information
+Summary(pl):	Rozszerzone informacje o plikach d¼wiêkowych
+Group:		X11/Development/Libraries
+Obsoletes:	kdemultimedia < 3.0.8
+
+%description kfile
+This package adds a fold to konqueror "file properities"
+dialog window with file enhanced informations. 
+
+%description kfile -l pl
+Ten pakiet dodaje do okna dialogowego "w³asciwo¶ci pliku" 
+konquerora dodatkow± zak³adkê z rozszerzonymi informacjami
+o pliku.
 
 %package kmid
 Summary:	KDE MIDI Player
@@ -225,6 +244,7 @@ KDE Media Player.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 kde_htmldir="%{_htmldir}"; export kde_htmldir
@@ -235,6 +255,7 @@ CFLAGS="%{rpmcflags} -I%{_includedir}"
 %configure CPPFLAGS="$CPPFLAGS" \
  	--with-pam="yes" \
 	--enable-final \
+	--enable-debug=%{_debug} \
 %ifnarch sparc sparcv9 sparc64
 	--enable-audio=oss
 %else
@@ -281,45 +302,27 @@ cat kmixcfg.lang >> kmix.lang
 %find_lang noatun	--with-kde
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+%{!?_without_clean:rm -rf $RPM_BUILD_ROOT}
 
-%post   arts -p /sbin/ldconfig
-%postun arts -p /sbin/ldconfig
+%post arts
+echo "Remember to restart artsd !"
 
 %post   mpeglib -p /sbin/ldconfig
 %postun mpeglib -p /sbin/ldconfig
 
-%post   noatun -p /sbin/ldconfig
-%postun noatun -p /sbin/ldconfig
-
-#%files -f %{name}.lang
 %files
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libdummy.so.*
 %attr(755,root,root) %{_libdir}/libdummy.la
-%attr(755,root,root) %{_libdir}/kde3/kfile_*.*
-%{_datadir}/services/kfile_*.desktop
-#%attr(755,root,root) %{_datadir}/apps/kconf_update/*.sh
-#%attr(755,root,root) %{_datadir}/apps/kconf_update/*.pl
-%attr(755,root,root) %{_datadir}/apps/kconf_update/noatun20update
-%{_datadir}/apps/kconf_update/*.upd
 
 %files devel
 %defattr(644,root,root,755)
 %{_libdir}/libdummy.so
 %{_libdir}/libaktion.so
-%{_libdir}/libarts_mpeglib.so
-%{_libdir}/libarts_splay.so
-%{_libdir}/libartsbuilder.so
-%{_libdir}/libartsgui.so
-%{_libdir}/libartsgui_idl.so
-%{_libdir}/libartsgui_kde.so
-%{_libdir}/libartsmidi.so
-%{_libdir}/libartsmidi_idl.so
-%{_libdir}/libartsmodules.so
+%{_libdir}/libarts[!e]*.so
 %{_libdir}/libmpeg.so
 %{_libdir}/libnoatun.so
-%{_libdir}/libnoatuncontrols.so
+%{_libdir}/libnoatun[!a]*.so
 %{_libdir}/libyafcore.so
 %{_libdir}/libyafxplayer.so
 %{_libdir}/libworkman.so
@@ -347,7 +350,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libarts[!_]*.la
 %attr(755,root,root) %{_libdir}/libarts_[!m]*.so.*
 %attr(755,root,root) %{_libdir}/libarts_[!m]*.la
-%attr(755,root,root) %{_libdir}/libarts[!_mgb]*.so
+%attr(755,root,root) %{_libdir}/libartseffects.so
 %{_libdir}/mcop/audiofilearts*
 %{_libdir}/mcop/arts*
 %{_libdir}/mcop/Splay*
@@ -360,8 +363,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/artscontrol
 %{_datadir}/mimelnk/application/*arts*
 %{_applnkdir}/Multimedia/arts*.desktop
-%{_pixmapsdir}/*/*/apps/arts*
-%{_pixmapsdir}/*/*/actions/artsbuilder*
+%{_pixmapsdir}/*/*/*/arts*
 
 %files kaboodle -f kaboodle.lang
 %defattr(644,root,root,755)
@@ -384,6 +386,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_applnkdir}/Settings/KDE/FileBrowsing/audiocd.desktop
 %{_pixmapsdir}/*/*/*/kaudiocreator.png
 
+%files kfile
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/kde3/kfile_*.*
+%{_datadir}/services/kfile_*.desktop
+
 %files kmid -f kmid.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kmid
@@ -392,7 +399,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mimelnk/audio/x-karaoke.desktop
 %{_datadir}/servicetypes/*midi*.desktop
 %{_applnkdir}/Multimedia/kmid.desktop
-%{_pixmapsdir}/*/*/apps/kmid.png
+%{_pixmapsdir}/*/*/*/kmid.png
 
 %files kmidi -f kmidi.lang
 %defattr(644,root,root,755)
@@ -402,7 +409,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_applnkdir}/Multimedia/kmidi.desktop
 %{_applnkdir}/Multimedia/timidity.desktop
 %{_datadir}/apps/kmidi
-%{_pixmapsdir}/*/*/apps/kmidi.png
+%{_pixmapsdir}/*/*/*/kmidi.png
 
 %files kmix -f kmix.lang
 %defattr(644,root,root,755)
@@ -417,7 +424,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/kmixctrl_restore.desktop
 %{_datadir}/apps/kmix
 %{_datadir}/apps/kicker/applets/*
-%{_pixmapsdir}/*/*/apps/kmix.png
+%{_pixmapsdir}/*/*/*/kmix.png
 
 %files kscd -f kscd.lang
 %defattr(644,root,root,755)
@@ -428,7 +435,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_applnkdir}/Multimedia/kscd.desktop
 %{_datadir}/apps/kscd
 %{_datadir}/mimelnk/text/xmcd.desktop
-%{_pixmapsdir}/*/*/apps/kscd.png
+%{_pixmapsdir}/*/*/*/kscd.png
 
 %files krec -f krec.lang
 %defattr(644,root,root,755)
@@ -461,13 +468,15 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/noatun*
 %attr(755,root,root) %{_libdir}/libnoatun*.so.*
-%attr(755,root,root) %{_libdir}/libnoatun[!.c]*so
+%attr(755,root,root) %{_libdir}/libnoatunarts.so
 %attr(755,root,root) %{_libdir}/libwinskinvis.*
 %{_libdir}/libnoatun*.la
 %attr(755,root,root) %{_libdir}/kde3/noatun*.*
 %{_libdir}/mcop/Noatun
 %{_libdir}/mcop/noatun*
 %{_libdir}/mcop/winskinvis*
-%{_applnkdir}/Multimedia/noatun.desktop
+%attr(755,root,root) %{_datadir}/apps/kconf_update/noatun20update
+%{_datadir}/apps/kconf_update/*.upd
 %{_datadir}/apps/noatun*
-%{_pixmapsdir}/*/*/apps/noatun.png
+%{_pixmapsdir}/*/*/*/noatun.png
+%{_applnkdir}/Multimedia/noatun.desktop
