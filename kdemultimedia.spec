@@ -1573,19 +1573,18 @@ rm -rf *.lang
 	kde_htmldir=%{_kdedocdir}
 
 %if %{with i18n}
-if [ -f %{SOURCE1} ]; then
-
-bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
-for f in $RPM_BUILD_ROOT%{_datadir}/locale/*/LC_MESSAGES/*.mo; do
-[ "`file $f | sed -e 's/.*,//' -e 's/message.*//'`" -le 1 ] && rm -f $f
-done
-
+if [ -f "%{SOURCE1}" ] ; then
+	bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
+	for f in $RPM_BUILD_ROOT%{_datadir}/locale/*/LC_MESSAGES/*.mo; do
+		if [ "`file $f | sed -e 's/.*,//' -e 's/message.*//'`" -le 1 ] ; then
+			rm -f $f
+		fi
+	done
 else
-
-echo "No i18n sources found and building --with i18n. FIXIT!"
-exit 1
-
+	echo "No i18n sources found and building --with i18n. FIXIT!"
+	exit 1
 fi
+
 %endif
 
 %find_lang artsbuilder	--with-kde
