@@ -46,7 +46,7 @@
 @@ -18,12 +18,25 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
- 
+
 +#include <config.h>
 +
 +// Many Linux systems do not define LINUX. It's something else that I
@@ -65,7 +65,7 @@
  #include <qpushbutton.h>
  #include <kprocess.h>
  #include <kmessagebox.h>
- 
+
 -#include <config.h>
 -
  // Moved the HAVE_LAME define in order to avoid redefined-warnings.
@@ -74,7 +74,7 @@
 @@ -68,19 +81,6 @@
  #include <cdda_paranoia.h>
  }
- 
+
 -// Many Linux systems do not define LINUX. It's something else that I
 -// can't be bothered to look up just right now.
 -#if defined(LINUX) || defined(__linux__)
@@ -82,15 +82,16 @@
 -{
 -/* This is in support for the Mega Hack, if cdparanoia ever is fixed, or we
 -   use another ripping library we can remove this.  */
+-#define _LINUX_BYTEORDER_SWAB_H
 -#include <linux/cdrom.h>
 -#include <sys/ioctl.h>
 -
 -}
 -#endif
--
+
  #include <kdebug.h>
  #include <kurl.h>
- #include <kprotocolmanager.h>
+
 --- kdemultimedia-3.1.3/kaudiocreator/Makefile.am.cdrom	Wed May  7 13:46:47 2003
 +++ kdemultimedia-3.1.3/kaudiocreator/Makefile.am	Fri Sep  5 13:10:34 2003
 @@ -2,7 +2,7 @@
