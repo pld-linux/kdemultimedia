@@ -32,11 +32,10 @@ Patch1:		%{name}-qt-linuxcdrom.patch
 Patch2:		%{name}-libtool-sanitize.patch
 %{!?_without_alsa:BuildRequires:	alsa-lib-devel}
 %{!?_without_alsa:BuildRequires:	alsa-driver-devel}
-%{?_with_nas:BuildRequires:	nas-devel >= 1.5}
-%{?_with_esd:BuildRequires:	esound-devel}
 BuildRequires:	arts-devel >= 12:1.0.0
 BuildRequires:	arts-kde-devel >= 8:%{version}
 BuildRequires:	cdparanoia-III-devel
+%{?_with_esd:BuildRequires:	esound-devel}
 BuildRequires:	gettext-devel
 BuildRequires:	gtk+-devel
 BuildRequires:	kdelibs-devel >= 8:%{version}
@@ -46,6 +45,7 @@ BuildRequires:	libogg-devel
 BuildRequires:	libpng-devel >= 1.2.5
 BuildRequires:	libstdc++-devel
 BuildRequires:	libvorbis-devel
+%{?_with_nas:BuildRequires:	nas-devel >= 1.5}
 BuildRequires:	sed >= 4.0
 %{!?_without_xine:BuildRequires:	xine-lib-devel >= 1.0b4}
 BuildRequires:	zlib-devel
