@@ -12,7 +12,7 @@
 
 %define         _state          snapshots
 %define         _ver		3.1.90
-%define         _snap		030618
+%define         _snap		030623
 
 %ifarch	sparc sparcv9 sparc64
 %define		_with_esd	1
@@ -30,7 +30,7 @@ Vendor:		The KDE Team
 Group:		X11/Applications
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
 Source0:        http://www.kernel.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
-# Source0-md5:	f95fb6102382b6ddf80d1ab6253df733
+# Source0-md5:	668122782af9e0cc5e553c546a33ffae
 Patch0:		%{name}-timidity.patch
 #Patch1:	http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-video-20030316.patch
 #Patch2:	http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-streaming-20030317.patch
@@ -485,6 +485,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/libkaboodlepart.so
 %{_datadir}/apps/kaboodle
 %{_datadir}/services/kaboodle_component.desktop
+%{_datadir}/services/kaboodleengine.desktop
 %{_desktopdir}/kaboodle.desktop
 %{_icondir}/*/*/apps/kaboodle.*
 
