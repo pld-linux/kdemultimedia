@@ -4,42 +4,46 @@
 %bcond_without	xine	# build without xine support
 
 %define		_state		stable
-%define		_ver		3.3.2
+%define		_ver		3.4.0
 
-%define		_minlibsevr	9:3.3.2
-%define		_minbaseevr	9:3.3.2
+%define		_minlibsevr	9:3.4.0
+%define		_minbaseevr	9:3.4.0
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	2
+Release:	0.1
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{_ver}.tar.bz2
-# Source0-md5:	2f393da809542dab5bf75bf7a91d1ec0
+# Source0-md5:	4e42790bbea7c4ac0c436da3c7c664ac
 Patch0:		%{name}-llh.patch
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	arts-qt-devel
 BuildRequires:	audiofile-devel
 BuildRequires:	cdparanoia-III-devel
 BuildRequires:	gettext-devel
+BuildRequires:	gstreamer-devel >= 0.8
+BuildRequires:	gstreamer-plugins-devel >= 0.8
 BuildRequires:	kdelibs-devel >= %{_minlibsevr}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libogg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libmusicbrainz-devel >= 1:2.1.1
+BuildRequires:	polypaudio-devel
+BuildRequires:	libtheora-devel
 BuildRequires:	libtunepimp-devel
 BuildRequires:	libvorbis-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
 BuildRequires:	taglib-devel >= 0.95.031114
-BuildRequires:	unsermake >= 040511
+#BuildRequires:	unsermake >= 040511
 %{?with_xine:BuildRequires:	xine-lib-devel >= 1:1.0}
 BuildRequires:	speex-devel
-BuildRequires:	flac-devel
+BuildRequires:	flac-devel >= 1.1.2
 BuildRequires:	libmad-devel
 BuildRequires:	zlib-devel
 Obsoletes:	kdemultimedia-libworkman
@@ -313,12 +317,12 @@ Obsoletes:	kdemultimedia < 8:3.0.8
 %description kfile
 This package adds a fold to konqueror "file properties" dialog window
 with file enhanced informations for avi, au, FLAC, M3U, MP3, MPC, Ogg,
-sid and WAV files.
+SID and WAV files.
 
 %description kfile -l pl
 Ten pakiet dodaje do okna dialogowego "w³a¶ciwo¶ci pliku" konquerora
 dodatkow± zak³adkê z rozszerzonymi informacjami o plikach avi, au,
-FLAC, MP3, M3U, MPC, Ogg, sid and WAV.
+FLAC, MP3, M3U, MPC, Ogg, SID i WAV.
 
 %package kmid
 Summary:	KDE MIDI Player
@@ -537,12 +541,10 @@ for f in `find . -name \*.desktop`; do
 	fi
 done
 
-for i in `find ./mpeglib/ -name Makefile.am`; do echo KDE_OPTIONS=nofinal >> ${i} ; done
-
 %build
 cp %{_datadir}/automake/config.sub admin
 
-export UNSERMAKE=%{_datadir}/unsermake/unsermake
+#export UNSERMAKE=%{_datadir}/unsermake/unsermake
 
 %{__make} -f admin/Makefile.common cvs
 
@@ -571,6 +573,7 @@ rm -rf $RPM_BUILD_ROOT
 %find_lang artsbuilder	--with-kde
 %find_lang juk		--with-kde
 %find_lang kaboodle	--with-kde
+%find_lang kio_audiocd	--with-kde
 %find_lang kmid		--with-kde
 %find_lang kmix		--with-kde
 %find_lang kmixcfg	--with-kde
@@ -699,7 +702,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mimelnk/application/x-artsbuilder.desktop
 %{_desktopdir}/kde/artsbuilder.desktop
 %{_iconsdir}/crystalsvg/*/actions/artsbuilderexecute.png
-%{_iconsdir}/crystalsvg/*/apps/artsbuilder.png
+%{_iconsdir}/crystalsvg/*/apps/artsbuilder.*
 
 %files artscontrol
 %defattr(644,root,root,755)
@@ -722,7 +725,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/videothumbnail.desktop
 %endif
 
-%files audiocd
+%files audiocd -f kio_audiocd.lang
 %defattr(644,root,root,755)
 %{_libdir}/kde3/kcm_audiocd.la
 %attr(755,root,root) %{_libdir}/kde3/kcm_audiocd.so
@@ -733,6 +736,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libaudiocdplugins.la
 %attr(755,root,root) %{_libdir}/libaudiocdplugins.so*
 %{_datadir}/apps/kconf_update/upgrade-metadata.sh
+%{_datadir}/apps/konqueror/servicemenus/audiocd_play.desktop
 %{_datadir}/config.kcfg/audiocd_*_encoder.kcfg
 %{_datadir}/services/audiocd.protocol
 %{_desktopdir}/kde/audiocd.desktop
