@@ -12,7 +12,7 @@
 
 %define         _state          snapshots
 %define         _ver		3.2
-%define         _snap		030406
+%define         _snap		030418
 
 %ifarch	sparc sparcv9 sparc64
 %define		_with_esd	1
@@ -93,7 +93,6 @@ Summary(pl):	kdemultimedia - pliki nag³ówkowe
 Group:		X11/Development/Libraries
 Requires:	arts-devel >= 1.0.3
 Requires:	kdelibs-devel >= %{version}
-Requires:	%{name}-aktion = %{version}
 Requires:	%{name}-arts = %{version}
 Requires:	%{name}-kscd = %{version}
 Requires:	%{name}-libkcddb = %{version}
@@ -118,27 +117,13 @@ kdemultimedia - static libraries.
 %description static -l pl
 kdemultimedia - biblioteki statyczne.
 
-%package aktion
-Summary:	KDE Media Player
-Summary(pl):	Odtwarzacz multimedialny dla KDE
-Group:		X11/Applications
-Requires:	kdelibs >= %{version}
-Obsoletes:	aktion
-
-%description aktion
-This is a media player for KDE. Currently it can be only used to play
-WAV files.
-
-%description aktion -l pl
-Odtwarzacz multimedialny dla KDE. W tej chwili obs³uguje tylko pliki
-WAV.
-
 %package arts
 Summary:	Arts Tools
 Summary(pl):	Narzêdzia Arts
 Group:		X11/Applications
 Requires:	kdelibs >= %{version}
 Requires:	%{name}-mpeglib = %{version}
+Obsoletes:	%{name}-aktion
 
 %description arts
 Arts Tools.
@@ -152,6 +137,7 @@ Summary(pl):    Program spe³niaj±cy funkcje szafy graj±cej
 Group:          X11/Applications
 Requires:       kdelibs >= %{version}
 Requires:       %{name}-mpeglib = %{version}
+Obsoletes:	%{name}-aktion
 
 %description juk
 JuK (pronounced jook) is a jukebox and music manager for the KDE
@@ -166,6 +152,8 @@ dla KDE podobny do iTunes(r) lub RealOne(r).
 Summary:	Media player
 Summary(pl):	Odtwarzacz multimedialny
 Group:		X11/Applications
+Requires:	kdelibs >= %{version}
+Obsoletes:	%{name}-aktion
 
 %description kaboodle
 Media player.
@@ -177,6 +165,8 @@ Odtwarzacz multimedialny.
 Summary:	Audio Creator
 Summary(pl):	Kreator audio
 Group:		X11/Applications
+Requires:	kdelibs >= %{version}
+Obsoletes:	%{name}-aktion
 
 %description kaudiocreator
 CD ripper and sound encoder frontend. Already provides audiocd
@@ -190,7 +180,9 @@ audiocd do konquerora.
 Summary:	Audio file formats enhanced information
 Summary(pl):	Rozszerzone informacje o plikach d¼wiêkowych
 Group:		X11/Development/Libraries
+Requires:	kdelibs >= %{version}
 Obsoletes:	kdemultimedia < 3.0.8
+Obsoletes:	%{name}-aktion
 
 %description kfile
 This package adds a fold to konqueror "file properties" dialog window
@@ -205,6 +197,7 @@ Summary:	KDE MIDI Player
 Summary(pl):	Odtwarzacz MIDI dla KDE
 Group:		X11/Applications
 Requires:	kdelibs >= %{version}
+Obsoletes:	%{name}-aktion
 
 %description kmid
 This is a MIDI player for KDE. It uses sound-card synthetizer or other
@@ -219,6 +212,7 @@ Summary:	KDE software MIDI Player
 Summary(pl):	Programowy odtwarzacz MIDI dla KDE
 Group:		X11/Applications
 Requires:	kdelibs >= %{version}
+Obsoletes:	%{name}-aktion
 
 %description kmidi
 Software MIDI player. It uses GUS patch files and CPU power to create
@@ -233,6 +227,7 @@ Summary:	KDE audio mixer
 Summary(pl):	Mixer audio dla KDE
 Group:		X11/Applications
 Requires:	kdelibs >= %{version}
+Obsoletes:	%{name}-aktion
 
 %description kmix
 Sound mixer application for KDE.
@@ -246,6 +241,7 @@ Summary(pl):	Rejestrator d¼wiêku dla KDE
 Group:		X11/Applications
 Requires:	%{name}-arts = %{version}
 Requires:	kdelibs >= %{version}
+Obsoletes:	%{name}-aktion
 
 %description krec
 KDE sound recorder.
@@ -258,6 +254,7 @@ Summary:	KDE CD Player
 Summary(pl):	Odtwarzacz CD dla KDE
 Group:		X11/Applications
 Requires:	kdelibs >= %{version}
+Obsoletes:	%{name}-aktion
 
 %description kscd
 CD Player with CDDB support. It can automatically update its CD
@@ -275,6 +272,7 @@ Summary(pl):    Biblioteka cddb pod KDE
 Group:          X11/Libraries
 Requires:       kdelibs >= %{version}
 Requires:       arts >= 1.0.0
+Obsoletes:	%{name}-aktion
 
 %description libkcddb
 cddb library for KDE.
@@ -288,6 +286,7 @@ Summary(pl):	MPEG lib
 Group:		X11/Applications
 Requires:	kdelibs >= %{version}
 Requires:	arts >= 1.0.0
+Obsoletes:	%{name}-aktion
 
 %description mpeglib
 MPEG lib.
@@ -301,6 +300,7 @@ Summary(pl):	KDE Media Player - odtwarzacz plików multimedialnych
 Group:		X11/Applications
 Requires:	kdelibs >= %{version}
 Requires:	arts >= 1.0.0
+Obsoletes:	%{name}-aktion
 
 %description noatun
 KDE Media Player.
@@ -315,6 +315,7 @@ Group:		X11/Applications
 Requires:	kdelibs >= %{version}
 Requires:	arts >= 1.0.0
 Requires:	xine-lib >= 1.0b4
+Obsoletes:	%{name}-aktion
 
 %description xine
 Xine Plug-in.
@@ -333,12 +334,10 @@ kde_appsdir="%{_applnkdir}"; export kde_appsdir
 kde_htmldir="%{_htmldir}"; export kde_htmldir
 kde_icondir="%{_pixmapsdir}"; export kde_icondir
 
-if [ -f %{_pkgconfigdir}/libpng12.pc ] ; then
-        PNGCFLAGS=" `pkg-config libpng12 --cflags`"
-fi
-	
-
-CFLAGS="%{rpmcflags} -I%{_includedir}"
+for plik in `find ./ -name *.desktop` ; do
+	echo $plik
+	sed -i -e "s/\[nb\]/\[no\]/g" $plik
+done
 
 AUDIO=""
 %ifnarch sparc sparcv9 sparc64
@@ -370,8 +369,7 @@ rm -rf $RPM_BUILD_ROOT
 
 mv $RPM_BUILD_ROOT%{_bindir}/{timidity,ktimidity}    
 
-install -d $RPM_BUILD_ROOT%{_applnkdir}/Settings/KDE
-mv -f $RPM_BUILD_ROOT%{_applnkdir}/{Settings/Sound,Settings/KDE/}
+mv -f $RPM_BUILD_ROOT%{_applnkdir}/{Settings,KDE-Settings}
 
 cd $RPM_BUILD_ROOT%{_desktopdir}
 cat timidity.desktop |sed 's/Exec=timidity/Exec=ktimidity/' \
@@ -382,7 +380,6 @@ cd $RPM_BUILD_ROOT%{_datadir}/apps/kmidi/config
 ln -s gravis.cfg GUSpatches
 cd -
 
-%find_lang aktion	--with-kde
 %find_lang artsbuilder	--with-kde
 cat artsbuilder.lang > arts.lang
 %find_lang juk		--with-kde
@@ -407,7 +404,6 @@ echo "Remember to restart artsd !"
 
 %files devel
 %defattr(644,root,root,755)
-%{_libdir}/libaktion.so
 %{_libdir}/libarts_mpeglib.so
 %{_libdir}/libarts_splay.so
 %{_libdir}/libartsbuilder.so
@@ -434,16 +430,6 @@ echo "Remember to restart artsd !"
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libworkmanaudio.a
-
-%files aktion -f aktion.lang
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/aktion*
-%{_libdir}/libaktion.la
-%attr(755,root,root) %{_libdir}/libaktion.so.*
-%{_datadir}/apps/aktion
-%{_datadir}/config/aktionrc
-%{_desktopdir}/aktion.desktop
-%{_pixmapsdir}/*/*/apps/aktion.png
 
 %files arts -f arts.lang
 %defattr(644,root,root,755)
@@ -501,7 +487,7 @@ echo "Remember to restart artsd !"
 %{_datadir}/apps/kaudiocreator
 %{_datadir}/services/audiocd.protocol
 %{_desktopdir}/kaudiocreator.desktop
-%{_applnkdir}/Settings/KDE/Sound/audiocd.desktop
+%{_applnkdir}/KDE-Settings/Sound/audiocd.desktop
 %{_pixmapsdir}/[!l]*/*/*/kaudiocreator.png
 
 %files kfile
@@ -595,7 +581,7 @@ echo "Remember to restart artsd !"
 %{_libdir}/libkcddb.la
 %attr(755,root,root) %{_libdir}/kde3/libkcm_cddb_config.so
 %{_libdir}/kde3/libkcm_cddb_config.la
-%{_applnkdir}/Settings/KDE/Sound/cddb.desktop
+%{_applnkdir}/KDE-Settings/Sound/cddb.desktop
 
 %files noatun -f noatun.lang
 %defattr(644,root,root,755)
