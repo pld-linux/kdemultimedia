@@ -209,7 +209,7 @@ CFLAGS="%{rpmcflags} -I%{_includedir}"
 
 %configure CPPFLAGS="$CPPFLAGS" \
  	--with-pam="yes" \
-	--enable-audio=oss,alsa
+	--enable-audio=oss#,alsa
 %{__make}
 
 %install
