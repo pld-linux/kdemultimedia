@@ -12,7 +12,7 @@
 
 %define         _state          snapshots
 %define         _ver		3.1.90
-%define         _snap		030623
+%define         _snap		030726
 
 %ifarch	sparc sparcv9 sparc64
 %define		_with_esd	1
@@ -30,7 +30,7 @@ Vendor:		The KDE Team
 Group:		X11/Applications
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
 Source0:        http://www.kernel.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
-# Source0-md5:	668122782af9e0cc5e553c546a33ffae
+# Source0-md5:	12e9f51a5f7ff88310cdf26ae8a6663d
 Patch0:		%{name}-timidity.patch
 #Patch1:	http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-video-20030316.patch
 #Patch2:	http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-streaming-20030317.patch
@@ -40,8 +40,6 @@ Patch0:		%{name}-timidity.patch
 %{?_with_nas:BuildRequires:	nas-devel >= 1.5}
 %{?_with_esd:BuildRequires:     esound-devel}
 BuildRequires:	Xaw3d-devel
-BuildRequires:	arts-devel
-BuildRequires:	arts-kde-devel
 BuildRequires:	cdparanoia-III
 BuildRequires:	cdparanoia-III-devel
 BuildRequires:	gettext-devel
@@ -92,7 +90,6 @@ Multimedialne aplikacje KDE. Pakiet zawiera:
 Summary:	kdemultimedia - headers
 Summary(pl):	kdemultimedia - pliki nag³ówkowe
 Group:		X11/Development/Libraries
-Requires:	arts-devel >= 1.2.0
 Requires:	kdelibs-devel >= %{version}
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 Requires:	%{name}-kscd = %{epoch}:%{version}-%{release}
@@ -273,7 +270,6 @@ Summary:        cddb library for KDE
 Summary(pl):    Biblioteka cddb pod KDE
 Group:          X11/Libraries
 Requires:       kdebase-core >= %{version}
-Requires:       arts >= 1.2.0
 Obsoletes:	%{name}-aktion
 
 %description libkcddb
@@ -287,7 +283,6 @@ Summary:	MPEG lib
 Summary(pl):	MPEG lib
 Group:		X11/Applications
 Requires:	kdelibs >= %{version}
-Requires:	arts >= 1.2.0
 Obsoletes:	%{name}-aktion
 
 %description mpeglib
@@ -301,7 +296,6 @@ Summary:	KDE Media Player
 Summary(pl):	KDE Media Player - odtwarzacz plików multimedialnych
 Group:		X11/Applications
 Requires:       kdebase-core >= %{version}
-Requires:	arts >= 1.2.0
 Obsoletes:	%{name}-aktion
 
 %description noatun
@@ -315,7 +309,6 @@ Summary:	Xine Plug-in
 Summary(pl):	Wtyczka do Xine
 Group:		X11/Applications
 Requires:	kdelibs >= %{version}
-Requires:	arts >= 1.2.0
 Requires:	xine-lib >= 1.0b4
 Obsoletes:	%{name}-aktion
 
@@ -355,7 +348,6 @@ sed -e 's#slots\[CDROM_MAX_SLOTS\]#kde_slots\[CDROM_MAX_SLOTS\]#g' \
 %{__make} -f Makefile.cvs
 
 %configure \
-	--enable-final \
 	--enable-audio=$AUDIO
 
 %{__make}
@@ -397,20 +389,35 @@ cat kmixcfg.lang >> kmix.lang
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post	arts		-p /sbin/ldconfig
-%postun	arts		-p /sbin/ldconfig
+%post	arts
+/sbin/ldconfig
 
-%post	kscd		-p /sbin/ldconfig
-%postun	kscd		-p /sbin/ldconfig
+%postun	arts
+/sbin/ldconfig
 
-%post	mpeglib		-p /sbin/ldconfig
-%postun	mpeglib		-p /sbin/ldconfig
+%post	kscd
+/sbin/ldconfig
 
-%post	libkcddb	-p /sbin/ldconfig
-%postun	libkcddb	-p /sbin/ldconfig
+%postun	kscd
+/sbin/ldconfig
 
-%post	noatun		-p /sbin/ldconfig
-%postun	noatun		-p /sbin/ldconfig
+%post	mpeglib
+/sbin/ldconfig
+
+%postun	mpeglib
+/sbin/ldconfig
+
+%post	libkcddb
+/sbin/ldconfig
+
+%postun	libkcddb
+/sbin/ldconfig
+
+%post	noatun
+/sbin/ldconfig
+
+%postun	noatun
+/sbin/ldconfig
 
 %files devel
 %defattr(644,root,root,755)
@@ -562,8 +569,10 @@ rm -rf $RPM_BUILD_ROOT
 %files krec -f krec.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/krec
-%{_libdir}/krec.la
-%attr(755,root,root) %{_libdir}/krec.so
+%{_libdir}/libkdeinit_krec.la
+%attr(755,root,root) %{_libdir}/libkdeinit_krec.so
+%{_libdir}/kde3/krec.la
+%attr(755,root,root) %{_libdir}/kde3/krec.so*
 %{_datadir}/apps/krec
 %{_desktopdir}/krec.desktop
 %{_icondir}/*/*/*/krec*
