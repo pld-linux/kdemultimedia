@@ -2,7 +2,7 @@
 # Conditional build:
 %bcond_without	alsa	# build without ALSA support
 %bcond_without	xine	# build without xine support
-
+#
 %define		_state		stable
 %define		_kdever		3.4
 %define		_ver		3.4.0
@@ -26,28 +26,28 @@ Patch0:		%{name}-llh.patch
 BuildRequires:	arts-qt-devel
 BuildRequires:	audiofile-devel
 BuildRequires:	cdparanoia-III-devel
+BuildRequires:	flac-devel >= 1.1.2
 BuildRequires:	gettext-devel
 BuildRequires:	gstreamer-devel >= 0.8
 BuildRequires:	gstreamer-plugins-devel >= 0.8
 BuildRequires:	kdelibs-devel >= %{_minlibsevr}
+BuildRequires:	lame-libs-devel
 BuildRequires:	libjpeg-devel
+BuildRequires:	libmad-devel
 BuildRequires:	libogg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libmusicbrainz-devel >= 1:2.1.1
-BuildRequires:	polypaudio-devel
 BuildRequires:	libtheora-devel
 BuildRequires:	libtunepimp-devel
 BuildRequires:	libvorbis-devel
+BuildRequires:	polypaudio-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
+BuildRequires:	speex-devel
 BuildRequires:	taglib-devel >= 0.95.031114
 #BuildRequires:	unsermake >= 040511
 %{?with_xine:BuildRequires:	xine-lib-devel >= 1:1.0}
-BuildRequires:	speex-devel
-BuildRequires:	flac-devel >= 1.1.2
-BuildRequires:	libmad-devel
 BuildRequires:	zlib-devel
-BuildRequires:	lame-libs-devel
 Obsoletes:	kdemultimedia-libworkman
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
