@@ -55,7 +55,7 @@ Requires:	kdelibs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_prefix		/usr/X11R6
-%define		_htmldir		/usr/share/doc/kde/HTML
+%define		_htmldir	/usr/share/doc/kde/HTML
 
 %define		no_install_post_chrpath		1
 
@@ -320,11 +320,15 @@ done
 %configure \
 	CDPARANOIA="/usr/bin/cdparanoia" \
 	aktion_has_xanim="yes" \
+	prefix=%{_prefix} \
 	--with-pam="yes" \
 	--enable-final \
 	--enable-audio=$AUDIO \
 	%{!?_without_alsa:--with-alsa} \
 	%{!?_without_alsa:--with-arts-alsa}
+
+# nasty hack: these sources do not compile with optimization enabled
+echo -e ',s: -O2::g\n,w' | ed mpeglib/lib/input/Makefile 
 
 %{__make}
 
@@ -354,30 +358,34 @@ cd -
 
 bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 
-#%find_lang kfile_m3u	--with-kde
-#%find_lang kfile_mp3	--with-kde
-#%find_lang kfile_ogg	--with-kde
-#%find_lang kfile_wav	--with-kde
-#cat {kfile_m3u,kfile_mp3,kfile_ogg,kfile_wav,kmyapp,koncd}.lang \
+%find_lang	kfile_au	--with-kde
+%find_lang	kfile_avi	--with-kde
+%find_lang	kfile_m3u	--with-kde
+%find_lang	kfile_mp3	--with-kde
+%find_lang	kfile_ogg	--with-kde
+%find_lang	kfile_wav	--with-kde
+cat kfile_{au,avi,m3u,mp3,ogg,wav}.lang > kfile.lang
+#cat {kmyapp,koncd}.lang \
 #    >> %{name}.lang
-%find_lang aktion	--with-kde
-%find_lang artsbuilder	--with-kde
-cat artsbuilder.lang > arts.lang
-#%find_lang artscontrol	--with-kde
-#cat artscontrol.lang >> arts.lang
-%find_lang kaboodle	--with-kde
-%find_lang kmid		--with-kde
-%find_lang kmidi	--with-kde
-%find_lang kmix		--with-kde
-%find_lang kmixcfg	--with-kde
-cat kmixcfg.lang >> kmix.lang
-#%find_lang kcmkmix	--with-kde
-#cat kcmkmix.lang >> kmix.lang
-#%find_lang kmyapp	--with-kde
-#%find_lang koncd	--with-kde
-%find_lang krec		--with-kde
-%find_lang kscd		--with-kde
-%find_lang noatun	--with-kde
+%find_lang	aktion		--with-kde
+%find_lang	artsbuilder	--with-kde
+%find_lang	artsmodules	--with-kde
+cat arts{builder,control,modules}.lang > arts.lang
+%find_lang	kaboodle	--with-kde
+%find_lang	kmid		--with-kde
+%find_lang	kmidi		--with-kde
+%find_lang	kmix		--with-kde
+%find_lang	kmixcfg		--with-kde
+%find_lang	kcmkmix		--with-kde
+cat {kmixcfg,kcmkmix}.lang >> kmix.lang
+#%find_lang	kmyapp		--with-kde
+#%find_lang	koncd		--with-kde
+%find_lang	krec		--with-kde
+%find_lang	kscd		--with-kde
+%find_lang	noatun		--with-kde
+%find_lang	kaudiocreator	--with-kde
+%find_lang	kcmaudiocd	--with-kde
+cat kcmaudiocd.lang >> kaudiocreator.lang
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -498,7 +506,7 @@ echo "Remember to restart artsd!"
 %{_applnkdir}/Multimedia/kaboodle.desktop
 %{_pixmapsdir}/*/*/apps/kaboodle.*
 
-%files kaudiocreator
+%files kaudiocreator -f kaudiocreator.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kaudiocreator
 %attr(755,root,root) %{_libdir}/kde3/kcm_audiocd.so
@@ -511,7 +519,7 @@ echo "Remember to restart artsd!"
 %{_applnkdir}/Settings/KDE/Sound/audiocd.desktop
 %{_pixmapsdir}/[!l]*/*/*/kaudiocreator.png
 
-%files kfile
+%files kfile -f kfile.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/kde3/kfile_*.so
 %{_libdir}/kde3/kfile_*.la
