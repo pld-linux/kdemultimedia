@@ -1,6 +1,6 @@
 %define		_ver		3.0.1
 #define		_sub_ver
-%define		_rel		2
+%define		_rel		3
 
 %{?_sub_ver:	%define	_version	%{_ver}%{_sub_ver}}
 %{!?_sub_ver:	%define	_version	%{_ver}}
@@ -424,9 +424,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %files kaboodle -f kaboodle.lang
 %defattr(644,root,root,755)
-%{_bindir}/kaboodle
-%{_libdir}/kaboodle.??
-%{_libdir}/libkaboodlepart.??
+%attr(755,root,root) %{_bindir}/kaboodle
+%attr(755,root,root) %{_libdir}/kaboodle.??
+%attr(755,root,root) %{_libdir}/libkaboodlepart.??
 %{_datadir}/apps/kaboodle
 %{_datadir}/services/kaboodle_component.desktop
 %{_applnkdir}/Multimedia/kaboodle.desktop
