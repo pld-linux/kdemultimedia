@@ -527,13 +527,13 @@ echo "Remember to restart artsd !"
 %{_libdir}/libmpeg.la
 %attr(755,root,root) %{_libdir}/libmpeg-*.so
 # Note that SplayPlayObject.mopclass is *not* here.
-#%{_libdir}/mcop/VCDPlayObject.mcopclass
+#%%{_libdir}/mcop/VCDPlayObject.mcopclass
 %{_libdir}/mcop/WAVPlayObject.mcopclass
 %{_libdir}/mcop/OGGPlayObject.mcopclass
 %{_libdir}/mcop/NULLPlayObject.mcopclass
 %{_libdir}/mcop/MP3PlayObject.mcopclass
 %{_libdir}/mcop/CDDAPlayObject.mcopclass
-#%{_libdir}/mcop/MPGPlayObject.mcopclass
+#%%{_libdir}/mcop/MPGPlayObject.mcopclass
 
 %files noatun -f noatun.lang
 %defattr(644,root,root,755)
