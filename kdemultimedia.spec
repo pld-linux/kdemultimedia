@@ -395,13 +395,10 @@ KDE Media Player - biblioteki wspó³dzielone.
 
 %build
 cp /usr/share/automake/config.sub admin
+# unsermake does not link non-C++ files to the resulting binary in --enable-final conditions.
+# so we don't use it for now
+#export UNSERMAKE=%{_datadir}/unsermake/unsermake
 
-export UNSERMAKE=/usr/share/unsermake/unsermake
-
-cp %{_datadir}/automake/config.sub admin
-export kde_htmldir=%{_kdedocdir}
-export kde_libs_htmldir=%{_kdedocdir}
-export UNSERMAKE=%{_datadir}/unsermake/unsermake
 %{__make} -f admin/Makefile.common cvs
 
 export CDPARANOIA=%{_bindir}/cdparanoia
@@ -477,6 +474,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libakode.so.*.*.*
 %{_libdir}/libarts_akode.la
 %attr(755,root,root) %{_libdir}/libarts_akode.so
+%{_libdir}/libakode_*.la
+%attr(755,root,root) %{_libdir}/libakode_*.so
 %{_libdir}/mcop/akode*PlayObject.mcopclass
 %{_libdir}/mcop/akodearts.mcop*
 
@@ -548,7 +547,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kde/artsbuilder.desktop
 %{_iconsdir}/crystalsvg/*/actions/artsbuilderexecute.png
 %{_iconsdir}/crystalsvg/*/apps/artsbuilder.png
-%{_kdedocdir}/en/artsbuilder
 
 %files artscontrol
 %defattr(644,root,root,755)
@@ -558,9 +556,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kde/artscontrol.desktop
 %{_iconsdir}/crystalsvg/*/apps/artscontrol.png
 %{_iconsdir}/crystalsvg/*/apps/artscontrol.svg
-##%{_kdedocdir}/en/artscontrol
 
-%if %{with xine}
 %files artsplugin-xine
 %defattr(644,root,root,755)
 %{_libdir}/kde3/videothumbnail.la
@@ -570,7 +566,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/mcop/xine*PlayObject.mcopclass
 %{_datadir}/apps/videothumbnail
 %{_datadir}/services/videothumbnail.desktop
-%endif
 
 %files audiocd
 %defattr(644,root,root,755)
@@ -601,7 +596,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/konqueror/servicemenus/jukservicemenu.desktop
 %{_desktopdir}/kde/juk.desktop
 %{_iconsdir}/*/*/*/juk*.png
-%{_kdedocdir}/en/juk
 
 %files kaboodle -f kaboodle.lang
 %defattr(644,root,root,755)
@@ -613,7 +607,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/kaboodleengine.desktop
 %{_desktopdir}/kde/kaboodle.desktop
 %{_iconsdir}/*/*/apps/kaboodle.*
-%{_kdedocdir}/en/kaboodle
 
 %files kappfinder
 %defattr(644,root,root,755)
@@ -623,7 +616,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kaudiocreator
 %{_datadir}/apps/kaudiocreator
-%{_datadir}/config/kaudiocreatorrc
+#%{_datadir}/config/kaudiocreatorrc
 %{_datadir}/config.kcfg/kaudiocreator.kcfg
 %{_datadir}/config.kcfg/kaudiocreator_encoders.kcfg
 %{_desktopdir}/kde/kaudiocreator.desktop
@@ -649,7 +642,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_iconsdir}/*/*/*/kmid.png
 %{_libdir}/libkmidlib.la
 %attr(755,root,root) %{_libdir}/libkmidlib.so.0.0.0
-%{_kdedocdir}/en/kmid
 
 %files kmix -f kmix.lang
 %defattr(644,root,root,755)
@@ -671,7 +663,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/kmixctrl_restore.desktop
 %{_desktopdir}/kde/kmix.desktop
 %{_iconsdir}/*/*/*/kmix.png
-%{_kdedocdir}/en/kmix
 %{_kdedocdir}/en/kcontrol/kmixcfg
 
 %files kscd -f kscd.lang
@@ -684,7 +675,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/profiles/kscd.profile.xml
 %{_datadir}/mimelnk/text/xmcd.desktop
 %{_iconsdir}/*/*/*/kscd.png
-%{_kdedocdir}/en/kscd
 
 %files krec -f krec.lang
 %defattr(644,root,root,755)
@@ -712,7 +702,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/servicetypes/krec_exportitem.desktop
 %{_desktopdir}/kde/krec.desktop
 %{_iconsdir}/*/*/*/krec*
-%{_kdedocdir}/en/krec
 
 %files libkcddb
 %defattr(644,root,root,755)
@@ -782,7 +771,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mimelnk/interface/x-winamp-skin.desktop
 %{_desktopdir}/kde/noatun.desktop
 %{_iconsdir}/*/*/*/noatun.png
-%{_kdedocdir}/en/noatun
 
 %files noatun-libs
 %defattr(644,root,root,755)
