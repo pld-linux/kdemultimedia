@@ -332,9 +332,6 @@ Wtyczka do Xine.
 #%patch2 -p1
 
 %build
-kde_appsdir="%{_applnkdir}"; export kde_appsdir
-kde_htmldir="%{_htmldir}"; export kde_htmldir
-kde_icondir="%{_icondir}"; export kde_icondir
 
 for plik in `find ./ -name *.desktop` ; do
 	echo $plik
