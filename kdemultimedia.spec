@@ -708,7 +708,7 @@ Internationalization and localization files for juk.
 %description -l pl juk-i18n
 Pliki umiêdzynarodawiaj±ce dla juk.
 
-%package kdemultimedia-i18n
+%package i18n
 Summary:	Common internationalization and localization files for kdemultimedia
 Summary(pl):	Wspó³dzielone pliki umiêdzynarodawiaj±ce dla kdemultimedia
 Group:	X11/Applications
@@ -777,10 +777,10 @@ Obsoletes:	kde-i18n-Zulu
 Obsoletes:	kde-i18n-kdelibs
 Obsoletes:	kde-i18n
 
-%description kdemultimedia-i18n
+%description i18n
 Common internationalization and localization files for kdemultimedia.
 
-%description -l pl kdemultimedia-i18n
+%description -l pl i18n
 Wspó³dzielone pliki umiêdzynarodawiaj±ce dla kdemultimedia.
 
 
@@ -1687,7 +1687,7 @@ rm -rf $RPM_BUILD_ROOT
 %files kscd-i18n -f kscd.lang
 %files krec-i18n -f krec.lang
 %files noatun-i18n -f noatun.lang
-%files kdemultimedia-i18n -f kdemultimedia.lang
+%files i18n -f kdemultimedia.lang
 %files kfile-i18n -f kfile.lang
 %files audiocd-i18n -f kio_audiocd.lang
 %files kaudiocreator-i18n -f kaudiocreator.lang
