@@ -247,7 +247,7 @@ MPEG lib.
 
 %package noatun
 Summary:	KDE Media Player
-Summary(pl):	KDE Media Player
+Summary(pl):	KDE Media Player - odtwarzacz plików multimedialnych
 Group:		X11/Applications
 Requires:	kdelibs >= %{version}
 Requires:	arts >= 1.0.0
@@ -256,21 +256,21 @@ Requires:	arts >= 1.0.0
 KDE Media Player.
 
 %description noatun -l pl
-KDE Media Player.
+KDE Media Player - odtwarzacz plików multimedialnych.
 
 %package xine
 Summary:	Xine Plug-in
-Summary(pl):	Plug-in do Xine
+Summary(pl):	Wtyczka do Xine
 Group:		X11/Applications
 Requires:	kdelibs >= %{version}
 Requires:	arts >= 1.0.0
 Requires:	xine-lib >= 1.0b4
 
 %description xine
-Xine Plug-in
+Xine Plug-in.
 
 %description xine -l pl
-Plug-in do Xine
+Wtyczka do Xine.
 
 %prep
 %setup -q
