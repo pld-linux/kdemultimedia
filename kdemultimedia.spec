@@ -207,6 +207,7 @@ Mikser audio dla KDE.
 Summary:	KDE sound recorder
 Summary(pl):	Rejestrator d¼wiêku dla KDE
 Group:		X11/Applications
+Requires:	%{name}-arts = %{version}
 Requires:	kdelibs >= %{version}
 
 %description krec
@@ -263,7 +264,7 @@ Summary(pl):	Wtyczka do Xine
 Group:		X11/Applications
 Requires:	kdelibs >= %{version}
 Requires:	arts >= 1.0.0
-Requires:	xine-lib >= 1.0b4
+Requires:	xine-lib
 
 %description xine
 Xine Plug-in.
