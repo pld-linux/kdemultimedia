@@ -326,6 +326,7 @@ Summary:	KDE MIDI Player
 Summary(pl):	Odtwarzacz MIDI dla KDE
 Group:		X11/Applications
 Requires:	kdebase-core >= %{_minbaseevr}
+Obsoletes:	kdemultimedia-kmidi
 
 %description kmid
 This is a MIDI player for KDE. It features:
