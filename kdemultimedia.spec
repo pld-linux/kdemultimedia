@@ -5,21 +5,24 @@
 
 %define		_state		unstable
 %define		_ver		3.3.92
+%define         _snap           050217
 
-%define		_minlibsevr	9:3.3.92
-%define		_minbaseevr	9:3.3.92
+%define		_minlibsevr	9:3.3.92.020517
+%define		_minbaseevr	9:3.3.92.020517
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
-Version:	%{_ver}
+Version:        %{_ver}.%{_snap}
+#Version:	%{_ver}
 Release:	1
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
-Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{_ver}.tar.bz2
-# Source0-md5:	cf278fa074fa17695eb5f7045e7b1325
+Source0:        http://ftp.pld-linux.org/software/kde/%{name}-%{_snap}.tar.bz2
+#Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{_ver}.tar.bz2
+#%% Source0-md5:	cf278fa074fa17695eb5f7045e7b1325
 Patch0:		%{name}-llh.patch
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	arts-qt-devel
@@ -475,7 +478,8 @@ KDE Media Player - shared libs.
 KDE Media Player - biblioteki wspó³dzielone.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{_snap}
+#%setup -q
 %patch0 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Player;/' \
