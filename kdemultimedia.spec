@@ -17,7 +17,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	0.1
+Release:	0.2
 Epoch:		8
 License:	GPL
 Vendor:		The KDE Team
