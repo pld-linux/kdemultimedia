@@ -96,7 +96,7 @@ formats:
 - musepack (.mpc)
 - mpeg (.MP3,.MP2, etc.)
 - Ogg Vorbis (.ogg)
-- flac
+- FLAC
 - speex
 - WAV
 
@@ -107,7 +107,7 @@ formatów:
 - musepack (.mpc)
 - mpeg (.MP3,.MP2, etc.)
 - Ogg Vorbis (.ogg)
-- flac
+- FLAC
 - speex
 - WAV
 
@@ -189,7 +189,7 @@ supports:
 - quicktime (qt,mov,moov)
 - real.com formats (rv,ra,ram,rm)
 - smil (.smi)
-- flac
+- FLAC
 - speex
 - ac3/aac/m4v/m4a
 - Ogg Vorbis (ogg)
@@ -206,7 +206,7 @@ jako¶æ przy konkretnym formacie. Wspierane formaty to:
 - quicktime (qt,mov,moov)
 - real.com (rv,ra,ram,rm)
 - smil (.smi)
-- flac
+- FLAC
 - speex
 - ac3/aac/m4v/m4a
 - Ogg Vorbis (ogg)
@@ -313,13 +313,13 @@ Obsoletes:	kdemultimedia < 8:3.0.8
 
 %description kfile
 This package adds a fold to konqueror "file properties" dialog window
-with file enhanced informations for avi, au, flac, m3u, MP3, mpc, Ogg,
+with file enhanced informations for avi, au, FLAC, m3u, MP3, mpc, Ogg,
 sid and WAV files.
 
 %description kfile -l pl
 Ten pakiet dodaje do okna dialogowego "w³a¶ciwo¶ci pliku" konquerora
 dodatkow± zak³adkê z rozszerzonymi informacjami o plikach avi, au,
-flac, MP3, m3u, mpc, Ogg, sid and WAV.
+FLAC, MP3, m3u, mpc, Ogg, sid and WAV.
 
 %package kmid
 Summary:	KDE MIDI Player
