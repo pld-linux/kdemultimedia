@@ -477,25 +477,29 @@ KDE Media Player - biblioteki wspó³dzielone.
 %prep
 %setup -q -D
 
-%{__sed} -i -e 's/Categories=.*/Categories=Audio;Player;/' \
+%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Player;/' \
 juk/juk.desktop \
 kscd/kscd.desktop
 
-%{__sed} -i -e 's/Categories=.*/Categories=Audio;Midi;/' \
+%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Midi;/' \
 kmid/kmid.desktop \
+
+%{__sed} -i -e 's/Categories=.*/Categories=Audio;Midi;/' \
 kappfinder-data/meterbridge.desktop
 
-%{__sed} -i -e 's/Categories=.*/Categories=AudioVideo;Player;/' \
+%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;AudioVideo;Player;/' \
 noatun/noatun.desktop \
 kaboodle/kaboodle.desktop
 
-%{__sed} -i -e 's/Categories=.*/Categories=Audio;Mixer;/' \
+%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Mixer;/' \
 kmix/kmix.desktop
 
-%{__sed} -i -e 's/Categories=.*/Categories=Audio;Recorder;/' \
+%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Recorder;/' \
 krec/krec.desktop \
+kaudiocreator/kaudiocreator.desktop 
+
+%{__sed} -i -e 's/Categories=.*/Categories=Audio;Recorder;/' \
 kappfinder-data/galan.desktop \
-kaudiocreator/kaudiocreator.desktop \
 kappfinder-data/mixxx.desktop \
 kappfinder-data/rezound.desktop
 
@@ -516,7 +520,9 @@ kappfinder-data/muse.desktop \
 kappfinder-data/freqtweak.desktop \
 kappfinder-data/djplay.desktop \
 kappfinder-data/ams.desktop \
-kappfinder-data/zynaddsubfx.desktop  \
+kappfinder-data/zynaddsubfx.desktop  
+
+%{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;/' \
 arts/tools/artscontrol.desktop \
 arts/builder/artsbuilder.desktop
 
