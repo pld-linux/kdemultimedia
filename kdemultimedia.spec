@@ -320,7 +320,6 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libdummy.so.*.*.*
-%attr(755,root,root) %{_libdir}/libdummy.la
 %attr(755,root,root) %{_libdir}/kde3/kfile_*.??
 %{_datadir}/services/kfile_*.desktop
 #%attr(755,root,root) %{_datadir}/apps/kconf_update/*.sh
@@ -364,9 +363,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/midisend
 %attr(755,root,root) %{_libdir}/libaudiofilearts.??
 %attr(755,root,root) %{_libdir}/libarts[!_]*.so.*.*.*
-%attr(755,root,root) %{_libdir}/libarts[!_]*.la
 %attr(755,root,root) %{_libdir}/libarts_[!m]*.so.*.*.*
-%attr(755,root,root) %{_libdir}/libarts_[!m]*.la
 %attr(755,root,root) %{_libdir}/libarts[!_mgb]*.so
 %{_libdir}/mcop/audiofilearts*
 %{_libdir}/mcop/arts*
@@ -388,7 +385,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/noatun*
 %attr(755,root,root) %{_libdir}/libnoatun*.so.*.*.*
 %attr(755,root,root) %{_libdir}/libnoatun[!.c]*so
-%attr(755,root,root) %{_libdir}/libwinskinvis.??
+%attr(755,root,root) %{_libdir}/libwinskinvis.so
 %{_libdir}/libnoatun*.la
 %attr(755,root,root) %{_libdir}/kde3/noatun*.??
 %{_libdir}/mcop/Noatun
@@ -426,8 +423,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kmix
 %attr(755,root,root) %{_bindir}/kmixctrl
-%attr(755,root,root) %{_libdir}/kmix.??
-%attr(755,root,root) %{_libdir}/kmixctrl.*
+%attr(755,root,root) %{_libdir}/kmix.so
+%attr(755,root,root) %{_libdir}/kmixctrl.so
 %attr(755,root,root) %{_libdir}/kde3/kcm_kmix.??
 %attr(755,root,root) %{_libdir}/kde3/kmix_panelapplet.??
 %{_applnkdir}/Multimedia/kmix.desktop
@@ -470,6 +467,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libnoatun.so
 %{_libdir}/libaktion.so
 %{_libdir}/libdummy.so
+%attr(755,root,root) %{_libdir}/lib*.la
 %{_includedir}/*.h
 %{_includedir}/arts/*
 %{_includedir}/mpeglib*
@@ -478,8 +476,8 @@ rm -rf $RPM_BUILD_ROOT
 %files kaboodle -f kaboodle.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kaboodle
-%attr(755,root,root) %{_libdir}/kaboodle.??
-%attr(755,root,root) %{_libdir}/libkaboodlepart.??
+%attr(755,root,root) %{_libdir}/kaboodle.so
+%attr(755,root,root) %{_libdir}/libkaboodlepart.so
 %{_datadir}/apps/kaboodle
 %{_datadir}/services/kaboodle_component.desktop
 %{_applnkdir}/Multimedia/kaboodle.desktop
