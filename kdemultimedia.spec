@@ -7,7 +7,7 @@
 
 %define         _state          snapshots
 %define         _ver		3.1.93
-%define         _snap		031105
+%define         _snap		031114
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
@@ -20,7 +20,7 @@ Vendor:		The KDE Team
 Group:		X11/Applications
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
 Source0:        http://www.kernel.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
-# Source0-md5:	632ac50e9464cdf134c55ef5f8a5e57f
+# Source0-md5:	fcc77afd559787c22128d9a8c6d6a84e
 Patch0:		%{name}-no_pedantic.patch
 BuildRequires:	Xaw3d-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
@@ -41,7 +41,7 @@ BuildRequires: 	libmusicbrainz-devel
 BuildRequires:	libvorbis-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
 BuildRequires:	sed >= 4.0
-BuildRequires:	taglib-devel >= 0.95
+BuildRequires:	taglib-devel >= 0.95.031114
 BuildRequires:	xine-lib-devel >= 1:1.0
 BuildRequires:	zlib-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -196,7 +196,7 @@ Sterowanie cddb.
 Summary:        A jukebox like program
 Summary(pl):    Program spe³niaj±cy funkcje szafy graj±cej
 Group:          X11/Applications
-Requires:       taglib >= 0.95
+Requires:       taglib >= 0.95.031114
 Requires:       kdebase-core >= 9:%{version}
 
 %description juk
@@ -612,6 +612,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kaudiocreator
 %{_datadir}/apps/kaudiocreator
+%{_datadir}/config.kcfg/kaudiocreator.kcfg
+%{_datadir}/config.kcfg/kaudiocreator_encoders.kcfg
 %{_desktopdir}/kde/kaudiocreator.desktop
 %{_iconsdir}/[!l]*/*/*/kaudiocreator.png
 
