@@ -8,7 +8,7 @@ Group:       X11/KDE/Multimedia
 Vendor:	     The KDE Team
 Source:      ftp://ftp.kde.org/pub/kde/stable/%{version}/distribution/tar/generic/source/%{name}-%{version}.tar.gz
 Requires:    qt >= 1.40, kdelibs = %{version}
-BuildRoot:   /tmp/%{name}-%{version}-root
+BuildRoot:	/tmp/%{name}-%{version}-root
 
 %description
 KDE multimedia applications.
