@@ -46,6 +46,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define         _sharedir       %{_prefix}/share
 %define         _htmldir        /usr/share/doc/kde/HTML
 
+%define		no_install_post_chrpath		1
+
 %description
 KDE multimedia applications. Package includes:
 
