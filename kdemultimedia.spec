@@ -10,7 +10,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	2
+Release:	3
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
@@ -384,6 +384,15 @@ KDE Media Player - biblioteki wspó³dzielone.
 %setup -q -n %{name}-%{version} 
 %patch100 -p1
 echo "KDE_OPTIONS=nofinal" >> mpeglib/lib/mpegplay/Makefile.am
+
+for f in `find . -name *.desktop | xargs grep -l '^Terminal=0'`; do
+	%{__sed} -i -e 's/^Terminal=0/Terminal=false/' $f
+done
+for f in `find . -name *.desktop | xargs grep -l '^Type=Application'`; do
+	if ! grep '^Encoding=' $f >/dev/null; then
+		%{__sed} -i -e '/\[Desktop Entry\]/aEncoding=UTF-8' $f
+	fi
+done
 
 %build
 fix="kfile-plugins/ogg/configure.in.in \
