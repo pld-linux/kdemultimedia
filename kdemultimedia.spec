@@ -47,6 +47,7 @@ BuildRequires:	libogg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libvorbis-devel
+BuildRequires: 	sed >= 4.0
 %{!?_without_xine:BuildRequires: xine-lib-devel >= 1.0b4}
 BuildRequires:	zlib-devel
 Requires:	kdelibs = %{version}
@@ -290,6 +291,13 @@ AUDIO=oss,$AUDIO
 %{?_with_nas:AUDIO=nas,$AUDIO}
 %{?_with_esd:AUDIO=esd,$AUDIO}
 AUDIO=${AUDIO%%,}
+
+for plik in `find ./ -name *.desktop` ; do
+	if [ -d $plik ]; then
+	echo $plik
+	sed -ie 's/\[nb\]/\[no\]/g' $plik
+	fi
+done
 
 # kdemultimedia includes kernel headers which breaks thins, ugly workaround
 mkdir linux
