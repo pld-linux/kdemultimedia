@@ -12,7 +12,7 @@
 
 %define         _state          snapshots
 %define         _ver		3.1.92
-%define         _snap		030930
+%define         _snap		031006
 
 %ifarch	sparc sparcv9 sparc64
 %define		_with_esd	1
@@ -30,7 +30,7 @@ Vendor:		The KDE Team
 Group:		X11/Applications
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
 Source0:        http://www.kernel.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
-# Source0-md5:	0f88932d8ca3d4eab968c4043b6ae4ea
+# Source0-md5:	19506ad74c297f6c65cc6d0255c5092d
 Patch0:		%{name}-no_pedantic.patch
 #Patch0:	%{name}-timidity.patch
 #Patch1:	http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-video-20030316.patch
