@@ -12,7 +12,7 @@
 
 %define         _state          snapshots
 %define         _ver		3.2
-%define         _snap		030610
+%define         _snap		030613
 
 %ifarch	sparc sparcv9 sparc64
 %define		_with_esd	1
@@ -30,11 +30,11 @@ Vendor:		The KDE Team
 Group:		X11/Applications
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
 Source0:        http://www.kernel.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
-# Source0-md5:	73d816dc07e252e7cff153d4f32140a5
+# Source0-md5:	49d9c8add27454d2212117de87d5941d
 Patch0:		%{name}-timidity.patch
 #Patch1:	http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-video-20030316.patch
 #Patch2:	http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-streaming-20030317.patch
-#Patch2:	%{name}-streaming-fixed.patch 
+#Patch2:	%{name}-streaming-fixed.patch
 %{?_without_alsa:BuildConflicts:	alsa-driver-devel}
 %{!?_without_alsa:BuildRequires:	alsa-lib-devel}
 %{?_with_nas:BuildRequires:	nas-devel >= 1.5}
@@ -61,6 +61,7 @@ Requires:	kdelibs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define         _htmldir        %{_docdir}/kde/HTML
+%define         _icondir        %{_datadir}/icons
 
 %define		no_install_post_chrpath		1
 
@@ -144,7 +145,7 @@ Obsoletes:	%{name}-aktion
 %description juk
 JuK (pronounced jook) is a jukebox and music manager for the KDE
 desktop similar to jukebox software on other platforms such as
-iTunes(r) or RealOne(r). 
+iTunes(r) or RealOne(r).
 
 %description juk -l pl
 Juk (czyt. d¿uk, jak w Jukebox) to szafa graj±ca i zarz±dca muzyki
@@ -334,7 +335,7 @@ Wtyczka do Xine.
 %build
 kde_appsdir="%{_applnkdir}"; export kde_appsdir
 kde_htmldir="%{_htmldir}"; export kde_htmldir
-kde_icondir="%{_pixmapsdir}"; export kde_icondir
+kde_icondir="%{_icondir}"; export kde_icondir
 
 for plik in `find ./ -name *.desktop` ; do
 	echo $plik
@@ -360,15 +361,18 @@ sed -e 's#slots\[CDROM_MAX_SLOTS\]#kde_slots\[CDROM_MAX_SLOTS\]#g' \
 %configure \
 	--enable-final \
 	--enable-audio=$AUDIO
-	
+
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__make} install DESTDIR=$RPM_BUILD_ROOT
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT \
+	kde_appsdir=%{_applnkdir} \
+	kde_htmldir=%{_htmldir}
 
-#mv $RPM_BUILD_ROOT%{_bindir}/{timidity,ktimidity}    
+#mv $RPM_BUILD_ROOT%{_bindir}/{timidity,ktimidity}
 
 mv -f $RPM_BUILD_ROOT%{_applnkdir}/{Settings,KDE-Settings}
 
@@ -465,7 +469,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/artscontrol
 %{_datadir}/mimelnk/application/*arts*
 %{_desktopdir}/arts*.desktop
-%{_pixmapsdir}/*/*/*/arts*
+%{_icondir}/*/*/*/arts*
 
 %files juk -f juk.lang
 %defattr(644,root,root,755)
@@ -473,7 +477,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/juk
 %{_datadir}/apps/konqueror/servicemenus/jukservicemenu.desktop
 %{_desktopdir}/juk.desktop
-%{_pixmapsdir}/*/*/*/juk.png
+%{_icondir}/*/*/*/juk.png
 
 
 %files kaboodle -f kaboodle.lang
@@ -486,7 +490,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kaboodle
 %{_datadir}/services/kaboodle_component.desktop
 %{_desktopdir}/kaboodle.desktop
-%{_pixmapsdir}/*/*/apps/kaboodle.*
+%{_icondir}/*/*/apps/kaboodle.*
 
 %files kaudiocreator
 %defattr(644,root,root,755)
@@ -499,7 +503,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/audiocd.protocol
 %{_desktopdir}/kaudiocreator.desktop
 %{_applnkdir}/KDE-Settings/Sound/audiocd.desktop
-%{_pixmapsdir}/[!l]*/*/*/kaudiocreator.png
+%{_icondir}/[!l]*/*/*/kaudiocreator.png
 
 %files kfile
 %defattr(644,root,root,755)
@@ -516,7 +520,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mimelnk/audio/x-karaoke.desktop
 %{_datadir}/servicetypes/*midi*.desktop
 %{_desktopdir}/kmid.desktop
-%{_pixmapsdir}/*/*/*/kmid.png
+%{_icondir}/*/*/*/kmid.png
 
 #%files kmidi -f kmidi.lang
 #%defattr(644,root,root,755)
@@ -526,7 +530,7 @@ rm -rf $RPM_BUILD_ROOT
 #%{_desktopdir}/kmidi.desktop
 #%{_desktopdir}/ktimidity.desktop
 #%{_datadir}/apps/kmidi
-#%{_pixmapsdir}/*/*/*/kmidi.png
+#%{_icondir}/*/*/*/kmidi.png
 
 %files kmix -f kmix.lang
 %defattr(644,root,root,755)
@@ -545,7 +549,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/kmixctrl_restore.desktop
 %{_datadir}/apps/kmix
 %{_datadir}/apps/kicker/applets/*
-%{_pixmapsdir}/*/*/*/kmix.png
+%{_icondir}/*/*/*/kmix.png
 
 %files kscd -f kscd.lang
 %defattr(644,root,root,755)
@@ -556,7 +560,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kscd.desktop
 %{_datadir}/apps/kscd
 %{_datadir}/mimelnk/text/xmcd.desktop
-%{_pixmapsdir}/*/*/*/kscd.png
+%{_icondir}/*/*/*/kscd.png
 
 %files krec -f krec.lang
 %defattr(644,root,root,755)
@@ -565,7 +569,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/krec.so
 %{_datadir}/apps/krec
 %{_desktopdir}/krec.desktop
-%{_pixmapsdir}/*/*/*/krec*
+%{_icondir}/*/*/*/krec*
 
 %files mpeglib
 %defattr(644,root,root,755)
@@ -586,7 +590,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/mcop/CDDAPlayObject.mcopclass
 #%%{_libdir}/mcop/MPGPlayObject.mcopclass
 
-%files libkcddb 
+%files libkcddb
 %defattr(644,root,root,755)
 %{_libdir}/libkcddb.la
 %attr(755,root,root) %{_libdir}/libkcddb.so.*.*.*
@@ -617,7 +621,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/noatun*
 %{_datadir}/mimelnk/interface/x-winamp-skin.desktop
 %{_desktopdir}/noatun.desktop
-%{_pixmapsdir}/*/*/*/noatun.png
+%{_icondir}/*/*/*/noatun.png
 
 %if %{?_without_xine:0}%{!?_without_xine:1}
 %files xine
