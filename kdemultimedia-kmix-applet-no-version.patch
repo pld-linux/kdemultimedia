@@ -1,0 +1,22 @@
+--- kdemultimedia-3.0.3/kmix/Makefile.am.orig	Fri Mar 22 03:05:50 2002
++++ kdemultimedia-3.0.3/kmix/Makefile.am	Tue Sep 24 23:14:24 2002
+@@ -34,7 +34,7 @@
+ kmix_panelapplet_la_SOURCES = kmixapplet.cpp kmixerwidget.cpp channel.cpp \
+ 	mixer.cpp ksmallslider.cpp volume.cpp kledbutton.cpp \
+ 	mixdevicewidget.cpp colorwidget.ui
+-kmix_panelapplet_la_LDFLAGS = $(all_libraries) -version-info 1:0:0 -module -no-undefined
++kmix_panelapplet_la_LDFLAGS = $(all_libraries) -module -no-undefined -avoid-version
+ kmix_panelapplet_la_LIBADD = $(LIB_KDEUI) $(LIBALIB) $(LIBOSSAUDIO) $(LIBASOUND)
+ 
+ $(srcdir)/version.h: VERSION
+--- kdemultimedia-3.0.3/kmix/Makefile.in.orig	Wed Aug  7 20:02:27 2002
++++ kdemultimedia-3.0.3/kmix/Makefile.in	Tue Sep 24 23:15:07 2002
+@@ -330,7 +330,7 @@
+ 	mixer.cpp ksmallslider.cpp volume.cpp kledbutton.cpp \
+ 	mixdevicewidget.cpp  colorwidget.cpp
+ 
+-kmix_panelapplet_la_LDFLAGS = $(all_libraries) -version-info 1:0:0 -module -no-undefined
++kmix_panelapplet_la_LDFLAGS = $(all_libraries) -module -no-undefined -avoid-version
+ kmix_panelapplet_la_LIBADD = $(LIB_KDEUI) $(LIBALIB) $(LIBOSSAUDIO) $(LIBASOUND)
+ 
+ EXTRA_DIST = kmix.desktop VERSION
