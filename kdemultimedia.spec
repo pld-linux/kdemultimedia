@@ -5,26 +5,24 @@ Version:	2.2
 Release:	1
 Epoch:		6
 License:	GPL
+Vendor:		The KDE Team
 Group:		X11/Applications
 Group(de):	X11/Applikationen
 Group(pl):	X11/Aplikacje
-Vendor:		The KDE Team
 Source0:	ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
 Patch0:		%{name}-kmidi-alsa.patch
-BuildRequires:	kdelibs-devel
-BuildRequires:	qt-devel >= 2.2.2
-BuildRequires:	XFree86-devel
-BuildRequires:	libstdc++-devel
-BuildRequires:	zlib-devel
-BuildRequires:	gettext-devel
-BuildRequires:	libjpeg-devel
-BuildRequires:	libpng-devel
 BuildRequires:	alsa-lib-devel
-BuildRequires:	esound-devel
-BuildRequires:	gtk+-devel
 BuildRequires:	cdparanoia-III-devel
+BuildRequires:	esound-devel
+BuildRequires:	gettext-devel
+BuildRequires:	gtk+-devel
+BuildRequires:	kdelibs-devel
+BuildRequires:	libjpeg-devel
 BuildRequires:	libogg-devel
+BuildRequires:	libpng-devel
+BuildRequires:	libstdc++-devel
 BuildRequires:	libvorbis-devel
+BuildRequires:	zlib-devel
 Requires:	kdelibs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -58,8 +56,10 @@ Group(pl):	X11/Aplikacje
 Requires:	kdelibs = %{version} 
 
 %description arts
+Arts.
 
 %description -l pl arts
+Arts.
 
 %package aktion
 Summary:	KDE Media Player
@@ -151,8 +151,10 @@ Requires:	kdelibs = %{version}
 Requires:	arts = %{version} 
 
 %description noatun
+KDE Media Player.
 
 %description -l pl noatun
+KDE Media Player.
 
 %package mpeglib
 Summary:	MPEG lib
@@ -164,14 +166,24 @@ Requires:	kdelibs = %{version}
 Requires:	arts = %{version} 
 
 %description mpeglib
+MPEG lib.
 
 %description -l pl mpeglib
+MPEG lib.
 
 %package devel
 Summary:	kdemultimedia - headers
 Summary(pl):	kdemultimedia - pliki nagЁСwkowe
-Group:		X11/KDE/Development/Libraries
+Group:		X11/Development/Libraries
+Group(de):	X11/Entwicklung/Libraries
+Group(es):	X11/Desarrollo/Bibliotecas
+Group(fr):	X11/Development/Librairies
+Group(pl):	X11/Programowanie/Biblioteki
+Group(pt_BR):	X11/Desenvolvimento/Bibliotecas
+Group(ru):	X11/Разработка/Библиотеки
+Group(uk):	X11/Розробка/Б╕бл╕отеки
 Requires:	kdemultimedia = %{version} 
+Requires:	kdelibs-devel = %{version}
 
 %description devel
 kdemultimedia - headers.
@@ -187,7 +199,7 @@ kdemultimedia - pliki nagЁСwkowe.
 kde_htmldir="%{_htmldir}"; export kde_htmldir
 kde_icondir="%{_pixmapsdir}"; export kde_icondir
 
-CFLAGS='-I/usr/X11R6/include'
+CFLAGS="%{rpmcflags} -I%{_includedir}"
 export CXXLAGS
 %configure2_13 \
  	--with-pam="yes" \
