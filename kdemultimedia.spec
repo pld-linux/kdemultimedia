@@ -361,9 +361,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libarts[!_]*.so.*.*.*
 %attr(755,root,root) %{_libdir}/libarts_[!m]*.so.*.*.*
 %attr(755,root,root) %{_libdir}/libarts[!_mgb]*.so
-%attr(755,root,root) %{_libdir}/libartsmidi.la
-%attr(755,root,root) %{_libdir}/libartseffects.la
-%attr(755,root,root) %{_libdir}/libaudiofilearts.la
+%{_libdir}/libartsmidi.la
+%{_libdir}/libartseffects.la
+%{_libdir}/libaudiofilearts.la
 %{_libdir}/mcop/audiofilearts*
 %{_libdir}/mcop/arts*
 %{_libdir}/mcop/Splay*
