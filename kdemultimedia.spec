@@ -5,8 +5,9 @@
 #
 %define		_state		snapshots
 %define		_ver		3.2.90
-%define		_snap		040414
-#
+%define		_snap		040424
+%define		_packager	adgor
+
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
@@ -17,10 +18,8 @@ License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
-#Source0:	http://ep09.pld-linux.org/~adgor/kde/%{name}.tar.bz2
-#Source0:	http://ep09.pld-linux.org/~djurban/kde/%{name}-%{_snap}.tar.bz2
-Source0:	%{name}-%{_snap}.tar.bz2
-# Source0-md5:	870592f2d0edc64cbea603e393be7f28
+Source0:	http://ep09.pld-linux.org/~%{_packager}/kde/%{name}-%{_snap}.tar.bz2
+##%% Source0-md5:	870592f2d0edc64cbea603e393be7f28
 #Source1:	http://ep09.pld-linux.org/~djurban/kde/i18n/kde-i18n-%{name}-%{version}.tar.bz2
 ##%% Source1-md5:	f7aeb11765cd23f1719c1d18762fbc47
 Patch0:		%{name}-no_mpeglib_examples.patch
@@ -604,7 +603,7 @@ Internationalization and localization files for kaudiocreator.
 Pliki umiêdzynarodawiaj±ce dla kaudiocreatora.
 
 %prep
-%setup -q -n %{name}
+%setup -q -n %{name}-%{_snap}
 %patch0 -p1
 
 %build
