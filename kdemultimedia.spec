@@ -12,7 +12,7 @@
 
 %define         _state          snapshots
 %define         _ver		3.2
-%define         _snap		030423
+%define         _snap		030502
 
 %ifarch	sparc sparcv9 sparc64
 %define		_with_esd	1
@@ -31,9 +31,9 @@ Group:		X11/Applications
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
 Source0:        http://team.pld.org.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
 Patch0:		%{name}-timidity.patch
-Patch1:		http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-video-20030316.patch
+#Patch1:		http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-video-20030316.patch
 #Patch2:	http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-streaming-20030317.patch
-Patch2:		%{name}-streaming-fixed.patch 
+#Patch2:		%{name}-streaming-fixed.patch 
 %{?_without_alsa:BuildConflicts:	alsa-driver-devel}
 %{!?_without_alsa:BuildRequires:	alsa-lib-devel}
 %{?_with_nas:BuildRequires:	nas-devel >= 1.5}
@@ -135,7 +135,7 @@ Narzêdzia Arts.
 Summary:        A jukebox like program
 Summary(pl):    Program spe³niaj±cy funkcje szafy graj±cej
 Group:          X11/Applications
-Requires:       kdelibs >= %{version}
+Requires:       kdebase-core >= %{version}
 Requires:       %{name}-mpeglib = %{version}
 Obsoletes:	%{name}-aktion
 
@@ -152,7 +152,7 @@ dla KDE podobny do iTunes(r) lub RealOne(r).
 Summary:	Media player
 Summary(pl):	Odtwarzacz multimedialny
 Group:		X11/Applications
-Requires:	kdelibs >= %{version}
+Requires:       kdebase-core >= %{version}
 Obsoletes:	%{name}-aktion
 
 %description kaboodle
@@ -165,7 +165,7 @@ Odtwarzacz multimedialny.
 Summary:	Audio Creator
 Summary(pl):	Kreator audio
 Group:		X11/Applications
-Requires:	kdelibs >= %{version}
+Requires:       kdebase-core >= %{version}
 Obsoletes:	%{name}-aktion
 
 %description kaudiocreator
@@ -180,7 +180,7 @@ audiocd do konquerora.
 Summary:	Audio file formats enhanced information
 Summary(pl):	Rozszerzone informacje o plikach d¼wiêkowych
 Group:		X11/Development/Libraries
-Requires:	kdelibs >= %{version}
+Requires:	konqueror >= %{version}
 Obsoletes:	kdemultimedia < 3.0.8
 Obsoletes:	%{name}-aktion
 
@@ -196,7 +196,7 @@ dodatkow± zak³adkê z rozszerzonymi informacjami o pliku.
 Summary:	KDE MIDI Player
 Summary(pl):	Odtwarzacz MIDI dla KDE
 Group:		X11/Applications
-Requires:	kdelibs >= %{version}
+Requires:       kdebase-core >= %{version}
 Obsoletes:	%{name}-aktion
 
 %description kmid
@@ -211,7 +211,7 @@ muzycznej lub inne urz±dzenia MIDI przy³±czone do niej.
 Summary:	KDE software MIDI Player
 Summary(pl):	Programowy odtwarzacz MIDI dla KDE
 Group:		X11/Applications
-Requires:	kdelibs >= %{version}
+Requires:       kdebase-core >= %{version}
 Obsoletes:	%{name}-aktion
 
 %description kmidi
@@ -226,7 +226,7 @@ do stworzenia dobrej jako¶ci d¼wiêku.
 Summary:	KDE audio mixer
 Summary(pl):	Mixer audio dla KDE
 Group:		X11/Applications
-Requires:	kdelibs >= %{version}
+Requires:       kdebase-kicker >= %{version}
 Obsoletes:	%{name}-aktion
 
 %description kmix
@@ -239,8 +239,8 @@ Mikser audio dla KDE.
 Summary:	KDE sound recorder
 Summary(pl):	Rejestrator d¼wiêku dla KDE
 Group:		X11/Applications
+Requires:       kdebase-core >= %{version}
 Requires:	%{name}-arts = %{version}
-Requires:	kdelibs >= %{version}
 Obsoletes:	%{name}-aktion
 
 %description krec
@@ -253,7 +253,7 @@ Rejestrator d¼wiêku dla KDE.
 Summary:	KDE CD Player
 Summary(pl):	Odtwarzacz CD dla KDE
 Group:		X11/Applications
-Requires:	kdelibs >= %{version}
+Requires:       kdebase-core >= %{version}
 Obsoletes:	%{name}-aktion
 
 %description kscd
@@ -270,7 +270,7 @@ graficzn± interpretacjê granych d¼wiêków.
 Summary:        cddb library for KDE
 Summary(pl):    Biblioteka cddb pod KDE
 Group:          X11/Libraries
-Requires:       kdelibs >= %{version}
+Requires:       kdebase-core >= %{version}
 Requires:       arts >= 1.0.0
 Obsoletes:	%{name}-aktion
 
@@ -298,7 +298,7 @@ MPEG lib.
 Summary:	KDE Media Player
 Summary(pl):	KDE Media Player - odtwarzacz plików multimedialnych
 Group:		X11/Applications
-Requires:	kdelibs >= %{version}
+Requires:       kdebase-core >= %{version}
 Requires:	arts >= 1.0.0
 Obsoletes:	%{name}-aktion
 
@@ -326,8 +326,8 @@ Wtyczka do Xine.
 %prep
 %setup -q -n %{name}-%{_snap}
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
+#%patch1 -p1
+#%patch2 -p1
 
 %build
 kde_appsdir="%{_applnkdir}"; export kde_appsdir
@@ -356,7 +356,6 @@ sed -e 's#slots\[CDROM_MAX_SLOTS\]#kde_slots\[CDROM_MAX_SLOTS\]#g' \
 %{__make} -f Makefile.cvs
 
 %configure \
- 	--with-pam="yes" \
 	--enable-final \
 	--enable-audio=$AUDIO
 	
