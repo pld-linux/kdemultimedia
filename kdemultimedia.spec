@@ -9,27 +9,29 @@
 # --with	nas 	Set this option if you want nas support.
 #
 
-%define         _state          stable
-%define         _ver		3.1.1
+%define         _state          snapshots
+%define         _ver		3.2
+%define         _snap		030328
 
 %ifarch	sparc sparcv9 sparc64
 %define		_with_esd	1
 %endif
-%define		_without_alsa	1
+##%define		_without_alsa	1
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	0.2
+Release:	0.%{_snap}.1
 Epoch:		8
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
-Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
-# generated from kde-i18n
-#Source1:	kde-i18n-%{name}-%{version}.tar.bz2
+#Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
+Source0:        http://team.pld.org.pl/~djurban/kde/%{name}-%{_snap}.tar.bz2
 Patch0:		%{name}-timidity.patch
+Patch1:		http://rambo.its.tudelft.nl/~ewald/xine/kdemultimedia-3.1.1-video-20030316.patch
+Patch2:		http://rambo.its.tudelft.nl/~ewald/xine/kdemultimedia-3.1.1-streaming-20030317.patch
 %{!?_without_alsa:BuildRequires:	alsa-lib-devel}
 %{!?_without_alsa:BuildRequires:	alsa-driver-devel}
 %{?_with_nas:BuildRequires:	nas-devel >= 1.5}
