@@ -3,38 +3,39 @@
 %bcond_without	alsa	# build without ALSA support
 %bcond_without	xine	# build without xine support
 
-%define		_state		unstable
-%define		_ver		3.3.92
-%define         _snap           050217
+%define		_state		stable
+%define		_ver		3.4.0
 
-%define		_minlibsevr	9:3.3.92.020517
-%define		_minbaseevr	9:3.3.92.020517
+%define		_minlibsevr	9:3.4.0
+%define		_minbaseevr	9:3.4.0
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
-Version:        %{_ver}.%{_snap}
-#Version:	%{_ver}
-Release:	1
+Version:	%{_ver}
+Release:	0.1
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
-Source0:        http://ftp.pld-linux.org/software/kde/%{name}-%{_snap}.tar.bz2
-#Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{_ver}.tar.bz2
-#%% Source0-md5:	cf278fa074fa17695eb5f7045e7b1325
+Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{_ver}.tar.bz2
+# Source0-md5:	4e42790bbea7c4ac0c436da3c7c664ac
 Patch0:		%{name}-llh.patch
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	arts-qt-devel
 BuildRequires:	audiofile-devel
 BuildRequires:	cdparanoia-III-devel
 BuildRequires:	gettext-devel
+BuildRequires:	gstreamer-devel >= 0.8
+BuildRequires:	gstreamer-plugins-devel >= 0.8
 BuildRequires:	kdelibs-devel >= %{_minlibsevr}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libogg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libmusicbrainz-devel >= 1:2.1.1
+BuildRequires:	polypaudio-devel
+BuildRequires:	libtheora-devel
 BuildRequires:	libtunepimp-devel
 BuildRequires:	libvorbis-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
@@ -42,7 +43,7 @@ BuildRequires:	taglib-devel >= 0.95.031114
 #BuildRequires:	unsermake >= 040511
 %{?with_xine:BuildRequires:	xine-lib-devel >= 1:1.0}
 BuildRequires:	speex-devel
-BuildRequires:	flac-devel
+BuildRequires:	flac-devel >= 1.1.2
 BuildRequires:	libmad-devel
 BuildRequires:	zlib-devel
 Obsoletes:	kdemultimedia-libworkman
@@ -478,8 +479,7 @@ KDE Media Player - shared libs.
 KDE Media Player - biblioteki wspó³dzielone.
 
 %prep
-%setup -q -n %{name}-%{_snap}
-#%setup -q
+%setup -q
 %patch0 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Player;/' \
