@@ -117,7 +117,7 @@ interpretacjê granych d¼wiêków.
 %setup -q -n %{name}
 
 %build
-make -f Makefile.cvs
+%{__make} -f Makefile.cvs
 KDEDIR=%{_prefix}
 CXXFLAGS="$RPM_OPT_FLAGS -Wall" 
 CFLAGS="$RPM_OPT_FLAGS -Wall" 
@@ -127,13 +127,13 @@ export KDEDIR CXXFLAGS CFLAGS
  	--with-install-root=$RPM_BUILD_ROOT \
 	--with-qt-dir=%{_prefix} \
  	--with-pam="yes"
-make KDEDIR=$KDEDIR
+%{__make} KDEDIR=$KDEDIR
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
 export KDEDIR=%{_prefix}
-make DESTDIR=$RPM_BUILD_ROOT install
+%{__make} DESTDIR=$RPM_BUILD_ROOT install
 
 %find_lang kmedia
 %find_lang kmix
