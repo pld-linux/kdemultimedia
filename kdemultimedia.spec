@@ -24,6 +24,7 @@ Patch0:		%{name}-kmidi-alsa.patch
 BuildRequires:	alsa-lib-devel
 %endif
 BuildRequires:	arts-devel
+BuildRequires:	arts-kde-devel
 BuildRequires:	cdparanoia-III-devel
 BuildRequires:	esound-devel
 BuildRequires:	gettext-devel
