@@ -1,20 +1,13 @@
-#
-# Conditional build:
-# --without	alsa	Set this option in case you don't want alsa.
-#
-# --with	esd	Set this option in case you want esd support.
-#
-# --with	nas 	Set this option if you want nas support.
-#
+
+%bcond_without alsa	# disables ALSA support
+
+%ifarch	sparc sparcv9 sparc64
+%undefine with_alsa
+%endif
 
 %define         _state          snapshots
 %define         _ver		3.1.92
-%define         _snap		031014
-
-%ifarch	sparc sparcv9 sparc64
-%define		_with_esd	1
-%define		_without_alsa	1
-%endif
+%define         _snap		031024
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
@@ -27,18 +20,11 @@ Vendor:		The KDE Team
 Group:		X11/Applications
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
 Source0:        http://www.kernel.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
-# Source0-md5:	31e7deb9520a49d6fb34321e5468965c
+# Source0-md5:	f4a62547234cba0409bc49c30c1b8b62
 Patch0:		%{name}-no_pedantic.patch
-#Patch0:	%{name}-timidity.patch
-#Patch1:	http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-video-20030316.patch
-#Patch2:	http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-streaming-20030317.patch
-#Patch2:	%{name}-streaming-fixed.patch
-%{?_without_alsa:BuildConflicts:	alsa-driver-devel}
-%{!?_without_alsa:BuildRequires:	alsa-lib-devel}
-%{?_with_nas:BuildRequires:	nas-devel >= 1.5}
-%{?_with_esd:BuildRequires:     esound-devel}
 BuildRequires:	Xaw3d-devel
-BuildRequires:	cdparanoia-III
+%{?with_alsa:BuildRequires:	alsa-lib-devel}
+BuildRequires:	audiofile-devel
 BuildRequires:	cdparanoia-III-devel
 BuildRequires:	gettext-devel
 # what for?
@@ -52,7 +38,7 @@ BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires: 	libmusicbrainz-devel
 BuildRequires:	libvorbis-devel
-%{!?_without_xine:BuildRequires: xine-lib-devel >= 1.0b4}
+BuildRequires:	xine-lib-devel >= 1:1.0
 BuildRequires:	zlib-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -111,16 +97,17 @@ kdemultimedia - static libraries.
 kdemultimedia - biblioteki statyczne.
 
 %package arts
-Summary:	Arts Tools
-Summary(pl):	Narzêdzia Arts
+Summary:	Arts extensions
+Summary(pl):	Rozszerzania Arts
 Group:		X11/Applications
 Requires:	kdelibs >= 9:%{version}
+Obsoletes:	%{name}-artsplugin-audiofile
 
 %description arts
-Arts Tools.
+Arts extensions.
 
 %description arts -l pl
-Narzêdzia Arts.
+Rozszerzenia Arts.
 
 %package artsbuilder
 Summary:	Arts Tools - builder
@@ -148,26 +135,25 @@ Arts Tools - control.
 %description artscontrol -l pl
 Narzêdzia Arts - control.
 
-%package artsplugin-audiofile
-Summary:	Audiofile Plug-in
-Summary(pl):	Wtyczka do Audiofile
-Group:		X11/Applications
-Requires:	audiofile
-Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
-Obsoletes:	%{name}-arts < 9:3.1.92.021012
+#%package artsplugin-audiofile
+#Summary:	Audiofile Plug-in
+#Summary(pl):	Wtyczka do Audiofile
+#Group:		X11/Applications
+#Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
+#Obsoletes:	%{name}-arts < 9:3.1.92.021012
 
-%description artsplugin-audiofile
-Audiofile Plug-in.
+#%description artsplugin-audiofile
+#Audiofile Plug-in.
 
-%description artsplugin-audiofile -l pl
-Wtyczka do Audiofile.
+#%description artsplugin-audiofile -l pl
+#Wtyczka do Audiofile.
 
 %package artsplugin-xine
 Summary:	Xine Plug-in
 Summary(pl):	Wtyczka do Xine
 Group:		X11/Applications
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
-Requires:	xine-lib >= 1.0b4
+Requires:	xine-lib >= 1:1.0
 Obsoletes:	%{name}-xine
 
 %description artsplugin-xine
@@ -274,20 +260,6 @@ hardware connected to MIDI to play MIDI files.
 %description kmid -l pl
 Odtwarzacz MIDI dla KDE. Wykorzystuje tylko syntezator na karcie
 muzycznej lub inne urz±dzenia MIDI przy³±czone do niej.
-
-#%package kmidi
-#Summary:	KDE software MIDI Player
-#Summary(pl):	Programowy odtwarzacz MIDI dla KDE
-#Group:		X11/Applications
-#Requires:       kdebase-core >= 9:%{version}
-#
-#%description kmidi
-#Software MIDI player. It uses GUS patch files and CPU power to create
-#high-quality sound.
-#
-#%description kmidi -l pl
-#Programowy odtwarzacz MIDI. Wykorzystuje patche z GUSa i moc procesora
-#do stworzenia dobrej jako¶ci d¼wiêku.
 
 %package kmix
 Summary:	KDE audio mixer
@@ -425,8 +397,6 @@ KDE Media Player - biblioteki wspó³dzielone.
 %prep
 %setup -q -n %{name}-%{_snap}
 %patch0 -p1
-#%patch1 -p1
-#%patch2 -p1
 
 %build
 
@@ -434,31 +404,16 @@ for f in `find . -name *.desktop` ; do
 	sed -i 's/\[nb\]/\[no\]/g' $f
 done
 
-AUDIO=""
-%ifnarch sparc sparcv9 sparc64
-AUDIO=oss,$AUDIO
-%endif
-%{?_with_esd:AUDIO=esd,$AUDIO}
-%{?_with_nas:AUDIO=nas,$AUDIO}
-AUDIO=${AUDIO%%,}
-
 # kdemultimedia includes kernel headers which breaks thins, ugly workaround
 rm -rf linux
 mkdir linux
 sed -e 's#slots\[CDROM_MAX_SLOTS\]#kde_slots\[CDROM_MAX_SLOTS\]#g' \
 /usr/include/linux/cdrom.h > linux/cdrom.h
 
-echo KDE_OPTIONS=nofinal >> juk/Makefile.am
-
 %{__make} -f admin/Makefile.common cvs
 
 %configure \
-	--enable-audio=$AUDIO \
-	--enable-final \
-%ifnarch sparc sparcv9 sparc64
-	--with-alsa \
-	--with-arts-alsa
-%endif
+	--with%{?without_alsa:out}-arts-alsa
 
 %{__make}
 
@@ -469,22 +424,10 @@ rm -rf $RPM_BUILD_ROOT
 	DESTDIR=$RPM_BUILD_ROOT \
 	kde_htmldir=%{_docdir}/kde/HTML
 
-#mv $RPM_BUILD_ROOT%{_bindir}/{timidity,ktimidity}
-
-#cd $RPM_BUILD_ROOT%{_desktopdir}
-#cat timidity.desktop |sed 's/Exec=timidity/Exec=ktimidity/' \
-#    > ktimidity.desktop
-#cd -
-
-#cd $RPM_BUILD_ROOT%{_datadir}/apps/kmidi/config
-#ln -s gravis.cfg GUSpatches
-#cd -
-
 %find_lang artsbuilder	--with-kde
 %find_lang juk		--with-kde
 %find_lang kaboodle	--with-kde
 %find_lang kmid		--with-kde
-%find_lang kmidi	--with-kde
 %find_lang kmix		--with-kde
 %find_lang kmixcfg	--with-kde
 cat kmixcfg.lang >> kmix.lang
@@ -587,6 +530,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/mcop/artsmodulesmixers.mcoptype
 %{_libdir}/mcop/artsmodulessynth.mcopclass
 %{_libdir}/mcop/artsmodulessynth.mcoptype
+# artsplugin-audiofile files  - arts crashes
+# without libaudiofilearts.so installed - so
+# separating them has no sense at this moment
+%{_libdir}/libaudiofilearts.la
+%attr(755,root,root) %{_libdir}/libaudiofilearts.so
+%{_libdir}/mcop/audiofilearts.mcopclass
+%{_libdir}/mcop/audiofilearts.mcoptype
 
 %files artsbuilder -f artsbuilder.lang
 %defattr(644,root,root,755)
@@ -605,13 +555,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/artscontrol
 %{_desktopdir}/kde/artscontrol.desktop
 %{_iconsdir}/crystalsvg/*/apps/artscontrol.png
-
-%files artsplugin-audiofile
-%defattr(644,root,root,755)
-%{_libdir}/libaudiofilearts.la
-%attr(755,root,root) %{_libdir}/libaudiofilearts.so
-%{_libdir}/mcop/audiofilearts.mcopclass
-%{_libdir}/mcop/audiofilearts.mcoptype
 
 %files artsplugin-xine
 %defattr(644,root,root,755)
@@ -650,8 +593,8 @@ rm -rf $RPM_BUILD_ROOT
 %files kaboodle -f kaboodle.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kaboodle
-%{_libdir}/kaboodle.la
-%attr(755,root,root) %{_libdir}/kaboodle.so
+#%{_libdir}/kaboodle.la
+#%attr(755,root,root) %{_libdir}/kaboodle.so
 %{_libdir}/kde3/libkaboodlepart.la
 %attr(755,root,root) %{_libdir}/kde3/libkaboodlepart.so
 %{_datadir}/apps/kaboodle
@@ -683,16 +626,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/servicetypes/*midi*.desktop
 %{_desktopdir}/kde/kmid.desktop
 %{_iconsdir}/*/*/*/kmid.png
-
-#%files kmidi -f kmidi.lang
-#%defattr(644,root,root,755)
-#%attr(755,root,root) %{_bindir}/kmidi
-#%attr(755,root,root) %{_bindir}/sf2cfg
-#%attr(755,root,root) %{_bindir}/ktimidity
-#%{_desktopdir}/kmidi.desktop
-#%{_desktopdir}/ktimidity.desktop
-#%{_datadir}/apps/kmidi
-#%{_iconsdir}/*/*/*/kmidi.png
 
 %files kmix -f kmix.lang
 %defattr(644,root,root,755)
