@@ -12,7 +12,7 @@
 
 %define         _state          snapshots
 %define         _ver		3.2
-%define         _snap		030511
+%define         _snap		030512
 
 %ifarch	sparc sparcv9 sparc64
 %define		_with_esd	1
