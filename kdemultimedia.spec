@@ -240,17 +240,3 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/kde/icons/cd.xpm
 
 %lang(en) %{_datadir}/kde/doc/HTML/en/kscd
-
-%changelog
-* Thu May 27 1999 Wojciech "Sas" Ciêciwa <cieciwa@alpha.zarz.agh.edu.pl>
-  [1.1.1-2]
-- updates package to version 1.1.1,
-- fixes problem with locala files,
-
-* Wed Dec  8 1998 Tomasz K³oczko <kloczek@rudy.mif.pg.gda.pl>
-  [1.0-7]
-- recompiled against libstdc++.so.2.9.
-
-* Sat Oct 10 1998 Jacek Konieczny <jajcus@zeus.polsl.gliwice.pl>
-  [1.0-4]
-- created new spec based on kdebase.spec.
