@@ -1,0 +1,43 @@
+--- kdemultimedia-3.1.4/kaudiocreator/cdconfigimp.cpp.orig	Tue Oct  7 13:06:41 2003
++++ kdemultimedia-3.1.4/kaudiocreator/cdconfigimp.cpp	Tue Oct  7 12:43:07 2003
+@@ -28,6 +28,7 @@
+ /* This is in support for the Mega Hack, if cdparanoia ever is fixed, or we
+    use another ripping library we can remove this.  */
+ #include <sys/ioctl.h>
++#include <sys/types.h>
+ #include <linux/cdrom.h>
+ 
+ }
+--- kdemultimedia-3.1.4/kaudiocreator/Makefile.am.orig	Tue Oct  7 13:57:35 2003
++++ kdemultimedia-3.1.4/kaudiocreator/Makefile.am	Tue Oct  7 13:57:35 2003
+@@ -2,7 +2,7 @@
+ 
+ bin_PROGRAMS = kaudiocreator
+ 
+-kaudiocreator_SOURCES = cdconfigimp.cpp kmacroexpander.cpp cddb.cpp main.cpp kaudiocreator.cpp encoderconfigimp.cpp  job.cpp  queconfigimp.cpp  ripconfigimp.cpp  tracksconfigimp.cpp  cdconfig.ui  encoderconfig.ui  queconfig.ui  ripconfig.ui  tracksconfig.ui id3tagdialog.ui wizard.ui
++kaudiocreator_SOURCES = cddb.cpp cdconfigimp.cpp kmacroexpander.cpp main.cpp kaudiocreator.cpp encoderconfigimp.cpp  job.cpp  queconfigimp.cpp  ripconfigimp.cpp  tracksconfigimp.cpp  cdconfig.ui  encoderconfig.ui  queconfig.ui  ripconfig.ui  tracksconfig.ui id3tagdialog.ui wizard.ui
+ 
+ EXTRA_DIST = kaudiocreator.h kaudiocreator.desktop cdconfigimp.h  encoderconfigimp.h  queconfigimp.h  ripconfigimp.h  tracksconfigimp.h cddb.h
+ 
+--- kdemultimedia-3.1.4/kioslave/audiocd/Makefile.am.orig	Tue Oct  7 14:11:26 2003
++++ kdemultimedia-3.1.4/kioslave/audiocd/Makefile.am	Tue Oct  7 14:11:26 2003
+@@ -6,7 +6,7 @@
+ 
+ kde_module_LTLIBRARIES = kio_audiocd.la
+ 
+-kio_audiocd_la_SOURCES = audiocd.cpp cddb.cpp
++kio_audiocd_la_SOURCES = cddb.cpp audiocd.cpp
+ 
+ kio_audiocd_la_LDFLAGS = $(all_libraries) $(KDE_RPATH) $(CDPARANOIA_RPATH) \
+  $(LAME_RPATH) $(VORBIS_RPATH) -module $(KDE_PLUGIN)
+--- kdemultimedia-3.1.4/admin/acinclude.m4.in.orig	Fri Oct 10 00:04:56 2003
++++ kdemultimedia-3.1.4/admin/acinclude.m4.in	Fri Oct 10 00:04:56 2003
+@@ -1752,7 +1752,7 @@
+ AC_SUBST(kde_libraries)
+ AC_SUBST(kde_includes)
+ 
+-if test "$kde_includes" = "$x_includes" || test "$kde_includes" = "$qt_includes"  || test "$kde_includes" = "/usr/include"; then
++if test "$kde_includes" = "$qt_includes"  || test "$kde_includes" = "/usr/include"; then
+  KDE_INCLUDES=""
+ else
+  KDE_INCLUDES="-I$kde_includes"
