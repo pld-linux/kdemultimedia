@@ -1,6 +1,6 @@
-%define		_ver		3.0.1
+%define		_ver		3.0.2
 #define		_sub_ver
-%define		_rel		3
+%define		_rel		1
 
 %{?_sub_ver:	%define	_version	%{_ver}%{_sub_ver}}
 %{!?_sub_ver:	%define	_version	%{_ver}}
@@ -20,7 +20,7 @@ Vendor:		The KDE Team
 Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_ftpdir}/%{version}/src/%{name}-%{version}.tar.bz2
 # generated from kde-i18n
-Source1:	kde-i18n-%{name}-%{version}.tar.bz2
+#Source1:	kde-i18n-%{name}-%{version}.tar.bz2
 Patch0:		%{name}-kmidi-alsa.patch
 %ifnarch sparc sparc64
 BuildRequires:	alsa-lib-devel
@@ -230,25 +230,26 @@ ALD=$RPM_BUILD_ROOT%{_applnkdir}
 install -d $ALD/Settings/KDE
 mv $ALD/{Settings/Sound,Settings/KDE}
 
-bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
+#bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
 
 %find_lang aktion --with-kde
 %find_lang artsbuilder --with-kde
-%find_lang artscontrol --with-kde
-cat artsbuilder.lang artscontrol.lang >> arts.lang
-%find_lang kaboodle --with-kde
+#%find_lang artscontrol --with-kde
+cat artsbuilder.lang > arts.lang
+#cat artscontrol.lang >> arts.lang
+#%find_lang kaboodle --with-kde
 %find_lang kmid --with-kde
 %find_lang kmidi --with-kde
 %find_lang kmix --with-kde
-%find_lang kcmkmix --with-kde
-cat kcmkmix.lang >> kmix.lang
+#%find_lang kcmkmix --with-kde
+#cat kcmkmix.lang >> kmix.lang
 %find_lang kscd --with-kde
 %find_lang noatun --with-kde
-%find_lang kfile_m3u --with-kde
-%find_lang kfile_mp3 --with-kde
-%find_lang kfile_ogg --with-kde
-%find_lang kfile_wav --with-kde
-cat kfile_m3u.lang kfile_mp3.lang kfile_ogg.lang kfile_wav.lang >> %{name}.lang
+#%find_lang kfile_m3u --with-kde
+#%find_lang kfile_mp3 --with-kde
+#%find_lang kfile_ogg --with-kde
+#%find_lang kfile_wav --with-kde
+#cat kfile_m3u.lang kfile_mp3.lang kfile_ogg.lang kfile_wav.lang >> %{name}.lang
 
 %post   mpeglib -p /sbin/ldconfig
 %postun mpeglib -p /sbin/ldconfig
@@ -274,7 +275,8 @@ cat kfile_m3u.lang kfile_mp3.lang kfile_ogg.lang kfile_wav.lang >> %{name}.lang
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%files -f %{name}.lang
+%files
+#-f %{name}.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libdummy.so.*.*.*
 %attr(755,root,root) %{_libdir}/libdummy.la
@@ -422,7 +424,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libdummy.so
 %{_libdir}/kde3/kmix_panelapplet.so
 
-%files kaboodle -f kaboodle.lang
+%files kaboodle
+#-f kaboodle.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kaboodle
 %attr(755,root,root) %{_libdir}/kaboodle.??
