@@ -7,7 +7,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	3.0.4
-Release:	4
+Release:	5
 Epoch:		7
 License:	GPL
 Vendor:		The KDE Team
@@ -334,9 +334,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libyaf*.so.*.*.*
 %attr(755,root,root) %{_libdir}/libarts_mpeglib*.so.*.*.*
 %attr(755,root,root) %{_libdir}/libmpeg-*.so
-%{_libdir}/libmpeg.la
-%{_libdir}/libyaf*.la
-%{_libdir}/libarts_mpeglib*.la
 # Note that SplayPlayObject.mopclass is *not* here.
 %{_libdir}/mcop/VCDPlayObject.mcopclass
 %{_libdir}/mcop/WAVPlayObject.mcopclass
@@ -350,7 +347,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/aktion*
 %attr(755,root,root) %{_libdir}/libaktion.so.*.*.*
-%{_libdir}/libaktion.la
 %{_applnkdir}/Multimedia/aktion.desktop
 %{_datadir}/apps/aktion
 %{_datadir}/config/aktionrc
@@ -361,7 +357,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/arts*
 %attr(755,root,root) %{_bindir}/midisend
-%attr(755,root,root) %{_libdir}/libaudiofilearts.??
+%attr(755,root,root) %{_libdir}/libaudiofilearts.so
 %attr(755,root,root) %{_libdir}/libarts[!_]*.so.*.*.*
 %attr(755,root,root) %{_libdir}/libarts_[!m]*.so.*.*.*
 %attr(755,root,root) %{_libdir}/libarts[!_mgb]*.so
@@ -386,7 +382,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libnoatun*.so.*.*.*
 %attr(755,root,root) %{_libdir}/libnoatun[!.c]*so
 %attr(755,root,root) %{_libdir}/libwinskinvis.so
-%{_libdir}/libnoatun*.la
 %attr(755,root,root) %{_libdir}/kde3/noatun*.??
 %{_libdir}/mcop/Noatun
 %{_libdir}/mcop/noatun*
@@ -400,7 +395,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kmid
 %attr(755,root,root) %{_libdir}/libkmidpart.so.*.*.*
-%{_libdir}/libkmidpart.la
 %{_applnkdir}/Multimedia/kmid.desktop
 %{_datadir}/apps/kmid
 %{_datadir}/mimelnk/audio/x-karaoke.desktop
@@ -440,7 +434,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kscd
 %attr(755,root,root) %{_bindir}/workman2cddb.pl
 %attr(755,root,root) %{_libdir}/libworkman.so.*.*.*
-%{_libdir}/libworkman.la
 %{_applnkdir}/Multimedia/kscd.desktop
 %{_datadir}/apps/kscd
 %{_datadir}/mimelnk/text/xmcd.desktop
