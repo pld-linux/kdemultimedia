@@ -4,24 +4,24 @@
 %bcond_without	i18n	# don't build i18n per module subpackages
 #
 %define		_state		stable
-%define		_ver		3.2.1
+%define		_ver		3.2.2
 #%efine		_snap		040110
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	2
+Release:	1
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
 Source0:	http://download.kde.org/%{_state}/%{_ver}/src/%{name}-%{_ver}.tar.bz2
-# Source0-md5:	6e03faa44ff7fdf60fd2fef0d23d5c43
+# Source0-md5:	062249563cbf66d77e61b41e5126f806
 #Source0:	http://ep09.pld-linux.org/~djurban/kde/%{name}-%{version}.tar.bz2
 %if %{with i18n}
 Source1:	kde-i18n-%{name}-%{version}.tar.bz2
-# Source1-md5:	7934bbaaa3b526b9115b43c4fbb846e1
+# Source1-md5:	70b3e8e15eea6e5c40df1b35c62aa8a5
 %endif
 # Patch0:		%{name}-3.2branch.diff
 # Patch0:		%{name}-no_pedantic.patch
