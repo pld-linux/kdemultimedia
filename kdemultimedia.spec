@@ -1,13 +1,12 @@
 
 %define         _state          unstable
 %define         _kdever         kde-3.1-beta1
-%define         _debug	        full
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	3.0.8
-Release:	1
+Release:	2
 Epoch:		7
 License:	GPL
 Vendor:		The KDE Team
@@ -16,6 +15,7 @@ Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_kdever}/src/%{name}-%{version}.t
 # generated from kde-i18n
 #Source1:	kde-i18n-%{name}-%{version}.tar.bz2
 Patch0:		%{name}-kscd.patch
+Patch1:		%{name}-xineplugin.patch
 %ifnarch sparc sparc64
 BuildRequires:	alsa-lib-devel
 BuildRequires:	alsa-driver-devel
@@ -244,6 +244,7 @@ KDE Media Player.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %build
 kde_htmldir="%{_htmldir}"; export kde_htmldir
@@ -254,7 +255,6 @@ CFLAGS="%{rpmcflags} -I%{_includedir}"
 %configure CPPFLAGS="$CPPFLAGS" \
  	--with-pam="yes" \
 	--enable-final \
-	--enable-debug=%{_debug} \
 %ifnarch sparc sparcv9 sparc64
 	--enable-audio=oss
 %else
