@@ -1,0 +1,842 @@
+diff -urN -x CVS kdemultimedia.orig/arts/builder/artsbuilder.desktop kdemultimedia/arts/builder/artsbuilder.desktop
+--- kdemultimedia.orig/arts/builder/artsbuilder.desktop	Sat Mar 27 14:11:47 2004
++++ kdemultimedia/arts/builder/artsbuilder.desktop	Sat Apr 17 14:45:15 2004
+@@ -54,6 +54,7 @@
+ GenericName[fr]=Concepteur de filtre audio
+ GenericName[he]=מעצב מסנני שמע
+ GenericName[hi]=ध्वनि फिल्टर डिजाइनर
++GenericName[hr]=Dizajner audio filtara
+ GenericName[hu]=Hangszűrő-tervező
+ GenericName[is]=Hljóðsíuhönnuður
+ GenericName[it]=Disegnatore di filtro audio
+diff -urN -x CVS kdemultimedia.orig/arts/tools/artscontrol.desktop kdemultimedia/arts/tools/artscontrol.desktop
+--- kdemultimedia.orig/arts/tools/artscontrol.desktop	Sat Mar 27 14:11:49 2004
++++ kdemultimedia/arts/tools/artscontrol.desktop	Sat Apr 17 14:45:17 2004
+@@ -67,6 +67,7 @@
+ GenericName[gl]=Control do Servidor de Son
+ GenericName[he]=שליטה בשרת הצליל
+ GenericName[hi]=ध्वनि सर्वर नियंत्रक
++GenericName[hr]=Kontrola zvučnog poslužitelja
+ GenericName[hu]=Hangszolgáltatás-vezérlő
+ GenericName[is]=Stillingar hljóðmiðlarans
+ GenericName[it]=Controllo del server sonoro
+diff -urN -x CVS kdemultimedia.orig/juk/advancedsearchdialog.cpp kdemultimedia/juk/advancedsearchdialog.cpp
+--- kdemultimedia.orig/juk/advancedsearchdialog.cpp	Wed Oct  1 22:11:22 2003
++++ kdemultimedia/juk/advancedsearchdialog.cpp	Wed Apr 14 14:09:59 2004
+@@ -36,7 +36,7 @@
+ // public methods
+ ////////////////////////////////////////////////////////////////////////////////
+ 
+-AdvancedSearchDialog::AdvancedSearchDialog(const QString &defaultName, 
++AdvancedSearchDialog::AdvancedSearchDialog(const QString &defaultName,
+                                            QWidget *parent,
+                                            const char *name) :
+     KDialogBase(parent, name, true, i18n("Create Search Playlist"), Ok|Cancel)
+@@ -65,7 +65,7 @@
+     QWidget *buttons = new QWidget(criteriaGroupBox);
+     QBoxLayout *l = new QHBoxLayout(buttons, 0, 5);
+ 
+-    KPushButton *clearButton = new KPushButton(i18n("Clear"), buttons);
++    KPushButton *clearButton = new KPushButton(KStdGuiItem::clear(), buttons);
+     connect(clearButton, SIGNAL(clicked()), SLOT(clear()));
+     l->addWidget(clearButton);
+ 
+diff -urN -x CVS kdemultimedia.orig/juk/collectionlist.cpp kdemultimedia/juk/collectionlist.cpp
+--- kdemultimedia.orig/juk/collectionlist.cpp	Thu Nov 27 15:42:26 2003
++++ kdemultimedia/juk/collectionlist.cpp	Wed Apr 14 00:34:27 2004
+@@ -112,7 +112,6 @@
+ CollectionList::CollectionList(QWidget *parent) :
+     Playlist(parent, i18n("Collection List")),
+     m_itemsDict(5003),
+-    m_viewModeItems(m_uniqueSetCount, SortedStringList()),
+     m_uniqueSets(m_uniqueSetCount, SortedStringList()),
+     m_uniqueSetLast(m_uniqueSetCount, QString::null)
+ {
+@@ -150,9 +149,7 @@
+     if(value.isEmpty())
+ 	return;
+ 
+-    if(value == m_uniqueSetLast[t] || m_uniqueSets[t].insert(value))
+-	m_viewModeItems[t].insert(value);
+-    else {
++    if(value != m_uniqueSetLast[t] && !m_uniqueSets[t].insert(value)) {
+ 	m_uniqueSetLast[t] = value;
+ 	emit signalCollectionChanged();
+     }
+diff -urN -x CVS kdemultimedia.orig/juk/collectionlist.h kdemultimedia/juk/collectionlist.h
+--- kdemultimedia.orig/juk/collectionlist.h	Thu Nov 27 15:42:26 2003
++++ kdemultimedia/juk/collectionlist.h	Wed Apr 14 00:34:27 2004
+@@ -62,13 +62,6 @@
+      */
+     QStringList uniqueSet(UniqueSetType t) const { return m_uniqueSets[t].values(); }
+ 
+-    /**
+-     * This is similar to uniqueSet() but in this case only returns values for
+-     * which there are two or more occurances in the collection list.  This is
+-     * useful when grouping items.
+-     */
+-    QStringList viewModeItems(UniqueSetType t) const { return m_viewModeItems[t].values(); }
+-
+     CollectionListItem *lookup(const QString &file) { return m_itemsDict.find(file); }
+     virtual PlaylistItem *createItem(const QFileInfo &file, 
+ 				     const QString &absFilePath = QString::null, 
+@@ -128,7 +121,6 @@
+     static CollectionList *m_list;
+     QDict<CollectionListItem> m_itemsDict;
+     KDirWatch *m_dirWatch;
+-    QValueVector<SortedStringList> m_viewModeItems;
+     QValueVector<SortedStringList> m_uniqueSets;
+     QValueVector<QString> m_uniqueSetLast;
+ };
+diff -urN -x CVS kdemultimedia.orig/juk/filerenamerconfigdlg.cpp kdemultimedia/juk/filerenamerconfigdlg.cpp
+--- kdemultimedia.orig/juk/filerenamerconfigdlg.cpp	Sat Sep  6 17:31:03 2003
++++ kdemultimedia/juk/filerenamerconfigdlg.cpp	Mon Apr 12 19:54:50 2004
+@@ -60,7 +60,7 @@
+ 
+ void FileRenamerConfigDlg::currentFilenameChanged(const QString &curFilename)
+ {
+-    Tag *tag = Tag::createTag(curFilename);
++    Tag *tag = Tag::createTag(curFilename, true);
+     if(tag == 0) {
+         m_child->lNewFilename->setText(i18n("Could not read tag from file"));
+         return;
+diff -urN -x CVS kdemultimedia.orig/juk/juk.cpp kdemultimedia/juk/juk.cpp
+--- kdemultimedia.orig/juk/juk.cpp	Fri Jan 16 19:15:02 2004
++++ kdemultimedia/juk/juk.cpp	Wed Apr 14 03:35:26 2004
+@@ -812,7 +812,7 @@
+         actionCollection()->action("file_save")->setEnabled(false);
+         actionCollection()->action("file_save_as")->setEnabled(false);
+         actionCollection()->action("renamePlaylist")->setEnabled(false);
+-        actionCollection()->action("reloadPlaylist")->setEnabled(false);
++        actionCollection()->action("reloadPlaylist")->setEnabled(m_splitter->collectionListSelected());
+         actionCollection()->action("deleteItemPlaylist")->setEnabled(false);
+     }
+     else {
+diff -urN -x CVS kdemultimedia.orig/juk/juk.h kdemultimedia/juk/juk.h
+--- kdemultimedia.orig/juk/juk.h	Tue Jan  6 08:38:39 2004
++++ kdemultimedia/juk/juk.h	Thu Apr 15 03:40:58 2004
+@@ -67,6 +67,12 @@
+     void volumeDown();
+     void volumeMute();
+ 
++    /**
++     * This forwards on the request to enable or disable directory scanning for
++     * new files being added or removed.
++     */
++    void setDirWatchEnabled(bool enabled) { m_splitter->setDirWatchEnabled(enabled); }
++
+ signals:
+     void signalEdit();
+     void signalNewSong(const QString& songTitle);
+diff -urN -x CVS kdemultimedia.orig/juk/playlist.cpp kdemultimedia/juk/playlist.cpp
+--- kdemultimedia.orig/juk/playlist.cpp	Thu Mar 18 23:51:30 2004
++++ kdemultimedia/juk/playlist.cpp	Sat Apr 17 02:07:14 2004
+@@ -44,6 +44,7 @@
+ #include "mediafiles.h"
+ #include "collectionlist.h"
+ #include "filerenamer.h"
++#include "juk.h"
+ 
+ ////////////////////////////////////////////////////////////////////////////////
+ // Playlist::SharedSettings definition
+@@ -537,13 +538,25 @@
+ 
+ void Playlist::slotRenameFile()
+ {
++    // TODO: find a less dirty hack for signaling disabling of the file
++    // renamer that doesn't involve going through these layers of indirection.
++
++    JuK *mainWindow = dynamic_cast<JuK *>(kapp->mainWidget());
++
++    Q_ASSERT(mainWindow);
++
++    if(mainWindow)
++	mainWindow->setDirWatchEnabled(false);
++
+     FileRenamer renamer;
+     PlaylistItemList items = selectedItems();
+-    if(items.count() == 1) {
+-        renamer.rename(items[0]);
+-    } else {
+-        renamer.rename(items);
+-    }
++    if(items.count() == 1)
++	renamer.rename(items[0]);
++    else
++	renamer.rename(items);
++
++    if(mainWindow)
++	mainWindow->setDirWatchEnabled(true);
+ }
+ 
+ void Playlist::slotGuessTagInfo(TagGuesser::Type type)
+@@ -952,7 +965,7 @@
+ 
+     // Turn off non-explicit sorting.
+ 
+-    setSorting(columns() + 1);
++    setSorting(PlaylistItem::lastColumn() + columnOffset() + 1);
+ 
+     PlaylistItem *after = 0;
+ 
+diff -urN -x CVS kdemultimedia.orig/juk/playlistsplitter.cpp kdemultimedia/juk/playlistsplitter.cpp
+--- kdemultimedia.orig/juk/playlistsplitter.cpp	Thu Mar 18 23:51:30 2004
++++ kdemultimedia/juk/playlistsplitter.cpp	Thu Apr 15 03:40:58 2004
+@@ -127,6 +127,9 @@
+     readConfig();
+ 
+     m_editor->slotUpdateCollection();
++
++    if(m_collection->childCount() == 0)
++	QTimer::singleShot(0, this, SLOT(slotOpenDirectory()));
+ }
+ 
+ PlaylistSplitter::~PlaylistSplitter()
+@@ -319,13 +322,21 @@
+ 	slotAddToPlaylist(files, visiblePlaylist());
+ }
+ 
+-Playlist *PlaylistSplitter::createPlaylist(const QString &name)
++Playlist *PlaylistSplitter::createPlaylist(const QString &name, bool raise)
+ {
+     Playlist *p = new Playlist(m_playlistStack, name);
+-    setupPlaylist(p, true);
++    setupPlaylist(p, raise);
+     return p;
+ }
+ 
++void PlaylistSplitter::setDirWatchEnabled(bool enabled)
++{
++    if(enabled)
++	m_dirWatch.startScan();
++    else
++	m_dirWatch.stopScan();
++}
++
+ ////////////////////////////////////////////////////////////////////////////////
+ // public slots
+ ////////////////////////////////////////////////////////////////////////////////
+@@ -362,17 +373,22 @@
+     }
+ }
+ 
+-Playlist *PlaylistSplitter::slotCreatePlaylist(const QString &name_)
++Playlist *PlaylistSplitter::slotCreatePlaylist(const QString &name, bool raise)
+ {
++    if(!name.isNull())
++	return createPlaylist(name, raise);
++
+     bool ok;
+ 
+     // If this text is changed, please also change it in PlaylistBox::duplicate().
+ 
+-    QString name = KInputDialog::getText(i18n("Create New Playlist"),
++    QString s = KInputDialog::getText(
++	i18n("Create New Playlist"),
+ 	i18n("Please enter a name for the new playlist:"),
+-	name_.isNull() ? uniquePlaylistName() : name_, &ok);
++	uniquePlaylistName(), &ok);
++    
+     if(ok)
+-	return createPlaylist(name);
++	return createPlaylist(s, raise);
+     else
+ 	return 0;
+ }
+@@ -419,6 +435,14 @@
+ 	p->slotRemoveSelectedItems();
+ }
+ 
++void PlaylistSplitter::slotReloadPlaylist()
++{
++    if(collectionListSelected())
++	slotScanDirectories();
++    else
++	visiblePlaylist()->slotReload();
++}
++
+ void PlaylistSplitter::slotAddToPlaylist(const QString &file, Playlist *list, PlaylistItem *after)
+ {
+     if(!after)
+@@ -843,7 +867,8 @@
+ 	    if(version == 2) {
+ 		Q_INT32 sortColumn;
+ 		s >> sortColumn;
+-		playlist->setSorting(sortColumn);
++		if(playlist)
++		    playlist->setSorting(sortColumn);
+ 	    }
+ 	}
+ 	break;
+@@ -876,7 +901,8 @@
+ 
+ void PlaylistSplitter::savePlaylists()
+ {
+-    QString playlistsFile = KGlobal::dirs()->saveLocation("appdata") + "playlists";
++    QString dirName = KGlobal::dirs()->saveLocation("appdata");
++    QString playlistsFile = dirName + "playlists.new";
+     QFile f(playlistsFile);
+ 
+     if(!f.open(IO_WriteOnly))
+@@ -911,6 +937,8 @@
+ 
+     fs << data;
+     f.close();
++
++    QDir(dirName).rename("playlists.new", "playlists");
+ }
+ 
+ ////////////////////////////////////////////////////////////////////////////////
+@@ -1009,12 +1037,21 @@
+     if(items.isEmpty())
+ 	return;
+ 
+-    Playlist *playlist = slotCreatePlaylist();
++    Playlist *playlist = slotCreatePlaylist(QString::null, false);
+ 
+     if(!playlist)
+         return;
+ 
+     playlist->createItems(items);
++
++    // Set this to the current playlist.  We avoid doing this above through the
++    // slotCreatePlaylist() because if the items being copied are in a dynamic
++    // list we need for their lifetime to last through their being copied in the
++    // call above.
++
++    PlaylistList l;
++    l.append(playlist);
++    slotChangePlaylist(l);
+ }
+ 
+ void PlaylistSplitter::slotShowSearchResults()
+diff -urN -x CVS kdemultimedia.orig/juk/playlistsplitter.h kdemultimedia/juk/playlistsplitter.h
+--- kdemultimedia.orig/juk/playlistsplitter.h	Wed Jan  7 12:11:00 2004
++++ kdemultimedia/juk/playlistsplitter.h	Thu Apr 15 03:40:58 2004
+@@ -168,9 +168,17 @@
+     KActionMenu *columnVisibleAction() const { return m_collection->columnVisibleAction(); }
+ 
+     /**
+-     * Create a playlist with the name \a name.
++     * Create a playlist with the name \a name.  If \a raise is true then the
++     * Playlist will be made the current playlist.
+      */
+-    Playlist *createPlaylist(const QString &name);
++    Playlist *createPlaylist(const QString &name, bool raise = true);
++
++    /**
++     * This can be used to turn on or off scanning for new files.  This is
++     * presently used so that the file renamer can temporariy disable searching
++     * for new files while it performs the rename.
++     */
++    void setDirWatchEnabled(bool enabled);
+ 
+ public slots:
+ 
+@@ -198,8 +206,11 @@
+     /**
+      * Create a playlist and prompt the user for a name if no name was
+      * specified.
++     *
++     * If \a raise is true the playlist will be shown after being created.
+      */
+-    Playlist *slotCreatePlaylist(const QString &name = QString::null);
++    Playlist *slotCreatePlaylist(const QString &name = QString::null,
++				 bool raise = true);
+ 
+     /**
+      * Create a playlist from a user-defined directory, and prompt the user for
+@@ -238,7 +249,7 @@
+      * 
+      * \see slotRefresh()
+      */
+-    void slotReloadPlaylist() { visiblePlaylist()->slotReload(); }
++    void slotReloadPlaylist();
+ 
+     /**
+      * Show or hide the editor.
+diff -urN -x CVS kdemultimedia.orig/juk/statuslabel.cpp kdemultimedia/juk/statuslabel.cpp
+--- kdemultimedia.orig/juk/statuslabel.cpp	Tue Nov  4 21:03:33 2003
++++ kdemultimedia/juk/statuslabel.cpp	Mon Apr 12 20:56:41 2004
+@@ -17,10 +17,10 @@
+ 
+ #include <kpushbutton.h>
+ #include <kiconloader.h>
++#include <ksqueezedtextlabel.h> 
+ #include <klocale.h>
+ #include <kdebug.h>
+ 
+-#include <qlabel.h>
+ #include <qtooltip.h>
+ #include <qlayout.h>
+ 
+@@ -47,13 +47,13 @@
+ 							  5, "trackAndPlaylistLayout");
+     trackAndPlaylistLayout->addSpacing(5);
+ 
+-    m_playlistLabel = new QLabel(trackAndPlaylist, "playlistLabel");
++    m_playlistLabel = new KSqueezedTextLabel(trackAndPlaylist, "playlistLabel");
+     trackAndPlaylistLayout->addWidget(m_playlistLabel);
+     m_playlistLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+     m_playlistLabel->setTextFormat(PlainText);
+     m_playlistLabel->setAlignment(AlignLeft | AlignVCenter);
+ 
+-    m_trackLabel = new QLabel(trackAndPlaylist, "trackLabel");
++    m_trackLabel = new KSqueezedTextLabel(trackAndPlaylist, "trackLabel");
+     trackAndPlaylistLayout->addWidget(m_trackLabel);
+     m_trackLabel->setAlignment(AlignRight | AlignVCenter);
+     m_trackLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+diff -urN -x CVS kdemultimedia.orig/juk/statuslabel.h kdemultimedia/juk/statuslabel.h
+--- kdemultimedia.orig/juk/statuslabel.h	Tue Nov  4 21:11:39 2003
++++ kdemultimedia/juk/statuslabel.h	Mon Apr 12 20:56:41 2004
+@@ -21,6 +21,7 @@
+ #include <qhbox.h>
+ 
+ class QLabel;
++class KSqueezedTextLabel;
+ 
+ class PlaylistItem;
+ 
+@@ -73,8 +74,8 @@
+     int m_itemCurrentTime;
+     bool m_showTimeRemaining;
+ 
+-    QLabel *m_playlistLabel;
+-    QLabel *m_trackLabel;
++    KSqueezedTextLabel *m_playlistLabel;
++    KSqueezedTextLabel *m_trackLabel;
+     QLabel *m_itemTimeLabel;
+ };
+ 
+diff -urN -x CVS kdemultimedia.orig/juk/tageditor.cpp kdemultimedia/juk/tageditor.cpp
+--- kdemultimedia.orig/juk/tageditor.cpp	Sun Mar 21 05:55:01 2004
++++ kdemultimedia/juk/tageditor.cpp	Thu Apr 15 00:31:08 2004
+@@ -28,6 +28,8 @@
+ #include <qcheckbox.h>
+ #include <qlayout.h>
+ #include <qdir.h>
++#include <qvalidator.h>
++#include <qeventloop.h>
+ 
+ #include <id3v1genres.h>
+ 
+@@ -35,12 +37,55 @@
+ #include "collectionlist.h"
+ #include "playlistitem.h"
+ 
++class FileNameValidator : public QValidator
++{
++public:
++    FileNameValidator(QObject *parent, const char *name = 0) :
++	QValidator(parent, name) {}
++
++    virtual void fixup(QString &s) const
++    {
++	s.remove('/');
++    }
++
++    virtual State validate(QString &s, int &) const
++    {
++	if(s.find('/' != -1))
++	   return Invalid;
++	return Acceptable;
++    }
++};
++
++class FixedHLayout : public QHBoxLayout
++{
++public:
++    FixedHLayout(QWidget *parent, int margin = 0, int spacing = -1, const char *name = 0) :
++	QHBoxLayout(parent, margin, spacing, name),
++	m_width(-1) {}
++    FixedHLayout(QLayout *parentLayout, int spacing = -1, const char *name = 0) :
++	QHBoxLayout(parentLayout, spacing, name),
++	m_width(-1) {}
++    void setWidth(int w = -1)
++    {
++	m_width = w == -1 ? QHBoxLayout::minimumSize().width() : w;
++    }
++    virtual QSize minimumSize() const
++    {
++	QSize s = QHBoxLayout::minimumSize();
++	s.setWidth(m_width);
++	return s;
++    }
++private:
++    int m_width;
++};
++
+ ////////////////////////////////////////////////////////////////////////////////
+ // public members
+ ////////////////////////////////////////////////////////////////////////////////
+ 
+-TagEditor::TagEditor(QWidget *parent, const char *name) : QWidget(parent, name),
+-							  m_currentPlaylist(0)
++TagEditor::TagEditor(QWidget *parent, const char *name) :
++    QWidget(parent, name),
++    m_currentPlaylist(0)
+ {
+     setupLayout();
+     readConfig();
+@@ -102,6 +147,8 @@
+     m_albumNameBox->setEditText(tag->album());
+ 
+     m_fileNameBox->setText(item->fileName());
++    m_fileNameBox->setValidator(new FileNameValidator(m_fileNameBox));
++
+     m_bitrateBox->setText(QString::number(tag->bitrate()));
+     m_lengthBox->setText(tag->lengthString());
+ 
+@@ -351,8 +398,8 @@
+         rightColumnLayout->addWidget(addHidden(m_fileNameBox));
+ 
+         { // lay out the track row
+-            QHBoxLayout *trackRowLayout = new QHBoxLayout(rightColumnLayout,
+-							  horizontalSpacing);
++            FixedHLayout *trackRowLayout = new FixedHLayout(rightColumnLayout,
++							    horizontalSpacing);
+ 
+             m_trackSpin = new KIntSpinBox(0, 255, 1, 0, 10, this, "trackSpin");
+ 	    addItem(i18n("T&rack:"), m_trackSpin, trackRowLayout);
+@@ -382,6 +429,8 @@
+             m_bitrateBox->setMaximumWidth(50);
+             m_bitrateBox->setReadOnly(true);
+             trackRowLayout->addWidget(addHidden(m_bitrateBox));
++
++	    trackRowLayout->setWidth();
+         }
+ 
+         m_commentBox = new KEdit(this, "commentBox");
+@@ -493,7 +542,7 @@
+ 	    else if(item)
+ 		errorFiles.append(item->fileName());
+ 
+-	    kapp->processEvents();
++	    kapp->eventLoop()->processEvents(QEventLoop::ExcludeUserInput);
+ 	}
+ 	
+ 	if(!errorFiles.isEmpty())
+diff -urN -x CVS kdemultimedia.orig/juk/viewmode.cpp kdemultimedia/juk/viewmode.cpp
+--- kdemultimedia.orig/juk/viewmode.cpp	Thu Dec  4 03:38:38 2003
++++ kdemultimedia/juk/viewmode.cpp	Wed Apr 14 00:34:27 2004
+@@ -302,17 +302,17 @@
+     
+     i = new PlaylistBox::Item(collectionItem, "cdimage", i18n("Artists"));
+     m_searchCategories.insert("artists", i);
+-    setupCategory("artists", CollectionList::instance()->viewModeItems(CollectionList::Artists),
++    setupCategory("artists", CollectionList::instance()->uniqueSet(CollectionList::Artists),
+ 		  PlaylistItem::ArtistColumn, false);
+ 
+     i = new PlaylistBox::Item(collectionItem, "cdimage", i18n("Albums"));
+     m_searchCategories.insert("albums", i);
+-    setupCategory("albums", CollectionList::instance()->viewModeItems(CollectionList::Albums),
++    setupCategory("albums", CollectionList::instance()->uniqueSet(CollectionList::Albums),
+ 		  PlaylistItem::AlbumColumn);
+ 
+     i = new PlaylistBox::Item(collectionItem, "cdimage", i18n("Genres"));
+     m_searchCategories.insert("genres", i);
+-    setupCategory("genres", CollectionList::instance()->viewModeItems(CollectionList::Genres),
++    setupCategory("genres", CollectionList::instance()->uniqueSet(CollectionList::Genres),
+ 		  PlaylistItem::GenreColumn);
+ 
+     for(QDictIterator<PlaylistBox::Item> it(m_searchCategories); it.current(); ++it)
+diff -urN -x CVS kdemultimedia.orig/kaudiocreator/encoder.cpp kdemultimedia/kaudiocreator/encoder.cpp
+--- kdemultimedia.orig/kaudiocreator/encoder.cpp	Tue Feb 24 02:47:42 2004
++++ kdemultimedia/kaudiocreator/encoder.cpp	Sat May  1 06:38:01 2004
+@@ -290,7 +290,7 @@
+     QFileInfo audioFile(job->newLocation);
+     KURL d(desiredFile);
+     QString relative = KURL::relativePath(d.directory(), audioFile.filePath());
+-    t << relative << audioFile.fileName() << endl;
++    t << relative << endl;
+   }
+   else
+     t << job->newLocation << endl;
+diff -urN -x CVS kdemultimedia.orig/kaudiocreator/kaudiocreator.desktop kdemultimedia/kaudiocreator/kaudiocreator.desktop
+--- kdemultimedia.orig/kaudiocreator/kaudiocreator.desktop	Sat Mar 27 14:12:03 2004
++++ kdemultimedia/kaudiocreator/kaudiocreator.desktop	Sun Apr 25 01:29:34 2004
+@@ -18,7 +18,7 @@
+ Comment[fr]=Une interface pour la création de fichiers sons
+ Comment[gl]=Interface para a creación de ficheiros de son
+ Comment[he]=ממשק ליצירת קבצי שמע
+-Comment[hi]=ऑडियो फाइल बनाने हेतु फ्रन्टएण्ड
++Comment[hi]=ऑडियो फ़ाइल बनाने हेतु फ्रन्टएण्ड
+ Comment[hr]=Sučelje za rađenje audio datoteka
+ Comment[hu]=Grafikus előtétprogram hangfájlok létrehozásához
+ Comment[is]=Andlit á tól sem búa til hljóðskrár
+diff -urN -x CVS kdemultimedia.orig/kaudiocreator/tracksimp.cpp kdemultimedia/kaudiocreator/tracksimp.cpp
+--- kdemultimedia.orig/kaudiocreator/tracksimp.cpp	Thu Feb 26 04:04:01 2004
++++ kdemultimedia/kaudiocreator/tracksimp.cpp	Sat May  1 20:49:35 2004
+@@ -62,6 +62,9 @@
+   connect(deviceCombo, SIGNAL(textChanged(const QString &)), this, SLOT(changeDevice(const QString &)));
+   
+   trackListing->setSorting(-1, false);
++  // DON't i18n this!  It is to catch stupid people who don't bother setting the genre and
++  // encoders that barf on empty strings for the genre (e.g. lame).
++  genres.insert("Unknown", "Pop");
+   genres.insert(i18n("A Cappella"), "A Cappella");
+   genres.insert(i18n("Acid Jazz"), "Acid Jazz");
+   genres.insert(i18n("Acid Punk"), "Acid Punk");
+@@ -446,27 +449,18 @@
+     return;
+   }
+ 
+-  QString list = "";
+-  if( genre.isEmpty() )
++   QStringList list;
++  if( genre == "Unknown" )
+     list += "Genre";
+-  
+-  if( year == 0 ){
+-    if(!list.isEmpty())
+-      list += ", ";
++  if( year == 0 )
+     list += "Year";
+-  }
+-  if( group == "Unknown Artist"){
+-    if(!list.isEmpty())
+-      list += ", ";
++  if( group == "Unknown Artist")
+     list += "Artist";
+-  }
+-  if( album == "Unknown Album"){
+-    if(!list.isEmpty())
+-      list += ", ";
++  if( album == "Unknown Album")
+     list += "Album";
+-  }
+-  if( Prefs::promptIfIncompleteInfo() && !list.isEmpty() ){
+-    int r = KMessageBox::questionYesNo(this, i18n("Part of the album is not set: %1.\n (To change album information click the \"Edit Information\" button.)\n Would you like to rip the selected tracks anyway?").arg(list), i18n("Album Information Incomplete"));
++  
++  if( Prefs::promptIfIncompleteInfo() && list.count()>0 ){
++    int r = KMessageBox::questionYesNo(this, i18n("Part of the album is not set: %1.\n (To change album information click the \"Edit Information\" button.)\n Would you like to rip the selected tracks anyway?").arg(list.join(", ")), i18n("Album Information Incomplete"));
+     if( r == KMessageBox::No )
+       return;
+   }
+@@ -479,6 +473,8 @@
+       newJob->device = device;
+       newJob->album = album;
+       newJob->genre = genres[genre];
++      if(newJob->genre.isEmpty())
++        newJob->genre = "Pop";
+       newJob->group = group;
+       newJob->song = currentItem->text(HEADER_NAME);
+       newJob->track = currentItem->text(HEADER_TRACK).toInt();
+diff -urN -x CVS kdemultimedia.orig/kaudiocreator/wizard.ui.h kdemultimedia/kaudiocreator/wizard.ui.h
+--- kdemultimedia.orig/kaudiocreator/wizard.ui.h	Thu Nov 20 21:22:00 2003
++++ kdemultimedia/kaudiocreator/wizard.ui.h	Fri Apr 30 04:51:09 2004
+@@ -82,7 +82,7 @@
+     string.replace(QRegExp("%year"), "2002");
+     string.replace(QRegExp("%song"), "Time");
+     string.replace(QRegExp("%extension"), "mp3");
+-    string.replace(QRegExp("%track"), "9");
++    string.replace(QRegExp("%track"), "09");
+     string.replace(QRegExp("~"), "/home/foo");
+     exampleLabel->setText(i18n("Example: %1").arg(string));
+ }
+diff -urN -x CVS kdemultimedia.orig/kioslave/audiocd/kcmaudiocd/audiocd.desktop kdemultimedia/kioslave/audiocd/kcmaudiocd/audiocd.desktop
+--- kdemultimedia.orig/kioslave/audiocd/kcmaudiocd/audiocd.desktop	Sat Mar 27 14:12:19 2004
++++ kdemultimedia/kioslave/audiocd/kcmaudiocd/audiocd.desktop	Sun Apr 25 01:29:36 2004
+@@ -75,7 +75,7 @@
+ Comment[fr]=Configuration du module pour CD audio
+ Comment[gl]=Configuración do Escravo IO de CD de Audio
+ Comment[he]=שינוי הגדרות פרוטוקול תקליטורי השמע
+-Comment[hi]=ऑडियो-सीडी आई-ओ स्लेव कॉन्फिगरेशन
++Comment[hi]=ऑडियो-सीडी आई-ओ स्लेव कॉन्फ़िगरेशन
+ Comment[hr]=Postava Audiocd IO poslužnika
+ Comment[hu]=az audiocd protokoll beállításai
+ Comment[is]=Stillingar Audiocd I/O þrælsins
+diff -urN -x CVS kdemultimedia.orig/kmid/x-karaoke.desktop kdemultimedia/kmid/x-karaoke.desktop
+--- kdemultimedia.orig/kmid/x-karaoke.desktop	Sun Feb 29 16:43:08 2004
++++ kdemultimedia/kmid/x-karaoke.desktop	Sun Apr 25 01:29:38 2004
+@@ -18,7 +18,7 @@
+ Comment[fi]=Karaoketiedosto
+ Comment[fr]=Fichier de karaoké
+ Comment[gl]=Ficheiro Karaoke
+-Comment[hi]=कराओके फाइल
++Comment[hi]=कराओके फ़ाइल
+ Comment[hu]=Karaoke-fájl
+ Comment[is]=Karaoke skrá
+ Comment[ja]=カラオケファイル
+diff -urN -x CVS kdemultimedia.orig/krec/kcm_krec.desktop kdemultimedia/krec/kcm_krec.desktop
+--- kdemultimedia.orig/krec/kcm_krec.desktop	Sat Mar 27 14:12:21 2004
++++ kdemultimedia/krec/kcm_krec.desktop	Sun Apr 25 01:29:40 2004
+@@ -50,7 +50,7 @@
+ Comment[fi]=KRec ohjelman yleiset asetukset
+ Comment[fr]=Configuration globale de KRec
+ Comment[gl]=Configuración Global de KRec
+-Comment[hi]=के-रेक का वैश्विक कॉन्फिगरेशन
++Comment[hi]=के-रेक का वैश्विक कॉन्फ़िगरेशन
+ Comment[hu]=A KRec globális beállításai
+ Comment[is]=Algildar stillingar KRec
+ Comment[it]=Configurazione globale di KRec
+diff -urN -x CVS kdemultimedia.orig/krec/kcm_krec_files.desktop kdemultimedia/krec/kcm_krec_files.desktop
+--- kdemultimedia.orig/krec/kcm_krec_files.desktop	Sat Mar 27 14:12:23 2004
++++ kdemultimedia/krec/kcm_krec_files.desktop	Sun Apr 25 01:29:42 2004
+@@ -25,7 +25,7 @@
+ Name[fr]=Nouveaux fichiers
+ Name[ga]=Comhaid Nua
+ Name[gl]=Novos Ficheiros
+-Name[hi]=नई फाइलें
++Name[hi]=नई फ़ाइलें
+ Name[hu]=Új fájlok
+ Name[is]=Nýjar skrár
+ Name[it]=Nuovi file
+@@ -64,7 +64,7 @@
+ Comment[fi]=Oletusasetukset uusille tiedostoille
+ Comment[fr]=Propriétés par défaut pour les nouveaux fichiers
+ Comment[gl]=Propiedades por Defecto para Novos Ficheiros
+-Comment[hi]=नई फाइलों हेतु डिफाल्ट गुण
++Comment[hi]=नई फ़ाइलों हेतु डिफ़ॉल्ट गुण
+ Comment[hu]=Az alapértelmezett tulajdonságok új fájloknál
+ Comment[is]=Sjálfgefnir eiginleikar nýrra skráa
+ Comment[it]=Impostazioni predefinite per i nuovi file
+diff -urN -x CVS kdemultimedia.orig/krec/krecnewproperties.cpp kdemultimedia/krec/krecnewproperties.cpp
+--- kdemultimedia.orig/krec/krecnewproperties.cpp	Sat Oct  4 18:14:38 2003
++++ kdemultimedia/krec/krecnewproperties.cpp	Wed Apr 14 14:09:59 2004
+@@ -26,6 +26,7 @@
+ #include <qlayout.h>
+ #include <kseparator.h>
+ #include <kpushbutton.h>
++#include <kstdguiitem.h>
+ #include <qlabel.h>
+ #include <qhbox.h>
+ #include <qvbox.h>
+@@ -66,7 +67,7 @@
+ 	QWidget *_btnWidget = new QWidget( this );
+ 	_layoutbuttons = new QHBoxLayout( _btnWidget );
+ 	_layoutbuttons->addStretch( 100 );
+-	_btnok = new KPushButton( i18n( "OK" ), _btnWidget );
++	_btnok = new KPushButton( KStdGuiItem::ok(), _btnWidget );
+ 	connect( _btnok, SIGNAL( clicked() ), this, SLOT( accept() ) );
+ 	_layoutbuttons->addWidget( _btnok, 0 );
+ 
+diff -urN -x CVS kdemultimedia.orig/kscd/kscd.cpp kdemultimedia/kscd/kscd.cpp
+--- kdemultimedia.orig/kscd/kscd.cpp	Fri Mar 12 15:38:40 2004
++++ kdemultimedia/kscd/kscd.cpp	Wed Apr 14 14:09:59 2004
+@@ -467,7 +467,7 @@
+     connect( infoPopup, SIGNAL(activated(int)), SLOT(information(int)) );
+ 
+     KHelpMenu* helpMenu = new KHelpMenu(this, KGlobal::instance()->aboutData(), false);
+-    mainPopup->insertItem(i18n("Help"), helpMenu->menu());
++    mainPopup->insertItem(SmallIcon("help"),i18n("&Help"), helpMenu->menu());
+     mainPopup->insertSeparator();
+     m_actions->action(KStdAction::name(KStdAction::Quit))->plug(mainPopup);
+ } // setupPopups
+diff -urN -x CVS kdemultimedia.orig/kscd/xmcd.desktop kdemultimedia/kscd/xmcd.desktop
+--- kdemultimedia.orig/kscd/xmcd.desktop	Thu Mar 18 14:50:06 2004
++++ kdemultimedia/kscd/xmcd.desktop	Sun Apr 25 01:29:44 2004
+@@ -21,7 +21,7 @@
+ Comment[fr]=Banque de données pour CD
+ Comment[gl]=Ficheiro de base de datos de CD
+ Comment[he]=קובץ מסד נתוני תקליטור
+-Comment[hi]=सीडी डाटाबेस फाइल
++Comment[hi]=सीडी डाटाबेस फ़ाइल
+ Comment[hr]=CD baza datoteka
+ Comment[hu]=CD-adatbázis fájl
+ Comment[id]=File Database CD
+diff -urN -x CVS kdemultimedia.orig/libkcddb/kcmcddb/libkcddb.desktop kdemultimedia/libkcddb/kcmcddb/libkcddb.desktop
+--- kdemultimedia.orig/libkcddb/kcmcddb/libkcddb.desktop	Sat Mar 27 14:12:37 2004
++++ kdemultimedia/libkcddb/kcmcddb/libkcddb.desktop	Sun Apr 25 01:29:46 2004
+@@ -64,7 +64,7 @@
+ GenericName[fi]=CDDB-asetukset
+ GenericName[fr]=Configuration CDDB
+ GenericName[gl]=Configuración CDDB
+-GenericName[hi]=सीडीडीबी कॉन्फिगरेशन
++GenericName[hi]=सीडीडीबी कॉन्फ़िगरेशन
+ GenericName[hr]=Podešavanje CDDB-a
+ GenericName[hu]=CDDB-beállító
+ GenericName[is]=Stillingar CDDB
+diff -urN -x CVS kdemultimedia.orig/libkcddb/libkcddb.kcfg kdemultimedia/libkcddb/libkcddb.kcfg
+--- kdemultimedia.orig/libkcddb/libkcddb.kcfg	Sat Nov 22 18:22:56 2003
++++ kdemultimedia/libkcddb/libkcddb.kcfg	Mon Apr 12 23:54:23 2004
+@@ -9,7 +9,7 @@
+       <default>freedb.freedb.org</default>
+     </entry>
+     <entry name="port" type="Int">
+-      <default>8880</default>
++      <default>80</default>
+     </entry>
+     <entry name="cachePolicy" type="Enum">
+       <choices>
+@@ -24,7 +24,7 @@
+         <choice name="CDDBP"></choice>
+ 	<choice name="HTTP"></choice>
+       </choices>
+-      <default>CDDBP</default>
++      <default>HTTP</default>
+     </entry>
+     <entry name="cacheLocations" type="StringList">
+       <default code="true">QDir::homeDirPath()+"/.cddb/"</default>
+diff -urN -x CVS kdemultimedia.orig/noatun/modules/htmlexport/htmlexport.plugin kdemultimedia/noatun/modules/htmlexport/htmlexport.plugin
+--- kdemultimedia.orig/noatun/modules/htmlexport/htmlexport.plugin	Sat Mar 27 14:12:43 2004
++++ kdemultimedia/noatun/modules/htmlexport/htmlexport.plugin	Sun Apr 25 01:29:48 2004
+@@ -78,7 +78,7 @@
+ Comment[fr]=Crée un fichier HTML à partir de la liste de lecture
+ Comment[gl]=Crea un ficheiro HTML coa lista de reproduccións
+ Comment[he]=יצירת קובץ HTML מתוך רשימת הניגון
+-Comment[hi]=प्लेलिस्ट से एचटीएमएल फाइल बनाता है
++Comment[hi]=प्लेलिस्ट से एचटीएमएल फ़ाइल बनाता है
+ Comment[hr]=Stvara od liste pjesama HTML datoteku 
+ Comment[hu]=Lejátszási lista exportálása HTML-ben
+ Comment[is]=Býr til HTML skrá úr lagalistanum
+diff -urN -x CVS kdemultimedia.orig/noatun/modules/metatag/metatag.plugin kdemultimedia/noatun/modules/metatag/metatag.plugin
+--- kdemultimedia.orig/noatun/modules/metatag/metatag.plugin	Sat Mar 27 14:12:55 2004
++++ kdemultimedia/noatun/modules/metatag/metatag.plugin	Sun Apr 25 01:29:50 2004
+@@ -71,7 +71,7 @@
+ Comment[fr]=Lecture et écriture des balises ID3 dans les fichiers multimedia
+ Comment[gl]=Soporte para ler e escribir ás etiquetas dos ficheiros multimedia
+ Comment[he]=תמיכה בקריאה וכתיבה של תגיות בקבצי מדיה
+-Comment[hi]=मीडिया फाइलों के टैग पढ़ने तथा लिखने का समर्थन
++Comment[hi]=मीडिया फ़ाइलों के टैग पढ़ने तथा लिखने का समर्थन
+ Comment[hr]=Podrška za čitanje i pisanje dodatnih informacija (tag-ova) u medijske datoteke
+ Comment[hu]=Támogatás médiafájlok azonosítóinak olvasásához és írásához
+ Comment[is]=Stuðningur til að lesa og skrifa ID3 tög í MP3 skrám
+diff -urN -x CVS kdemultimedia.orig/noatun/modules/splitplaylist/splitplaylist.plugin kdemultimedia/noatun/modules/splitplaylist/splitplaylist.plugin
+--- kdemultimedia.orig/noatun/modules/splitplaylist/splitplaylist.plugin	Fri Apr  2 14:10:04 2004
++++ kdemultimedia/noatun/modules/splitplaylist/splitplaylist.plugin	Sun Apr 18 14:40:31 2004
+@@ -21,6 +21,7 @@
+ Name[eu]=Jo zerrenda moztu
+ Name[fi]=Jaettu soittolista
+ Name[fr]=Liste de lecture découpée
++Name[gl]=Dividir Lista de Reproduccións
+ Name[hi]=स्प्लिट प्लेलिस्ट
+ Name[hr]=Razdvoji listu pjesama
+ Name[hu]=Osztott lejátszási lista
+diff -urN -x CVS kdemultimedia.orig/noatun/modules/winskin/waSkinModel.cpp kdemultimedia/noatun/modules/winskin/waSkinModel.cpp
+--- kdemultimedia.orig/noatun/modules/winskin/waSkinModel.cpp	Wed Feb 26 16:59:35 2003
++++ kdemultimedia/noatun/modules/winskin/waSkinModel.cpp	Tue Apr  6 13:37:23 2004
+@@ -160,7 +160,7 @@
+     }
+ 
+     // now the filename mapping 1.8x -> 2.0
+-    if (fname.upper() == "volume.bmp") 
++    if (fname == "volume.bmp") 
+ 	return WaSkinModel::getPixmap(dir, QString("volbar.bmp"), target);
+ 
+     if (fname == "numbers.bmp") 
+diff -urN -x CVS kdemultimedia.orig/xine_artsplugin/configure.in.in kdemultimedia/xine_artsplugin/configure.in.in
+--- kdemultimedia.orig/xine_artsplugin/configure.in.in	Sun Nov 30 15:11:10 2003
++++ kdemultimedia/xine_artsplugin/configure.in.in	Fri Apr 16 08:27:50 2004
+@@ -228,7 +228,7 @@
+ AC_LANG_RESTORE()
+ 
+ dnl Check for new internal xine symbol names
+-AC_CHECK_LIB(xine, _x_ao_new_port, , 
++AC_CHECK_LIB(xine, _x_ao_new_port, :, 
+ [
+   AC_DEFINE(_x_ao_new_port, ao_new_port, [Compatibility with older version of xine])
+ ])
+diff -urN -x CVS kdemultimedia.orig/xine_artsplugin/tools/thumbnail/videothumbnail.desktop kdemultimedia/xine_artsplugin/tools/thumbnail/videothumbnail.desktop
+--- kdemultimedia.orig/xine_artsplugin/tools/thumbnail/videothumbnail.desktop	Sat Mar 27 14:13:13 2004
++++ kdemultimedia/xine_artsplugin/tools/thumbnail/videothumbnail.desktop	Sun Apr 25 01:29:52 2004
+@@ -18,7 +18,8 @@
+ Name[ga]=Comhaid Físe
+ Name[gl]=Ficheiros de video
+ Name[he]=קבצי וידאו
+-Name[hi]=वीडियो फाइलें
++Name[hi]=वीडियो फ़ाइलें
++Name[hr]=Video datoteke
+ Name[hu]=Videófájlok
+ Name[is]=Kvikmyndaskrár
+ Name[it]=File Video
