@@ -43,7 +43,6 @@ BuildRequires:	zlib-devel
 Requires:	kdelibs = %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_prefix		/usr/X11R6
 %define         _fontdir        /usr/share/fonts
 %define         _sharedir       %{_prefix}/share
 %define         _htmldir        /usr/share/doc/kde/HTML
