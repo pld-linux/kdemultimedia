@@ -7,20 +7,20 @@
 
 %define		_state		snapshots
 %define		_ver		3.1.94
-%define		_snap		031204
+%define		_snap		040110
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}.%{_snap}
-Release:	0.4
+Release:	1
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
-Source0:	http://ep09.pld-linux.org/~adgor/kde/%{name}-%{_snap}.tar.bz2
-# Source0-md5:	6ba045c7d203a3c0c70f68e35c0c612c
+Source0:	http://ep09.pld-linux.org/~djurban/kde/%{name}-%{_snap}.tar.bz2
+# Source0-md5:	c7e6af256c06d45a80621bf69d12d8db
 # Patch0:		%{name}-no_pedantic.patch
 # Patch1:		%{name}-cdda_check.patch
 BuildRequires:	Xaw3d-devel
@@ -416,6 +416,15 @@ done
 #sed -i 's/#include <asm\/byteorder.h>/#include <asm\/types.h>\n#include <endian.h>/' \
 #	linux/cdrom.h
 
+fix="kfile-plugins/ogg/configure.in.in \
+     mpeglib_artsplug/configure.in.in"
+
+for i in $fix;
+do
+	grep -v AC_REQUIRE $i >> $i.1
+	mv $i{.1,}
+done
+
 %{__make} -f admin/Makefile.common cvs
 
 export CDPARANOIA=%{_bindir}/cdparanoia
@@ -665,7 +674,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files kscd -f kscd.lang
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/cddaslave
+#%%attr(755,root,root) %{_bindir}/cddaslave
 %attr(755,root,root) %{_bindir}/kscd
 %attr(755,root,root) %{_bindir}/workman2cddb.pl
 %{_desktopdir}/kde/kscd.desktop
