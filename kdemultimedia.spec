@@ -30,7 +30,7 @@ Vendor:		The KDE Team
 Group:		X11/Applications
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
 # Source0-md5:	410ca37dc25eab09cb47488c7b33771d
-Source0:        http://team.pld.org.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
+Source0:        http://www.kernel.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
 Patch0:		%{name}-timidity.patch
 #Patch1:	http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-video-20030316.patch
 #Patch2:	http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-streaming-20030317.patch
