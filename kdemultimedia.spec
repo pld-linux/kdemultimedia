@@ -2,6 +2,7 @@
 # Conditional build:
 %bcond_without	alsa	# build without ALSA support
 %bcond_without	i18n	# don't build i18n per module subpackages
+%bcond_without	xine	# build without xine support
 #
 %define		_state		stable
 %define		_ver		3.2.2
@@ -39,7 +40,7 @@ BuildRequires: 	libmusicbrainz-devel
 BuildRequires:	libvorbis-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
 BuildRequires:	taglib-devel >= 0.95.031114
-BuildRequires:	xine-lib-devel >= 1:1.0
+%{?with_xine:BuildRequires:	xine-lib-devel >= 1:1.0}
 BuildRequires:	zlib-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -831,6 +832,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_iconsdir}/crystalsvg/*/apps/artscontrol.png
 %{_iconsdir}/crystalsvg/*/apps/artscontrol.svg
 
+%if %{with xine}
 %files artsplugin-xine
 %defattr(644,root,root,755)
 %{_libdir}/kde3/videothumbnail.la
@@ -840,6 +842,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/mcop/xinePlayObject.mcopclass
 %{_datadir}/apps/videothumbnail
 %{_datadir}/services/videothumbnail.desktop
+%endif
 
 %files audiocd
 %defattr(644,root,root,755)
