@@ -270,6 +270,7 @@ Summary:	Media player
 Summary(pl):	Odtwarzacz multimedialny
 Group:		X11/Applications
 Requires:	kdebase-core >= %{_minbaseevr}
+Obsoletes:	kdemultimedia-aktion
 
 %description kaboodle
 A simple, embeddable, single file media player.
