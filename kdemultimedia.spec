@@ -10,7 +10,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	1
+Release:	2
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
@@ -19,12 +19,9 @@ Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{_ver}.tar.bz2
 # Source0-md5:	f49a1cf9c5d405aed791808b4bbf035d	
 #Source0:	http://ep09.pld-linux.org/~djurban/kde/%{name}-%{version}.tar.bz2
 Patch100:	%{name}-branch.diff
-# Patch0:		%{name}-no_pedantic.patch
-# Patch1:		%{name}-cdda_check.patch
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	audiofile-devel
 BuildRequires:	cdparanoia-III-devel
-BuildRequires:	ed
 BuildRequires:	gettext-devel
 BuildRequires:	kdelibs-devel >= 9:%{version}
 BuildRequires:	libjpeg-devel
@@ -35,6 +32,7 @@ BuildRequires: 	libmusicbrainz-devel
 BuildRequires:	libvorbis-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
 BuildRequires:	taglib-devel >= 0.95.031114
+BuildRequires:	unsermake
 %{?with_xine:BuildRequires:	xine-lib-devel >= 1:1.0}
 BuildRequires:	zlib-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -159,8 +157,8 @@ This package provides audiocd protocol for konqueror.
 Ten pakiet dostarcza protokó³ audiocd dla konquerora.
 
 %package cddb
-Summary:	cddb library for KDE
-Summary(pl):	Biblioteka cddb pod KDE
+Summary:	CDDB library for KDE
+Summary(pl):	Biblioteka CDDB pod KDE
 Group:		X11/Applications
 Requires:	kdebase-core >= 9:%{version}
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
@@ -170,7 +168,7 @@ Obsoletes:	kdemultimedia-libkcddb < 9:3.1.92.031014
 CDDB control.
 
 %description cddb -l pl
-Sterowanie cddb.
+Sterowanie CDDB.
 
 %package juk
 Summary:	A jukebox like program
@@ -180,11 +178,17 @@ Requires:	taglib >= 0.95.031114
 Requires:	kdebase-core >= 9:%{version}
 
 %description juk
-JuK (pronounced jook) is a jukebox and music manager for the KDE desktop similar to jukebox software on other platforms such asiTunes(r) or RealOne(r).  As is typical with many jukebox applications, JuK allows you to edit the "tags" of the audio files, and manage your collection and playlists. 
+JuK (pronounced jook) is a jukebox and music manager for the KDE
+desktop similar to jukebox software on other platforms such as
+iTunes(R) or RealOne(R). As is typical with many jukebox applications,
+JuK allows you to edit the "tags" of the audio files, and manage your
+collection and playlists. 
 
 %description juk -l pl
 Juk (czyt. d¿uk, jak w Jukebox) to szafa graj±ca i zarz±dca muzyki
-dla KDE podobny do iTunes(r) lub RealOne(r).
+dla KDE podobny do iTunes(R) lub RealOne(R). Podobnie jak wiele
+innych tego typu aplikacji, JuK umo¿liwia modyfikowanie znaczników
+plików d¼wiêkowych i zarz±dzanie kolekcj± oraz playlistami.
 
 %package kaboodle
 Summary:	Media player
@@ -614,7 +618,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kde/kmid.desktop
 %{_iconsdir}/*/*/*/kmid.png
 %{_libdir}/libkmidlib.la
-%{_libdir}/libkmidlib.so.0.0.0
+%attr(755,root,root) %{_libdir}/libkmidlib.so.0.0.0
 %{_kdedocdir}/en/kmid
 
 %files kmix 
