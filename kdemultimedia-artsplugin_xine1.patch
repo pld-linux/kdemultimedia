@@ -1,6 +1,6 @@
-diff -urN kdemultimedia-3.1/xine_artsplugin.old/Makefile.am kdemultimedia-3.1/xine_artsplugin/Makefile.am
---- kdemultimedia-3.1/xine_artsplugin.old/Makefile.am	Sun Oct 27 00:20:56 2002
-+++ kdemultimedia-3.1/xine_artsplugin/Makefile.am	Thu Dec  5 21:10:14 2002
+diff -urN kdemultimedia-3.1.orig/xine_artsplugin/Makefile.am kdemultimedia-3.1/xine_artsplugin/Makefile.am
+--- kdemultimedia-3.1.orig/xine_artsplugin/Makefile.am	Sun Oct 27 00:20:56 2002
++++ kdemultimedia-3.1/xine_artsplugin/Makefile.am	Tue Jan 14 10:03:11 2003
 @@ -1,13 +1,10 @@
 -INCLUDES= -I$(kde_includes)/arts $(all_includes) $(XINE_INCS)
 -
@@ -17,7 +17,7 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/Makefile.am kdemultimedia-3.1/xi
  libarts_xine_la_LDFLAGS = $(all_libraries) -module -avoid-version -pthread
  libarts_xine_la_LIBADD = $(XINE_LIBS) $(LIB_X11) $(LIB_XEXT) \
  			 -lkmedia2_idl -lsoundserver_idl -lartsflow
-@@ -18,7 +15,7 @@
+@@ -18,9 +15,7 @@
  xinePlayObject.cc xinePlayObject.h: $(srcdir)/xinePlayObject.idl
  	$(MCOPIDL) $(INCLUDES) $(srcdir)/xinePlayObject.idl
  
@@ -26,19 +26,20 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/Makefile.am kdemultimedia-3.1/xi
  
  mcopclassdir = $(libdir)/mcop
  mcopclass_DATA = xinePlayObject.mcopclass
-diff -urN kdemultimedia-3.1/xine_artsplugin.old/audio_fifo_out.c kdemultimedia-3.1/xine_artsplugin/audio_fifo_out.c
---- kdemultimedia-3.1/xine_artsplugin.old/audio_fifo_out.c	Fri Nov 22 20:42:23 2002
-+++ kdemultimedia-3.1/xine_artsplugin/audio_fifo_out.c	Thu Dec  5 21:10:14 2002
-@@ -12,14 +12,22 @@
- #include <config.h>
- #endif
+-
+-SUBDIRS = tools
+diff -urN kdemultimedia-3.1.orig/xine_artsplugin/audio_fifo_out.c kdemultimedia-3.1/xine_artsplugin/audio_fifo_out.c
+--- kdemultimedia-3.1.orig/xine_artsplugin/audio_fifo_out.c	Fri Nov 22 20:42:23 2002
++++ kdemultimedia-3.1/xine_artsplugin/audio_fifo_out.c	Tue Jan 14 10:03:11 2003
+@@ -1,6 +1,6 @@
+ /*
+    This file is part of KDE/aRts (Noatun) - xine integration
+-   Copyright (C) 2002 Ewald Snel <ewald@rambo.its.tudelft.nl>
++   Copyright (C) 2002-2003 Ewald Snel <ewald@rambo.its.tudelft.nl>
  
-+/* FIXME: xine bug? */
-+#define HAVE_SETENV
-+#define HAVE_STRPBRK
-+#define HAVE_STRSEP
-+
- #include <stdio.h>
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+@@ -16,10 +16,12 @@
  #include <stdlib.h>
  #include <string.h>
  #include <inttypes.h>
@@ -46,88 +47,208 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/audio_fifo_out.c kdemultimedia-3
  #include <pthread.h>
 +#include <time.h>
  #include <sys/time.h>
- #include <xine/xine_internal.h>
+-#include <xine/xine_internal.h>
  #include <xine/audio_out.h>
 +
  #include "audio_fifo_out.h"
  
  #define GAP_TOLERANCE	5000
-@@ -33,8 +41,9 @@
+@@ -32,17 +34,17 @@
+ 
      int		     capabilities;
      int		     mode;
-     int		     enabled;
+-    int		     enabled;
 -    int		     locked;
 -    pthread_mutex_t  mutex;
-+    int		     close_delay;
 +    pthread_mutex_t  read_mutex;
 +    pthread_mutex_t  write_mutex;
      pthread_cond_t   cond;
  
      uint32_t	     bytes_per_frame;
-@@ -63,6 +72,7 @@
-     ao->fifo_read_ptr		= 0;
-     ao->fifo_write_ptr		= 0;
-     ao->bytes_in_buffer		= 0;
-+    ao->close_delay		= 0;
+-    uint32_t	     bytes_in_buffer;
+-    uint32_t	     buffer_size;
+     uint8_t	    *fifo;
+-    uint32_t	     fifo_read_ptr;
+-    uint32_t	     fifo_write_ptr;
++    int		     fifo_size;
++    int		     fifo_read_ptr;
++    int		     fifo_write_ptr;
++    int		     fifo_flush;
++    int		     fifo_delay;
+ } fifo_driver_t;
+ 
+ /*
+@@ -57,12 +59,13 @@
+ 	fprintf( stderr, "fifo_audio_out: unsupported mode %08x\n", mode);
+ 	return 0;
+     }
++
++    /* lock read buffer */
++    pthread_mutex_lock( &ao->read_mutex );
++
+     ao->mode			= mode;
+     ao->audio->sample_rate	= rate;
+     ao->audio->bits_per_sample	= bits;
+-    ao->fifo_read_ptr		= 0;
+-    ao->fifo_write_ptr		= 0;
+-    ao->bytes_in_buffer		= 0;
  
      switch (mode)
      {
-@@ -77,10 +87,10 @@
-     ao->buffer_size	= ao->audio->sample_rate * ao->bytes_per_frame;
-     ao->fifo		= malloc( (ao->buffer_size << 1) );
+@@ -73,14 +76,17 @@
+ 	ao->audio->num_channels = 2;
+ 	break;
+     }
++
+     ao->bytes_per_frame	= (ao->audio->bits_per_sample * ao->audio->num_channels) / 8;
+-    ao->buffer_size	= ao->audio->sample_rate * ao->bytes_per_frame;
+-    ao->fifo		= malloc( (ao->buffer_size << 1) );
++    ao->fifo_size	= ao->audio->sample_rate * ao->bytes_per_frame;
++    ao->fifo		= malloc( 2*ao->fifo_size );
++    ao->fifo_read_ptr	= 0;
++    ao->fifo_write_ptr	= 0;
++    ao->fifo_flush	= 0;
++    ao->fifo_delay	= 0;
  
 -    pthread_mutex_lock( &ao->mutex );
 -    ao->enabled = 1;
 -    ao->locked  = 0;
 -    pthread_mutex_unlock( &ao->mutex );
-+    /* enable audio */
-+    pthread_mutex_lock( &ao->write_mutex );
-+    ao->enabled		= 1;
-+    pthread_mutex_unlock( &ao->write_mutex );
++    /* unlock and enable read buffer for aRts sound server */
++    pthread_mutex_unlock( &ao->read_mutex );
  
      return ao->audio->sample_rate;
  }
-@@ -121,7 +131,7 @@
-     }
-     if ((ao->bytes_in_buffer + n) > ao->buffer_size)
+@@ -100,83 +106,95 @@
+     return GAP_TOLERANCE;
+ }
+ 
++static int ao_fifo_bytes_in_buffer( fifo_driver_t *ao )
++{
++    int bytes_in_buffer = (ao->fifo_write_ptr - ao->fifo_read_ptr);
++
++    if (bytes_in_buffer < 0)
++    {
++	bytes_in_buffer += ao->fifo_size;
++    }
++    return bytes_in_buffer;
++}
++
+ static int ao_fifo_write( ao_driver_t *this_gen, int16_t *data, uint32_t num_frames )
+ {
+     fifo_driver_t *ao = (fifo_driver_t *)this_gen;
+-    uint32_t w, n, m;
+     uint8_t *src = (uint8_t *)data;
++    int bytes_in_buffer, bytes_to_write, written;
+ 
+-    w = ao->fifo_write_ptr;
+-    n = (num_frames * ao->bytes_per_frame);
+-    m = (ao->buffer_size - w);
++    bytes_to_write = (num_frames * ao->bytes_per_frame);
+ 
+-    if (n > ao->buffer_size)
+-    {
+-	/* split audio packet into 2 fragments */
+-	n    = (num_frames >> 1);
+-	src += (n * ao->bytes_per_frame);
++    pthread_mutex_lock( &ao->write_mutex );
+ 
+-	return  ao_fifo_write( this_gen, data, n ) &&
+-		ao_fifo_write( this_gen, (int16_t *)src, n + (num_frames & 1) );
+-    }
+-    if ((ao->bytes_in_buffer + n) > ao->buffer_size)
++    while (!ao->fifo_flush && bytes_to_write > 0)
      {
 -	pthread_mutex_lock( &ao->mutex );
-+	pthread_mutex_lock( &ao->write_mutex );
++	bytes_in_buffer = ao_fifo_bytes_in_buffer( ao );
++	written = bytes_to_write;
  
- 	while ((ao->bytes_in_buffer + n) > ao->buffer_size)
+-	while ((ao->bytes_in_buffer + n) > ao->buffer_size)
++	if ((bytes_in_buffer + written) >= ao->fifo_size)
  	{
-@@ -132,8 +142,9 @@
- 	    if (!ao->enabled)
+-	    struct timespec ts;
+-	    struct timeval tv;
+-	    int delay;
++	    written  = (ao->fifo_size - bytes_in_buffer - 1);
++	    written -= (written % ao->bytes_per_frame);
+ 
+-	    if (!ao->enabled)
++	    if (written == 0)
  	    {
- 		/* audio has stopped */
+-		/* audio has stopped */
 -		pthread_mutex_unlock( &ao->mutex );
 -		return 0;
-+		pthread_mutex_unlock( &ao->write_mutex );
-+		ao->close_delay += n;
-+		return 1;
++		struct timespec ts;
++		struct timeval tv;
++		int delay;
++
++		gettimeofday( &tv, 0 );
++
++		delay  = ao_fifo_arts_delay();
++		delay += (1000 * num_frames) / ao->audio->sample_rate;
++		delay  = (delay < 20) ? 20 : ((delay >= 250) ? 250 : delay + 1);
++
++		ts.tv_sec  = tv.tv_sec + (delay / 1000);
++		ts.tv_nsec = (1000 * tv.tv_usec) + (1000000 * (delay % 1000));
++
++		if (ts.tv_nsec >= 1000000000)
++		{
++		    ts.tv_sec++;
++		    ts.tv_nsec -= 1000000000;
++		}
++		if (pthread_cond_timedwait( &ao->cond, &ao->write_mutex, &ts ) != 0)
++		{
++		    fprintf( stderr, "fifo_audio_out: blocked for more than %d ms,\n", delay);
++		    fprintf( stderr, "fifo_audio_out: %d sample(s) discarded.\n", num_frames);
++		    pthread_mutex_unlock( &ao->write_mutex );
++		    return 0;
++		}
  	    }
++	}
  
- 	    gettimeofday( &tv, 0 );
-@@ -152,31 +163,37 @@
- 		ts.tv_sec++;
- 		ts.tv_nsec -= 1000000000;
+-	    gettimeofday( &tv, 0 );
+-
+-	    ts.tv_sec	= tv.tv_sec;
+-	    ts.tv_nsec	= tv.tv_usec * 1000;
+-
+-	    delay	= ao_fifo_arts_delay();
+-	    delay      += (1000 * num_frames) / ao->audio->sample_rate;
+-	    delay	= (delay < 20) ? 20 : ((delay >= 250) ? 250 : delay + 1);
+-	    ts.tv_sec  += delay / 1000;
+-	    ts.tv_nsec += 1000000 * (delay % 1000);
++	if (!ao->fifo_flush && written > 0)
++	{
++	    int new_write_ptr = (ao->fifo_write_ptr + written);
+ 
+-	    if (ts.tv_nsec >= 1000000000)
++	    if (new_write_ptr >= ao->fifo_size)
+ 	    {
+-		ts.tv_sec++;
+-		ts.tv_nsec -= 1000000000;
++		new_write_ptr -= ao->fifo_size;
++
++		memcpy( &ao->fifo[ao->fifo_write_ptr], src, (written - new_write_ptr) );
++		memcpy( ao->fifo, &src[written - new_write_ptr], new_write_ptr );
  	    }
 -	    if (pthread_cond_timedwait( &ao->cond, &ao->mutex, &ts ) != 0)
-+	    if (pthread_cond_timedwait( &ao->cond, &ao->write_mutex, &ts ) != 0)
++	    else
  	    {
- 		fprintf( stderr, "fifo_audio_out: blocked for more than %d ms,\n", delay);
- 		fprintf( stderr, "fifo_audio_out: %d sample(s) discarded.\n", num_frames);
+-		fprintf( stderr, "fifo_audio_out: blocked for more than %d ms,\n", delay);
+-		fprintf( stderr, "fifo_audio_out: %d sample(s) discarded.\n", num_frames);
 -		pthread_mutex_unlock( &ao->mutex );
-+		pthread_mutex_unlock( &ao->write_mutex );
- 		return 0;
+-		return 0;
++		memcpy( &ao->fifo[ao->fifo_write_ptr], src, written );
  	    }
++
++	    /* update audio buffer pointer */
++	    ao->fifo_write_ptr = new_write_ptr;
++	    bytes_to_write -= written;
++	    src += written;
  	}
 -	pthread_mutex_unlock( &ao->mutex );
-+	pthread_mutex_unlock( &ao->write_mutex );
-     }
+-    }
 -    if (n >= m)
-+    if (n > 0)
-     {
+-    {
 -	memcpy( (ao->fifo + w), src, m );
 -	w = (n - m);
 -	memcpy( ao->fifo, src + m, w );
@@ -136,37 +257,26 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/audio_fifo_out.c kdemultimedia-3
 -    {
 -	memcpy( (ao->fifo + w), src, n );
 -	w += n;
-+	if (n >= m)
-+	{
-+	    memcpy( (ao->fifo + w), src, m );
-+	    w = (n - m);
-+	    memcpy( ao->fifo, src + m, w );
-+	}
-+	else
-+	{
-+	    memcpy( (ao->fifo + w), src, n );
-+	    w += n;
-+	}
      }
 -    pthread_mutex_lock( &ao->mutex );
 -    ao->fifo_write_ptr = w;
-+
-+    /* update audio buffer pointer */
-+    pthread_mutex_lock( &ao->write_mutex );
-+    ao->fifo_write_ptr   = w;
-     ao->bytes_in_buffer += n;
+-    ao->bytes_in_buffer += n;
 -    pthread_mutex_unlock( &ao->mutex );
++
++    /* audio has stopped */
++    ao->fifo_delay += bytes_to_write;
++
 +    pthread_mutex_unlock( &ao->write_mutex );
 +
      return 1;
  }
  
-@@ -184,28 +201,29 @@
+@@ -184,28 +202,27 @@
  {
      fifo_driver_t *ao = (fifo_driver_t *)this_gen;
      return (ao_fifo_arts_delay() * ao->audio->sample_rate / 1000)
 -	   + (ao->bytes_in_buffer / ao->bytes_per_frame);
-+	   + ((ao->bytes_in_buffer + ao->close_delay) / ao->bytes_per_frame);
++	   + ((ao_fifo_bytes_in_buffer( ao ) + ao->fifo_delay) / ao->bytes_per_frame);
  }
  
  static void ao_fifo_close( ao_driver_t *this_gen )
@@ -182,12 +292,11 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/audio_fifo_out.c kdemultimedia-3
 -    pthread_mutex_unlock( &ao->mutex );
 +    /* lock read buffer */
 +    pthread_mutex_lock( &ao->read_mutex );
-+    pthread_mutex_lock( &ao->write_mutex );
  
 -    ao_fifo_wait_close( this_gen );
 +    /* disable audio driver */
-+    ao->enabled = 0;
-+    ao->close_delay = 0;
++    ao->fifo_flush = 2;
++    ao->fifo_delay = 0;
  
 +    /* free audio FIFO */
      if (ao->fifo)
@@ -195,12 +304,11 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/audio_fifo_out.c kdemultimedia-3
  	free( ao->fifo );
  	ao->fifo = NULL;
      }
-+    pthread_mutex_unlock( &ao->write_mutex );
 +    pthread_mutex_unlock( &ao->read_mutex );
  }
  
  static uint32_t ao_fifo_get_capabilities( ao_driver_t *this_gen )
-@@ -220,7 +238,9 @@
+@@ -220,7 +237,9 @@
      ao_fifo_close( this_gen );
  
      pthread_cond_destroy( &ao->cond );
@@ -211,7 +319,7 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/audio_fifo_out.c kdemultimedia-3
      free( ao );
  }
  
-@@ -236,10 +256,31 @@
+@@ -236,10 +255,34 @@
  
  static int ao_fifo_control( ao_driver_t *this_gen, int cmd, ... )
  {
@@ -223,14 +331,16 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/audio_fifo_out.c kdemultimedia-3
 +    case AO_CTRL_PLAY_PAUSE:
 +	/* flush audio FIFO */
 +	pthread_mutex_lock( &ao->read_mutex );
-+	pthread_mutex_lock( &ao->write_mutex );
 +
 +	ao->fifo_read_ptr = ao->fifo_write_ptr;
-+	ao->bytes_in_buffer = 0;
 +
-+	pthread_cond_broadcast( &ao->cond );
-+	pthread_mutex_unlock( &ao->write_mutex );
++	if (ao->fifo_flush == 1)
++	{
++	    ao->fifo_flush = 0;
++	    ao->fifo_delay = 0;
++	}
 +	pthread_mutex_unlock( &ao->read_mutex );
++
 +	break;
 +
 +    case AO_CTRL_PLAY_RESUME:
@@ -240,46 +350,56 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/audio_fifo_out.c kdemultimedia-3
  }
  
 -ao_driver_t *init_audio_out_plugin( config_values_t *config, xine_arts_audio *audio )
-+xine_audio_port_t *init_audio_out_plugin( xine_t *xine, xine_arts_audio *audio )
++xine_audio_port_t *init_audio_out_plugin( xine_t *xine, xine_arts_audio *audio,
++					  void **ao_driver )
  {
      fifo_driver_t *ao = (fifo_driver_t *)malloc( sizeof(fifo_driver_t) );
  
-@@ -249,7 +290,7 @@
+@@ -247,9 +290,8 @@
+     ao->fifo		= NULL;
+     ao->fifo_read_ptr	= 0;
      ao->fifo_write_ptr	= 0;
-     ao->bytes_in_buffer	= 0;
-     ao->enabled		= 0;
+-    ao->bytes_in_buffer	= 0;
+-    ao->enabled		= 0;
 -    ao->locked		= 0;
-+    ao->close_delay	= 0;
++    ao->fifo_flush	= 2;
++    ao->fifo_delay	= 0;
      ao->capabilities	= (AO_CAP_MODE_MONO | AO_CAP_MODE_STEREO);
  
      ao->ao_driver.get_capabilities	= ao_fifo_get_capabilities;
-@@ -266,32 +307,36 @@
+@@ -266,102 +308,101 @@
      ao->ao_driver.control		= ao_fifo_control;
  
      pthread_cond_init( &ao->cond, NULL );
 -    pthread_mutex_init( &ao->mutex, NULL );
 +    pthread_mutex_init( &ao->read_mutex, NULL );
 +    pthread_mutex_init( &ao->write_mutex, NULL );
++
++    *ao_driver		= (void *)ao;
  
 -    return (ao_driver_t *)ao;
-+    return ao_new_port( xine, (ao_driver_t *)ao );
++    return ao_new_port( xine, (ao_driver_t *)ao, 0 );
  }
  
 -unsigned long ao_fifo_read( ao_driver_t *this_gen, unsigned char **buffer,
-+unsigned long ao_fifo_read( xine_audio_port_t *ao_port, unsigned char **buffer,
++unsigned long ao_fifo_read( void *ao_driver, unsigned char **buffer,
  			    unsigned long samples )
  {
 -    fifo_driver_t *ao = (fifo_driver_t *)this_gen;
-+    fifo_driver_t *ao = (fifo_driver_t *)ao_port->driver;
-     uint32_t r, m, n, a;
+-    uint32_t r, m, n, a;
++    fifo_driver_t *ao = (fifo_driver_t *)ao_driver;
++    int bytes_in_buffer, bytes_to_read;
++
++    /* lock read buffer */
++    pthread_mutex_lock( &ao->read_mutex );
  
 -    /* lock audio, return on audio disabled */
 -    pthread_mutex_lock( &ao->mutex );
-+    /* lock read buffer */
-+    pthread_mutex_lock( &ao->read_mutex );
-+    pthread_mutex_lock( &ao->write_mutex );
++    bytes_in_buffer = ao_fifo_bytes_in_buffer( ao );
++    bytes_to_read   = (samples * ao->bytes_per_frame);
  
-     if (!ao->enabled || !ao->bytes_in_buffer)
+-    if (!ao->enabled || !ao->bytes_in_buffer)
++    if (ao->fifo_flush || bytes_in_buffer == 0)
      {
 -	if (ao->locked)
 -	{
@@ -287,131 +407,147 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/audio_fifo_out.c kdemultimedia-3
 -	    pthread_cond_broadcast( &ao->cond );
 -	}
 -	pthread_mutex_unlock( &ao->mutex );
-+	/* signal blocked writes */
-+	pthread_cond_broadcast( &ao->cond );
-+	pthread_mutex_unlock( &ao->write_mutex );
-+
 +	/* unlock read buffer */
 +	pthread_mutex_unlock( &ao->read_mutex );
++
++	/* signal blocked writes */
++	pthread_mutex_lock( &ao->write_mutex );
++	pthread_cond_signal( &ao->cond );
++	pthread_mutex_unlock( &ao->write_mutex );
 +
 +	/* audio FIFO empty or disabled, return */
  	return 0;
      }
 -    ao->locked = 1;
 -    pthread_mutex_unlock( &ao->mutex );
-+
-+    pthread_mutex_unlock( &ao->write_mutex );
  
-     r = ao->fifo_read_ptr;
-     m = (ao->buffer_size - r);
-@@ -300,7 +345,7 @@
- 
-     if (n > a)
+-    r = ao->fifo_read_ptr;
+-    m = (ao->buffer_size - r);
+-    n = (samples * ao->bytes_per_frame);
+-    a = ao->bytes_in_buffer;
+-
+-    if (n > a)
++    if (bytes_to_read > bytes_in_buffer)
      {
 -	fprintf( stderr, "Warning: Sound Buffer Underflow!\n" );
+-	n = a;
 +	fprintf( stderr, "fifo_audio_out: audio buffer underflow!\n" );
- 	n = a;
++	bytes_to_read = bytes_in_buffer - (bytes_in_buffer % ao->bytes_per_frame);
      }
-     if (n > m)
-@@ -308,60 +353,57 @@
+-    if (n > m)
++    if ((ao->fifo_read_ptr + bytes_to_read) > ao->fifo_size)
+     {
  	/* copy samples from front to end of buffer */
- 	memcpy( ao->fifo + ao->buffer_size, ao->fifo, (n - m) );
+-	memcpy( ao->fifo + ao->buffer_size, ao->fifo, (n - m) );
++	memcpy( &ao->fifo[ao->fifo_size], ao->fifo,
++		((ao->fifo_read_ptr + bytes_to_read) - ao->fifo_size) );
      }
+-    *buffer = (ao->fifo + r);
+-    return n;
 +
 +    /* return pointer to audio samples */
-     *buffer = (ao->fifo + r);
++    *buffer = &ao->fifo[ao->fifo_read_ptr];
 +
-     return n;
++    return bytes_to_read;
  }
  
 -void ao_fifo_flush( ao_driver_t *this_gen, unsigned long samples )
-+void ao_fifo_flush( xine_audio_port_t *ao_port, unsigned long samples )
++void ao_fifo_flush( void *ao_driver, unsigned long samples )
  {
 -    fifo_driver_t *ao = (fifo_driver_t *)this_gen;
-+    fifo_driver_t *ao = (fifo_driver_t *)ao_port->driver;
-     uint32_t r, m, n, a;
+-    uint32_t r, m, n, a;
++    fifo_driver_t *ao = (fifo_driver_t *)ao_driver;
++    int bytes_in_buffer, bytes_to_flush;
  
 -    pthread_mutex_lock( &ao->mutex );
-+    pthread_mutex_lock( &ao->write_mutex );
++    /* flush audio data */
++    bytes_in_buffer = ao_fifo_bytes_in_buffer( ao );
++    bytes_to_flush  = (samples * ao->bytes_per_frame);
  
 -    if (ao->enabled)
--    {
++    if (bytes_to_flush <= bytes_in_buffer)
+     {
 -	r = ao->fifo_read_ptr;
 -	m = (ao->buffer_size - r);
 -	n = (samples * ao->bytes_per_frame);
 -	a = ao->bytes_in_buffer;
--
++	int new_read_ptr = (ao->fifo_read_ptr + bytes_to_flush);
+ 
 -	if (n > a)
 -	    n = a;
-+    /* flush audio data */
-+    r = ao->fifo_read_ptr;
-+    m = (ao->buffer_size - r);
-+    n = (samples * ao->bytes_per_frame);
-+    a = ao->bytes_in_buffer;
-+
-+    if (n > a)
-+	n = a;
- 
+-
 -	a -= n;
 -	r += n;
-+    a -= n;
-+    r += n;
++	if (new_read_ptr >= ao->fifo_size)
++	{
++	    new_read_ptr -= ao->fifo_size;
++	}
++	ao->fifo_read_ptr = new_read_ptr;
++    }
  
 -	if (r >= ao->buffer_size)
 -	    r -= ao->buffer_size;
-+    if (r >= ao->buffer_size)
-+	r -= ao->buffer_size;
++    /* unlock read buffer */
++    pthread_mutex_unlock( &ao->read_mutex );
  
 -	ao->fifo_read_ptr = r;
 -	ao->bytes_in_buffer = a;
 -    }
 -    ao->locked = 0;
-+    ao->fifo_read_ptr   = r;
-+    ao->bytes_in_buffer = a;
-+
-+    /* signal blocked writes */
-     pthread_cond_broadcast( &ao->cond );
+-    pthread_cond_broadcast( &ao->cond );
 -    pthread_mutex_unlock( &ao->mutex );
++    /* signal blocked writes */
++    pthread_mutex_lock( &ao->write_mutex );
++    pthread_cond_signal( &ao->cond );
 +    pthread_mutex_unlock( &ao->write_mutex );
-+
-+    /* unlock read buffer */
-+    pthread_mutex_unlock( &ao->read_mutex );
  }
  
 -void ao_fifo_wait_close( ao_driver_t *this_gen )
-+void ao_fifo_disable( xine_ao_driver_t *ao_port )
++void ao_fifo_clear( void *ao_driver, int clear )
  {
 -    fifo_driver_t *ao = (fifo_driver_t *)this_gen;
--
++    fifo_driver_t *ao = (fifo_driver_t *)ao_driver;
+ 
 -    pthread_mutex_lock( &ao->mutex );
 -    ao->enabled = 0;
 -    pthread_cond_broadcast( &ao->cond );
 -    pthread_mutex_unlock( &ao->mutex );
-+    fifo_driver_t *ao = (fifo_driver_t *)ao_port->driver;
- 
+-
 -    while (ao->locked)
 -    {
 -	struct timespec ts;
-+    pthread_mutex_lock( &ao->write_mutex );
- 
+-
 -	ts.tv_sec = 0;
 -	ts.tv_nsec = 50000000;	/* 50ms */
-+    /* disable audio driver */
-+    ao->enabled = 0;
-+    ao->close_delay = 0;
- 
+-
 -	nanosleep( &ts, NULL );
 -	pthread_mutex_lock( &ao->mutex );
 -	pthread_cond_broadcast( &ao->cond );
 -	pthread_mutex_unlock( &ao->mutex );
--    }
-+    /* signal blocked writes */
-+    pthread_cond_broadcast( &ao->cond );
++    pthread_mutex_lock( &ao->write_mutex );
++
++    /* enable/disable audio driver */
++    ao->fifo_flush = clear;
++    ao->fifo_delay = 0;
++
++    if (clear)
++    {
++	/* signal blocked writes */
++	pthread_cond_signal( &ao->cond );
+     }
 +    pthread_mutex_unlock( &ao->write_mutex );
  }
-diff -urN kdemultimedia-3.1/xine_artsplugin.old/audio_fifo_out.h kdemultimedia-3.1/xine_artsplugin/audio_fifo_out.h
---- kdemultimedia-3.1/xine_artsplugin.old/audio_fifo_out.h	Thu Jun  6 12:42:13 2002
-+++ kdemultimedia-3.1/xine_artsplugin/audio_fifo_out.h	Thu Dec  5 21:10:14 2002
+diff -urN kdemultimedia-3.1.orig/xine_artsplugin/audio_fifo_out.h kdemultimedia-3.1/xine_artsplugin/audio_fifo_out.h
+--- kdemultimedia-3.1.orig/xine_artsplugin/audio_fifo_out.h	Thu Jun  6 12:42:13 2002
++++ kdemultimedia-3.1/xine_artsplugin/audio_fifo_out.h	Tue Jan 14 10:03:11 2003
+@@ -1,6 +1,6 @@
+ /*
+    This file is part of KDE/aRts (Noatun) - xine integration
+-   Copyright (C) 2002 Ewald Snel <ewald@rambo.its.tudelft.nl>
++   Copyright (C) 2002-2003 Ewald Snel <ewald@rambo.its.tudelft.nl>
+ 
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
 @@ -11,6 +11,8 @@
  #ifndef __AUDIO_FIFO_OUT_H
  #define __AUDIO_FIFO_OUT_H
@@ -421,30 +557,31 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/audio_fifo_out.h kdemultimedia-3
  #ifdef __cplusplus
  extern "C" {
  #endif
-@@ -23,16 +25,16 @@
+@@ -23,16 +25,17 @@
  } xine_arts_audio;
  
  
 -ao_driver_t *init_audio_out_plugin( config_values_t *config, xine_arts_audio *audio );
-+xine_audio_port_t *init_audio_out_plugin( xine_t *xine, xine_arts_audio *audio );
++xine_audio_port_t *init_audio_out_plugin( xine_t *xine, xine_arts_audio *audio,
++					  void **ao_driver );
  
  int ao_fifo_arts_delay();
  
 -unsigned long ao_fifo_read( ao_driver_t *this_gen, unsigned char **buffer,
-+unsigned long ao_fifo_read( xine_audio_port_t *ao_port, unsigned char **buffer,
++unsigned long ao_fifo_read( void *ao_driver, unsigned char **buffer,
  			    unsigned long samples );
  
 -void ao_fifo_flush( ao_driver_t *ao, unsigned long samples );
-+void ao_fifo_flush( xine_audio_port_t *ao_port, unsigned long samples );
++void ao_fifo_flush( void *ao_driver, unsigned long samples );
  
 -void ao_fifo_wait_close( ao_driver_t *this_gen );
-+void ao_fifo_disable( xine_audio_port_t *ao_port );
++void ao_fifo_clear( void *ao_driver, int clear );
  
  #ifdef __cplusplus
  }
-diff -urN kdemultimedia-3.1/xine_artsplugin.old/configure.in.in kdemultimedia-3.1/xine_artsplugin/configure.in.in
---- kdemultimedia-3.1/xine_artsplugin.old/configure.in.in	Sun Oct 27 00:20:56 2002
-+++ kdemultimedia-3.1/xine_artsplugin/configure.in.in	Thu Dec  5 21:10:14 2002
+diff -urN kdemultimedia-3.1.orig/xine_artsplugin/configure.in.in kdemultimedia-3.1/xine_artsplugin/configure.in.in
+--- kdemultimedia-3.1.orig/xine_artsplugin/configure.in.in	Sun Oct 27 00:20:56 2002
++++ kdemultimedia-3.1/xine_artsplugin/configure.in.in	Tue Jan 14 10:03:11 2003
 @@ -23,11 +23,10 @@
  dnl distribution terms that you use for the rest of that program.
  dnl  
@@ -490,7 +627,7 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/configure.in.in kdemultimedia-3.
        LIBS="$XINE_LIBS $LIBS"
  dnl
  dnl Now check if the installed XINE is sufficiently new. (Also sanity
-@@ -200,17 +197,16 @@
+@@ -200,17 +197,20 @@
          fi
        fi
      XINE_CFLAGS=""
@@ -504,16 +641,41 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/configure.in.in kdemultimedia-3.
 +  AC_SUBST(XINE_ACFLAGS)
    AC_LANG_RESTORE()
    rm -f conf.xinetest
++
++dnl Make sure HAVE_STRSEP, HAVE_SETENV and HAVE_STRPBRK are defined as
++dnl necessary.
++  AC_CHECK_FUNCS([strsep strpbrk setenv])
  ])
 -AC_PATH_XINE(0.9.9,, 
 +AM_PATH_XINE(1.0.0,,
  [
    DO_NOT_COMPILE="$DO_NOT_COMPILE xine_artsplugin"
  ])
-diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemultimedia-3.1/xine_artsplugin/xinePlayObject_impl.cpp
---- kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp	Fri Nov 22 20:42:23 2002
-+++ kdemultimedia-3.1/xine_artsplugin/xinePlayObject_impl.cpp	Thu Dec  5 21:10:14 2002
-@@ -15,62 +15,174 @@
+diff -urN kdemultimedia-3.1.orig/xine_artsplugin/xinePlayObject.mcopclass kdemultimedia-3.1/xine_artsplugin/xinePlayObject.mcopclass
+--- kdemultimedia-3.1.orig/xine_artsplugin/xinePlayObject.mcopclass	Sun Oct 27 00:20:56 2002
++++ kdemultimedia-3.1/xine_artsplugin/xinePlayObject.mcopclass	Tue Jan 14 10:03:11 2003
+@@ -1,7 +1,7 @@
+ Interface=xinePlayObject,Arts::PlayObject,Arts::VideoPlayObject,Arts::SynthModule,Arts::Object
+ Author=Ewald Snel <ewald@rambo.its.tudelft.nl>
+-Extension=vob,mpg,mpeg,m1v,m2v,m1s,m2s,m2p,avi,asf,asx,wmv,qt,mov,moov
+-MimeType=video/x-mpg,video/x-dat,video/x-mpeg,video/mpeg,video/x-msvideo,video/x-ms-asf,video/x-ms-wmv,video/quicktime,application/vnd.ms-asf
++Extension=vob,mpg,mpeg,m1v,m2v,m1s,m2s,m2p,avi,asf,asx,wmv,qt,mov,moov,rv,ra,ram,rm,smi
++MimeType=video/x-mpg,video/x-dat,video/x-mpeg,video/mpeg,video/x-msvideo,video/x-ms-asf,video/x-ms-wmv,video/quicktime,application/vnd.ms-asf,application/vnd.rn-realmedia,video/vnd.rn-realvideo,audio/vnd.rn-realaudio,audio/x-pn-realaudio
+ Language=C++
+ Library=libarts_xine.la
+ Preference=4
+diff -urN kdemultimedia-3.1.orig/xine_artsplugin/xinePlayObject_impl.cpp kdemultimedia-3.1/xine_artsplugin/xinePlayObject_impl.cpp
+--- kdemultimedia-3.1.orig/xine_artsplugin/xinePlayObject_impl.cpp	Fri Nov 22 20:42:23 2002
++++ kdemultimedia-3.1/xine_artsplugin/xinePlayObject_impl.cpp	Tue Jan 14 10:03:11 2003
+@@ -1,6 +1,6 @@
+ /*
+    This file is part of KDE/aRts (Noatun) - xine integration
+-   Copyright (C) 2002 Ewald Snel <ewald@rambo.its.tudelft.nl>
++   Copyright (C) 2002-2003 Ewald Snel <ewald@rambo.its.tudelft.nl>
+ 
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+@@ -15,62 +15,172 @@
  #include <stdio.h>
  #include <stdlib.h>
  #include <string.h>
@@ -524,7 +686,6 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
  #include <audiosubsys.h>
  #include <convert.h>
  #include <debug.h>
-+#include <iostream>
 +
  #include "xinePlayObject_impl.h"
  
@@ -545,24 +706,21 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
 +
 +static void xine_init_routine()
 +{
-+    xine_cfg_entry_t cfg_entry;
-+    char msg[1024];
++    const char *default_driver;
++    char cfg_filename[272];
 +
 +    xine_shared = (xine_t *)xine_new();
 +
-+    snprintf( msg, 1024, "%s/.xine/config", getenv( "HOME" ) );
++    snprintf( cfg_filename, 272, "%s/.xine/config", getenv( "HOME" ) );
 +
-+    xine_config_load( xine_shared, (char *)msg );
++    xine_config_load( xine_shared, (const char *)cfg_filename );
 +
 +    // Get default video output driver
-+    if (xine_config_lookup_entry( xine_shared, "video.driver", &cfg_entry ))
-+    {
-+	xine_force_xshm = !strcasecmp( cfg_entry.str_value, "XShm" );
-+    }
-+    else
-+    {
-+	xine_force_xshm = false;
-+    }
++    default_driver = xine_config_register_string (xine_shared, "video.driver",
++						  "auto", "video driver to use",
++						  NULL, 10, NULL, NULL);
++
++    xine_force_xshm = (default_driver && !strcasecmp( default_driver, "XShm" ));
 +
 +    xine_init( xine_shared );
 +}
@@ -596,7 +754,6 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
 +	    pthread_cond_wait( &xine_cond, &xine_mutex );
 +	}
 +    }
-+
 +    pthread_mutex_unlock( &xine_mutex );
 +
 +    return NULL;
@@ -682,10 +839,13 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
 +    screen		   = DefaultScreen( display );
 +    shm_completion	   = (XShmQueryExtension( display ) == True)
 +			     ? XShmGetEventBase( display ) + ShmCompletion : -1;
++#if 0
 +    display_ratio	   = (double)(DisplayWidth( display, screen ) *
 +				      DisplayHeightMM( display, screen ))
 +				   / (DisplayWidthMM( display, screen ) *
 +				      DisplayHeight( display, screen ));
++#endif
++    display_ratio	   = 1.0;
 +
 +    // Initialize xine visual structure
 +    visual.display	   = display;
@@ -712,7 +872,7 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
  
      if (pthread_create( &thread, 0, pthread_start_routine, this ))
      {
-@@ -80,28 +192,137 @@
+@@ -80,28 +190,139 @@
  
  xinePlayObject_impl::~xinePlayObject_impl()
  {
@@ -731,9 +891,9 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
 +    event.xclient.format	= 32;
 +
 +    XSendEvent( display, xcom_window, True, 0, &event );
-+
-+    XFlush( display );
  
++    XFlush( display );
++
 +    // Wait for the thread to die
      pthread_join( thread, 0 );
 -    pthread_cond_destroy( &cond );
@@ -745,6 +905,8 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
 +
 +	xine_event_dispose_queue( queue );
 +	xine_dispose( stream );
++	xine_close_audio_driver( xine, ao_port );
++	xine_close_video_driver( xine, vo_port );
 +    }
 +    if (xine != 0)
 +    {
@@ -761,7 +923,8 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
 +    XCloseDisplay( display );
  }
  
- bool xinePlayObject_impl::loadMedia( const string &filename )
+-bool xinePlayObject_impl::loadMedia( const string &filename )
++bool xinePlayObject_impl::loadMedia( const string &url )
  {
 -    halt();
 +    bool result = false;
@@ -777,11 +940,7 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
 +	    xine = xine_shared_init();
 +	}
 +
-+	ao_port = init_audio_out_plugin( xine, &audio );
-+
-+	width = 0;
-+	height = 0;
-+	ds_counter = 0;
++	ao_port = init_audio_out_plugin( xine, &audio, &ao_driver );
 +
 +	if (xine_force_xshm)
 +	{
@@ -834,33 +993,37 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
 +	    }
 +	}
 +    }
- 
--    // TODO: Should we protect this with a mutex?
--    mrl = filename;
++
 +    if (stream != 0)
 +    {
 +	if (xine_get_status( stream ) == XINE_STATUS_PLAY)
 +	{
-+	    ao_fifo_disable( ao_port );
- 
--    return true; //running;
++	    ao_fifo_clear( ao_driver, 2 );
++
 +	    xine_stop( stream );
 +
 +	    clearWindow();
 +	}
-+	if ((result = xine_open( stream, filename.c_str() )))
++	if ((result = xine_open( stream, url.c_str() )))
 +	{
-+	    mrl = filename;
++	    mrl = url;
++	    resizeNotify();
 +	}
+ 
+-    // TODO: Should we protect this with a mutex?
+-    mrl = filename;
++	stream_length = 0;
++	stream_position = 0;
 +    }
-+
+ 
+-    return true; //running;
 +    pthread_mutex_unlock( &mutex );
 +
 +    return result;
  }
  
  string xinePlayObject_impl::description()
-@@ -112,11 +333,22 @@
+@@ -112,12 +333,29 @@
  poTime xinePlayObject_impl::currentTime()
  {
      poTime time;
@@ -872,8 +1035,15 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
 -    time.ms = 0;
 +    if (stream != 0 && mrl != "")
 +    {
-+	xine_get_pos_length( stream, 0, &pos_time, 0 );
-+
++	if (xine_get_pos_length( stream, 0, &pos_time, 0 ))
++	{
++	    stream_position = pos_time;
++	}
++	else
++	{
++	    pos_time = stream_position;
++	}
+ 
 +	time.seconds = pos_time / 1000;
 +	time.ms = pos_time % 1000;
 +    }
@@ -882,10 +1052,10 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
 +	time.seconds = 0;
 +	time.ms = 0;
 +    }
- 
      pthread_mutex_unlock( &mutex );
  
-@@ -126,19 +358,30 @@
+     return time;
+@@ -126,25 +364,50 @@
  poTime xinePlayObject_impl::overallTime()
  {
      poTime time;
@@ -897,7 +1067,14 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
 -    time.ms = 0;
 +    if (stream != 0 && mrl != "")
 +    {
-+	xine_get_pos_length( stream, 0, 0, &length_time );
++	if (xine_get_pos_length( stream, 0, 0, &length_time ))
++	{
++	    stream_length = length_time;
++	}
++	else
++	{
++	    length_time = stream_length;
++	}
  
 -    pthread_mutex_unlock( &mutex );
 +	if (length_time <= 0)
@@ -914,13 +1091,27 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
 +	time.seconds = 0;
  	time.ms = 1;
      }
- 
 +    pthread_mutex_unlock( &mutex );
-+
+ 
      return time;
  }
  
-@@ -158,9 +401,9 @@
+ poCapabilities xinePlayObject_impl::capabilities()
+ {
+-    return static_cast<poCapabilities>( capPause | capSeek );
++    int n;
++
++    pthread_mutex_lock( &mutex );
++
++    n = (stream == 0) ? 0 : xine_get_stream_info( stream, XINE_STREAM_INFO_SEEKABLE );
++
++    pthread_mutex_unlock( &mutex );
++
++    return static_cast<poCapabilities>( capPause | ((n == 0) ? 0 : capSeek) );
+ }
+ 
+ string xinePlayObject_impl::mediaName()
+@@ -158,9 +421,9 @@
  
      pthread_mutex_lock( &mutex );
  
@@ -932,7 +1123,7 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
  	state = posPaused;
      else
  	state = posPlaying;
-@@ -176,9 +419,10 @@
+@@ -176,9 +439,10 @@
  
      pthread_mutex_lock( &mutex );
  
@@ -945,7 +1136,7 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
      }
      pthread_mutex_unlock( &mutex );
  
-@@ -191,60 +435,53 @@
+@@ -191,60 +455,53 @@
  
      if (window == -1)
      {
@@ -1026,7 +1217,7 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
      }
      pthread_mutex_unlock( &mutex );
  }
-@@ -253,19 +490,13 @@
+@@ -253,19 +510,16 @@
  {
      pthread_mutex_lock( &mutex );
  
@@ -1036,21 +1227,23 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
 -	if (xine_get_status( xine ) == XINE_PLAY)
 -	{
 -	    ao_fifo_wait_close( ao_driver );
--
++	ao_fifo_clear( ao_driver, 2 );
+ 
 -	    xine_stop( xine );
 -	}
-+	ao_fifo_disable( ao_port );
++	xine_stop( stream );
  
 -	sendEvent( video.xcom_window, VPO_STOP );
-+	xine_stop( stream );
++	clearWindow();
  
 -	// Wait for the xine object to be destroyed
 -	pthread_cond_wait( &cond, &mutex );
-+	clearWindow();
++	stream_length = 0;
++	stream_position = 0;
      }
      pthread_mutex_unlock( &mutex );
  }
-@@ -274,17 +505,15 @@
+@@ -274,18 +528,27 @@
  {
      pthread_mutex_lock( &mutex );
  
@@ -1058,21 +1251,32 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
 +    if (stream != 0 && xine_get_status( stream ) == XINE_STATUS_PLAY)
      {
 -	int paused = (xine_get_speed( xine ) == SPEED_PAUSE);
--
--	ao_fifo_flush( ao_driver, ULONG_MAX );
++	int seek_position = (1000 * t.seconds) + t.ms;
 +	int paused = (xine_get_param( stream, XINE_PARAM_SPEED ) == XINE_SPEED_PAUSE);
  
+-	ao_fifo_flush( ao_driver, ULONG_MAX );
++	ao_fifo_clear( ao_driver, 1 );
+ 
 -	xine_play( xine, (char *)mrl.c_str(), 0, t.seconds );
-+	xine_play( stream, 0, 1000*t.seconds + t.ms );
++	if (xine_play( stream, 0, seek_position ))
++	{
++	    if (seek_position >= 0 && seek_position <= stream_length)
++	    {
++		stream_position = seek_position;
++	    }
++	}
  
  	if (paused)
  	{
 -	    xine_set_speed( xine, SPEED_PAUSE );
 +	    xine_set_param( stream, XINE_PARAM_SPEED, XINE_SPEED_PAUSE );
  	}
++
++	ao_fifo_clear( ao_driver, 0 );
      }
      pthread_mutex_unlock( &mutex );
-@@ -294,11 +523,9 @@
+ }
+@@ -294,11 +557,11 @@
  {
      pthread_mutex_lock( &mutex );
  
@@ -1080,13 +1284,14 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
 +    if (stream != 0 && xine_get_status( stream ) == XINE_STATUS_PLAY)
      {
 -	xine_set_speed( xine, SPEED_PAUSE );
--
++	ao_fifo_clear( ao_driver, 1 );
+ 
 -	ao_fifo_flush( ao_driver, ULONG_MAX );
 +	xine_set_param( stream, XINE_PARAM_SPEED, XINE_SPEED_PAUSE );
      }
      pthread_mutex_unlock( &mutex );
  }
-@@ -311,21 +538,12 @@
+@@ -311,21 +574,12 @@
  
      pthread_mutex_lock( &mutex );
  
@@ -1109,20 +1314,11 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
 +	// Calculate resampling parameters
 +	speed = (double)audio.sample_rate / samplingRateFloat;
 +	xSamples = (unsigned int)((double)samples * speed + 8.0);
-+	received = ao_fifo_read( ao_port, &buffer, xSamples );
++	received = ao_fifo_read( ao_driver, &buffer, xSamples );
      }
  
      pthread_mutex_unlock( &mutex );
-@@ -341,7 +559,7 @@
- 	skip   = (int)floor( flpos );
- 	skip   = (received < (xSamples - 8)) ? (xSamples - 8) : skip;
- 	flpos  = flpos - floor( flpos );
--	ao_fifo_flush( ao_driver, skip );
-+	ao_fifo_flush( ao_port, skip );
-     }
-     for (unsigned long i=converted; i < samples; i++)
-     {
-@@ -350,166 +568,163 @@
+@@ -350,166 +604,122 @@
      }
  }
  
@@ -1130,38 +1326,23 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
 +void xinePlayObject_impl::xineEvent( const xine_event_t *event )
  {
 -    pthread_mutex_lock( &mutex );
-+    if (event->type == XINE_EVENT_UI_PLAYBACK_FINISHED)
-+    {
-+	clearWindow();
-+    }
-+}
- 
+-
 -    running   = false;
 -    vo_driver = init_video_out_plugin( config, &video );
-+void xinePlayObject_impl::clearWindow()
-+{
-+    Window root;
-+    unsigned int u, w, h;
-+    int x, y, screen;
- 
+-
 -    if (vo_driver)
--    {
++    if (event->type == XINE_EVENT_UI_PLAYBACK_FINISHED)
+     {
 -	ao_driver = init_audio_out_plugin( config, &audio );
-+    XLockDisplay( display );
- 
+-
 -	xine = xine_init( vo_driver, ao_driver, config );
-+    screen = DefaultScreen( display );
- 
+-
 -	xine_register_event_listener( xine, xine_handle_event, this );
 -	xine_select_audio_channel( xine, 0 );
 -	xine_select_spu_channel( xine, -1 );
-+    XGetGeometry( display, visual.d, &root, &x, &y, &w, &h, &u, &u );
- 
+-
 -	running = xine_play( xine, (char *)mrl.c_str(), 0, 0 );
-+    XSetForeground( display, DefaultGC( display, screen ),
-+		    BlackPixel( display, screen ) );
-+    XFillRectangle( display, visual.d,
-+		    DefaultGC( display, screen ), x, y, w, h );
++	fprintf (stderr, "PLAYBACK FINISHED!");
  
 -	if (!running)
 -	{
@@ -1171,23 +1352,18 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
 -    if (!vo_driver || running)
 -    {
 -	pthread_cond_broadcast( &cond );
--    }
++	clearWindow();
+     }
 -    pthread_mutex_unlock( &mutex );
-+    XUnlockDisplay( display );
  }
  
 -void xinePlayObject_impl::stopEvent()
-+void xinePlayObject_impl::frameOutput( int video_width, int video_height,
-+				       double video_pixel_aspect,
-+				       int *dest_x, int *dest_y,
-+				       int *dest_width, int *dest_height,
-+				       double *dest_pixel_aspect,
-+				       int *win_x, int *win_y )
++void xinePlayObject_impl::clearWindow()
  {
 -    pthread_mutex_lock( &mutex );
-+    Window child, root;
-+    unsigned int u;
-+    int n;
++    Window root;
++    unsigned int u, w, h;
++    int x, y, screen;
  
 -    if (xine != 0)
 -    {
@@ -1196,9 +1372,7 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
  
 -	xine_remove_event_listener( xine, xine_handle_event );
 -	xine_exit( xine );
-+    XGetGeometry( display, visual.d, &root, &n, &n,
-+		  (unsigned int *)dest_width, (unsigned int *)dest_height,
-+		  &u, &u );
++    screen = DefaultScreen( display );
  
 -	xine	    = 0;
 -	ao_driver   = 0;
@@ -1206,44 +1380,29 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
 -    }
 -    pthread_cond_broadcast( &cond );
 -    pthread_mutex_unlock( &mutex );
-+    XTranslateCoordinates( display, visual.d, root, 0, 0, win_x, win_y, &child );
++    XGetGeometry( display, visual.d, &root, &x, &y, &w, &h, &u, &u );
  
 -    clearWindow();
 -}
-+    *dest_x = 0;
-+    *dest_y = 0;
-+    *dest_pixel_aspect = display_ratio;
++    XSetForeground( display, DefaultGC( display, screen ),
++		    BlackPixel( display, screen ) );
++    XFillRectangle( display, visual.d,
++		    DefaultGC( display, screen ), x, y, w, h );
  
 -void xinePlayObject_impl::xineEvent( xine_event_t *event )
 -{
 -    if (event->type == XINE_EVENT_PLAYBACK_FINISHED)
-+    if (video_pixel_aspect >= display_ratio)
-+	video_width  = (int)(((video_width * video_pixel_aspect)
-+			      / display_ratio) + .5);
-+    else
-+	video_height = (int)(((video_height * display_ratio)
-+			      / video_pixel_aspect) + .5);
-+
-+    if ((!ds_counter || (--ds_counter == 0)) &&
-+        (video_width != width || video_height != height))
-     {
+-    {
 -	sendEvent( video.xcom_window, VPO_STOP );
-+	width  = video_width;
-+	height = video_height;
-+
-+	resizeNotify();
-     }
+-    }
 +    XUnlockDisplay( display );
  }
  
 -void xinePlayObject_impl::sendEvent( long window, long message )
-+void xinePlayObject_impl::destSize( int video_width, int video_height,
-+				    double video_pixel_aspect,
-+				    int *dest_width, int *dest_height,
-+				    double *dest_pixel_aspect )
++void xinePlayObject_impl::frameOutput( int *x, int *y, int *width, int *height, double *ratio )
  {
 -    XEvent event;
-+    Window root;
++    Window child, root;
 +    unsigned int u;
 +    int n;
  
@@ -1257,31 +1416,18 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
 -    event.xclient.format	= 32;
 -    event.xclient.data.l[0]	= message;
 +    XGetGeometry( display, visual.d, &root, &n, &n,
-+		  (unsigned int *)dest_width, (unsigned int *)dest_height,
-+		  &u, &u );
++		  (unsigned int *)width, (unsigned int *)height, &u, &u );
  
 -    XSendEvent( video.display, window, True, 0, &event );
-+    *dest_pixel_aspect = display_ratio;
++    if (x != 0 && y != 0)
++    {
++	XTranslateCoordinates( display, visual.d, root, 0, 0, x, y, &child );
++    }
  
 -    XFlush( video.display );
-+    if (video_pixel_aspect >= display_ratio)
-+	video_width  = (int)(((video_width * video_pixel_aspect)
-+			      / display_ratio) + .5);
-+    else
-+	video_height = (int)(((video_height * display_ratio)
-+			      / video_pixel_aspect) + .5);
++    *ratio = display_ratio;
 +
-+    if (video_width != width || video_height != height)
-+    {
-+	width  = video_width;
-+	height = video_height;
-+
-+	resizeNotify();
-+    }
 +    XUnlockDisplay( display );
-+
-+    // Reset 'seen dest_size_cb' counter
-+    ds_counter = 25;
  }
  
 -void xinePlayObject_impl::clearWindow()
@@ -1290,21 +1436,34 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
 -    Window root;
 -    unsigned int u, w, h;
 -    int x, y, screen;
--
--    XLockDisplay( video.display );
 +    XEvent event;
++    int width, height, ratio;
+ 
+-    XLockDisplay( video.display );
++    width  = xine_get_stream_info( stream, XINE_STREAM_INFO_VIDEO_WIDTH );
++    height = xine_get_stream_info( stream, XINE_STREAM_INFO_VIDEO_HEIGHT );
++    ratio  = xine_get_stream_info( stream, XINE_STREAM_INFO_VIDEO_RATIO );
++
++    // Adjust video size to aspect ratio
++    if (ratio >= 1000 && ratio <= 100000)
++    {
++	if ((ratio * height) >= (10000 * width))
++	    width  = (1 + ((ratio * height) / 5000)) / 2;
++	else
++	    height = (1 + ((20000 * width) / ratio)) / 2;
++    }
  
 -    screen = DefaultScreen( video.display );
 +    // Resize notify signal for front-ends
 +    memset( &event, 0, sizeof(event) );
  
 -    XGetGeometry( video.display, video.window, &root, &x, &y, &w, &h, &u, &u );
-+    event.type			= ClientMessage;
-+    event.xclient.window	= visual.d;
-+    event.xclient.message_type	= xcom_resize;
-+    event.xclient.format	= 32;
-+    event.xclient.data.l[0]	= width;
-+    event.xclient.data.l[1]	= height;
++    event.type                  = ClientMessage;
++    event.xclient.window        = visual.d;
++    event.xclient.message_type  = xcom_resize;
++    event.xclient.format        = 32;
++    event.xclient.data.l[0]     = width;
++    event.xclient.data.l[1]     = height;
  
 -    XSetForeground( video.display, DefaultGC( video.display, screen ),
 -		    BlackPixel( video.display, screen ) );
@@ -1359,7 +1518,8 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
  	    }
  	}
 -	else if (event.type == video.shm_completion && vo_driver)
--	{
++	else if (event.type == shm_completion && stream != 0)
+ 	{
 -	    vo_driver->gui_data_exchange( vo_driver,
 -					  GUI_DATA_EX_COMPLETION_EVENT,
 -					  &event );
@@ -1368,8 +1528,7 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
 -	if (event.type == ClientMessage &&
 -	    event.xclient.message_type == video.xcom_atom &&
 -	    event.xclient.window == video.xcom_window)
-+	else if (event.type == shm_completion && stream != 0)
- 	{
+-	{
 -	    switch (event.xclient.data.l[0])
 -	    {
 -	    case VPO_QUIT:
@@ -1395,9 +1554,17 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.cpp kdemulti
  }
  
  REGISTER_IMPLEMENTATION(xinePlayObject_impl);
-diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.h kdemultimedia-3.1/xine_artsplugin/xinePlayObject_impl.h
---- kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.h	Sun Sep 15 23:14:53 2002
-+++ kdemultimedia-3.1/xine_artsplugin/xinePlayObject_impl.h	Thu Dec  5 21:10:14 2002
+diff -urN kdemultimedia-3.1.orig/xine_artsplugin/xinePlayObject_impl.h kdemultimedia-3.1/xine_artsplugin/xinePlayObject_impl.h
+--- kdemultimedia-3.1.orig/xine_artsplugin/xinePlayObject_impl.h	Sun Sep 15 23:14:53 2002
++++ kdemultimedia-3.1/xine_artsplugin/xinePlayObject_impl.h	Tue Jan 14 10:03:11 2003
+@@ -1,6 +1,6 @@
+ /*
+    This file is part of KDE/aRts (Noatun) - xine integration
+-   Copyright (C) 2002 Ewald Snel <ewald@rambo.its.tudelft.nl>
++   Copyright (C) 2002-2003 Ewald Snel <ewald@rambo.its.tudelft.nl>
+ 
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
 @@ -16,10 +16,10 @@
  #include <stdsynthmodule.h>
  #include <X11/Xlib.h>
@@ -1411,7 +1578,15 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.h kdemultime
  #include "xinePlayObject.h"
  
  
-@@ -41,7 +41,6 @@
+@@ -34,14 +34,13 @@
+     xinePlayObject_impl();
+     virtual ~xinePlayObject_impl();
+ 
+-    bool loadMedia( const string &filename );
++    bool loadMedia( const string &url );
+     string description();
+     poTime currentTime();
+     poTime overallTime();
      poCapabilities capabilities();
      string mediaName();
      poState state();
@@ -1419,7 +1594,7 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.h kdemultime
      long x11Snapshot();
      long x11WindowId();
      void x11WindowId( long window );
-@@ -52,11 +51,14 @@
+@@ -52,11 +51,10 @@
      void calculateBlock( unsigned long samples );
  
  protected:
@@ -1429,48 +1604,47 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.h kdemultime
 -    void sendEvent( long window, long message );
 +    void xineEvent( const xine_event_t *event );
      void clearWindow();
-+    void frameOutput( int video_width, int video_height, double video_pixel_aspect,
-+		      int *dest_x, int *dest_y, int *dest_width, int *dest_height,
-+		      double *dest_pixel_aspect, int *win_x, int *win_y );
-+    void destSize( int video_width, int video_height, double video_pixel_aspect,
-+		   int *dest_width, int *dest_height, double *dest_pixel_aspect );
++    void frameOutput( int *x, int *y, int *width, int *height, double *ratio );
 +    void resizeNotify();
      void eventLoop();
  
      // C -> C++ wrapper for pthread API
-@@ -67,26 +69,61 @@
+@@ -67,26 +65,63 @@
      }
  
      // C -> C++ wrapper for xine API
 -    static inline void xine_handle_event( void *user_data, xine_event_t *event )
-+    static inline void xine_handle_event( void *user_data, const xine_event_t *event )
++    static inline void xine_handle_event( void *arg, const xine_event_t *event )
++    {
++	((xinePlayObject_impl *)arg)->xineEvent( event );
++    }
++
++    // C -> C++ wrapper for xine API
++    static inline void frame_output_cb( void *arg, int, int, double,
++					int *dest_x, int *dest_y,
++					int *dest_width, int *dest_height,
++					double *dest_pixel_aspect,
++					int *win_x, int *win_y )
      {
- 	((xinePlayObject_impl *)user_data)->xineEvent( event );
+-	((xinePlayObject_impl *)user_data)->xineEvent( event );
++	((xinePlayObject_impl *)arg)->frameOutput( win_x, win_y,
++						   dest_width, dest_height,
++						   dest_pixel_aspect );
++
++	*dest_x = 0;
++	*dest_y = 0;
++    }
++
++    // C -> C++ wrapper for xine API
++    static inline void dest_size_cb( void *arg, int, int, double,
++				     int *dest_width, int *dest_height,
++				     double *dest_pixel_aspect )
++    {
++	((xinePlayObject_impl *)arg)->frameOutput( NULL, NULL,
++						   dest_width, dest_height,
++						   dest_pixel_aspect );
      }
  
-+    // C -> C++ wrapper for xine API
-+    static void frame_output_cb( void *user_data, int video_width,
-+				 int video_height, double video_pixel_aspect,
-+				 int *dest_x, int *dest_y, int *dest_width,
-+				 int *dest_height, double *dest_pixel_aspect,
-+				 int *win_x, int *win_y )
-+    {
-+	xinePlayObject_impl *xpo = (xinePlayObject_impl *)user_data;
-+	xpo->frameOutput( video_width, video_height, video_pixel_aspect,
-+			  dest_x, dest_y, dest_width, dest_height,
-+			  dest_pixel_aspect, win_x, win_y );
-+    }
-+
-+    // C -> C++ wrapper for xine API
-+    static void dest_size_cb( void *user_data, int video_width, int video_height,
-+			      double video_pixel_aspect, int *dest_width,
-+			      int *dest_height, double *dest_pixel_aspect )
-+    {
-+	xinePlayObject_impl *xpo = (xinePlayObject_impl *)user_data;
-+	xpo->destSize( video_width, video_height, video_pixel_aspect,
-+		       dest_width, dest_height, dest_pixel_aspect );
-+    }
-+
  private:
 -    double	     flpos;
 -    string	     mrl;
@@ -1497,6 +1671,7 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.h kdemultime
 +    xine_stream_t	*stream;
 +    xine_event_queue_t	*queue;
 +    xine_audio_port_t	*ao_port;
++    void		*ao_driver;
 +    xine_video_port_t	*vo_port;
 +    x11_visual_t	 visual;
 +    xine_arts_audio	 audio;
@@ -1509,9 +1684,8 @@ diff -urN kdemultimedia-3.1/xine_artsplugin.old/xinePlayObject_impl.h kdemultime
 +    int			 shm_completion;
 +    double		 display_ratio;
 +
-+    int			 width;
-+    int			 height;
-+    int			 ds_counter;
++    int			 stream_length;
++    int			 stream_position;
  };
  
  #endif
