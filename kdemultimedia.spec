@@ -298,7 +298,7 @@ sed -e 's#slots\[CDROM_MAX_SLOTS\]#kde_slots\[CDROM_MAX_SLOTS\]#g' \
 /usr/include/linux/cdrom.h > linux/cdrom.h
 
 # echo $AUDIO
-%{__make} -f Makefile.cvs
+#%{__make} -f Makefile.cvs
 %configure \
  	--with-pam="yes" \
 	--enable-final \
