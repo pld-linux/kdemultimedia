@@ -293,7 +293,7 @@ AUDIO=oss,$AUDIO
 AUDIO=${AUDIO%%,}
 
 # echo $AUDIO
-
+%{__make} -f Makefile.cvs
 %configure \
  	--with-pam="yes" \
 	--enable-final \
