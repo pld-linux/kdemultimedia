@@ -4,20 +4,20 @@
 %bcond_without	i18n	# don't build i18n per module subpackages
 #
 %define		_state		stable
-%define		_ver		3.2.0
+%define		_ver		3.2.1
 #%efine		_snap		040110
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	3
+Release:	0.1
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
-Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
-# Source0-md5:	caa8578190d032acd3c8fa996cf9585a
+Source0:	http://download.kde.org/%{_state}/%{_ver}/src/%{name}-%{_ver}.tar.bz2
+# Source0-md5:	6e03faa44ff7fdf60fd2fef0d23d5c43
 #Source0:	http://ep09.pld-linux.org/~djurban/kde/%{name}-%{version}.tar.bz2
 %if %{with i18n}
 Source1:        http://ep09.pld-linux.org/~djurban/kde/i18n/kde-i18n-%{name}-%{version}.tar.bz2
@@ -593,7 +593,7 @@ Pliki umiêdzynarodawiaj±ce dla kaudiocreatora.
 
 %prep
 %setup -q -n %{name}-%{version} 
-%patch0 -p1
+#%patch0 -p1
 #%%patch1 -p1
 
 %build
@@ -773,7 +773,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libnoatuntags.so
 %attr(755,root,root) %{_libdir}/libworkman.so
 # static-only library, no shared version - so here
-%{_libdir}/libworkmanaudio.a
+#%{_libdir}/libworkmanaudio.a
 %{_includedir}/*.h
 %{_includedir}/arts/*.h
 %{_includedir}/arts/*.idl
@@ -931,6 +931,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/servicetypes/*midi*.desktop
 %{_desktopdir}/kde/kmid.desktop
 %{_iconsdir}/*/*/*/kmid.png
+%{_libdir}/libkmidlib.la
+%{_libdir}/libkmidlib.so.0.0.0
 
 %files kmix -f kmix_en.lang
 %defattr(644,root,root,755)
