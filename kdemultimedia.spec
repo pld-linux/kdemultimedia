@@ -12,7 +12,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	4
+Release:	5
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
@@ -499,7 +499,7 @@ KDE Media Player - biblioteki wspó³dzielone.
 	-e '/\[Desktop Entry\]/aEncoding=UTF-8' -e 's/Terminal=0/Terminal=false/' \
 	krec/krec.desktop
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Recorder;/' \
-	-e 's/Terminal=0/Terminal=false/' \
+	-e '/\[Desktop Entry\]/aEncoding=UTF-8' -e 's/Terminal=0/Terminal=false/' \
 	kaudiocreator/kaudiocreator.desktop 
 %{__sed} -i -e 's/Categories=.*/Categories=Audio;Recorder;/' \
 	kappfinder-data/galan.desktop \
@@ -526,6 +526,8 @@ KDE Media Player - biblioteki wspó³dzielone.
 	-e 's/Terminal=0/Terminal=false/' \
 	arts/tools/artscontrol.desktop \
 	arts/builder/artsbuilder.desktop
+%{__sed} -i -e '/\[Desktop Entry\]/aEncoding=UTF-8' \
+	libkcddb/kcmcddb/libkcddb.desktop
 
 for i in `find ./mpeglib/ -name Makefile.am`; do echo KDE_OPTIONS=nofinal >> ${i} ; done
 
