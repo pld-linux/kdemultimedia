@@ -274,13 +274,18 @@ Xine Plug-in.
 Wtyczka do Xine.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{_snap}
 %patch0 -p1
 
 %build
 kde_appsdir="%{_applnkdir}"; export kde_appsdir
 kde_htmldir="%{_htmldir}"; export kde_htmldir
 kde_icondir="%{_pixmapsdir}"; export kde_icondir
+
+if [ -f %{_pkgconfigdir}/libpng12.pc ] ; then
+        PNGCFLAGS=" `pkg-config libpng12 --cflags`"
+fi
+	
 
 CFLAGS="%{rpmcflags} -I%{_includedir}"
 
