@@ -4,24 +4,22 @@
 %bcond_without	xine	# build without xine support
 
 %define		_state		stable
-%define		_ver		3.3.1
+%define		_ver		3.3.2
 
-%define		_minlibsevr	9:3.3.1
-%define		_minbaseevr	9:3.3.1
+%define		_minlibsevr	9:3.3.2
+%define		_minbaseevr	9:3.3.2
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	3
+Release:	1
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{_ver}.tar.bz2
-# Source0-md5:	4a3462ba7b37e0057eadd24541908f95
-# Source0-size:	5362949
-Patch100:	%{name}-branch.diff
+# Source0-md5:	2f393da809542dab5bf75bf7a91d1ec0
 Patch0:		%{name}-llh.patch
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	arts-qt-devel
@@ -44,6 +42,7 @@ BuildRequires:	speex-devel
 BuildRequires:	flac-devel
 BuildRequires:	libmad-devel
 BuildRequires:	zlib-devel
+Obsoletes:	kdemultimedia-libworkman
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -100,7 +99,6 @@ formats:
 - speex
 - WAV
 
-
 %description akode -l pl
 Wtyczka arts, która wspiera wysokiej jako¶ci odtwarzanie nastêpuj±cych
 formatów:
@@ -110,7 +108,6 @@ formatów:
 - FLAC
 - speex
 - WAV
-
 
 %package arts
 Summary:	Arts extensions
@@ -158,12 +155,12 @@ Zaawansowane narzêdzie konfiguracyjne dla arts, zawiera: okno zakresu
 FFT, listê obs³ugiwanych typów plików, modu³y zarz±dzania klientami,
 midi oraz ¶rodowiskiem, a tak¿e monitor stanu serwera d¼wiêku.
 
-#%package artsplugin-audiofile 
-#Summary: Audiofile Plug-in
-#Summary(pl): Wtyczka do Audiofile 
-#Group: X11/Applications 
-#Requires: %{name}-arts = %{epoch}:%{version}-%{release} 
-#Obsoletes:kdemultimedia-arts < 9:3.1.92.021012
+#%package artsplugin-audiofile
+#Summary:	Audiofile Plug-in
+#Summary(pl):	Wtyczka do Audiofile
+#Group:		X11/Applications
+#Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
+#Obsoletes:	kdemultimedia-arts < 9:3.1.92.021012
 
 #%description artsplugin-audiofile #Audiofile Plug-in.
 
@@ -478,8 +475,7 @@ KDE Media Player - shared libs.
 KDE Media Player - biblioteki wspó³dzielone.
 
 %prep
-%setup -q 
-#%patch100 -p1
+%setup -q
 %patch0 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Player;/' \
@@ -503,7 +499,7 @@ KDE Media Player - biblioteki wspó³dzielone.
 	krec/krec.desktop
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Recorder;/' \
 	-e '/\[Desktop Entry\]/aEncoding=UTF-8' -e 's/Terminal=0/Terminal=false/' \
-	kaudiocreator/kaudiocreator.desktop 
+	kaudiocreator/kaudiocreator.desktop
 %{__sed} -i -e 's/Categories=.*/Categories=Audio;Recorder;/' \
 	kappfinder-data/galan.desktop \
 	kappfinder-data/mixxx.desktop \
@@ -524,7 +520,7 @@ KDE Media Player - biblioteki wspó³dzielone.
 	kappfinder-data/freqtweak.desktop \
 	kappfinder-data/djplay.desktop \
 	kappfinder-data/ams.desktop \
-	kappfinder-data/zynaddsubfx.desktop  
+	kappfinder-data/zynaddsubfx.desktop
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;/' \
 	-e 's/Terminal=0/Terminal=false/' \
 	arts/tools/artscontrol.desktop \
