@@ -15,17 +15,17 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	0.1
+Release:	1
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
-#Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
-Source0:	http://ep09.pld-linux.org/~djurban/kde/%{name}-%{version}.tar.bz2
+Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
 # Source0-md5:	caa8578190d032acd3c8fa996cf9585a
+#Source0:	http://ep09.pld-linux.org/~djurban/kde/%{name}-%{version}.tar.bz2
 %if %{with i18n}
 Source1:        http://ep09.pld-linux.org/~djurban/kde/i18n/kde-i18n-%{name}-%{version}.tar.bz2
-# Source1-md5:	f7aeb11765cd23f1719c1d18762fbc47  
+# Source1-md5:	f7aeb11765cd23f1719c1d18762fbc47
 %endif
 # Patch0:		%{name}-no_pedantic.patch
 # Patch1:		%{name}-cdda_check.patch
@@ -468,8 +468,6 @@ Common internationalization and localization files for kdemultimedia.
 
 %description -l pl i18n
 Wspó³dzielone pliki umiêdzynarodawiaj±ce dla kdemultimedia.
-
-
 
 %package kaboodle-i18n
 Summary:	Internationalization and localization files for kaboodle
