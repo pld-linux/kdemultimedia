@@ -12,7 +12,7 @@
 
 %define         _state          snapshots
 %define         _ver		3.2
-%define         _snap		030518
+%define         _snap		030602
 
 %ifarch	sparc sparcv9 sparc64
 %define		_with_esd	1
@@ -29,8 +29,8 @@ License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
+# Source0-md5:	410ca37dc25eab09cb47488c7b33771d
 Source0:        http://team.pld.org.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
-# Source0-md5:	689c73cec637b0d0cd81a9cd701bb2f4
 Patch0:		%{name}-timidity.patch
 #Patch1:	http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-video-20030316.patch
 #Patch2:	http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-streaming-20030317.patch
@@ -367,18 +367,18 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
 
-mv $RPM_BUILD_ROOT%{_bindir}/{timidity,ktimidity}    
+#mv $RPM_BUILD_ROOT%{_bindir}/{timidity,ktimidity}    
 
 mv -f $RPM_BUILD_ROOT%{_applnkdir}/{Settings,KDE-Settings}
 
-cd $RPM_BUILD_ROOT%{_desktopdir}
-cat timidity.desktop |sed 's/Exec=timidity/Exec=ktimidity/' \
-    > ktimidity.desktop
-cd -
+#cd $RPM_BUILD_ROOT%{_desktopdir}
+#cat timidity.desktop |sed 's/Exec=timidity/Exec=ktimidity/' \
+#    > ktimidity.desktop
+#cd -
 
-cd $RPM_BUILD_ROOT%{_datadir}/apps/kmidi/config
-ln -s gravis.cfg GUSpatches
-cd -
+#cd $RPM_BUILD_ROOT%{_datadir}/apps/kmidi/config
+#ln -s gravis.cfg GUSpatches
+#cd -
 
 %find_lang artsbuilder	--with-kde
 cat artsbuilder.lang > arts.lang
@@ -516,15 +516,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kmid.desktop
 %{_pixmapsdir}/*/*/*/kmid.png
 
-%files kmidi -f kmidi.lang
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/kmidi
-%attr(755,root,root) %{_bindir}/sf2cfg
-%attr(755,root,root) %{_bindir}/ktimidity
-%{_desktopdir}/kmidi.desktop
-%{_desktopdir}/ktimidity.desktop
-%{_datadir}/apps/kmidi
-%{_pixmapsdir}/*/*/*/kmidi.png
+#%files kmidi -f kmidi.lang
+#%defattr(644,root,root,755)
+#%attr(755,root,root) %{_bindir}/kmidi
+#%attr(755,root,root) %{_bindir}/sf2cfg
+#%attr(755,root,root) %{_bindir}/ktimidity
+#%{_desktopdir}/kmidi.desktop
+#%{_desktopdir}/ktimidity.desktop
+#%{_datadir}/apps/kmidi
+#%{_pixmapsdir}/*/*/*/kmidi.png
 
 %files kmix -f kmix.lang
 %defattr(644,root,root,755)
@@ -590,7 +590,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libkcddb.so.*.*.*
 %{_libdir}/kde3/libkcm_cddb_config.la
 %attr(755,root,root) %{_libdir}/kde3/libkcm_cddb_config.so
-%{_applnkdir}/KDE-Settings/Sound/cddb.desktop
+%{_applnkdir}/KDE-Settings/Sound/libkcddb.desktop
 
 %files noatun -f noatun.lang
 %defattr(644,root,root,755)
