@@ -2,7 +2,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	3.0.4
-Release:	2
+Release:	3
 Epoch:		7
 License:	GPL
 Vendor:		The KDE Team
@@ -40,6 +40,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define         _fontdir        /usr/share/fonts
 %define         _sharedir       %{_prefix}/share
 %define         _htmldir        /usr/share/doc/kde/HTML
+
+%define		no_install_post_chrpath		1
 
 %description
 KDE multimedia applications. Package includes:
