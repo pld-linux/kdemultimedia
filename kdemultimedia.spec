@@ -2,7 +2,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	3.0.3
-Release:	2
+Release:	3
 Epoch:		7
 License:	GPL
 Vendor:		The KDE Team
@@ -45,8 +45,9 @@ KDE multimedia applications. Package includes:
  - KMID - MIDI player,
  - KMIDI - software MIDI player,
  - KMIX - audio mixer,
- - KSCD - CD player.
- - Noatun - a media player,
+ - KSCD - CD player,
+ - Noatun - a media player.
+
 %description -l pl
 Multimedialne aplikacje KDE. Pakiet zawiera:
 
@@ -173,10 +174,11 @@ MPEG lib.
 Summary:	kdemultimedia - headers
 Summary(pl):	kdemultimedia - pliki nag³ówkowe
 Group:		X11/Development/Libraries
+Requires:	arts-devel >= 1.0.3
+Requires:	kdelibs-devel = %{version}
+Requires:	kdemultimedia-arts = %{version}
 Requires:	kdemultimedia-mpeglib = %{version}
 Requires:	kdemultimedia-noatun = %{version}
-Requires:	kdemultimedia-arts = %{version}
-Requires:	kdelibs-devel = %{version}
 
 %description devel
 kdemultimedia - headers.
@@ -248,6 +250,9 @@ cat kcmkmix.lang >> kmix.lang
 %find_lang kfile_wav	--with-kde
 cat {kfile_m3u,kfile_mp3,kfile_ogg,kfile_wav,kmyapp,koncd}.lang >> %{name}.lang
 
+%clean
+rm -rf $RPM_BUILD_ROOT
+
 %post   mpeglib -p /sbin/ldconfig
 %postun mpeglib -p /sbin/ldconfig
 
@@ -269,16 +274,12 @@ cat {kfile_m3u,kfile_mp3,kfile_ogg,kfile_wav,kmyapp,koncd}.lang >> %{name}.lang
 %post   noatun -p /sbin/ldconfig
 %postun noatun -p /sbin/ldconfig
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libdummy.so.*.*.*
 %attr(755,root,root) %{_libdir}/libdummy.la
 %attr(755,root,root) %{_libdir}/kde3/kfile_*.??
 %{_datadir}/services/kfile_*.desktop
-%dir %{_datadir}/apps/kconf_update/
 #%attr(755,root,root) %{_datadir}/apps/kconf_update/*.sh
 #%attr(755,root,root) %{_datadir}/apps/kconf_update/*.pl
 %attr(755,root,root) %{_datadir}/apps/kconf_update/noatun20update
@@ -403,7 +404,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(644,root,root,755)
-%{_includedir}/*
 %{_libdir}/libarts_mpeglib.so
 %{_libdir}/libnoatuncontrols.so
 %{_libdir}/libartsmidi_idl.so
@@ -423,6 +423,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libaktion.so
 %{_libdir}/libdummy.so
 %{_libdir}/kde3/kmix_panelapplet.so
+%{_includedir}/*.h
+%{_includedir}/arts/*
+%{_includedir}/mpeglib*
+%{_includedir}/noatun
 
 %files kaboodle -f kaboodle.lang
 %defattr(644,root,root,755)
