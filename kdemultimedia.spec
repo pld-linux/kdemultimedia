@@ -19,6 +19,8 @@ License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_ftpdir}/%{version}/src/%{name}-%{version}.tar.bz2
+# generated from kde-i18n
+Source1:	kde-i18n-%{name}-%{version}.tar.bz2
 Patch0:		%{name}-kmidi-alsa.patch
 %ifnarch sparc sparc64
 BuildRequires:	alsa-lib-devel
@@ -220,6 +222,8 @@ rm -rf $RPM_BUILD_ROOT
 ALD=$RPM_BUILD_ROOT%{_applnkdir}
 install -d $ALD/Settings/KDE
 mv $ALD/{Settings/Sound,Settings/KDE}
+
+bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT%
 
 %find_lang aktion --with-kde
 %find_lang noatun --with-kde
