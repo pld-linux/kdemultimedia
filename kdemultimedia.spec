@@ -4,12 +4,12 @@
 # 
 
 %define         _state          unstable
-%define         _kdever         kde-3.1-rc3
+%define         _kdever         kde-3.1-rc4
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
-Version:	3.0.99
+Version:	3.1
 Release:	1
 Epoch:		7
 License:	GPL
@@ -78,7 +78,7 @@ Summary:	kdemultimedia - headers
 Summary(pl):	kdemultimedia - pliki nag³ówkowe
 Group:		X11/Development/Libraries
 Requires:	arts-devel >= 1.0.3
-Requires:	kdelibs-devel = %{version}
+Requires:	kdelibs-devel >= %{version}
 Requires:	kdemultimedia-arts = %{version}
 Requires:	kdemultimedia-mpeglib = %{version}
 Requires:	kdemultimedia-noatun = %{version}
@@ -93,7 +93,7 @@ kdemultimedia - pliki nag³ówkowe.
 Summary:	KDE Media Player
 Summary(pl):	Odtwarzacz multimedialny dla KDE
 Group:		X11/Applications
-Requires:	kdelibs = %{version}
+Requires:	kdelibs >= %{version}
 Obsoletes:	aktion
 
 %description aktion
@@ -108,7 +108,7 @@ WAV.
 Summary:	Arts Tools
 Summary(pl):	Narzêdzia Arts
 Group:		X11/Applications
-Requires:	kdelibs = %{version}
+Requires:	kdelibs >= %{version}
 Requires:	%{name}-mpeglib = %{version}
 
 %description arts
@@ -159,7 +159,7 @@ dodatkow± zak³adkê z rozszerzonymi informacjami o pliku.
 Summary:	KDE MIDI Player
 Summary(pl):	Odtwarzacz MIDI dla KDE
 Group:		X11/Applications
-Requires:	kdelibs = %{version}
+Requires:	kdelibs >= %{version}
 
 %description kmid
 This is a MIDI player for KDE. It uses sound-card synthetizer or other
@@ -173,7 +173,7 @@ muzycznej lub inne urz±dzenia MIDI przy³±czone do niej.
 Summary:	KDE software MIDI Player
 Summary(pl):	Programowy odtwarzacz MIDI dla KDE
 Group:		X11/Applications
-Requires:	kdelibs = %{version}
+Requires:	kdelibs >= %{version}
 
 %description kmidi
 Software MIDI player. It uses GUS patch files and CPU power to create
@@ -187,7 +187,7 @@ do stworzenia dobrej jako¶ci d¼wiêku.
 Summary:	KDE audio mixer
 Summary(pl):	Mixer audio dla KDE
 Group:		X11/Applications
-Requires:	kdelibs = %{version}
+Requires:	kdelibs >= %{version}
 
 %description kmix
 Sound mixer application for KDE.
@@ -199,7 +199,7 @@ Mikser audio dla KDE.
 Summary:	KDE sound recorder
 Summary(pl):	Rejestrator d¼wiêku dla KDE
 Group:		X11/Applications
-Requires:	kdelibs = %{version}
+Requires:	kdelibs >= %{version}
 
 %description krec
 KDE sound recorder.
@@ -211,7 +211,7 @@ Rejestrator d¼wiêku dla KDE.
 Summary:	KDE CD Player
 Summary(pl):	Odtwarzacz CD dla KDE
 Group:		X11/Applications
-Requires:	kdelibs = %{version}
+Requires:	kdelibs >= %{version}
 
 %description kscd
 CD Player with CDDB support. It can automaticaly update its CD
@@ -227,7 +227,7 @@ graficzn± interpretacjê granych d¼wiêków.
 Summary:	MPEG lib
 Summary(pl):	MPEG lib
 Group:		X11/Applications
-Requires:	kdelibs = %{version}
+Requires:	kdelibs >= %{version}
 Requires:	arts >= 1.0.0
 
 %description mpeglib
@@ -240,7 +240,7 @@ MPEG lib.
 Summary:	KDE Media Player
 Summary(pl):	KDE Media Player
 Group:		X11/Applications
-Requires:	kdelibs = %{version}
+Requires:	kdelibs >= %{version}
 Requires:	arts >= 1.0.0
 
 %description noatun
@@ -253,7 +253,7 @@ KDE Media Player.
 Summary:	Xine Plug-in
 Summary(pl):	Plug-in do Xine
 Group:		X11/Applications
-Requires:	kdelibs = %{version}
+Requires:	kdelibs >= %{version}
 Requires:	arts >= 1.0.0
 
 %description xine
