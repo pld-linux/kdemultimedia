@@ -94,7 +94,7 @@ Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 Arts plugin that supports high quality playback of the following
 formats:
 - musepack (.mpc)
-- mpeg (.mp3,.mp2, etc.)
+- mpeg (.MP3,.MP2, etc.)
 - ogg vorbis (.ogg)
 - flac
 - speex
@@ -105,7 +105,7 @@ formats:
 Wtyczka arts, która wspiera wysokiej jako¶ci odtwarzanie nastêpuj±cych
 formatów:
 - musepack (.mpc)
-- mpeg (.mp3,.mp2, etc.)
+- mpeg (.MP3,.MP2, etc.)
 - ogg vorbis (.ogg)
 - flac
 - speex
@@ -184,7 +184,7 @@ better quality. For best quality use akode alongside this plugin, arts
 will autodetect which plugin gives better quality. This plugin
 supports:
 - microsoft's windows media formats (asf,asx,wmv,wma)
-- mpeg (vob,mpg,mpeg,m1v,m2v,m1s,m2s,m2p,mp4,mp3,mp2,mp1)
+- mpeg (vob,mpg,mpeg,m1v,m2v,m1s,m2s,m2p,MP4,MP3,MP2,mp1)
 - divx and avi
 - quicktime (qt,mov,moov)
 - real.com formats (rv,ra,ram,rm)
@@ -201,7 +201,7 @@ odtwarza w lepszej jako¶ci. Dla najlepszej jako¶ci nale¿y u¿ywaæ tej
 wtyczki wraz z akode, a arts sam wykryje, która z nich da lepsz±
 jako¶æ przy konkretnym formacie. Wspierane formaty to:
 - Microsoft Windows media (asf,asx,wmv,wma)
-- mpeg (vob,mpg,mpeg,m1v,m2v,m1s,m2s,m2p,mp4,mp3,mp2,mp1)
+- mpeg (vob,mpg,mpeg,m1v,m2v,m1s,m2s,m2p,MP4,MP3,MP2,mp1)
 - divx i avi
 - quicktime (qt,mov,moov)
 - real.com (rv,ra,ram,rm)
@@ -313,13 +313,13 @@ Obsoletes:	kdemultimedia < 8:3.0.8
 
 %description kfile
 This package adds a fold to konqueror "file properties" dialog window
-with file enhanced informations for avi, au, flac, m3u, mp3, mpc, ogg,
+with file enhanced informations for avi, au, flac, m3u, MP3, mpc, ogg,
 sid and wav files.
 
 %description kfile -l pl
 Ten pakiet dodaje do okna dialogowego "w³a¶ciwo¶ci pliku" konquerora
 dodatkow± zak³adkê z rozszerzonymi informacjami o plikach avi, au,
-flac, mp3, m3u, mpc, ogg, sid and wav.
+flac, MP3, m3u, mpc, ogg, sid and wav.
 
 %package kmid
 Summary:	KDE MIDI Player
@@ -365,11 +365,11 @@ Requires:	%{name}-artscontrol = %{epoch}:%{version}-%{release}
 Requires:	%{name}-kmix = %{epoch}:%{version}-%{release}
 
 %description krec
-KDE sound recorder which supports mp3 and ogg exporting and simple
+KDE sound recorder which supports MP3 and ogg exporting and simple
 effects and mixers.
 
 %description krec -l pl
-Rejestrator d¼wiêku dla KDE z obs³ug± eksportu do mp3 i ogg oraz
+Rejestrator d¼wiêku dla KDE z obs³ug± eksportu do MP3 i ogg oraz
 prostymi efektami i mikserem.
 
 %package kscd
@@ -411,12 +411,12 @@ Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 %description mpeglib
 Plugin that adds support of MPEG audio and video formats to arts. It
 give better quality than xine and worse than akode, yet it may be
-beter for playing broken or low quality mp3 files than akode.
+beter for playing broken or low quality MP3 files than akode.
 
 %description mpeglib -l pl
 Wtyczka dodaj±ca obs³ugê MPEG do arts daje jako¶æ lepsz± od wtyczki
 xine i gorsz± akode. Jedynie w przypadku uszkodzonych i niskiej
-jako¶ci mp3 jest lepsza od akode. Obs³uguje zarówno d¼wiêk jak i obraz
+jako¶ci MP3 jest lepsza od akode. Obs³uguje zarówno d¼wiêk jak i obraz
 zakodowany w MPEG.
 
 %package mpeglib-devel
