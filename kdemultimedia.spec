@@ -1037,6 +1037,14 @@ rm -rf $RPM_BUILD_ROOT
 	DESTDIR=$RPM_BUILD_ROOT \
 	kde_htmldir=%{_kdedocdir}
 
+%if %{with i18n}
+bzip2 -dc %{SOURCE14} | tar xf - -C $RPM_BUILD_ROOT
+for f in $RPM_BUILD_ROOT%{_datadir}/locale/*/LC_MESSAGES/*.mo; do
+        [ "`file $f | sed -e 's/.*,//' -e 's/message.*//'`" -le 1 ] && rm -f $f
+done
+%endif
+	
+
 %find_lang artsbuilder	--with-kde
 %find_lang juk		--with-kde
 %find_lang kaboodle	--with-kde
@@ -1085,6 +1093,7 @@ rm -rf $RPM_BUILD_ROOT
 %post	noatun-libs		-p /sbin/ldconfig
 %postun	noatun-libs		-p /sbin/ldconfig
 
+%if %{with i18n}
 %files artsbuilder-i18n -f artsbuilder.lang
 %files juk-i18n -f juk.lang
 %files kaboodle-i18n -f kaboodle.lang
@@ -1093,7 +1102,7 @@ rm -rf $RPM_BUILD_ROOT
 %files kscd-i18n -f kscd.lang
 %files krec-i18n -f krec.lang
 %files noatun-i18n -f noatun.lang
-
+%endif
 
 %files devel
 %defattr(644,root,root,755)
