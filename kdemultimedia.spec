@@ -3,10 +3,13 @@ Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	2.0.1
 Release:	1
-Copyright:	GPL
+Epoch:		6
+License:	GPL
 Group:		X11/Applications
+Group(de):	X11/Applikationen
+Group(pl):	X11/Aplikacje
 Vendor:		The KDE Team
-Source:		ftp://ftp.kde.org/pub/kde/snapshost/current/%{name}-%{version}.tar.bz2
+Source0:	ftp://ftp.kde.org/pub/kde/snapshost/current/%{name}-%{version}.tar.bz2
 BuildRequires:	kdelibs-devel
 BuildRequires:	qt-devel >= 2.2.2
 BuildRequires:	XFree86-devel
@@ -20,27 +23,27 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define         _htmldir        %{_sharedir}/doc/kde/HTML
 
 %description
-KDE multimedia applications.
-Package includes:
-  KMedia - Media player
-  KMID - MIDI player
-  KMIDI - software MIDI player
-  KMIX - audio mixer
-  KSCD - CD Player
+KDE multimedia applications. Package includes:
+ - KMedia - Media player,
+ - KMID - MIDI player,
+ - KMIDI - software MIDI player,
+ - KMIX - audio mixer,
+ - KSCD - CD Player.
 
 %description -l pl
-Multimedialne aplikacje KDE.
-Pakiet zawiera:
-  KMedia - Program do odtwarzania plików d¼wiêkowych
-  KMID - Odtwarzacz MIDI
-  KMIDI - Programowy odtwarzacz MIDI
-  KMIX - Mixer audio
-  KSCD - Odtwarzacz CD
+Multimedialne aplikacje KDE. Pakiet zawiera:
+ - KMedia - Program do odtwarzania plików d¼wiêkowych,
+ - KMID - Odtwarzacz MIDI,
+ - KMIDI - Programowy odtwarzacz MIDI,
+ - KMIX - Mixer audio,
+ - KSCD - Odtwarzacz CD.
 
 %package arts
 Summary:	Arts
 Summary(pl):	Arts
 Group:		X11/Applications
+Group(de):	X11/Applikationen
+Group(pl):	X11/Aplikacje
 Requires:	kdelibs = %{version} 
 
 %description arts
@@ -51,36 +54,40 @@ Requires:	kdelibs = %{version}
 Summary:	KDE Media Player
 Summary(pl):	Odtwarzacz multimedialny dla KDE
 Group:		X11/Applications
+Group(de):	X11/Applikationen
+Group(pl):	X11/Aplikacje
 Requires:	kdelibs = %{version}
 
 %description aktion
-This is a media player for KDE.
-Currently it can be only used to play WAV files.
+This is a media player for KDE. Currently it can be only used to play
+WAV files.
 
 %description -l pl aktion
-Odtwarzacz multimedialny dla KDE.
-W tej chwili obs³uguje tylko pliki WAV.
+Odtwarzacz multimedialny dla KDE. W tej chwili obs³uguje tylko pliki
+WAV.
 
 %package kmid
 Summary:	KDE MIDI Player	
 Summary(pl):	Odtwarzacz MIDI dla KDE
 Group:		X11/Applications
+Group(de):	X11/Applikationen
+Group(pl):	X11/Aplikacje
 Requires:	kdelibs = %{version}
 
 %description kmid
-This is a MIDI player for KDE.
-It uses sound-card synthetizer or other hardware connected to MIDI to play MIDI
-files.
+This is a MIDI player for KDE. It uses sound-card synthetizer or other
+hardware connected to MIDI to play MIDI files.
 
 %description kmid -l pl
-Odtwarzacz MIDI dla KDE.
-Wykorzystuje tylko syntetyzator na karcie muzycznej lub inne urz±dzenia MIDI
-przy³±czone do niej.
+Odtwarzacz MIDI dla KDE. Wykorzystuje tylko syntetyzator na karcie
+muzycznej lub inne urz±dzenia MIDI przy³±czone do niej.
 
 %package kmidi
 Summary:	KDE software MIDI Player	
 Summary(pl):	Programowy odtwarzacz MIDI dla KDE
 Group:		X11/Applications
+Group(de):	X11/Applikationen
+Group(pl):	X11/Aplikacje
 Requires:	kdelibs = %{version}
 
 %description kmidi
@@ -88,13 +95,15 @@ Software MIDI player. It uses GUS patch files and CPU power to create
 high-quality sound.
 
 %description kmidi -l pl
-Programowy odtwarzacz MIDI. Wykorzystuje patche z GUSa i moc procesora do
-stworzenia dobrej jako¶ci d¼wiêku.
+Programowy odtwarzacz MIDI. Wykorzystuje patche z GUSa i moc procesora
+do stworzenia dobrej jako¶ci d¼wiêku.
 
 %package kmix 
 Summary:	KDE audio mixer
 Summary(pl):	Mixer audio dla KDE
 Group:		X11/Applications
+Group(de):	X11/Applikationen
+Group(pl):	X11/Aplikacje
 Requires:	kdelibs = %{version}
 
 %description kmix
@@ -107,21 +116,26 @@ Mikser audio dla KDE.
 Summary:	KDE CD Player	
 Summary(pl):	Odtwarzacz CD dla KDE
 Group:		X11/Applications
+Group(de):	X11/Applikationen
+Group(pl):	X11/Aplikacje
 Requires:	kdelibs = %{version} 
 
 %description kscd
-CD Player with CDDB support. It can automaticaly update its CD database with
-the Internet and show graphical interpretation of played sounds.
+CD Player with CDDB support. It can automaticaly update its CD
+database with the Internet and show graphical interpretation of played
+sounds.
 
 %description kscd -l pl
-Odtwarzacz CD z obs³ug± CDDB. Automatycznie uaktualnia swoj± bazê danych
-o p³ytach CD z Internetem. Potrafi tak¿e wy¶wietliæ ³adn± graficzn±
-interpretacjê granych d¼wiêków.
+Odtwarzacz CD z obs³ug± CDDB. Automatycznie uaktualnia swoj± bazê
+danych o p³ytach CD z Internetem. Potrafi tak¿e wy¶wietliæ ³adn±
+graficzn± interpretacjê granych d¼wiêków.
 
 %package kaiman
 Summary:	KDE Media Player
 Summary(pl):	KDE Media Player
 Group:		X11/Applications
+Group(de):	X11/Applikationen
+Group(pl):	X11/Aplikacje
 Requires:	kdelibs = %{version} 
 
 %description kaiman
@@ -132,6 +146,8 @@ Requires:	kdelibs = %{version}
 Summary:	MPEG lib
 Summary(pl):	MPEG lib
 Group:		X11/Applications
+Group(de):	X11/Applikationen
+Group(pl):	X11/Aplikacje
 Requires:	kdelibs = %{version} 
 
 %description mpeglib
@@ -154,22 +170,22 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install DESTDIR=$RPM_BUILD_ROOT
 
 
-%post mpeglib -p /sbin/ldconfig
+%post   mpeglib -p /sbin/ldconfig
 %postun mpeglib -p /sbin/ldconfig
 
-%post aktion -p /sbin/ldconfig
+%post   aktion -p /sbin/ldconfig
 %postun aktion -p /sbin/ldconfig
 
-%post arts -p /sbin/ldconfig
+%post   arts -p /sbin/ldconfig
 %postun arts -p /sbin/ldconfig
 
-%post kmid -p /sbin/ldconfig
+%post   kmid -p /sbin/ldconfig
 %postun kmid -p /sbin/ldconfig
 
-%post kmix -p /sbin/ldconfig
+%post   kmix -p /sbin/ldconfig
 %postun kmix -p /sbin/ldconfig
 
-%post kscd -p /sbin/ldconfig
+%post   kscd -p /sbin/ldconfig
 %postun kscd -p /sbin/ldconfig
 
 %clean
