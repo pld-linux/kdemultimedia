@@ -1,16 +1,25 @@
+%define		_ver		3.0
+#define		_sub_ver
+%define		_rel		1
+
+%{?_sub_ver:	%define	_version	%{_ver}%{_sub_ver}}
+%{!?_sub_ver:	%define	_version	%{_ver}}
+%{?_sub_ver:	%define	_release	0.%{_sub_ver}.%{_rel}}
+%{!?_sub_ver:	%define	_release	%{_rel}}
+%{!?_sub_ver:	%define	_ftpdir	stable}
+%{?_sub_ver:	%define	_ftpdir	unstable/kde-%{version}%{_sub_ver}}
+
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
-Version:	2.2.2
-Release:	5
+Version:	%{_version}
+Release:	%{_release}
 Epoch:		6
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
-Source0:	ftp://ftp.kde.org/pub/kde/stable/%{version}/src/%{name}-%{version}.tar.bz2
+Source0:	ftp://ftp.kde.org/pub/kde/%{_ftpdir}/%{version}/src/%{name}-%{version}.tar.bz2
 Patch0:		%{name}-kmidi-alsa.patch
-Patch1:		%{name}-fix-num-validator.patch
-Patch2:		%{name}-fix-kmidi-layout.patch
 %ifnarch sparc sparc64
 BuildRequires:	alsa-lib-devel
 %endif
@@ -173,11 +182,20 @@ kdemultimedia - headers.
 %description devel -l pl
 kdemultimedia - pliki nag³ówkowe.
 
+%package kaboodle
+Summary:	Media player
+Summary(pl):	Odtwarzacz multimedialny
+Group:		X11/Applications
+
+%description kaboodle
+Media player.
+
+%description kaboodle -l pl
+Odtwarzacz multimedialny.
+
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
 
 %build
 kde_htmldir="%{_htmldir}"; export kde_htmldir
@@ -198,6 +216,9 @@ rm -rf $RPM_BUILD_ROOT
 ALD=$RPM_BUILD_ROOT%{_applnkdir}
 install -d $ALD/Settings/KDE
 mv $ALD/{Settings/Sound,Settings/KDE}
+
+%find_lang aktion --with-kde
+%find_lang noatun --with-kde
 
 %post   mpeglib -p /sbin/ldconfig
 %postun mpeglib -p /sbin/ldconfig
@@ -223,13 +244,20 @@ mv $ALD/{Settings/Sound,Settings/KDE}
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%files
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libdummy.so.*.*.*
+%attr(755,root,root) %{_libdir}/libdummy.la
+%attr(755,root,root) %{_libdir}/kde3/kfile_*.??
+%{_datadir}/services/kfile_*.desktop
+
 %files mpeglib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/mpeglibartsplay
 %attr(755,root,root) %{_bindir}/yaf*
 %attr(755,root,root) %{_libdir}/libyaf*.so.*.*.*
 %attr(755,root,root) %{_libdir}/libarts_mpeglib*.so.*.*.*
-%attr(755,root,root) %{_libdir}/libmpeg-*.so.*.*.*
+%attr(755,root,root) %{_libdir}/libmpeg-*.so
 %{_libdir}/libmpeg.la
 %{_libdir}/libyaf*.la
 %{_libdir}/libarts_mpeglib*.la
@@ -241,10 +269,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/mcop/MP3PlayObject.mcopclass
 %{_libdir}/mcop/CDDAPlayObject.mcopclass
 %{_libdir}/mcop/MPGPlayObject.mcopclass
-#%{_includedir}/mpeglib_artsplug
-#%{_includedir}/mpeglib
 
-%files aktion
+%files aktion -f aktion.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/aktion*
 %attr(755,root,root) %{_libdir}/libaktion.so.*.*.*
@@ -258,47 +284,42 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/arts*
 %attr(755,root,root) %{_bindir}/midisend
-%attr(755,root,root) %{_bindir}/so_play
-#%attr(755,root,root) %{_libdir}/libartsbuilder.so.*.*.*
-#%attr(755,root,root) %{_libdir}/libartsmodules.so.*.*.*
-#%attr(755,root,root) %{_libdir}/libarts_splay.so.*.*.*
+%attr(755,root,root) %{_libdir}/libaudiofilearts.??
 %attr(755,root,root) %{_libdir}/libarts[!_]*.so.*.*.*
 %attr(755,root,root) %{_libdir}/libarts[!_]*.la
 %attr(755,root,root) %{_libdir}/libarts_[!m]*.so.*.*.*
 %attr(755,root,root) %{_libdir}/libarts_[!m]*.la
 %attr(755,root,root) %{_libdir}/libarts[!_mgb]*.so
+%{_libdir}/mcop/audiofilearts*
 %{_libdir}/mcop/arts*
 %{_libdir}/mcop/Splay*
 %{_libdir}/mcop/Arts/*
 %{_libdir}/mcop/ExtraStereo.mcopclass
 %{_libdir}/mcop/ExtraStereoGuiFactory.mcopclass
-%{_libdir}/arts*.mcop*
 %{_libdir}/mcop/VoiceRemoval.mcopclass
 %{_libdir}/mcop/RawWriter.mcopclass
-#%{_libdir}/libartsbuilder.so
-#%{_libdir}/libartsbuilder.la
-#%{_libdir}/libartsmodules.so
-#%{_libdir}/libartsmodules.la
 %{_applnkdir}/Multimedia/arts*.desktop
 %{_pixmapsdir}/*/*/apps/arts*
+%{_pixmapsdir}/*/*/actions/artsbuilder*
 %{_datadir}/apps/artsbuilder
 %{_datadir}/apps/artscontrol
 %{_htmldir}/en/artsbuilder
 %{_datadir}/mimelnk/application/*arts*
 
-%files noatun
+%files noatun -f noatun.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/noatun*
 %attr(755,root,root) %{_libdir}/libnoatun*.so.*.*.*
 %attr(755,root,root) %{_libdir}/libnoatun[!.c]*so
-%attr(755,root,root) %{_libdir}/libkjofolui*
-%attr(755,root,root) %{_libdir}/libsplitplaylist*
-%attr(755,root,root) %{_libdir}/libliszt.*
+%attr(755,root,root) %{_libdir}/libwinskinvis.??
 %{_libdir}/libnoatun*.la
+%attr(755,root,root) %{_libdir}/kde3/noatun*.??
 %{_libdir}/mcop/Noatun
 %{_libdir}/mcop/noatun*
+%{_libdir}/mcop/winskinvis*
 %{_applnkdir}/Multimedia/noatun.desktop
-%{_datadir}/apps/noatun
+%{_datadir}/apps/noatun*
+%{_datadir}/apps/kconf_update/noatun*
 %{_pixmapsdir}/*/*/apps/noatun.png
 
 %files kmid
@@ -328,12 +349,13 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kmix
 %attr(755,root,root) %{_bindir}/kmixctrl
+%attr(755,root,root) %{_libdir}/kmix.??
 %attr(755,root,root) %{_libdir}/kmixctrl.*
-%attr(755,root,root) %{_libdir}/libkcm_kmix.*
-%attr(755,root,root) %{_libdir}/libkmixapplet.so.*.*.*
-%{_libdir}/libkmixapplet.la
+%attr(755,root,root) %{_libdir}/kde3/kcm_kmix.??
+%attr(755,root,root) %{_libdir}/kde3/kmix_panelapplet.so.*.*.*
+%attr(755,root,root) %{_libdir}/kde3/kmix_panelapplet.la
 %{_applnkdir}/Multimedia/kmix.desktop
-%{_applnkdir}/Settings/KDE/Sound/kmix.desktop
+%{_applnkdir}/Settings/KDE/Sound/kmixcfg.desktop
 %{_datadir}/services/kmixctrl_restore.desktop
 %{_datadir}/apps/kmix
 %{_datadir}/apps/kicker/applets/*
@@ -364,7 +386,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libartsbuilder.so
 %{_libdir}/libyafxplayer.so
 %{_libdir}/libmpeg.so
-%{_libdir}/libkmixapplet.so
 %{_libdir}/libarts_splay.so
 %{_libdir}/libkmidpart.so
 %{_libdir}/libartsmidi.so
@@ -373,3 +394,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libartsgui.so
 %{_libdir}/libnoatun.so
 %{_libdir}/libaktion.so
+%{_libdir}/libdummy.so
+%{_libdir}/kde3/kmix_panelapplet.so
+
+%files kaboodle
+%defattr(644,root,root,755)
+%{_bindir}/kaboodle
+%{_libdir}/kaboodle.??
+%{_libdir}/libkaboodlepart.??
+%{_datadir}/apps/kaboodle
+%{_datadir}/services/kaboodle_component.desktop
+%{_applnkdir}/Multimedia/kaboodle.desktop
+%{_pixmapsdir}/*/*/apps/kaboodle.*
