@@ -1,11 +1,22 @@
 # Conditional build:
 # --without	xine	Set this option in case You haven't
 #			xine-lib to ommit xine plug-in building.
+#
+# --without	alsa	Set this option in case you dont want alsa.
+#			
+#
+# --with	esd	Set this option in case you want esd support.
+#
+# --with	nas 	Set this option if you want nas support.
+#
 
-%define         _state          unstable
+%define         _state          stable
 %define         _ver		3.1
-%define         _rcver		rc7
-%define         _kdever		kde-%{_ver}-%{_rcver}
+
+%ifarch	sparc sparcv9 sparc64
+%define		_with_esd	1
+%define		_without_alsa	1
+%endif
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
@@ -16,19 +27,19 @@ Epoch:		8
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
-Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_kdever}/src/%{name}-%{version}.tar.bz2
+Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
 # generated from kde-i18n
 #Source1:	kde-i18n-%{name}-%{version}.tar.bz2
 Patch0:		%{name}-timidity.patch
-%ifnarch sparc sparc64
-BuildRequires:	alsa-lib-devel
-BuildRequires:	alsa-driver-devel
-%endif
+Patch1:         %{name}-artsplugin_xine1.patch
+%{!?_without_alsa:BuildRequires:	alsa-lib-devel}
+%{!?_without_alsa:BuildRequires:	alsa-driver-devel}
+%{?_with_nas:BuildRequires:	nas-devel >= 1.5}
+%{?_with_esd:BuildRequires:     esound-devel}
 BuildRequires:	arts-devel
 BuildRequires:	arts-kde-devel
 BuildRequires:	cdparanoia-III
 BuildRequires:	cdparanoia-III-devel
-BuildRequires:	esound-devel
 BuildRequires:	gettext-devel
 BuildRequires:	gtk+-devel
 BuildRequires:	kdelibs-devel = %{version}
@@ -263,6 +274,7 @@ Plug-in do Xine
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %build
 kde_appsdir="%{_applnkdir}"; export kde_appsdir
@@ -271,14 +283,21 @@ kde_icondir="%{_pixmapsdir}"; export kde_icondir
 
 CFLAGS="%{rpmcflags} -I%{_includedir}"
 
+AUDIO=""
+%ifnarch sparc sparcv9 sparc64
+AUDIO=oss,$AUDIO
+%endif
+%{!?_without_alsa:AUDIO=alsa,$AUDIO}
+%{?_with_nas:AUDIO=nas,$AUDIO}
+%{?_with_esd:AUDIO=esd,$AUDIO}
+AUDIO=${AUDIO%%,}
+
+# echo $AUDIO
+
 %configure \
  	--with-pam="yes" \
 	--enable-final \
-%ifnarch sparc sparcv9 sparc64
-	--enable-audio=oss
-%else
-	--enable-audio=esd
-%endif
+	--enable-audio=$AUDIO
 
 %{__make}
 
