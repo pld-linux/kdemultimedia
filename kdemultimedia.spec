@@ -11,8 +11,8 @@
 #
 
 %define         _state          snapshots
-%define         _ver		3.1.91
-%define         _snap		030918
+%define         _ver		3.1.92
+%define         _snap		030930
 
 %ifarch	sparc sparcv9 sparc64
 %define		_with_esd	1
@@ -30,7 +30,7 @@ Vendor:		The KDE Team
 Group:		X11/Applications
 #Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_ver}/src/%{name}-%{version}.tar.bz2
 Source0:        http://www.kernel.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
-# Source0-md5:	35ad2e12dec6a0dadc0c57b3dbe79b08
+# Source0-md5:	0f88932d8ca3d4eab968c4043b6ae4ea
 Patch0:		%{name}-no_pedantic.patch
 #Patch0:	%{name}-timidity.patch
 #Patch1:	http://rambo.its.tudelft.nl/~ewald/xine/%{name}-3.1.1-video-20030316.patch
@@ -88,7 +88,7 @@ Multimedialne aplikacje KDE. Pakiet zawiera:
 Summary:	kdemultimedia - headers
 Summary(pl):	kdemultimedia - pliki nag³ówkowe
 Group:		X11/Development/Libraries
-Requires:	kdelibs-devel >= %{version}
+Requires:	kdelibs-devel >= 9:%{version}
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 Requires:	%{name}-kscd = %{epoch}:%{version}-%{release}
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
@@ -117,7 +117,7 @@ kdemultimedia - biblioteki statyczne.
 Summary:	Arts Tools
 Summary(pl):	Narzêdzia Arts
 Group:		X11/Applications
-Requires:	kdelibs >= %{version}
+Requires:	kdelibs >= 9:%{version}
 Requires:	%{name}-mpeglib = %{epoch}:%{version}-%{release}
 Obsoletes:	%{name}-aktion
 
@@ -132,7 +132,7 @@ Summary:        A jukebox like program
 Summary(pl):    Program spe³niaj±cy funkcje szafy graj±cej
 Group:          X11/Applications
 Requires:       id3lib
-Requires:       kdebase-core >= %{version}
+Requires:       kdebase-core >= 9:%{version}
 Requires:       %{name}-mpeglib = %{epoch}:%{version}-%{release}
 Obsoletes:	%{name}-aktion
 
@@ -149,7 +149,7 @@ dla KDE podobny do iTunes(r) lub RealOne(r).
 Summary:	Media player
 Summary(pl):	Odtwarzacz multimedialny
 Group:		X11/Applications
-Requires:       kdebase-core >= %{version}
+Requires:       kdebase-core >= 9:%{version}
 Obsoletes:	%{name}-aktion
 
 %description kaboodle
@@ -162,7 +162,7 @@ Odtwarzacz multimedialny.
 Summary:	Audio Creator
 Summary(pl):	Kreator audio
 Group:		X11/Applications
-Requires:       kdebase-core >= %{version}
+Requires:       kdebase-core >= 9:%{version}
 Obsoletes:	%{name}-aktion
 
 %description kaudiocreator
@@ -193,7 +193,7 @@ dodatkow± zak³adkê z rozszerzonymi informacjami o pliku.
 Summary:	KDE MIDI Player
 Summary(pl):	Odtwarzacz MIDI dla KDE
 Group:		X11/Applications
-Requires:       kdebase-core >= %{version}
+Requires:       kdebase-core >= 9:%{version}
 Obsoletes:	%{name}-aktion
 
 %description kmid
@@ -208,7 +208,7 @@ muzycznej lub inne urz±dzenia MIDI przy³±czone do niej.
 Summary:	KDE software MIDI Player
 Summary(pl):	Programowy odtwarzacz MIDI dla KDE
 Group:		X11/Applications
-Requires:       kdebase-core >= %{version}
+Requires:       kdebase-core >= 9:%{version}
 Obsoletes:	%{name}-aktion
 
 %description kmidi
@@ -223,7 +223,7 @@ do stworzenia dobrej jako¶ci d¼wiêku.
 Summary:	KDE audio mixer
 Summary(pl):	Mixer audio dla KDE
 Group:		X11/Applications
-Requires:       kdebase-kicker >= %{version}
+Requires:       kdebase-kicker >= 9:%{version}
 Obsoletes:	%{name}-aktion
 
 %description kmix
@@ -236,7 +236,7 @@ Mikser audio dla KDE.
 Summary:	KDE sound recorder
 Summary(pl):	Rejestrator d¼wiêku dla KDE
 Group:		X11/Applications
-Requires:       kdebase-core >= %{version}
+Requires:       kdebase-core >= 9:%{version}
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 Obsoletes:	%{name}-aktion
 
@@ -250,7 +250,7 @@ Rejestrator d¼wiêku dla KDE.
 Summary:	KDE CD Player
 Summary(pl):	Odtwarzacz CD dla KDE
 Group:		X11/Applications
-Requires:       kdebase-core >= %{version}
+Requires:       kdebase-core >= 9:%{version}
 Obsoletes:	%{name}-aktion
 
 %description kscd
@@ -267,7 +267,7 @@ graficzn± interpretacjê granych d¼wiêków.
 Summary:        cddb library for KDE
 Summary(pl):    Biblioteka cddb pod KDE
 Group:          X11/Libraries
-Requires:       kdebase-core >= %{version}
+Requires:       kdebase-core >= 9:%{version}
 Obsoletes:	%{name}-aktion
 
 %description libkcddb
@@ -280,7 +280,7 @@ Biblioteka cddb pod KDE.
 Summary:	MPEG lib
 Summary(pl):	MPEG lib
 Group:		X11/Applications
-Requires:	kdelibs >= %{version}
+Requires:	kdelibs >= 9:%{version}
 Obsoletes:	%{name}-aktion
 
 %description mpeglib
@@ -293,7 +293,7 @@ MPEG lib.
 Summary:	KDE Media Player
 Summary(pl):	KDE Media Player - odtwarzacz plików multimedialnych
 Group:		X11/Applications
-Requires:       kdebase-core >= %{version}
+Requires:       kdebase-core >= 9:%{version}
 Obsoletes:	%{name}-aktion
 
 %description noatun
@@ -306,7 +306,7 @@ KDE Media Player - odtwarzacz plików multimedialnych.
 Summary:	Xine Plug-in
 Summary(pl):	Wtyczka do Xine
 Group:		X11/Applications
-Requires:	kdelibs >= %{version}
+Requires:	kdelibs >= 9:%{version}
 Requires:	xine-lib >= 1.0b4
 Obsoletes:	%{name}-aktion
 
@@ -371,7 +371,7 @@ rm -rf $RPM_BUILD_ROOT
 %find_lang artsbuilder	--with-kde
 cat artsbuilder.lang > arts.lang
 %find_lang juk		--with-kde
-#%find_lang kaboodle	--with-kde
+%find_lang kaboodle	--with-kde
 %find_lang kmid		--with-kde
 %find_lang kmidi	--with-kde
 %find_lang kmix		--with-kde
@@ -463,18 +463,18 @@ rm -rf $RPM_BUILD_ROOT
 %{_iconsdir}/*/*/*/juk*.png
 
 
-#%files kaboodle -f kaboodle.lang
-#%defattr(644,root,root,755)
-#%attr(755,root,root) %{_bindir}/kaboodle
-#%{_libdir}/kaboodle.la
-#%attr(755,root,root) %{_libdir}/kaboodle.so
-#%{_libdir}/kde3/libkaboodlepart.la
-#%attr(755,root,root) %{_libdir}/kde3/libkaboodlepart.so
-#%{_datadir}/apps/kaboodle
-#%{_datadir}/services/kaboodle_component.desktop
-#%{_datadir}/services/kaboodleengine.desktop
-#%{_desktopdir}/kde/kaboodle.desktop
-#%{_iconsdir}/*/*/apps/kaboodle.*
+%files kaboodle -f kaboodle.lang
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/kaboodle
+%{_libdir}/kaboodle.la
+%attr(755,root,root) %{_libdir}/kaboodle.so
+%{_libdir}/kde3/libkaboodlepart.la
+%attr(755,root,root) %{_libdir}/kde3/libkaboodlepart.so
+%{_datadir}/apps/kaboodle
+%{_datadir}/services/kaboodle_component.desktop
+%{_datadir}/services/kaboodleengine.desktop
+%{_desktopdir}/kde/kaboodle.desktop
+%{_iconsdir}/*/*/apps/kaboodle.*
 
 %files kaudiocreator
 %defattr(644,root,root,755)
@@ -541,6 +541,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files kscd -f kscd.lang
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/cddaslave
 %attr(755,root,root) %{_bindir}/kscd
 %attr(755,root,root) %{_bindir}/workman2cddb.pl
 %{_libdir}/libworkman.la
@@ -562,6 +563,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/kcm_krec_files.so
 %{_libdir}/kde3/krec.la
 %attr(755,root,root) %{_libdir}/kde3/krec.so
+%{_libdir}/kde3/libkrecexport_mp3.la
+%attr(755,root,root) %{_libdir}/kde3/libkrecexport_mp3.so
 %{_libdir}/kde3/libkrecexport_ogg.la
 %attr(755,root,root) %{_libdir}/kde3/libkrecexport_ogg.so
 %{_libdir}/kde3/libkrecexport_wave.la
@@ -569,6 +572,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/krec
 %{_datadir}/services/kcm_krec.desktop
 %{_datadir}/services/kcm_krec_files.desktop
+%{_datadir}/services/krec_exportmp3.desktop
 %{_datadir}/services/krec_exportogg.desktop
 %{_datadir}/services/krec_exportwave.desktop
 %{_datadir}/servicetypes/krec_exportitem.desktop
