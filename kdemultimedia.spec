@@ -53,6 +53,7 @@ BuildRequires:	libjpeg-devel
 BuildRequires:	libogg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
+BuildRequires: 	libmusicbrainz-devel
 BuildRequires:	libvorbis-devel
 %{!?_without_xine:BuildRequires: xine-lib-devel >= 1.0b4}
 BuildRequires:	zlib-devel
@@ -324,10 +325,10 @@ Wtyczka do Xine.
 
 %build
 
-for plik in `find ./ -name *.desktop` ; do
-	echo $plik
-	sed -i -e "s/\[nb\]/\[no\]/g" $plik
-done
+#for plik in `find ./ -name *.desktop` ; do
+#	echo $plik
+#	sed -i -e "s/\[nb\]/\[no\]/g" $plik
+#done
 
 AUDIO=""
 %ifnarch sparc sparcv9 sparc64
@@ -343,9 +344,15 @@ mkdir linux
 sed -e 's#slots\[CDROM_MAX_SLOTS\]#kde_slots\[CDROM_MAX_SLOTS\]#g' \
 /usr/include/linux/cdrom.h > linux/cdrom.h
 
-%{__make} -f admin/Makefile.common cvs
+echo KDE_OPTIONS=nofinal >> juk/Makefile.am
 
-%configure \
+%%{__make} -f admin/Makefile.common cvs
+
+%configure --enable-final \
+%ifnarch sparc sparcv9 sparc64
+	--with-alsa \
+	--with-arts-alsa \
+%endif
 	--enable-audio=$AUDIO
 
 %{__make}
