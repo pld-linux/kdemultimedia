@@ -29,6 +29,7 @@ Source1:	ftp://blysk.ds.pg.gda.pl/linux/kde-i18n-package/%{version}/kde-i18n-%{n
 # Source1-md5:	bf74bdf16415c1e71cf77339756bc64d
 Patch0:		%{name}-timidity.patch
 Patch1:		%{name}-qt-linuxcdrom.patch
+Patch2:		%{name}-libtool-sanitize.patch
 %{!?_without_alsa:BuildRequires:	alsa-lib-devel}
 %{!?_without_alsa:BuildRequires:	alsa-driver-devel}
 %{?_with_nas:BuildRequires:	nas-devel >= 1.5}
@@ -288,6 +289,7 @@ Wtyczka do Xine.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 kde_appsdir="%{_applnkdir}"; export kde_appsdir
@@ -307,9 +309,9 @@ for plik in `find ./ -name *.desktop` ; do
 	sed -i -e 's/\[nb\]/\[no\]/g' $plik
 done
 
-# bleh, cannot be done
+# bleh, cannot be done (linking with modules not beginning with lib)
 #%{__libtoolize}
-#%{__make} -f admin/Makefile.common cvs
+%{__make} -f admin/Makefile.common cvs
 
 %configure \
 	CDPARANOIA="/usr/bin/cdparanoia" \
