@@ -13,7 +13,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}.%{_snap}
-Release:	1.1
+Release:	1.2
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
@@ -22,6 +22,7 @@ Group:		X11/Applications
 Source0:	http://www.kernel.pl/~adgor/kde/%{name}-%{_snap}.tar.bz2
 # Source0-md5:	fcc77afd559787c22128d9a8c6d6a84e
 Patch0:		%{name}-no_pedantic.patch
+Patch1:		%{name}-cdda_check.patch
 BuildRequires:	Xaw3d-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	audiofile-devel
@@ -399,6 +400,7 @@ KDE Media Player - biblioteki wspó³dzielone.
 %prep
 %setup -q -n %{name}-%{_snap}
 %patch0 -p1
+%patch1 -p1
 
 %build
 for f in `find . -name \*.desktop | xargs grep -l '\[nb\]'` ; do
@@ -410,6 +412,9 @@ rm -rf linux
 mkdir linux
 sed -e 's#slots\[CDROM_MAX_SLOTS\]#kde_slots[CDROM_MAX_SLOTS]#g' \
 /usr/include/linux/cdrom.h > linux/cdrom.h
+
+sed -i 's/#include <asm\/byteorder.h>/#include <asm\/types.h>\n#include <endian.h>/' \
+	linux/cdrom.h
 
 %{__make} -f admin/Makefile.common cvs
 
