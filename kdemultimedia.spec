@@ -31,6 +31,7 @@ Source1:	ftp://blysk.ds.pg.gda.pl/linux/kde-i18n-package/%{version}/kde-i18n-%{n
 Patch0:		%{name}-timidity.patch
 Patch1:		%{name}-qt-linuxcdrom.patch
 Patch2:		%{name}-libtool-sanitize.patch
+Patch3:		%{name}-compile.patch
 %{!?_without_alsa:BuildRequires:	alsa-lib-devel}
 %{!?_without_alsa:BuildRequires:	alsa-driver-devel}
 %{?_with_nas:BuildRequires:	nas-devel >= 1.5}
@@ -292,6 +293,7 @@ Wtyczka do Xine.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 kde_appsdir="%{_applnkdir}"; export kde_appsdir
