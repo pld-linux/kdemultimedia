@@ -363,7 +363,16 @@ for i in {kmid,kmidi,kmix,kscd,noatun}.png; do
 	ln -s crystalsvg/48x48/apps/$i $RPM_BUILD_ROOT%{_pixmapsdir}/$i
 done
 
+for i in `find $RPM_BUILD_ROOT%{_applnkdir} -type f`; do
+	if grep '^Icon=.[^.]*$' $i >/dev/null; then
+		echo -e ',s/\(^Icon=.*$\)/\\1.png/\n,w' | ed $i
+	fi
+done
+
 bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT
+for f in $RPM_BUILD_ROOT%{_datadir}/locale/*/LC_MESSAGES/*.mo; do
+	[ "`file $f | sed -e 's/.*,//' -e 's/message.*//'`" -le 1 ] && rm -f $f
+done
 
 %find_lang	kfile_au	--with-kde
 %find_lang	kfile_avi	--with-kde
