@@ -171,6 +171,24 @@ diff -urN -x CVS kdemultimedia.orig/arts/builder/x-artsbuilder.desktop kdemultim
  Comment[zh_CN]=Arts 构建程序
  Comment[zu]=Umakhi Wezamasiko
  Icon=arts
+diff -urN -x CVS kdemultimedia.orig/arts/modules/effects/mcopclass/Synth_FREEVERB.mcopclass kdemultimedia/arts/modules/effects/mcopclass/Synth_FREEVERB.mcopclass
+--- kdemultimedia.orig/arts/modules/effects/mcopclass/Synth_FREEVERB.mcopclass	2003-07-31 11:42:02.000000000 +0200
++++ kdemultimedia/arts/modules/effects/mcopclass/Synth_FREEVERB.mcopclass	2005-04-03 14:02:37.000000000 +0200
+@@ -4,3 +4,4 @@
+ Library=libartsmoduleseffects.la
+ Features=RackGUI
+ Name="Freeverb"
++Use=directly
+\ Brak znaku nowej linii na ko�cu pliku
+diff -urN -x CVS kdemultimedia.orig/arts/modules/effects/mcopclass/Synth_VOICE_REMOVAL.mcopclass kdemultimedia/arts/modules/effects/mcopclass/Synth_VOICE_REMOVAL.mcopclass
+--- kdemultimedia.orig/arts/modules/effects/mcopclass/Synth_VOICE_REMOVAL.mcopclass	2003-07-31 11:42:02.000000000 +0200
++++ kdemultimedia/arts/modules/effects/mcopclass/Synth_VOICE_REMOVAL.mcopclass	2005-04-03 14:02:37.000000000 +0200
+@@ -4,3 +4,4 @@
+ Library=libartsmoduleseffects.la
+ Features=RackGUI
+ Name="Voice Removal"
++Use=directly
+\ Brak znaku nowej linii na ko�cu pliku
 diff -urN -x CVS kdemultimedia.orig/arts/tools/artscontrolapplet.desktop kdemultimedia/arts/tools/artscontrolapplet.desktop
 --- kdemultimedia.orig/arts/tools/artscontrolapplet.desktop	2005-02-23 06:06:30.000000000 +0100
 +++ kdemultimedia/arts/tools/artscontrolapplet.desktop	2005-03-07 15:19:21.000000000 +0100
@@ -1243,6 +1261,60 @@ diff -urN -x CVS kdemultimedia.orig/kfile-plugins/wav/kfile_wav.desktop kdemulti
  Name[zh_CN]=WAV 信息
  Name[zh_TW]=WAV 資訊
  Name[zu]=Ulwazi lwe WAV
+diff -urN -x CVS kdemultimedia.orig/kioslave/audiocd/audiocd.cpp kdemultimedia/kioslave/audiocd/audiocd.cpp
+--- kdemultimedia.orig/kioslave/audiocd/audiocd.cpp	2005-01-09 23:54:17.000000000 +0100
++++ kdemultimedia/kioslave/audiocd/audiocd.cpp	2005-04-09 06:39:21.000000000 +0200
+@@ -262,7 +262,8 @@
+ 	// Misc settings
+ 	QString device; // URL settable
+ 	int paranoiaLevel; // URL settable
+-
++	bool reportErrors;
++	
+ 	// Directory strings, never change after init
+ 	QString s_info;
+ 	QString s_fullCD;
+@@ -557,7 +558,10 @@
+ 			// NO => title of the track.
+ 			trackName = d->track_titles[d->req_track];
+ 
+-		encoder->fillSongInfo(trackName, d->cd_artist, d->cd_title, d->cd_category, d->req_track+1, d->cd_year);
++		encoder->fillSongInfo(trackName, d->cd_artist, d->cd_title, d->cd_category, d->req_track+1, d->cd_year, "");
++	}
++	else {
++		encoder->fillSongInfo("", "", "", "", d->req_track+1, 0, QString("CDDBDISCID=%1").arg(d->discid));
+ 	}
+ 	long totalByteCount = CD_FRAMESIZE_RAW * (lastSector - firstSector + 1);
+ 	long time_secs = (8 * totalByteCount) / (44100 * 2 * 16);
+@@ -983,10 +987,8 @@
+ 	{
+ 		// TODO make the 5 configurable? The default in the lib is 20 fyi
+ 		int16_t * buf = paranoia_read_limited(paranoia, paranoiaCallback, 5);
+-		if( warned == 0 && paranoia_read_limited_error >= 5 ){
+-#if KDE_IS_VERSION (3, 2, 89)
++		if( warned == 0 && paranoia_read_limited_error >= 5 && d->reportErrors ){
+ 			warning(i18n("AudioCD: Disk damage detected on this track, risk of data corruption."));
+-#endif
+ 			warned = 1;
+ 		}
+ 		if (0 == buf) {
+@@ -1153,6 +1155,8 @@
+ 		// never skip on errors of the medium, should be default for high quality
+ 	}
+ 
++	d->reportErrors = config->readBoolEntry( "report_errors", false );
++
+ 	if(config->hasKey("niceLevel")) {
+ 		int niceLevel = config->readNumEntry("niceLevel", 0);
+ 		if(setpriority(PRIO_PROCESS, getpid(), niceLevel) != 0)
+diff -urN -x CVS kdemultimedia.orig/kioslave/audiocd/configure.in.in kdemultimedia/kioslave/audiocd/configure.in.in
+--- kdemultimedia.orig/kioslave/audiocd/configure.in.in	2005-01-31 01:24:24.000000000 +0100
++++ kdemultimedia/kioslave/audiocd/configure.in.in	2005-04-09 06:39:21.000000000 +0200
+@@ -239,3 +239,4 @@
+     DO_NOT_COMPILE="$DO_NOT_COMPILE kaudiocreator"
+ fi
+ 
++
 diff -urN -x CVS kdemultimedia.orig/kioslave/audiocd/kcmaudiocd/audiocd.desktop kdemultimedia/kioslave/audiocd/kcmaudiocd/audiocd.desktop
 --- kdemultimedia.orig/kioslave/audiocd/kcmaudiocd/audiocd.desktop	2005-02-07 05:55:22.000000000 +0100
 +++ kdemultimedia/kioslave/audiocd/kcmaudiocd/audiocd.desktop	2005-03-07 15:19:25.000000000 +0100
@@ -1270,6 +1342,193 @@ diff -urN -x CVS kdemultimedia.orig/kioslave/audiocd/kcmaudiocd/audiocd.desktop 
  Keywords[zh_CN]=音频 CD,CD,Ogg,Vorbis,编码,CDDA,Bitrate
  
  Categories=Qt;KDE;X-KDE-settings-sound;
+diff -urN -x CVS kdemultimedia.orig/kioslave/audiocd/Makefile.am kdemultimedia/kioslave/audiocd/Makefile.am
+--- kdemultimedia.orig/kioslave/audiocd/Makefile.am	2004-12-26 11:31:27.000000000 +0100
++++ kdemultimedia/kioslave/audiocd/Makefile.am	2005-04-09 06:39:21.000000000 +0200
+@@ -27,3 +27,5 @@
+ updatedir = $(kde_datadir)/kconf_update
+ update_DATA = audiocd.upd
+ update_SCRIPTS = upgrade-metadata.sh
++
++audiocd.lo: ../../libkcddb/configbase.h
+diff -urN -x CVS kdemultimedia.orig/kioslave/audiocd/plugins/audiocdencoder.h kdemultimedia/kioslave/audiocd/plugins/audiocdencoder.h
+--- kdemultimedia.orig/kioslave/audiocd/plugins/audiocdencoder.h	2004-03-21 04:58:59.000000000 +0100
++++ kdemultimedia/kioslave/audiocd/plugins/audiocdencoder.h	2005-04-09 06:39:22.000000000 +0200
+@@ -84,12 +84,13 @@
+    * information if they want to so it can be inserted 
+    * where neccessary (start, middle, end, or combos etc).
+    */ 
+-  virtual void fillSongInfo(QString trackName,
+-		            QString cdArtist,
+-			    QString cdTitle,
+-			    QString cdCategory,
++  virtual void fillSongInfo( const QString &trackName,
++		      const QString &cdArtist,
++			    const QString &cdTitle,
++			    const QString &cdCategory,
+ 			    int trackNumber,
+-			    int cdYear) = 0;
++			    int cdYear,
++					const QString &comment ) = 0;
+   
+   /**
+    * Perform any initial file creation necessary for a new song (that
+diff -urN -x CVS kdemultimedia.orig/kioslave/audiocd/plugins/flac/encoderflac.cpp kdemultimedia/kioslave/audiocd/plugins/flac/encoderflac.cpp
+--- kdemultimedia.orig/kioslave/audiocd/plugins/flac/encoderflac.cpp	2004-07-09 13:25:30.000000000 +0200
++++ kdemultimedia/kioslave/audiocd/plugins/flac/encoderflac.cpp	2005-04-09 06:39:22.000000000 +0200
+@@ -152,9 +152,9 @@
+     return 0;
+ }
+ 
+-void EncoderFLAC::fillSongInfo(QString trackName, QString cdArtist,
+-			       QString cdTitle,   QString cdCategory,
+-			       int trackNumber, int cdYear)
++void EncoderFLAC::fillSongInfo(const QString &trackName, const QString &cdArtist,
++			       const QString &cdTitle,   const QString &cdCategory,
++			       int trackNumber, int cdYear, const QString &comment)
+ {
+     d->metadata = new FLAC__StreamMetadata*[1];
+     d->metadata[0] = FLAC__metadata_object_new(FLAC__METADATA_TYPE_VORBIS_COMMENT);
+@@ -162,16 +162,16 @@
+ //    d->metadata[2] = FLAC__metadata_object_new(FLAC__METADATA_TYPE_SEEKTABLE)
+ 
+     typedef QPair<QString, QString> Comment;
+-    Comment comments[6] = { Comment("Title", trackName),
++    Comment comments[7] = { Comment("Title", trackName),
+ 	    	    	    Comment("Artist", cdArtist),
+ 	    	    	    Comment("Album",  cdTitle),
+ 	    	    	    Comment("Genre",  cdCategory),
+ 	    	    	    Comment("Tracknumber", QString::number(trackNumber)),
+-	    	    	    Comment("Date", QString::null) };
+-
++									Comment("Comment", comment),
++	    	    	    Comment("Date", QString::null )};
+     if (cdYear > 0) {
+     	QDateTime dt = QDate(cdYear, 1, 1);
+-    	comments[5] = Comment("Date", dt.toString(Qt::ISODate));
++    	comments[6] = Comment("Date", dt.toString(Qt::ISODate));
+     }
+ 
+     FLAC__StreamMetadata_VorbisComment_Entry entry;
+@@ -179,7 +179,7 @@
+     QCString cfield;
+     int num_comments = 0;
+ 
+-    for(int i=0; i<6; i++) {
++    for(int i=0; i<7; i++) {
+ 	if (!comments[i].second.isEmpty()) {
+ 	    field = comments[i].first+"="+comments[i].second;
+ 	    cfield = field.utf8();
+diff -urN -x CVS kdemultimedia.orig/kioslave/audiocd/plugins/flac/encoderflac.h kdemultimedia/kioslave/audiocd/plugins/flac/encoderflac.h
+--- kdemultimedia.orig/kioslave/audiocd/plugins/flac/encoderflac.h	2004-04-04 01:39:05.000000000 +0200
++++ kdemultimedia/kioslave/audiocd/plugins/flac/encoderflac.h	2005-04-09 06:39:22.000000000 +0200
+@@ -44,12 +44,13 @@
+   virtual const char * fileType() const { return "flac"; };
+   virtual const char * mimeType() const { return "audio/x-flac"; }
+ 
+-  virtual void fillSongInfo(QString trackName,
+-		            QString cdArtist,
+-			    QString cdTitle,
+-			    QString cdCategory,
++  virtual void fillSongInfo(const QString &trackName,
++		            const QString &cdArtist,
++			    const QString &cdTitle,
++			    const QString &cdCategory,
+ 			    int trackNumber,
+-			    int cdYear);
++			    int cdYear,
++					const QString &comment);
+   
+   virtual long readInit(long size);
+   virtual long read(int16_t * buf, int frames);
+diff -urN -x CVS kdemultimedia.orig/kioslave/audiocd/plugins/lame/encoderlame.cpp kdemultimedia/kioslave/audiocd/plugins/lame/encoderlame.cpp
+--- kdemultimedia.orig/kioslave/audiocd/plugins/lame/encoderlame.cpp	2005-01-20 10:53:00.000000000 +0100
++++ kdemultimedia/kioslave/audiocd/plugins/lame/encoderlame.cpp	2005-04-09 06:39:22.000000000 +0200
+@@ -104,7 +104,8 @@
+   static void (*_lamelib_id3tag_set_track)(lame_global_flags*, const char*) = NULL;
+   static void (*_lamelib_id3tag_set_year)(lame_global_flags*, const char *) = NULL;
+   static int  (*_lamelib_id3tag_set_genre)(lame_global_flags *, const char *) = NULL;
+-
++	static int  (*_lamelib_id3tag_set_comment)(lame_global_flags *, const char *) = NULL;
++	
+ 	static void (*_lamelib_lame_mp3_tags_fid)(lame_global_flags*, FILE *fpStream) = NULL;
+   static int  (*_lamelib_lame_encode_buffer_interleaved) (
+           lame_global_flags*, short int*, int, unsigned char*, int) = NULL;
+@@ -292,7 +293,10 @@
+      _lamelib_id3tag_set_genre =
+            (int (*) (lame_global_flags*, const char*))
+            _lamelib->symbol("id3tag_set_genre");
+-     _lamelib_lame_mp3_tags_fid =
++     _lamelib_id3tag_set_comment =
++					 (int (*) (lame_global_flags*, const char*))
++					 _lamelib->symbol("id3tag_set_comment");
++		 _lamelib_lame_mp3_tags_fid =
+            (void (*) (lame_global_flags*, FILE *))
+            _lamelib->symbol("lame_mp3_tags_fid");
+ 
+@@ -590,12 +594,13 @@
+   return mp3bytes;
+ }
+ 
+-void EncoderLame::fillSongInfo(QString trackName,
+-			QString cdArtist,
+-			QString cdTitle,
+-			QString cdCategory,
++void EncoderLame::fillSongInfo( const QString &trackName,
++			const QString &cdArtist,
++			const QString &cdTitle,
++			const QString &cdCategory,
+ 			int trackNumber,
+-			int cdYear){
++			int cdYear,
++			const QString &comment ){
+ 
+ #if HAVE_TAGLIB
+ 		d->tag.setTitle(QStringToTString(trackName));
+@@ -604,14 +609,16 @@
+ 		d->tag.setGenre(QStringToTString(cdCategory));
+ 		d->tag.setTrack(trackNumber);
+ 		d->tag.setYear(cdYear);
++		d->tag.setComment(QStringToTString(comment));
+ #else
+ 	if( d->write_id3 ){
+ 		/* If CDDB is used to determine the filenames, tell lame to append ID3v1 TAG to MP3 Files */
+-		(_lamelib_id3tag_set_album)  (d->gf, cdTitle.latin1());
+-		(_lamelib_id3tag_set_artist) (d->gf, cdArtist.latin1());
+-		(_lamelib_id3tag_set_title)  (d->gf, trackName.latin1());
+-		(_lamelib_id3tag_set_year)   (d->gf, QString("%1").arg(cdYear).latin1());
+-		(_lamelib_id3tag_set_genre)  (d->gf, cdCategory.latin1());
++		(_lamelib_id3tag_set_album)   (d->gf, cdTitle.latin1());
++		(_lamelib_id3tag_set_artist)  (d->gf, cdArtist.latin1());
++		(_lamelib_id3tag_set_title)   (d->gf, trackName.latin1());
++		(_lamelib_id3tag_set_year)    (d->gf, QString("%1").arg(cdYear).latin1());
++		(_lamelib_id3tag_set_genre)   (d->gf, cdCategory.latin1());
++		(_lamelib_id3tag_set_comment) (d->gf, comment.latin1());
+ 		QString tn;
+ 		tn.sprintf("%02d", trackNumber);
+ 		(_lamelib_id3tag_set_track) (d->gf, tn.latin1());
+diff -urN -x CVS kdemultimedia.orig/kioslave/audiocd/plugins/lame/encoderlame.h kdemultimedia/kioslave/audiocd/plugins/lame/encoderlame.h
+--- kdemultimedia.orig/kioslave/audiocd/plugins/lame/encoderlame.h	2004-09-09 03:04:38.000000000 +0200
++++ kdemultimedia/kioslave/audiocd/plugins/lame/encoderlame.h	2005-04-09 06:39:22.000000000 +0200
+@@ -47,12 +47,13 @@
+   virtual const char * mimeType() const;
+ 
+   
+-  virtual void fillSongInfo(QString trackName,
+-		            QString cdArtist,
+-			    QString cdTitle,
+-			    QString cdCategory,
++  virtual void fillSongInfo( const QString &trackName,
++		            const QString &cdArtist,
++			    const QString &cdTitle,
++			    const QString &cdCategory,
+ 			    int trackNumber,
+-			    int cdYear);
++			    int cdYear,
++					const QString &comment );
+   
+   virtual long readInit(long size);
+   virtual long read(int16_t * buf, int frames);
 diff -urN -x CVS kdemultimedia.orig/kioslave/audiocd/plugins/vorbis/audiocd_vorbis_encoder.kcfg kdemultimedia/kioslave/audiocd/plugins/vorbis/audiocd_vorbis_encoder.kcfg
 --- kdemultimedia.orig/kioslave/audiocd/plugins/vorbis/audiocd_vorbis_encoder.kcfg	2004-11-20 18:46:00.000000000 +0100
 +++ kdemultimedia/kioslave/audiocd/plugins/vorbis/audiocd_vorbis_encoder.kcfg	2005-03-14 22:57:13.000000000 +0100
@@ -1282,6 +1541,116 @@ diff -urN -x CVS kdemultimedia.orig/kioslave/audiocd/plugins/vorbis/audiocd_vorb
        <label>Quality</label>
        <default>3</default>
        <min>-1</min>
+diff -urN -x CVS kdemultimedia.orig/kioslave/audiocd/plugins/vorbis/encodervorbis.cpp kdemultimedia/kioslave/audiocd/plugins/vorbis/encodervorbis.cpp
+--- kdemultimedia.orig/kioslave/audiocd/plugins/vorbis/encodervorbis.cpp	2005-01-20 10:53:01.000000000 +0100
++++ kdemultimedia/kioslave/audiocd/plugins/vorbis/encodervorbis.cpp	2005-04-09 06:39:23.000000000 +0200
+@@ -296,12 +296,13 @@
+   return processed;
+ }
+ 
+-void EncoderVorbis::fillSongInfo(QString trackName,
+-		            QString cdArtist,
+-			    QString cdTitle,
+-			    QString cdCategory,
++void EncoderVorbis::fillSongInfo(const QString &trackName,
++		            const QString &cdArtist,
++			    const QString &cdTitle,
++			    const QString &cdCategory,
+ 			    int trackNumber,
+-			    int cdYear){
++			    int cdYear,
++					const QString &comment){
+   if( !d->write_vorbis_comments )
+     return;
+ 
+@@ -313,7 +314,8 @@
+   commentFields.append(CommentField("album", cdTitle));
+   commentFields.append(CommentField("genre", cdCategory));
+   commentFields.append(CommentField("tracknumber", QString::number(trackNumber)));
+-
++	commentFields.append(CommentField("comment", comment));
++	
+   if (cdYear > 0) {
+     QDateTime dt = QDate(cdYear, 1, 1);
+     commentFields.append(CommentField("date", dt.toString(Qt::ISODate).utf8().data()));
+diff -urN -x CVS kdemultimedia.orig/kioslave/audiocd/plugins/vorbis/encodervorbis.h kdemultimedia/kioslave/audiocd/plugins/vorbis/encodervorbis.h
+--- kdemultimedia.orig/kioslave/audiocd/plugins/vorbis/encodervorbis.h	2004-03-27 02:20:46.000000000 +0100
++++ kdemultimedia/kioslave/audiocd/plugins/vorbis/encodervorbis.h	2005-04-09 06:39:23.000000000 +0200
+@@ -49,12 +49,13 @@
+   virtual const char * fileType() const { return "ogg"; };
+   virtual const char * mimeType() const;
+ 
+-  virtual void fillSongInfo(QString trackName,
+-		            QString cdArtist,
+-			    QString cdTitle,
+-			    QString cdCategory,
++  virtual void fillSongInfo( const QString &trackName,
++	        const QString &cdArtist,
++			    const QString &cdTitle,
++			    const QString &cdCategory,
+ 			    int trackNumber,
+-			    int cdYear);
++			    int cdYear,
++					const QString &comment );
+   
+   virtual long readInit(long size);
+   virtual long read(int16_t * buf, int frames);
+diff -urN -x CVS kdemultimedia.orig/kioslave/audiocd/plugins/wav/encodercda.h kdemultimedia/kioslave/audiocd/plugins/wav/encodercda.h
+--- kdemultimedia.orig/kioslave/audiocd/plugins/wav/encodercda.h	2004-03-21 05:15:47.000000000 +0100
++++ kdemultimedia/kioslave/audiocd/plugins/wav/encodercda.h	2005-04-09 06:39:23.000000000 +0200
+@@ -46,12 +46,13 @@
+   virtual QString type() const { return "CDA"; };
+   virtual const char * mimeType() const;
+   virtual const char * fileType() const { return "cda"; };
+-  virtual void fillSongInfo(QString,
+-		            QString,
+-			    QString,
+-			    QString,
++  virtual void fillSongInfo(const QString &,
++		            const QString &,
++			    const QString &,
++			    const QString &,
+ 			    int,
+-			    int){};
++			    int,
++					const QString &){};
+   virtual long readInit(long){ return 0; };
+   virtual long read(int16_t * buf, int frames);
+   virtual long readCleanup(){ return 0; };
+diff -urN -x CVS kdemultimedia.orig/kioslave/audiocd/plugins/wav/encoderwav.h kdemultimedia/kioslave/audiocd/plugins/wav/encoderwav.h
+--- kdemultimedia.orig/kioslave/audiocd/plugins/wav/encoderwav.h	2004-03-21 05:15:47.000000000 +0100
++++ kdemultimedia/kioslave/audiocd/plugins/wav/encoderwav.h	2005-04-09 06:39:23.000000000 +0200
+@@ -45,12 +45,13 @@
+   virtual const char * fileType() const { return "wav"; };
+   virtual const char * mimeType() const;
+   
+-  virtual void fillSongInfo(QString ,
+-		            QString ,
+-			    QString ,
+-			    QString ,
++  virtual void fillSongInfo(const QString &,
++		            const QString &,
++			    const QString &,
++			    const QString &,
+ 			    int ,
+-			    int ){};
++			    int,
++					const QString &){};
+ 
+   virtual long readInit(long size);
+   
+diff -urN -x CVS kdemultimedia.orig/kmid/kdisptext.cpp kdemultimedia/kmid/kdisptext.cpp
+--- kdemultimedia.orig/kmid/kdisptext.cpp	2004-03-26 13:12:29.000000000 +0100
++++ kdemultimedia/kmid/kdisptext.cpp	2005-04-03 18:49:56.000000000 +0200
+@@ -367,7 +367,7 @@
+ 
+ 
+     setContentsPos(0,0);
+-    
++    viewport()->repaint(true);
+ } 
+ 
+ void KDisplayText::PaintIn(int type)
 diff -urN -x CVS kdemultimedia.orig/kmid/kmid.desktop kdemultimedia/kmid/kmid.desktop
 --- kdemultimedia.orig/kmid/kmid.desktop	2005-02-05 05:16:59.000000000 +0100
 +++ kdemultimedia/kmid/kmid.desktop	2005-03-07 15:19:26.000000000 +0100
@@ -1712,6 +2081,27 @@ diff -urN -x CVS kdemultimedia.orig/libkcddb/cdinfo.h kdemultimedia/libkcddb/cdi
        void checkTrack( uint );
        static QString escape( const QString & );
        static QString unescape( const QString & );
+diff -urN -x CVS kdemultimedia.orig/libkcddb/httplookup.cpp kdemultimedia/libkcddb/httplookup.cpp
+--- kdemultimedia.orig/libkcddb/httplookup.cpp	2004-10-17 14:47:03.000000000 +0200
++++ kdemultimedia/libkcddb/httplookup.cpp	2005-04-06 22:12:14.000000000 +0200
+@@ -148,6 +148,8 @@
+             case NoRecordFound:
+               if ( !block_ )
+                 emit queryReady();
++
++              return;
+               break;
+ 
+             default:
+@@ -182,8 +184,6 @@
+     }
+ 
+     result_ = Success;
+-
+-    return;
+   }
+ }
+ 
 diff -urN -x CVS kdemultimedia.orig/libkcddb/kcmcddb/libkcddb.desktop kdemultimedia/libkcddb/kcmcddb/libkcddb.desktop
 --- kdemultimedia.orig/libkcddb/kcmcddb/libkcddb.desktop	2005-02-23 06:06:34.000000000 +0100
 +++ kdemultimedia/libkcddb/kcmcddb/libkcddb.desktop	2005-03-07 15:19:29.000000000 +0100
@@ -1752,6 +2142,34 @@ diff -urN -x CVS kdemultimedia.orig/libkcddb/kcmcddb/libkcddb.desktop kdemultime
 -Keywords[xx]=xxcddbxx
  
  Categories=Qt;KDE;X-KDE-settings-sound;
+diff -urN -x CVS kdemultimedia.orig/noatun/library/effects.cpp kdemultimedia/noatun/library/effects.cpp
+--- kdemultimedia.orig/noatun/library/effects.cpp	2004-10-06 13:03:14.000000000 +0200
++++ kdemultimedia/noatun/library/effects.cpp	2005-04-03 14:07:34.000000000 +0200
+@@ -246,6 +246,7 @@
+ 	Arts::TraderQuery query;
+ 	query.supports("Interface", "Arts::StereoEffect");
+ 	query.supports("Interface", "Arts::SynthModule");
++	query.supports("Use", "directly");
+ 	vector<Arts::TraderOffer> *offers = query.query();
+ 	for (vector<Arts::TraderOffer>::iterator i=offers->begin(); i!=offers->end(); i++)
+ 	{
+diff -urN -x CVS kdemultimedia.orig/noatun/modules/artseffects/ExtraStereo.mcopclass kdemultimedia/noatun/modules/artseffects/ExtraStereo.mcopclass
+--- kdemultimedia.orig/noatun/modules/artseffects/ExtraStereo.mcopclass	2001-05-02 20:20:48.000000000 +0200
++++ kdemultimedia/noatun/modules/artseffects/ExtraStereo.mcopclass	2005-04-03 14:07:34.000000000 +0200
+@@ -2,3 +2,4 @@
+ Interface=ExtraStereo,Arts::StereoEffect,Arts::SynthModule,Arts::Object
+ Language=C++
+ Library=libartseffects.la
++Use=directly
+\ Brak znaku nowej linii na ko�cu pliku
+diff -urN -x CVS kdemultimedia.orig/noatun/modules/artseffects/VoiceRemoval.mcopclass kdemultimedia/noatun/modules/artseffects/VoiceRemoval.mcopclass
+--- kdemultimedia.orig/noatun/modules/artseffects/VoiceRemoval.mcopclass	2001-05-02 20:20:48.000000000 +0200
++++ kdemultimedia/noatun/modules/artseffects/VoiceRemoval.mcopclass	2005-04-03 14:07:34.000000000 +0200
+@@ -2,3 +2,4 @@
+ Interface=VoiceRemoval,Arts::StereoEffect,Arts::SynthModule,Arts::Object
+ Language=C++
+ Library=libartseffects.la
++Use=directly
 diff -urN -x CVS kdemultimedia.orig/noatun/modules/dcopiface/dcopiface.plugin kdemultimedia/noatun/modules/dcopiface/dcopiface.plugin
 --- kdemultimedia.orig/noatun/modules/dcopiface/dcopiface.plugin	2005-02-23 06:06:35.000000000 +0100
 +++ kdemultimedia/noatun/modules/dcopiface/dcopiface.plugin	2005-03-07 15:19:30.000000000 +0100
