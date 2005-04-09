@@ -2,6 +2,7 @@
 # Conditional build:
 %bcond_without	alsa	# build without ALSA support
 %bcond_without	xine	# build without xine support
+%bcond_with	gstreamer # build without gstreamer support
 #
 %define		_state		stable
 %define		_kdever		3.4
@@ -21,6 +22,7 @@ Vendor:		The KDE Team
 Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_kdever}/src/%{name}-%{_ver}.tar.bz2
 # Source0-md5:	4e42790bbea7c4ac0c436da3c7c664ac
+Patch100:	%{name}-branch.diff
 Patch0:		%{name}-llh.patch
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	arts-qt-devel
@@ -28,8 +30,10 @@ BuildRequires:	audiofile-devel
 BuildRequires:	cdparanoia-III-devel
 BuildRequires:	flac-devel >= 1.1.2
 BuildRequires:	gettext-devel
+%if %{with gstreamer}
 BuildRequires:	gstreamer-devel >= 0.8
 BuildRequires:	gstreamer-plugins-devel >= 0.8
+%endif
 BuildRequires:	kdelibs-devel >= %{_minlibsevr}
 BuildRequires:	lame-libs-devel
 BuildRequires:	libjpeg-devel
@@ -37,11 +41,13 @@ BuildRequires:	libmad-devel
 BuildRequires:	libogg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
+BuildRequires:	libsamplerate-devel
 BuildRequires:	libmusicbrainz-devel >= 1:2.1.1
 BuildRequires:	libtheora-devel
 BuildRequires:	libtunepimp-devel
 BuildRequires:	libvorbis-devel
 BuildRequires:	polypaudio-devel
+BuildRequires:	jack-audio-connection-kit-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
 BuildRequires:	speex-devel
 BuildRequires:	taglib-devel >= 0.95.031114
@@ -261,12 +267,23 @@ desktop similar to jukebox software on other platforms such as
 iTunes(R) or RealOne(R). As is typical with many jukebox applications,
 JuK allows you to edit the "tags" of the audio files, and manage your
 collection and playlists.
+%if %{without gstreamer}
+
+Gstreamer support in this version has been disabled. To reenable it
+please repuild the source rpm with '--with gstreamer' option.
+%endif
 
 %description juk -l pl
 Juk (czyt. d¿uk, jak w Jukebox) to szafa graj±ca i zarz±dca muzyki dla
 KDE podobny do iTunes(R) lub RealOne(R). Podobnie jak wiele innych
 tego typu aplikacji, JuK umo¿liwia modyfikowanie znaczników plików
 d¼wiêkowych i zarz±dzanie kolekcj± oraz playlistami.
+%if %{without gstreamer}
+
+Obs³uga bibliotek gstreamer zosta³a wy³±czona w tej wersji pakietu. Aby 
+j± uaktywniæ, nale¿y przebudowaæ pakiet ¼ród³owy (.src.rpm) z parametrem 
+'--with gstreamer'.
+%endif
 
 %package kaboodle
 Summary:	Media player
@@ -483,6 +500,7 @@ KDE Media Player - biblioteki wspó³dzielone.
 
 %prep
 %setup -q
+%patch100 -p1
 %patch0 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Player;/' \
