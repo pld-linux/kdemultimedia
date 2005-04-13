@@ -2,7 +2,7 @@
 # Conditional build:
 %bcond_without	alsa	# build without ALSA support
 %bcond_without	xine	# build without xine support
-%bcond_with	gstreamer # build without gstreamer support
+%bcond_without	gstreamer # build without gstreamer support
 #
 %define		_state		stable
 %define		_kdever		3.4
@@ -574,6 +574,7 @@ export CDPARANOIA=%{_bindir}/cdparanoia
 	--disable-rpath \
 	--enable-final \
 	--with%{?without_alsa:out}-arts-alsa \
+	--with-extra-includes=%{_includedir}/speex \
 	--with-qt-libraries=%{_libdir} \
 %if "%{_lib}" == "lib64"
 	--enable-libsuffix=64 \
