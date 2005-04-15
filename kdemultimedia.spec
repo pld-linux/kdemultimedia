@@ -27,6 +27,8 @@ Patch0:		%{name}-llh.patch
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	arts-qt-devel
 BuildRequires:	audiofile-devel
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	cdparanoia-III-devel
 BuildRequires:	flac-devel >= 1.1.2
 BuildRequires:	gettext-devel
@@ -46,6 +48,7 @@ BuildRequires:	libmusicbrainz-devel >= 1:2.1.1
 BuildRequires:	libtheora-devel
 BuildRequires:	libtunepimp-devel
 BuildRequires:	libvorbis-devel
+BuildRequires:	pkgconfig
 BuildRequires:	polypaudio-devel
 BuildRequires:	jack-audio-connection-kit-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
