@@ -1,0 +1,13 @@
+--- kdemultimedia-3.3.91/akode/plugins/polyp_sink/polyp_sink.cpp.orig	2004-12-15 22:57:27.000000000 +0100
++++ kdemultimedia-3.3.91/akode/plugins/polyp_sink/polyp_sink.cpp	2005-01-30 21:26:05.000000000 +0100
+@@ -21,8 +21,8 @@
+ #include <stdint.h>
+ #include <polyp/polyplib-simple.h>
+ 
+-#include <akode/audioframe.h>
+-#include <akode/audiobuffer.h>
++#include <audioframe.h>
++#include <audiobuffer.h>
+ #include "polyp_sink.h"
+ 
+ #include <iostream>
