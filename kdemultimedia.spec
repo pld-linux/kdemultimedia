@@ -1,8 +1,11 @@
 #
+# TODO:
+# - enable gstreamer after making it selectable runtime
+#
 # Conditional build:
 %bcond_without	alsa	# build without ALSA support
 %bcond_without	xine	# build without xine support
-%bcond_without	gstreamer # build without gstreamer support
+%bcond_with	gstreamer # build with gstreamer support
 #
 %define		_state		stable
 %define		_kdever		3.4
