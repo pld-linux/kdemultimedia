@@ -7,25 +7,26 @@
 %bcond_without	xine	# build without xine support
 %bcond_with	gstreamer # build with gstreamer support
 #
-%define		_state		stable
-%define		_kdever		3.4.1
-%define		_ver		3.4.1
+%define		_state		unstable
+%define		_kdever		3.4.89
+%define		_ver		3.4.89
+%define		_snap		050625
 
-%define		_minlibsevr	9:3.4.1
-%define		_minbaseevr	9:3.4.1
+%define		_minlibsevr	9:3.4.89.050624
+%define		_minbaseevr	9:3.4.89.050625
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
-Version:	%{_ver}
+Version:	%{_ver}.%{_snap}
 Release:	1
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
-Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_kdever}/src/%{name}-%{_ver}.tar.bz2
-# Source0-md5:	db69c9ab845c8295f095dc6394fba047
-Patch100:	%{name}-branch.diff
+Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_kdever}/src/%{name}-%{_snap}.tar.bz2
+##% Source0-md5:	db69c9ab845c8295f095dc6394fba047
+#Patch100:	%{name}-branch.diff
 Patch0:		%{name}-llh.patch
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	arts-qt-devel
@@ -505,9 +506,9 @@ KDE Media Player - shared libs.
 KDE Media Player - biblioteki wspó³dzielone.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{_snap}
 #%patch100 -p1
-%patch0 -p1
+#%patch0 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Player;/' \
 	-e 's/Terminal=0/Terminal=false/' \
@@ -603,8 +604,8 @@ rm -rf $RPM_BUILD_ROOT
 %find_lang kio_audiocd	--with-kde
 %find_lang kmid		--with-kde
 %find_lang kmix		--with-kde
-%find_lang kmixcfg	--with-kde
-cat kmixcfg.lang >> kmix.lang
+#%find_lang kmixcfg	--with-kde
+#cat kmixcfg.lang >> kmix.lang
 %find_lang krec		--with-kde
 %find_lang kscd		--with-kde
 %find_lang noatun	--with-kde
@@ -717,8 +718,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libaudiofilearts.so
 %{_libdir}/mcop/audiofilearts.mcopclass
 %{_libdir}/mcop/audiofilearts.mcoptype
-%{_iconsdir}/crystalsvg/*/actions/arts[!bc]*.png
-%{_iconsdir}/crystalsvg/*/actions/arts[!bc]*.svg
+%{_iconsdir}/[!l]*/*/actions/arts[!bc]*.*
 
 %files artsbuilder -f artsbuilder.lang
 %defattr(644,root,root,755)
@@ -728,8 +728,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/artsbuilder
 %{_datadir}/mimelnk/application/x-artsbuilder.desktop
 %{_desktopdir}/kde/artsbuilder.desktop
-%{_iconsdir}/crystalsvg/*/actions/artsbuilderexecute.png
-%{_iconsdir}/crystalsvg/*/apps/artsbuilder.*
+%{_iconsdir}/[!l]*/*/actions/artsbuilderexecute.*
+%{_iconsdir}/[!l]*/*/apps/artsbuilder.*
 
 %files artscontrol
 %defattr(644,root,root,755)
@@ -737,8 +737,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/artscontrol
 %{_datadir}/apps/kicker/applets/artscontrolapplet.desktop
 %{_desktopdir}/kde/artscontrol.desktop
-%{_iconsdir}/crystalsvg/*/apps/artscontrol.png
-%{_iconsdir}/crystalsvg/*/apps/artscontrol.svg
+%{_iconsdir}/[!l]*/*/apps/artscontrol.*
 
 %if %{with xine}
 %files artsplugin-xine
@@ -821,14 +820,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/kde3/libkmidpart.la
 %attr(755,root,root) %{_libdir}/kde3/libkmidpart.so
 %{_libdir}/libkmidlib.la
-%attr(755,root,root) %{_libdir}/libkmidlib.so*
+%{_libdir}/libkmidlib.so
+%attr(755,root,root) %{_libdir}/libkmidlib.so.*.*.*
 %{_datadir}/apps/kmid
 %{_datadir}/mimelnk/audio/x-karaoke.desktop
 %{_datadir}/servicetypes/*midi*.desktop
 %{_desktopdir}/kde/kmid.desktop
 %{_iconsdir}/*/*/*/kmid.png
-%{_libdir}/libkmidlib.la
-%attr(755,root,root) %{_libdir}/libkmidlib.so.0.0.0
 
 %files kmix -f kmix.lang
 %defattr(644,root,root,755)
@@ -850,7 +848,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/kmixctrl_restore.desktop
 %{_desktopdir}/kde/kmix.desktop
 %{_iconsdir}/*/*/*/kmix.png
-%{_kdedocdir}/en/kcontrol/kmixcfg
 
 %files kscd -f kscd.lang
 %defattr(644,root,root,755)
