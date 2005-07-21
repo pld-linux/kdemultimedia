@@ -377,7 +377,6 @@ Odtwarzacz MIDI dla KDE. Oferuje:
 Summary:	KDE audio mixer
 Summary(pl):	Mikser d¼wiêku dla KDE
 Group:		X11/Applications
-Requires:	kdebase-core >= %{_minbaseevr}
 
 %description kmix
 Sound mixer application for KDE.
@@ -389,7 +388,6 @@ Mikser d¼wiêku dla KDE.
 Summary:	KDE sound recorder
 Summary(pl):	Rejestrator d¼wiêku dla KDE
 Group:		X11/Applications
-Requires:	kdebase-core >= %{_minbaseevr}
 Requires:	%{name}-artscontrol = %{epoch}:%{version}-%{release}
 Requires:	%{name}-kmix = %{epoch}:%{version}-%{release}
 
