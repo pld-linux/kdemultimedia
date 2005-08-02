@@ -504,7 +504,7 @@ KDE Media Player - biblioteki wspó³dzielone.
 
 %prep
 %setup -q
-#%patch100 -p1
+%patch100 -p0
 %patch0 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Player;/' \
