@@ -194,7 +194,7 @@ Obsoletes:	kdemultimedia-xine
 
 %description artsplugin-xine
 This plugin allows arts to play using xine engine. This plugin
-supports more formats then akode, yet akode plays some of them with
+supports more formats than akode, yet akode plays some of them with
 better quality. For best quality use akode alongside this plugin, arts
 will autodetect which plugin gives better quality. This plugin
 supports:
