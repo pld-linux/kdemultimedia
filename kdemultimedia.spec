@@ -8,23 +8,23 @@
 %bcond_with	gstreamer # build with gstreamer support
 #
 %define		_state		stable
-%define		_kdever		3.4.2
-%define		_ver		3.4.2
+%define		_kdever		3.4.3
+%define		_ver		3.4.3
 
-%define		_minlibsevr	9:3.4.2
-%define		_minbaseevr	9:3.4.2
+%define		_minlibsevr	9:3.4.3
+%define		_minbaseevr	9:3.4.3
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	1
+Release:	0.1
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_kdever}/src/%{name}-%{_ver}.tar.bz2
-# Source0-md5:	7da7ba5fd676acfdf662113a4cdfe43c
+# Source0-md5:	49fed5afad01c322d3bc8c6a175d1898
 Patch100:	%{name}-branch.diff
 Patch0:		%{name}-llh.patch
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
@@ -504,7 +504,7 @@ KDE Media Player - biblioteki wspó³dzielone.
 
 %prep
 %setup -q
-%patch100 -p0
+#%patch100 -p0
 %patch0 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Player;/' \
