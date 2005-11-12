@@ -8,8 +8,8 @@
 %bcond_with	gstreamer # build with gstreamer support
 #
 %define		_state		unstable
-%define		_kdever		3.4.89
-%define		_ver		3.4.89
+%define		_kdever		3.4.91
+%define		_ver		3.4.91
 %define		_snap		050625
 
 %define		_minlibsevr	9:3.4.89.050624
@@ -24,10 +24,10 @@ Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
-Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_kdever}/src/%{name}-%{_snap}.tar.bz2
+Source0:        ziew.tar.bz2
 ##% Source0-md5:	db69c9ab845c8295f095dc6394fba047
 #Patch100:	%{name}-branch.diff
-Patch0:		%{name}-llh.patch
+Patch0:		kde-common-PLD.patch
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	arts-qt-devel
 BuildRequires:	audiofile-devel
@@ -506,9 +506,9 @@ KDE Media Player - shared libs.
 KDE Media Player - biblioteki wspó³dzielone.
 
 %prep
-%setup -q -n %{name}-%{_snap}
+%setup -q -n %{name} -T -D
 #%patch100 -p1
-#%patch0 -p1
+%patch0 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Player;/' \
 	-e 's/Terminal=0/Terminal=false/' \
@@ -568,18 +568,16 @@ for f in `find . -name \*.desktop`; do
 	fi
 done
 
-%build
 cp %{_datadir}/automake/config.sub admin
-
-#export UNSERMAKE=%{_datadir}/unsermake/unsermake
-
+export kde_htmldir=%{_kdedocdir}
+export kde_libs_htmldir=%{_kdedocdir}
 %{__make} -f admin/Makefile.common cvs
 
+%build
 export CDPARANOIA=%{_bindir}/cdparanoia
 
 %configure \
 	--disable-rpath \
-	--enable-final \
 	--with%{?without_alsa:out}-arts-alsa \
 	--with-extra-includes=%{_includedir}/speex \
 	--with-qt-libraries=%{_libdir} \
@@ -591,7 +589,9 @@ export CDPARANOIA=%{_bindir}/cdparanoia
 %{__make}
 
 %install
+%if 0
 rm -rf $RPM_BUILD_ROOT
+rm *.lang
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
@@ -601,7 +601,8 @@ rm -rf $RPM_BUILD_ROOT
 %find_lang artsbuilder	--with-kde
 %find_lang juk		--with-kde
 %find_lang kaboodle	--with-kde
-%find_lang kio_audiocd	--with-kde
+%endif
+%find_lang kioslave	--with-kde
 %find_lang kmid		--with-kde
 %find_lang kmix		--with-kde
 #%find_lang kmixcfg	--with-kde
@@ -634,12 +635,12 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(644,root,root,755)
 %{_includedir}/*.h
-%{_includedir}/akode
+#%{_includedir}/akode
 %{_includedir}/arts/*.h
 %{_includedir}/arts/*.idl
 %{_includedir}/libkcddb
 %{_includedir}/noatun
-%{_libdir}/libakode.so
+#%{_libdir}/libakode.so
 %{_libdir}/libartsbuilder.so
 %{_libdir}/libartsgui.so
 %{_libdir}/libartsgui_idl.so
@@ -654,13 +655,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files akode
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libakode.la
-%attr(755,root,root) %{_libdir}/libakode.so.*.*.*
+#%attr(755,root,root) %{_libdir}/libakode.la
+#%attr(755,root,root) %{_libdir}/libakode.so.*.*.*
 %{_libdir}/libarts_akode.la
 %attr(755,root,root) %{_libdir}/libarts_akode.so
-%{_libdir}/libakode_*.la
-%attr(755,root,root) %{_libdir}/libakode_*.so
-%{_libdir}/mcop/akode*PlayObject.mcopclass
+#%{_libdir}/libakode_*.la
+#%attr(755,root,root) %{_libdir}/libakode_*.so
+%{_libdir}/mcop/akodePlayObject.mcopclass
 %{_libdir}/mcop/akodearts.mcop*
 
 %files arts
@@ -751,7 +752,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/videothumbnail.desktop
 %endif
 
-%files audiocd -f kio_audiocd.lang
+%files audiocd -f kioslave.lang
 %defattr(644,root,root,755)
 %{_libdir}/kde3/kcm_audiocd.la
 %attr(755,root,root) %{_libdir}/kde3/kcm_audiocd.so
@@ -762,7 +763,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libaudiocdplugins.la
 %attr(755,root,root) %{_libdir}/libaudiocdplugins.so*
 %{_datadir}/apps/kconf_update/upgrade-metadata.sh
-%{_datadir}/apps/konqueror/servicemenus/audiocd_play.desktop
+%{_datadir}/apps/konqueror/servicemenus/audiocd_*.desktop
 %{_datadir}/config.kcfg/audiocd_*_encoder.kcfg
 %{_datadir}/services/audiocd.protocol
 %{_desktopdir}/kde/audiocd.desktop
@@ -929,9 +930,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/yaf-vorbis
 %attr(755,root,root) %{_bindir}/yaf-yuv
 %{_libdir}/libyafcore.la
-%attr(755,root,root) %{_libdir}/libyafcore.so.*.*.*
 %{_libdir}/libyafxplayer.la
-%attr(755,root,root) %{_libdir}/libyafxplayer.so.*.*.*
 
 %files noatun -f noatun.lang
 %defattr(644,root,root,755)
