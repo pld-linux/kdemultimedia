@@ -8,25 +8,27 @@
 %bcond_with	gstreamer # build with gstreamer support
 #
 %define		_state		stable
-%define		_kdever		3.4.3
-%define		_ver		3.4.3
+%define		_kdever		3.5
+%define		_ver		3.5.0
 
-%define		_minlibsevr	9:3.4.3
-%define		_minbaseevr	9:3.4.3
+%define		_minlibsevr	9:3.5.0
+%define		_minbaseevr	9:3.5.0
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	1
+Release:	0.1
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_kdever}/src/%{name}-%{_ver}.tar.bz2
-# Source0-md5:	49fed5afad01c322d3bc8c6a175d1898
+# Source0-md5:	02e56f2de8e97c85f957889ef98accfd
+Patch0:		kde-common-PLD.patch
 Patch100:	%{name}-branch.diff
-Patch0:		%{name}-llh.patch
+Patch1:		%{name}-llh.patch
+BuildRequires:	akode-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	arts-qt-devel
 BuildRequires:	audiofile-devel
@@ -506,6 +508,7 @@ KDE Media Player - biblioteki wspó³dzielone.
 %setup -q
 #%patch100 -p0
 %patch0 -p1
+#%patch1 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Player;/' \
 	-e 's/Terminal=0/Terminal=false/' \
@@ -565,18 +568,17 @@ for f in `find . -name \*.desktop`; do
 	fi
 done
 
-%build
 cp %{_datadir}/automake/config.sub admin
-
-#export UNSERMAKE=%{_datadir}/unsermake/unsermake
-
+export kde_htmldir=%{_kdedocdir}
+export kde_libs_htmldir=%{_kdedocdir}
 %{__make} -f admin/Makefile.common cvs
 
+%build
 export CDPARANOIA=%{_bindir}/cdparanoia
 
 %configure \
-	--disable-rpath \
 	--enable-final \
+	--disable-rpath \
 	--with%{?without_alsa:out}-arts-alsa \
 	--with-extra-includes=%{_includedir}/speex \
 	--with-qt-libraries=%{_libdir} \
@@ -589,6 +591,7 @@ export CDPARANOIA=%{_bindir}/cdparanoia
 
 %install
 rm -rf $RPM_BUILD_ROOT
+rm -f *.lang
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
@@ -598,11 +601,11 @@ rm -rf $RPM_BUILD_ROOT
 %find_lang artsbuilder	--with-kde
 %find_lang juk		--with-kde
 %find_lang kaboodle	--with-kde
-%find_lang kio_audiocd	--with-kde
+%find_lang kioslave	--with-kde
 %find_lang kmid		--with-kde
 %find_lang kmix		--with-kde
-%find_lang kmixcfg	--with-kde
-cat kmixcfg.lang >> kmix.lang
+#%find_lang kmixcfg	--with-kde
+#cat kmixcfg.lang >> kmix.lang
 %find_lang krec		--with-kde
 %find_lang kscd		--with-kde
 %find_lang noatun	--with-kde
@@ -631,12 +634,12 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(644,root,root,755)
 %{_includedir}/*.h
-%{_includedir}/akode
+#%{_includedir}/akode
 %{_includedir}/arts/*.h
 %{_includedir}/arts/*.idl
 %{_includedir}/libkcddb
 %{_includedir}/noatun
-%{_libdir}/libakode.so
+#%{_libdir}/libakode.so
 %{_libdir}/libartsbuilder.so
 %{_libdir}/libartsgui.so
 %{_libdir}/libartsgui_idl.so
@@ -651,13 +654,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %files akode
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libakode.la
-%attr(755,root,root) %{_libdir}/libakode.so.*.*.*
 %{_libdir}/libarts_akode.la
 %attr(755,root,root) %{_libdir}/libarts_akode.so
-%{_libdir}/libakode_*.la
-%attr(755,root,root) %{_libdir}/libakode_*.so
-%{_libdir}/mcop/akode*PlayObject.mcopclass
+%{_libdir}/mcop/akodePlayObject.mcopclass
 %{_libdir}/mcop/akodearts.mcop*
 
 %files arts
@@ -715,8 +714,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libaudiofilearts.so
 %{_libdir}/mcop/audiofilearts.mcopclass
 %{_libdir}/mcop/audiofilearts.mcoptype
-%{_iconsdir}/crystalsvg/*/actions/arts[!bc]*.png
-%{_iconsdir}/crystalsvg/*/actions/arts[!bc]*.svg
+%{_iconsdir}/[!l]*/*/actions/arts[!bc]*.*
 
 %files artsbuilder -f artsbuilder.lang
 %defattr(644,root,root,755)
@@ -726,8 +724,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/artsbuilder
 %{_datadir}/mimelnk/application/x-artsbuilder.desktop
 %{_desktopdir}/kde/artsbuilder.desktop
-%{_iconsdir}/crystalsvg/*/actions/artsbuilderexecute.png
-%{_iconsdir}/crystalsvg/*/apps/artsbuilder.*
+%{_iconsdir}/[!l]*/*/actions/artsbuilderexecute.*
+%{_iconsdir}/[!l]*/*/apps/artsbuilder.*
 
 %files artscontrol
 %defattr(644,root,root,755)
@@ -735,8 +733,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/artscontrol
 %{_datadir}/apps/kicker/applets/artscontrolapplet.desktop
 %{_desktopdir}/kde/artscontrol.desktop
-%{_iconsdir}/crystalsvg/*/apps/artscontrol.png
-%{_iconsdir}/crystalsvg/*/apps/artscontrol.svg
+%{_iconsdir}/[!l]*/*/apps/artscontrol.*
 
 %if %{with xine}
 %files artsplugin-xine
@@ -750,7 +747,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/videothumbnail.desktop
 %endif
 
-%files audiocd -f kio_audiocd.lang
+%files audiocd -f kioslave.lang
 %defattr(644,root,root,755)
 %{_libdir}/kde3/kcm_audiocd.la
 %attr(755,root,root) %{_libdir}/kde3/kcm_audiocd.so
@@ -761,7 +758,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libaudiocdplugins.la
 %attr(755,root,root) %{_libdir}/libaudiocdplugins.so*
 %{_datadir}/apps/kconf_update/upgrade-metadata.sh
-%{_datadir}/apps/konqueror/servicemenus/audiocd_play.desktop
+%{_datadir}/apps/konqueror/servicemenus/audiocd_*.desktop
 %{_datadir}/config.kcfg/audiocd_*_encoder.kcfg
 %{_datadir}/services/audiocd.protocol
 %{_desktopdir}/kde/audiocd.desktop
@@ -819,14 +816,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/kde3/libkmidpart.la
 %attr(755,root,root) %{_libdir}/kde3/libkmidpart.so
 %{_libdir}/libkmidlib.la
-%attr(755,root,root) %{_libdir}/libkmidlib.so*
+%{_libdir}/libkmidlib.so
+%attr(755,root,root) %{_libdir}/libkmidlib.so.*.*.*
 %{_datadir}/apps/kmid
 %{_datadir}/mimelnk/audio/x-karaoke.desktop
 %{_datadir}/servicetypes/*midi*.desktop
 %{_desktopdir}/kde/kmid.desktop
 %{_iconsdir}/*/*/*/kmid.png
-%{_libdir}/libkmidlib.la
-%attr(755,root,root) %{_libdir}/libkmidlib.so.0.0.0
 
 %files kmix -f kmix.lang
 %defattr(644,root,root,755)
@@ -848,7 +844,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/kmixctrl_restore.desktop
 %{_desktopdir}/kde/kmix.desktop
 %{_iconsdir}/*/*/*/kmix.png
-%{_kdedocdir}/en/kcontrol/kmixcfg
 
 %files kscd -f kscd.lang
 %defattr(644,root,root,755)
@@ -930,9 +925,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/yaf-vorbis
 %attr(755,root,root) %{_bindir}/yaf-yuv
 %{_libdir}/libyafcore.la
-%attr(755,root,root) %{_libdir}/libyafcore.so.*.*.*
 %{_libdir}/libyafxplayer.la
-%attr(755,root,root) %{_libdir}/libyafxplayer.so.*.*.*
 
 %files noatun -f noatun.lang
 %defattr(644,root,root,755)
