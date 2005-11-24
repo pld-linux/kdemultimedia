@@ -18,13 +18,13 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	0.1
+Release:	1
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_kdever}/src/%{name}-%{_ver}.tar.bz2
-# Source0-md5:	02e56f2de8e97c85f957889ef98accfd
+# Source0-md5:	3bead58887f06af59afabdc542532bb0
 Patch0:		kde-common-PLD.patch
 Patch100:	%{name}-branch.diff
 Patch1:		%{name}-llh.patch
@@ -656,8 +656,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir}/libarts_akode.la
 %attr(755,root,root) %{_libdir}/libarts_akode.so
-%{_libdir}/mcop/akodePlayObject.mcopclass
-%{_libdir}/mcop/akodearts.mcop*
+%{_libdir}/mcop/akode*.mcop*
 
 %files arts
 %defattr(644,root,root,755)
