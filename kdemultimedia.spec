@@ -18,7 +18,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	%{_ver}
-Release:	1
+Release:	2
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
@@ -28,6 +28,7 @@ Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_kdever}/src/%{name}-%{_ver}.tar.
 Patch0:		kde-common-PLD.patch
 Patch100:	%{name}-branch.diff
 Patch1:		%{name}-llh.patch
+Patch2:		%{name}-libtunepimp.patch
 BuildRequires:	akode-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	arts-qt-devel
@@ -51,7 +52,7 @@ BuildRequires:	libstdc++-devel
 BuildRequires:	libsamplerate-devel
 BuildRequires:	libmusicbrainz-devel >= 1:2.1.1
 BuildRequires:	libtheora-devel
-BuildRequires:	libtunepimp-devel
+BuildRequires:	libtunepimp-devel >= 0.4.0
 BuildRequires:	libvorbis-devel
 BuildRequires:	pkgconfig
 BuildRequires:	polypaudio-devel
@@ -509,6 +510,7 @@ KDE Media Player - biblioteki wspó³dzielone.
 #%patch100 -p0
 %patch0 -p1
 #%patch1 -p1
+%patch2 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Player;/' \
 	-e 's/Terminal=0/Terminal=false/' \
