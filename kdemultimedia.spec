@@ -5,7 +5,10 @@
 # Conditional build:
 %bcond_without	alsa	# build without ALSA support
 %bcond_without	xine	# build without xine support
-%bcond_with	gstreamer # build with gstreamer support
+%bcond_with	gstreamer		# build with gstreamer support
+%bcond_with	hidden_visibility	# pass '--fvisibility=hidden'
+					# & '--fvisibility-inlines-hidden'
+					# to g++ 
 #
 %define		_state		stable
 %define		_kdever		3.5
@@ -37,6 +40,7 @@ BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	cdparanoia-III-devel
 BuildRequires:	flac-devel >= 1.1.2
+%{?with_hidden_visibility:BuildRequires:	gcc-c++ >= 5:4.1.0-0.20051206r108118.1}
 BuildRequires:	gettext-devel
 %if %{with gstreamer}
 BuildRequires:	gstreamer-devel >= 0.8
@@ -56,6 +60,7 @@ BuildRequires:	libtunepimp-devel >= 0.4.0
 BuildRequires:	libvorbis-devel
 BuildRequires:	pkgconfig
 BuildRequires:	polypaudio-devel
+%{?with_hidden_visibility:BuildRequires:	qt-devel >= 6:3.3.5.051113-1}
 BuildRequires:	jack-audio-connection-kit-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
 BuildRequires:	speex-devel
@@ -579,15 +584,17 @@ export kde_libs_htmldir=%{_kdedocdir}
 export CDPARANOIA=%{_bindir}/cdparanoia
 
 %configure \
+	--%{?debug:en}%{!?debug:dis}able-debug%{?debug:=full} \
+	%{!?debug:--disable-rpath} \
 	--enable-final \
-	--disable-rpath \
-	--with%{?without_alsa:out}-arts-alsa \
-	--with-extra-includes=%{_includedir}/speex \
-	--with-qt-libraries=%{_libdir} \
+	%{?with_hidden_visibility:--enable-gcc-hidden-visibility} \
 %if "%{_lib}" == "lib64"
 	--enable-libsuffix=64 \
 %endif
-	--%{?debug:en}%{!?debug:dis}able-debug%{?debug:=full}
+	--with%{?without_alsa:out}-arts-alsa \
+	--with-extra-includes=%{_includedir}/speex \
+	--with-qt-libraries=%{_libdir} \
+	--with-distribution="PLD Linux Distribution"
 
 %{__make}
 
