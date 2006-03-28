@@ -1,21 +1,24 @@
 #
 # TODO:
 # - enable gstreamer after making it selectable runtime
+# - not sure about those unpackaged files:
+#   /etc/xdg/menus/applications-merged/kde-multimedia-music.menu
+#   /usr/share/desktop-directories/kde-multimedia-music.directory
+#   /usr/share/icons/locolor/16x16/apps/kaudiocreator.png
+#   /usr/share/icons/locolor/32x32/apps/kaudiocreator.png
 #
 # Conditional build:
 %bcond_without	alsa	# build without ALSA support
 %bcond_without	xine	# build without xine support
 %bcond_with	gstreamer		# build with gstreamer support
-%bcond_with	hidden_visibility	# pass '--fvisibility=hidden'
-					# & '--fvisibility-inlines-hidden'
-					# to g++ 
+%bcond_with	hidden_visibility	# pass '--fvisibility=hidden' & '--fvisibility-inlines-hidden' to g++ 
 #
 %define		_state		stable
-%define		_kdever		3.5.1
-%define		_ver		3.5.1
+%define		_kdever		3.5.2
+%define		_ver		3.5.2
 
-%define		_minlibsevr	9:3.5.1
-%define		_minbaseevr	9:3.5.1
+%define		_minlibsevr	9:3.5.2
+%define		_minbaseevr	9:3.5.2
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
@@ -27,10 +30,10 @@ License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_kdever}/src/%{name}-%{_ver}.tar.bz2
-# Source0-md5:	595f637c637987a92f6dac9d9cd6667d
+# Source0-md5:	f98ef8465bf4de1eb36bc3bdb1f4f7d6
 Patch0:		kde-common-PLD.patch
-Patch100:	%{name}-branch.diff
-Patch1:		%{name}-llh.patch
+#Patch100:	%{name}-branch.diff
+#Patch1:		%{name}-llh.patch
 BuildRequires:	akode-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	arts-qt-devel
@@ -607,6 +610,7 @@ rm -f *.lang
 
 %find_lang artsbuilder	--with-kde
 %find_lang juk		--with-kde
+%find_lang kaudiocreator	--with-kde
 %find_lang kaboodle	--with-kde
 %find_lang kioslave	--with-kde
 %find_lang kmid		--with-kde
@@ -799,7 +803,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_datadir}/apps/kappfinder/apps/Multimedia/*
 
-%files kaudiocreator
+%files kaudiocreator -f kaudiocreator.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kaudiocreator
 %{_datadir}/apps/kaudiocreator
