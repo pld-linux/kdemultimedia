@@ -14,22 +14,19 @@
 %bcond_with	hidden_visibility	# pass '--fvisibility=hidden' & '--fvisibility-inlines-hidden' to g++ 
 #
 %define		_state		stable
-%define		_kdever		3.5.2
-%define		_ver		3.5.2
-
-%define		_minlibsevr	9:3.5.2
-%define		_minbaseevr	9:3.5.2
+%define		_minlibsevr	9:%{version}
+%define		_minbaseevr	9:%{version}
 
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
-Version:	%{_ver}
+Version:	3.5.2
 Release:	1
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
-Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{_kdever}/src/%{name}-%{_ver}.tar.bz2
+Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{version}/src/%{name}-%{version}.tar.bz2
 # Source0-md5:	f98ef8465bf4de1eb36bc3bdb1f4f7d6
 Patch0:		kde-common-PLD.patch
 #Patch100:	%{name}-branch.diff
@@ -333,7 +330,7 @@ Summary:	Audio Creator
 Summary(pl):	Kreator audio
 Group:		X11/Applications
 Requires:	kdebase-core >= %{_minbaseevr}
-Requires:	kdemultimedia-audiocd >= %{_ver}
+Requires:	kdemultimedia-audiocd >= %{version}
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
 
 %description kaudiocreator
@@ -346,7 +343,7 @@ Nak³adka na CD ripper i koder d¼wiêku.
 Summary:	Audio file formats enhanced information
 Summary(pl):	Rozszerzone informacje o plikach d¼wiêkowych
 Group:		X11/Development/Libraries
-Requires:	konqueror >= %{_ver}
+Requires:	konqueror >= %{version}
 Obsoletes:	kdemultimedia < 8:3.0.8
 
 %description kfile
