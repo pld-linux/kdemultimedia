@@ -20,14 +20,14 @@
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
-Version:	3.5.2
+Version:	3.5.3
 Release:	1
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{version}/src/%{name}-%{version}.tar.bz2
-# Source0-md5:	f98ef8465bf4de1eb36bc3bdb1f4f7d6
+# Source0-md5:	61bd938c564e3280034944338955712b
 Patch0:		kde-common-PLD.patch
 #Patch100:	%{name}-branch.diff
 #Patch1:		%{name}-llh.patch
@@ -42,8 +42,7 @@ BuildRequires:	flac-devel >= 1.1.2
 %{?with_hidden_visibility:BuildRequires:	gcc-c++ >= 5:4.1.0-0.20051206r108118.1}
 BuildRequires:	gettext-devel
 %if %{with gstreamer}
-BuildRequires:	gstreamer-devel >= 0.8
-BuildRequires:	gstreamer-plugins-devel >= 0.8
+BuildRequires:	gstreamer08x-devel >= 0.8
 %endif
 BuildRequires:	kdelibs-devel >= %{_minlibsevr}
 BuildRequires:	lame-libs-devel
@@ -592,7 +591,8 @@ export CDPARANOIA=%{_bindir}/cdparanoia
 	--with%{?without_alsa:out}-arts-alsa \
 	--with-extra-includes=%{_includedir}/speex \
 	--with-qt-libraries=%{_libdir} \
-	--with-distribution="PLD Linux Distribution"
+	--with-distribution="PLD Linux Distribution" \
+	--with-vorbis
 
 %{__make}
 
