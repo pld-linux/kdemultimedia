@@ -16,14 +16,14 @@
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
-Version:	3.5.3
-Release:	1
+Version:	3.5.4
+Release:	0.1
 Epoch:		9
 License:	GPL
 Vendor:		The KDE Team
 Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{version}/src/%{name}-%{version}.tar.bz2
-# Source0-md5:	61bd938c564e3280034944338955712b
+# Source0-md5:	921680248b5f5793b9201715fffe6e33
 Patch0:		kde-common-PLD.patch
 #Patch100:	%{name}-branch.diff
 #Patch1:		%{name}-llh.patch
@@ -615,7 +615,7 @@ rm -f *.lang
 %find_lang noatun	--with-kde
 
 # locolor icons are deprecated (in PLD?)
-rm -f $RPM_BUILD_ROOT%{_iconsdir}/icons/locolor/*/apps/kaudiocreator.png
+rm -f $RPM_BUILD_ROOT%{_iconsdir}/locolor/*/apps/kaudiocreator.png
 # PLD doesn't have /etc/xdg
 rm -f $RPM_BUILD_ROOT/etc/xdg/menus/applications-merged/kde-multimedia-music.menu
 
@@ -665,6 +665,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir}/libarts_akode.la
 %attr(755,root,root) %{_libdir}/libarts_akode.so
+%attr(755,root,root) %{_libdir}/libarts_akode.so.*.*.*
 %{_libdir}/mcop/akode*.mcop*
 
 %files arts
@@ -698,6 +699,8 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libartsmodulesmixers.so.*.*.*
 %{_libdir}/libartsmodulessynth.la
 %attr(755,root,root) %{_libdir}/libartsmodulessynth.so.*.*.*
+%{_libdir}/libarts_audiofile.la
+%attr(755,root,root) %{_libdir}/libarts_audiofile.so.*.*.*
 %{_libdir}/mcop/Arts
 %{_libdir}/mcop/artseffects.mcopclass
 %{_libdir}/mcop/artseffects.mcoptype
@@ -715,11 +718,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/mcop/artsmodulesmixers.mcoptype
 %{_libdir}/mcop/artsmodulessynth.mcopclass
 %{_libdir}/mcop/artsmodulessynth.mcoptype
-# artsplugin-audiofile files - arts crashes
-# without libaudiofilearts.so installed - so
-# separating them has no sense at this moment
-%{_libdir}/libaudiofilearts.la
-%attr(755,root,root) %{_libdir}/libaudiofilearts.so
 %{_libdir}/mcop/audiofilearts.mcopclass
 %{_libdir}/mcop/audiofilearts.mcoptype
 %{_iconsdir}/[!l]*/*/actions/arts[!bc]*.*
@@ -750,6 +748,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/videothumbnail.so
 %{_libdir}/*_xine.la
 %attr(755,root,root) %{_libdir}/*_xine.so
+%attr(755,root,root) %{_libdir}/libarts_xine.so.*.*.*
 %{_libdir}/mcop/xine*PlayObject.mcopclass
 %{_datadir}/apps/videothumbnail
 %{_datadir}/services/videothumbnail.desktop
@@ -805,12 +804,11 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kaudiocreator
 %{_datadir}/apps/kaudiocreator
-#%{_datadir}/config/kaudiocreatorrc
 %{_datadir}/config.kcfg/kaudiocreator.kcfg
 %{_datadir}/config.kcfg/kaudiocreator_encoders.kcfg
 %{_datadir}/apps/kconf_update/upgrade-kaudiocreator-metadata.sh
 %{_desktopdir}/kde/kaudiocreator.desktop
-%{_iconsdir}/[!l]*/*/*/kaudiocreator.png
+%{_iconsdir}/*/*/*/kaudiocreator.png
 
 %files kfile
 %defattr(644,root,root,755)
