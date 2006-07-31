@@ -20,13 +20,12 @@ Version:	3.5.4
 Release:	0.1
 Epoch:		9
 License:	GPL
-Vendor:		The KDE Team
 Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{version}/src/%{name}-%{version}.tar.bz2
 # Source0-md5:	921680248b5f5793b9201715fffe6e33
 Patch0:		kde-common-PLD.patch
-#Patch100:	%{name}-branch.diff
-#Patch1:		%{name}-llh.patch
+#Patch100: %{name}-branch.diff
+#Patch1: %{name}-llh.patch
 BuildRequires:	akode-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	arts-qt-devel
@@ -40,22 +39,22 @@ BuildRequires:	gettext-devel
 %if %{with gstreamer}
 BuildRequires:	gstreamer08x-devel >= 0.8
 %endif
+BuildRequires:	jack-audio-connection-kit-devel
 BuildRequires:	kdelibs-devel >= %{_minlibsevr}
 BuildRequires:	lame-libs-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libmad-devel
+BuildRequires:	libmusicbrainz-devel >= 1:2.1.1
 BuildRequires:	libogg-devel
 BuildRequires:	libpng-devel
-BuildRequires:	libstdc++-devel
 BuildRequires:	libsamplerate-devel
-BuildRequires:	libmusicbrainz-devel >= 1:2.1.1
+BuildRequires:	libstdc++-devel
 BuildRequires:	libtheora-devel
 BuildRequires:	libtunepimp-devel >= 0.4.0
 BuildRequires:	libvorbis-devel
 BuildRequires:	pkgconfig
 BuildRequires:	polypaudio-devel
 %{?with_hidden_visibility:BuildRequires:	qt-devel >= 6:3.3.5.051113-1}
-BuildRequires:	jack-audio-connection-kit-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
 BuildRequires:	speex-devel
 BuildRequires:	taglib-devel >= 0.95.031114
@@ -91,10 +90,10 @@ Multimedialne aplikacje KDE. Pakiet zawiera:
 Summary:	Header files for kdemultimedia libraries
 Summary(pl):	Pliki nag³ówkowe bibliotek kdemultimedia
 Group:		X11/Development/Libraries
-Requires:	kdelibs-devel >= %{_minlibsevr}
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
 Requires:	%{name}-noatun-libs = %{epoch}:%{version}-%{release}
+Requires:	kdelibs-devel >= %{_minlibsevr}
 Obsoletes:	kdemultimedia-static
 
 %description devel
@@ -104,7 +103,7 @@ Header files for kdemultimedia libraries.
 Pliki nag³ówkowe bibliotek kdemultimedia
 
 %package akode
-Summary:	A new generation arts plugin with high quality support for many formats.
+Summary:	A new generation arts plugin with high quality support for many formats
 Summary(pl):	Wtyczka do arts nowej generacji z wysokiej jako¶ci obs³ug± ró¿nych formatów .
 Group:		X11/Libraries
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
@@ -249,8 +248,8 @@ adresu.
 Summary:	CDDB library for KDE
 Summary(pl):	Biblioteka CDDB pod KDE
 Group:		X11/Applications
-Requires:	kdebase-core >= %{_minbaseevr}
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
+Requires:	kdebase-core >= %{_minbaseevr}
 Conflicts:	kdemultimedia-libkcddb < 9:3.1.92.031014
 
 %description cddb
@@ -266,8 +265,8 @@ ma CD-Text.
 Summary:	A jukebox like program
 Summary(pl):	Program spe³niaj±cy funkcjê szafy graj±cej
 Group:		X11/Applications
-Requires:	taglib >= 0.95.031114
 Requires:	kdebase-core >= %{_minbaseevr}
+Requires:	taglib >= 0.95.031114
 
 %description juk
 JuK (pronounced jook) is a jukebox and music manager for the KDE
@@ -324,9 +323,9 @@ inne aplikacje w systemie i dodaj±cej je do menu KDE.
 Summary:	Audio Creator
 Summary(pl):	Kreator audio
 Group:		X11/Applications
+Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core >= %{_minbaseevr}
 Requires:	kdemultimedia-audiocd >= %{version}
-Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
 
 %description kaudiocreator
 CD ripper and sound encoder frontend.
@@ -405,8 +404,8 @@ prostymi efektami i mikserem.
 Summary:	KDE CD Player
 Summary(pl):	Odtwarzacz CD dla KDE
 Group:		X11/Applications
-Requires:	kdebase-core >= %{_minbaseevr}
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
+Requires:	kdebase-core >= %{_minbaseevr}
 
 %description kscd
 CD Player with CDDB support. It can automatically update its CD
@@ -452,8 +451,8 @@ zakodowany w MPEG.
 Summary:	MPEG libraries - development files
 Summary(pl):	Biblioteki obs³ugi MPEG - pliki dla programistów
 Group:		X11/Applications
-Requires:	kdelibs-devel >= %{_minlibsevr}
 Requires:	%{name}-mpeglib-examples = %{epoch}:%{version}-%{release}
+Requires:	kdelibs-devel >= %{_minlibsevr}
 Conflicts:	kdemultimedia-devel < 9:3.1.92.031012
 
 %description mpeglib-devel
@@ -479,8 +478,8 @@ Biblioteki obs³ugi MPEG - przyk³ady.
 Summary:	KDE Media Player
 Summary(pl):	KDE Media Player - odtwarzacz plików multimedialnych
 Group:		X11/Applications
-Requires:	kdebase-core >= %{_minbaseevr}
 Requires:	%{name}-noatun-libs = %{epoch}:%{version}-%{release}
+Requires:	kdebase-core >= %{_minbaseevr}
 
 # THIS NEEDS EXTENDING. noatun is a too powerful app to describe with
 # one sentence.
@@ -616,8 +615,8 @@ rm -f *.lang
 
 # locolor icons are deprecated (in PLD?)
 rm -f $RPM_BUILD_ROOT%{_iconsdir}/locolor/*/apps/kaudiocreator.png
-# PLD doesn't have /etc/xdg
-rm -f $RPM_BUILD_ROOT/etc/xdg/menus/applications-merged/kde-multimedia-music.menu
+# PLD doesn't have %{_sysconfdir}/xdg
+rm -f $RPM_BUILD_ROOT%{_sysconfdir}/xdg/menus/applications-merged/kde-multimedia-music.menu
 
 %clean
 rm -rf $RPM_BUILD_ROOT
