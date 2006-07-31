@@ -1,11 +1,7 @@
-#
 # TODO:
 # - enable gstreamer after making it selectable runtime
 # - not sure about those unpackaged files:
-#   /etc/xdg/menus/applications-merged/kde-multimedia-music.menu
 #   /usr/share/desktop-directories/kde-multimedia-music.directory
-#   /usr/share/icons/locolor/16x16/apps/kaudiocreator.png
-#   /usr/share/icons/locolor/32x32/apps/kaudiocreator.png
 #
 # Conditional build:
 %bcond_without	alsa	# build without ALSA support
@@ -617,6 +613,11 @@ rm -f *.lang
 %find_lang krec		--with-kde
 %find_lang kscd		--with-kde
 %find_lang noatun	--with-kde
+
+# locolor icons are deprecated (in PLD?)
+rm -f $RPM_BUILD_ROOT%{_iconsdir}/icons/locolor/*/apps/kaudiocreator.png
+# PLD doesn't have /etc/xdg
+rm -f $RPM_BUILD_ROOT/etc/xdg/menus/applications-merged/kde-multimedia-music.menu
 
 %clean
 rm -rf $RPM_BUILD_ROOT
