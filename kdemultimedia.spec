@@ -51,6 +51,7 @@ BuildRequires:	libsamplerate-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtheora-devel
 BuildRequires:	libtunepimp-devel >= 0.4.0
+BuildRequires:	libtunepimp-devel < 0.5
 BuildRequires:	libvorbis-devel
 BuildRequires:	pkgconfig
 BuildRequires:	polypaudio-devel
