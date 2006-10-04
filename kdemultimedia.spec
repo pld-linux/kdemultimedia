@@ -24,8 +24,7 @@ Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{version}/src/%{name}-%{version}.tar.bz2
 # Source0-md5:	fc8f0911050c42aec0636cf3873e22ba
 Patch0:		kde-common-PLD.patch
-#Patch100: %{name}-branch.diff
-#Patch1: %{name}-llh.patch
+#Patch100:	%{name}-branch.diff
 BuildRequires:	akode-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	arts-qt-devel
@@ -508,29 +507,22 @@ KDE Media Player - biblioteki wspó³dzielone.
 %setup -q
 #%patch100 -p0
 %patch0 -p1
-#%patch1 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Player;/' \
-	-e 's/Terminal=0/Terminal=false/' \
 	juk/juk.desktop \
 	kscd/kscd.desktop
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Midi;Player;/' \
-	-e 's/Terminal=0/Terminal=false/' \
 	kmid/kmid.desktop
 %{__sed} -i -e 's/Categories=.*/Categories=Audio;Midi;/' \
 	kappfinder-data/meterbridge.desktop
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;AudioVideo;Player;/' \
-	-e 's/Terminal=0/Terminal=false/' \
 	noatun/noatun.desktop \
 	kaboodle/kaboodle.desktop
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Mixer;/' \
-	-e 's/Terminal=0/Terminal=false/' \
 	kmix/kmix.desktop
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Recorder;/' \
-	-e '/\[Desktop Entry\]/aEncoding=UTF-8' -e 's/Terminal=0/Terminal=false/' \
 	krec/krec.desktop
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Recorder;/' \
-	-e '/\[Desktop Entry\]/aEncoding=UTF-8' -e 's/Terminal=0/Terminal=false/' \
 	kaudiocreator/kaudiocreator.desktop
 %{__sed} -i -e 's/Categories=.*/Categories=Audio;Recorder;/' \
 	kappfinder-data/galan.desktop \
@@ -554,23 +546,16 @@ KDE Media Player - biblioteki wspó³dzielone.
 	kappfinder-data/ams.desktop \
 	kappfinder-data/zynaddsubfx.desktop
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;/' \
-	-e 's/Terminal=0/Terminal=false/' \
 	arts/tools/artscontrol.desktop \
 	arts/builder/artsbuilder.desktop
-%{__sed} -i -e '/\[Desktop Entry\]/aEncoding=UTF-8' \
-	libkcddb/kcmcddb/libkcddb.desktop
 for f in `find . -name \*.desktop`; do
-	if grep -q '^Categories=.*[^;]$' $f; then
-		sed -i -e 's/\(^Categories=.*$\)/\1;/' $f
-	fi
 	if grep -q '\[ven\]' $f; then
 		sed -i -e 's/\[ven\]/[ve]/' $f
 	fi
 done
 
 cp %{_datadir}/automake/config.sub admin
-export kde_htmldir=%{_kdedocdir}
-export kde_libs_htmldir=%{_kdedocdir}
+
 %{__make} -f admin/Makefile.common cvs
 
 %build
@@ -598,25 +583,22 @@ rm -f *.lang
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
-	kde_htmldir=%{_kdedocdir} \
-	kde_libs_htmldir=%{_kdedocdir}
+	kde_htmldir=%{_kdedocdir}
 
-%find_lang artsbuilder	--with-kde
-%find_lang juk		--with-kde
+%find_lang artsbuilder		--with-kde
+%find_lang juk			--with-kde
 %find_lang kaudiocreator	--with-kde
-%find_lang kaboodle	--with-kde
-%find_lang kioslave	--with-kde
-%find_lang kmid		--with-kde
-%find_lang kmix		--with-kde
-#%find_lang kmixcfg	--with-kde
-#cat kmixcfg.lang >> kmix.lang
-%find_lang krec		--with-kde
-%find_lang kscd		--with-kde
-%find_lang noatun	--with-kde
+%find_lang kaboodle		--with-kde
+%find_lang kioslave		--with-kde
+%find_lang kmid			--with-kde
+%find_lang kmix			--with-kde
+%find_lang krec			--with-kde
+%find_lang kscd			--with-kde
+%find_lang noatun		--with-kde
 
 # locolor icons are deprecated (in PLD?)
 rm -f $RPM_BUILD_ROOT%{_iconsdir}/locolor/*/apps/kaudiocreator.png
-# PLD doesn't have %{_sysconfdir}/xdg
+# PLD doesn't have 'Multimedia/Music' submenu
 rm -f $RPM_BUILD_ROOT%{_sysconfdir}/xdg/menus/applications-merged/kde-multimedia-music.menu
 
 %clean
