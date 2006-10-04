@@ -16,13 +16,13 @@
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
-Version:	3.5.4
-Release:	1
+Version:	3.5.5
+Release:	0.1
 Epoch:		9
 License:	GPL
 Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{version}/src/%{name}-%{version}.tar.bz2
-# Source0-md5:	921680248b5f5793b9201715fffe6e33
+# Source0-md5:	fc8f0911050c42aec0636cf3873e22ba
 Patch0:		kde-common-PLD.patch
 #Patch100: %{name}-branch.diff
 #Patch1: %{name}-llh.patch
@@ -51,7 +51,7 @@ BuildRequires:	libsamplerate-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtheora-devel
 BuildRequires:	libtunepimp-devel >= 0.4.0
-BuildRequires:	libtunepimp-devel < 0.5
+#BuildRequires:	libtunepimp-devel < 0.5
 BuildRequires:	libvorbis-devel
 BuildRequires:	pkgconfig
 BuildRequires:	polypaudio-devel
