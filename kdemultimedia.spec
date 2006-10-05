@@ -25,6 +25,7 @@ Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{version}/src/%{name}-%{version}.t
 # Source0-md5:	fc8f0911050c42aec0636cf3873e22ba
 Patch0:		kde-common-PLD.patch
 #Patch100:	%{name}-branch.diff
+Patch1:		kde-ac260-lt.patch
 BuildRequires:	akode-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	arts-qt-devel
@@ -507,6 +508,7 @@ KDE Media Player - biblioteki wspó³dzielone.
 %setup -q
 #%patch100 -p0
 %patch0 -p1
+%patch1 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Player;/' \
 	juk/juk.desktop \
