@@ -50,11 +50,11 @@ BuildRequires:	libpng-devel
 BuildRequires:	libsamplerate-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtheora-devel
-BuildRequires:	libtunepimp-devel >= 0.4.0
 #BuildRequires:	libtunepimp-devel < 0.5
+BuildRequires:	libtunepimp-devel >= 0.4.0
 BuildRequires:	libvorbis-devel
 BuildRequires:	pkgconfig
-BuildRequires:	polypaudio-devel
+BuildRequires:	pulseaudio-devel
 %{?with_hidden_visibility:BuildRequires:	qt-devel >= 6:3.3.5.051113-1}
 BuildRequires:	rpmbuild(macros) >= 1.129
 BuildRequires:	speex-devel
