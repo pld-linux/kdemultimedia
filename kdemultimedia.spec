@@ -6,6 +6,7 @@
 # Conditional build:
 %bcond_without	alsa	# build without ALSA support
 %bcond_without	xine	# build without xine support
+%bcond_with	tunepimp
 %bcond_with	gstreamer		# build with gstreamer support
 %bcond_with	hidden_visibility	# pass '--fvisibility=hidden' & '--fvisibility-inlines-hidden' to g++ 
 #
@@ -17,7 +18,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	3.5.5
-Release:	0.1
+Release:	0.2
 Epoch:		9
 License:	GPL
 Group:		X11/Applications
@@ -50,8 +51,10 @@ BuildRequires:	libpng-devel
 BuildRequires:	libsamplerate-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtheora-devel
-#BuildRequires:	libtunepimp-devel < 0.5
+%if %{with tunepimp}
+BuildRequires:	libtunepimp-devel < 0.5
 BuildRequires:	libtunepimp-devel >= 0.4.0
+%endif
 BuildRequires:	libvorbis-devel
 BuildRequires:	pkgconfig
 BuildRequires:	pulseaudio-devel
@@ -738,6 +741,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/videothumbnail.desktop
 %endif
 
+%if %{with tunepimp}
 %files audiocd -f kioslave.lang
 %defattr(644,root,root,755)
 %{_libdir}/kde3/kcm_audiocd.la
@@ -753,6 +757,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/config.kcfg/audiocd_*_encoder.kcfg
 %{_datadir}/services/audiocd.protocol
 %{_desktopdir}/kde/audiocd.desktop
+%endif
 
 %files cddb
 %defattr(644,root,root,755)
@@ -784,6 +789,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_datadir}/apps/kappfinder/apps/Multimedia/*
 
+%if %{with tunepimp}
 %files kaudiocreator -f kaudiocreator.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kaudiocreator
@@ -793,6 +799,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kconf_update/upgrade-kaudiocreator-metadata.sh
 %{_desktopdir}/kde/kaudiocreator.desktop
 %{_iconsdir}/*/*/*/kaudiocreator.png
+%endif
 
 %files kfile
 %defattr(644,root,root,755)
