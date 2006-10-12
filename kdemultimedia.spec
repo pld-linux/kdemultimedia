@@ -18,7 +18,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	3.5.5
-Release:	0.2
+Release:	0.3
 Epoch:		9
 License:	GPL
 Group:		X11/Applications
@@ -33,7 +33,7 @@ BuildRequires:	arts-qt-devel
 BuildRequires:	audiofile-devel
 BuildRequires:	autoconf
 BuildRequires:	automake
-BuildRequires:	cdparanoia-III-devel
+BuildRequires:	cdparanoia-III-devel >= alpha9.8-6
 BuildRequires:	flac-devel >= 1.1.2
 %{?with_hidden_visibility:BuildRequires:	gcc-c++ >= 5:4.1.0-0.20051206r108118.1}
 BuildRequires:	gettext-devel
@@ -741,7 +741,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/videothumbnail.desktop
 %endif
 
-%if %{with tunepimp}
 %files audiocd -f kioslave.lang
 %defattr(644,root,root,755)
 %{_libdir}/kde3/kcm_audiocd.la
@@ -757,7 +756,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/config.kcfg/audiocd_*_encoder.kcfg
 %{_datadir}/services/audiocd.protocol
 %{_desktopdir}/kde/audiocd.desktop
-%endif
 
 %files cddb
 %defattr(644,root,root,755)
@@ -789,7 +787,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_datadir}/apps/kappfinder/apps/Multimedia/*
 
-%if %{with tunepimp}
 %files kaudiocreator -f kaudiocreator.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kaudiocreator
@@ -799,7 +796,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kconf_update/upgrade-kaudiocreator-metadata.sh
 %{_desktopdir}/kde/kaudiocreator.desktop
 %{_iconsdir}/*/*/*/kaudiocreator.png
-%endif
 
 %files kfile
 %defattr(644,root,root,755)
