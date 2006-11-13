@@ -278,7 +278,7 @@ desktop similar to jukebox software on other platforms such as
 iTunes(R) or RealOne(R). As is typical with many jukebox applications,
 JuK allows you to edit the "tags" of the audio files, and manage your
 collection and playlists.
-%if %{without gstreamer}
+%if !%{with gstreamer}
 
 Gstreamer support in this version has been disabled. To reenable it
 please repuild the source rpm with '--with gstreamer' option.
@@ -289,7 +289,7 @@ Juk (czyt. d¿uk, jak w Jukebox) to szafa graj±ca i zarz±dca muzyki dla
 KDE podobny do iTunes(R) lub RealOne(R). Podobnie jak wiele innych
 tego typu aplikacji, JuK umo¿liwia modyfikowanie znaczników plików
 d¼wiêkowych i zarz±dzanie kolekcj± oraz playlistami.
-%if %{without gstreamer}
+%if !%{with gstreamer}
 
 Obs³uga bibliotek gstreamer zosta³a wy³±czona w tej wersji pakietu. Aby 
 j± uaktywniæ, nale¿y przebudowaæ pakiet ¼ród³owy (.src.rpm) z parametrem 
