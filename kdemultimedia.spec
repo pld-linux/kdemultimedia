@@ -574,7 +574,7 @@ export CDPARANOIA=%{_bindir}/cdparanoia
 %if "%{_lib}" == "lib64"
 	--enable-libsuffix=64 \
 %endif
-	--with%{?without_alsa:out}-arts-alsa \
+	--with%{!?with_alsa:out}-arts-alsa \
 	--with-extra-includes=%{_includedir}/speex \
 	--with-qt-libraries=%{_libdir} \
 	--with-distribution="PLD Linux Distribution" \
