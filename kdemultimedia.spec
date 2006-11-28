@@ -68,6 +68,8 @@ BuildRequires:	zlib-devel
 Obsoletes:	kdemultimedia-libworkman
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
+%define         _noautoreq      libtool(.*)
+
 %description
 KDE multimedia applications. Package includes:
 
