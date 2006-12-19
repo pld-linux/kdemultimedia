@@ -18,7 +18,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	3.5.5
-Release:	1
+Release:	1.1
 Epoch:		9
 License:	GPL
 Group:		X11/Applications
@@ -27,6 +27,7 @@ Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{version}/src/%{name}-%{version}.t
 Patch0:		kde-common-PLD.patch
 #Patch100:	%{name}-branch.diff
 Patch1:		kde-ac260-lt.patch
+Patch2:		kde-am.patch
 BuildRequires:	akode-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	arts-qt-devel
@@ -67,8 +68,6 @@ BuildRequires:	taglib-devel >= 0.95.031114
 BuildRequires:	zlib-devel
 Obsoletes:	kdemultimedia-libworkman
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-
-%define         _noautoreq      libtool(.*)
 
 %description
 KDE multimedia applications. Package includes:
@@ -514,6 +513,7 @@ KDE Media Player - biblioteki wspó³dzielone.
 #%patch100 -p0
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Player;/' \
 	juk/juk.desktop \
@@ -608,6 +608,9 @@ rm -f $RPM_BUILD_ROOT%{_iconsdir}/locolor/*/apps/kaudiocreator.png
 # PLD doesn't have 'Multimedia/Music' submenu
 rm -f $RPM_BUILD_ROOT%{_sysconfdir}/xdg/menus/applications-merged/kde-multimedia-music.menu
 
+rm $RPM_BUILD_ROOT%{_libdir}/kde3/*.la
+rm $RPM_BUILD_ROOT%{_libdir}/libkdeinit_*.la
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -632,27 +635,44 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(644,root,root,755)
 %{_includedir}/*.h
-#%{_includedir}/akode
 %{_includedir}/arts/*.h
 %{_includedir}/arts/*.idl
 %{_includedir}/libkcddb
 %{_includedir}/noatun
-#%{_libdir}/libakode.so
-%{_libdir}/libartsbuilder.so
-%{_libdir}/libartsgui.so
-%{_libdir}/libartsgui_idl.so
-%{_libdir}/libartsgui_kde.so
-%{_libdir}/libartsmidi_idl.so
-%{_libdir}/libartsmidi.so
-%{_libdir}/libartsmodules*.so
-%{_libdir}/libkcddb.so
-%{_libdir}/libnoatun.so
-%{_libdir}/libnoatuncontrols.so
-%{_libdir}/libnoatuntags.so
+%{_libdir}/libartsbuilder.la
+%attr(755,root,root) %{_libdir}/libartsbuilder.so
+%{_libdir}/libartscontrolapplet.la
+%{_libdir}/libartscontrolsupport.la
+%{_libdir}/libartseffects.la
+%{_libdir}/libartsgui.la
+%attr(755,root,root) %{_libdir}/libartsgui.so
+%{_libdir}/libartsgui_idl.la
+%attr(755,root,root) %{_libdir}/libartsgui_idl.so
+%{_libdir}/libartsgui_kde.la
+%attr(755,root,root) %{_libdir}/libartsgui_kde.so
+%{_libdir}/libartsmidi_idl.la
+%attr(755,root,root) %{_libdir}/libartsmidi_idl.so
+%{_libdir}/libartsmidi.la
+%attr(755,root,root) %{_libdir}/libartsmidi.so
+%{_libdir}/libartsmodules.la
+%attr(755,root,root) %{_libdir}/libartsmodules*.so
+%{_libdir}/libartsmodulescommon.la
+%{_libdir}/libartsmoduleseffects.la
+%{_libdir}/libartsmodulesmixers.la
+%{_libdir}/libartsmodulessynth.la
+%{_libdir}/libkcddb.la
+%attr(755,root,root) %{_libdir}/libkcddb.so
+%{_libdir}/libnoatun.la
+%attr(755,root,root) %{_libdir}/libnoatun.so
+%{_libdir}/libnoatunarts.la
+%{_libdir}/libnoatuncontrols.la
+%attr(755,root,root) %{_libdir}/libnoatuncontrols.so
+%{_libdir}/libnoatuntags.la
+%attr(755,root,root) %{_libdir}/libnoatuntags.so
+%{_libdir}/libwinskinvis.la
 
 %files akode
 %defattr(644,root,root,755)
-%{_libdir}/libarts_akode.la
 %attr(755,root,root) %{_libdir}/libarts_akode.so
 %attr(755,root,root) %{_libdir}/libarts_akode.so.*.*.*
 %{_libdir}/mcop/akode*.mcop*
@@ -660,36 +680,35 @@ rm -rf $RPM_BUILD_ROOT
 %files arts
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/midisend
-%{_libdir}/libartsbuilder.la
-%attr(755,root,root) %{_libdir}/libartsbuilder.so.*.*.*
-%{_libdir}/libartscontrolapplet.la
-%attr(755,root,root) %{_libdir}/libartscontrolapplet.so.*.*.*
-%{_libdir}/libartscontrolsupport.la
-%attr(755,root,root) %{_libdir}/libartscontrolsupport.so.*.*.*
-%{_libdir}/libartseffects.la
-%attr(755,root,root) %{_libdir}/libartseffects.so
-%{_libdir}/libartsgui.la
-%attr(755,root,root) %{_libdir}/libartsgui.so.*.*.*
-%{_libdir}/libartsgui_idl.la
-%attr(755,root,root) %{_libdir}/libartsgui_idl.so.*.*.*
-%{_libdir}/libartsgui_kde.la
-%attr(755,root,root) %{_libdir}/libartsgui_kde.so.*.*.*
-%{_libdir}/libartsmidi.la
-%attr(755,root,root) %{_libdir}/libartsmidi.so.*.*.*
-%{_libdir}/libartsmidi_idl.la
-%attr(755,root,root) %{_libdir}/libartsmidi_idl.so.*.*.*
-%{_libdir}/libartsmodules.la
-%attr(755,root,root) %{_libdir}/libartsmodules.so.*.*.*
-%{_libdir}/libartsmodulescommon.la
-%attr(755,root,root) %{_libdir}/libartsmodulescommon.so.*.*.*
-%{_libdir}/libartsmoduleseffects.la
-%attr(755,root,root) %{_libdir}/libartsmoduleseffects.so.*.*.*
-%{_libdir}/libartsmodulesmixers.la
-%attr(755,root,root) %{_libdir}/libartsmodulesmixers.so.*.*.*
-%{_libdir}/libartsmodulessynth.la
-%attr(755,root,root) %{_libdir}/libartsmodulessynth.so.*.*.*
-%{_libdir}/libarts_audiofile.la
+%attr(755,root,root) %{_libdir}/libarts_audiofile.so
 %attr(755,root,root) %{_libdir}/libarts_audiofile.so.*.*.*
+%attr(755,root,root) %{_libdir}/libartsbuilder.so
+%attr(755,root,root) %{_libdir}/libartsbuilder.so.*.*.*
+%attr(755,root,root) %{_libdir}/libartscontrolapplet.so
+%attr(755,root,root) %{_libdir}/libartscontrolapplet.so.*.*.*
+%attr(755,root,root) %{_libdir}/libartscontrolsupport.so
+%attr(755,root,root) %{_libdir}/libartscontrolsupport.so.*.*.*
+%attr(755,root,root) %{_libdir}/libartseffects.so
+%attr(755,root,root) %{_libdir}/libartsgui.so
+%attr(755,root,root) %{_libdir}/libartsgui.so.*.*.*
+%attr(755,root,root) %{_libdir}/libartsgui_idl.so
+%attr(755,root,root) %{_libdir}/libartsgui_idl.so.*.*.*
+%attr(755,root,root) %{_libdir}/libartsgui_kde.so
+%attr(755,root,root) %{_libdir}/libartsgui_kde.so.*.*.*
+%attr(755,root,root) %{_libdir}/libartsmidi.so
+%attr(755,root,root) %{_libdir}/libartsmidi.so.*.*.*
+%attr(755,root,root) %{_libdir}/libartsmidi_idl.so
+%attr(755,root,root) %{_libdir}/libartsmidi_idl.so.*.*.*
+%attr(755,root,root) %{_libdir}/libartsmodules.so
+%attr(755,root,root) %{_libdir}/libartsmodules.so.*.*.*
+%attr(755,root,root) %{_libdir}/libartsmodulescommon.so
+%attr(755,root,root) %{_libdir}/libartsmodulescommon.so.*.*.*
+%attr(755,root,root) %{_libdir}/libartsmoduleseffects.so
+%attr(755,root,root) %{_libdir}/libartsmoduleseffects.so.*.*.*
+%attr(755,root,root) %{_libdir}/libartsmodulesmixers.so
+%attr(755,root,root) %{_libdir}/libartsmodulesmixers.so.*.*.*
+%attr(755,root,root) %{_libdir}/libartsmodulessynth.so
+%attr(755,root,root) %{_libdir}/libartsmodulessynth.so.*.*.*
 %{_libdir}/mcop/Arts
 %{_libdir}/mcop/artseffects.mcopclass
 %{_libdir}/mcop/artseffects.mcoptype
@@ -733,10 +752,8 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with xine}
 %files artsplugin-xine
 %defattr(644,root,root,755)
-%{_libdir}/kde3/videothumbnail.la
 %attr(755,root,root) %{_libdir}/kde3/videothumbnail.so
-%{_libdir}/*_xine.la
-%attr(755,root,root) %{_libdir}/*_xine.so
+%attr(755,root,root) %{_libdir}/libarts_xine.so
 %attr(755,root,root) %{_libdir}/libarts_xine.so.*.*.*
 %{_libdir}/mcop/xine*PlayObject.mcopclass
 %{_datadir}/apps/videothumbnail
@@ -745,14 +762,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %files audiocd -f kioslave.lang
 %defattr(644,root,root,755)
-%{_libdir}/kde3/kcm_audiocd.la
 %attr(755,root,root) %{_libdir}/kde3/kcm_audiocd.so
-%{_libdir}/kde3/kio_audiocd.la
 %attr(755,root,root) %{_libdir}/kde3/kio_audiocd.so
-%{_libdir}/kde3/libaudiocd_encoder*.la
 %attr(755,root,root) %{_libdir}/kde3/libaudiocd_encoder*.so
-%{_libdir}/libaudiocdplugins.la
-%attr(755,root,root) %{_libdir}/libaudiocdplugins.so*
+%attr(755,root,root) %{_libdir}/libaudiocdplugins.so
+%attr(755,root,root) %{_libdir}/libaudiocdplugins.so.*.*.*
 %{_datadir}/apps/kconf_update/upgrade-metadata.sh
 %{_datadir}/apps/konqueror/servicemenus/audiocd_*.desktop
 %{_datadir}/config.kcfg/audiocd_*_encoder.kcfg
@@ -761,7 +775,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files cddb
 %defattr(644,root,root,755)
-%{_libdir}/kde3/kcm_cddb.la
 %attr(755,root,root) %{_libdir}/kde3/kcm_cddb.so
 %{_datadir}/config.kcfg/libkcddb.kcfg
 %{_desktopdir}/kde/libkcddb.desktop
@@ -777,7 +790,6 @@ rm -rf $RPM_BUILD_ROOT
 %files kaboodle -f kaboodle.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kaboodle
-%{_libdir}/kde3/libkaboodlepart.la
 %attr(755,root,root) %{_libdir}/kde3/libkaboodlepart.so
 %{_datadir}/apps/kaboodle
 %{_datadir}/services/kaboodle_component.desktop
@@ -801,17 +813,14 @@ rm -rf $RPM_BUILD_ROOT
 
 %files kfile
 %defattr(644,root,root,755)
-%{_libdir}/kde3/kfile_*.la
 %attr(755,root,root) %{_libdir}/kde3/kfile_*.so
 %{_datadir}/services/kfile_*.desktop
 
 %files kmid -f kmid.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kmid
-%{_libdir}/kde3/libkmidpart.la
 %attr(755,root,root) %{_libdir}/kde3/libkmidpart.so
-%{_libdir}/libkmidlib.la
-%{_libdir}/libkmidlib.so
+%attr(755,root,root) %{_libdir}/libkmidlib.so
 %attr(755,root,root) %{_libdir}/libkmidlib.so.*.*.*
 %{_datadir}/apps/kmid
 %{_datadir}/mimelnk/audio/x-karaoke.desktop
@@ -823,15 +832,10 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kmix
 %attr(755,root,root) %{_bindir}/kmixctrl
-%{_libdir}/libkdeinit_kmix.la
 %attr(755,root,root) %{_libdir}/libkdeinit_kmix.so
-%{_libdir}/libkdeinit_kmixctrl.la
 %attr(755,root,root) %{_libdir}/libkdeinit_kmixctrl.so
-%{_libdir}/kde3/kmix.la
 %attr(755,root,root) %{_libdir}/kde3/kmix.so
-%{_libdir}/kde3/kmixctrl.la
 %attr(755,root,root) %{_libdir}/kde3/kmixctrl.so
-%{_libdir}/kde3/kmix_panelapplet.la
 %attr(755,root,root) %{_libdir}/kde3/kmix_panelapplet.so
 %{_datadir}/apps/kicker/applets/kmixapplet.desktop
 %{_datadir}/apps/kmix
@@ -854,19 +858,12 @@ rm -rf $RPM_BUILD_ROOT
 %files krec -f krec.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/krec
-%{_libdir}/libkdeinit_krec.la
 %attr(755,root,root) %{_libdir}/libkdeinit_krec.so
-%{_libdir}/kde3/kcm_krec.la
 %attr(755,root,root) %{_libdir}/kde3/kcm_krec.so
-%{_libdir}/kde3/kcm_krec_files.la
 %attr(755,root,root) %{_libdir}/kde3/kcm_krec_files.so
-%{_libdir}/kde3/krec.la
 %attr(755,root,root) %{_libdir}/kde3/krec.so
-%{_libdir}/kde3/libkrecexport_mp3.la
 %attr(755,root,root) %{_libdir}/kde3/libkrecexport_mp3.so
-%{_libdir}/kde3/libkrecexport_ogg.la
 %attr(755,root,root) %{_libdir}/kde3/libkrecexport_ogg.so
-%{_libdir}/kde3/libkrecexport_wave.la
 %attr(755,root,root) %{_libdir}/kde3/libkrecexport_wave.so
 %{_datadir}/apps/krec
 %{_datadir}/services/kcm_krec.desktop
@@ -880,20 +877,22 @@ rm -rf $RPM_BUILD_ROOT
 
 %files libkcddb
 %defattr(644,root,root,755)
-%{_libdir}/libkcddb.la
+%attr(755,root,root) %{_libdir}/libkcddb.so
 %attr(755,root,root) %{_libdir}/libkcddb.so.*.*.*
 
 %files mpeglib
 %defattr(644,root,root,755)
 # mpeglib part
-%{_libdir}/libmpeg.la
+%attr(755,root,root) %{_libdir}/libmpeg.so
 %attr(755,root,root) %{_libdir}/libmpeg-0.3.0.so
 # mpeglib_artsplug part
 %attr(755,root,root) %{_bindir}/mpeglibartsplay
-%{_libdir}/libarts_mpeglib.la
+%attr(755,root,root) %{_libdir}/libarts_mpeglib.so
 %attr(755,root,root) %{_libdir}/libarts_mpeglib-0.3.0.so.*.*.*
-%{_libdir}/libarts_splay.la
+%attr(755,root,root) %{_libdir}/libarts_splay.so
 %attr(755,root,root) %{_libdir}/libarts_splay.so.*.*.*
+%attr(755,root,root) %{_libdir}/libyafcore.so
+%attr(755,root,root) %{_libdir}/libyafxplayer.so
 %{_libdir}/mcop/CDDAPlayObject.mcopclass
 %{_libdir}/mcop/MP3PlayObject.mcopclass
 %{_libdir}/mcop/NULLPlayObject.mcopclass
@@ -903,13 +902,13 @@ rm -rf $RPM_BUILD_ROOT
 
 %files mpeglib-devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libarts_mpeglib.so
-%attr(755,root,root) %{_libdir}/libarts_splay.so
-%attr(755,root,root) %{_libdir}/libmpeg.so
-%attr(755,root,root) %{_libdir}/libyafcore.so
-%attr(755,root,root) %{_libdir}/libyafxplayer.so
 %{_includedir}/mpeglib
 %{_includedir}/mpeglib_artsplug
+%attr(755,root,root) %{_libdir}/libarts_mpeglib.la
+%attr(755,root,root) %{_libdir}/libarts_splay.la
+%attr(755,root,root) %{_libdir}/libmpeg.la
+%attr(755,root,root) %{_libdir}/libyafcore.la
+%attr(755,root,root) %{_libdir}/libyafxplayer.la
 
 %files mpeglib-examples
 %defattr(644,root,root,755)
@@ -919,15 +918,11 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/yaf-tplay
 %attr(755,root,root) %{_bindir}/yaf-vorbis
 %attr(755,root,root) %{_bindir}/yaf-yuv
-%{_libdir}/libyafcore.la
-%{_libdir}/libyafxplayer.la
 
 %files noatun -f noatun.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/noatun*
-%{_libdir}/libkdeinit_noatun.la
 %attr(755,root,root) %{_libdir}/libkdeinit_noatun.so
-%{_libdir}/kde3/noatun*.la
 %attr(755,root,root) %{_libdir}/kde3/noatun*.so
 %{_libdir}/mcop/Noatun
 %{_libdir}/mcop/ExtraStereo.mcopclass
@@ -947,13 +942,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %files noatun-libs
 %defattr(644,root,root,755)
-%{_libdir}/libnoatun.la
+%attr(755,root,root) %{_libdir}/libnoatun.so
 %attr(755,root,root) %{_libdir}/libnoatun.so.*.*.*
-%{_libdir}/libnoatuncontrols.la
+%attr(755,root,root) %{_libdir}/libnoatuncontrols.so
 %attr(755,root,root) %{_libdir}/libnoatuncontrols.so.*.*.*
-%{_libdir}/libnoatuntags.la
+%attr(755,root,root) %{_libdir}/libnoatuntags.so
 %attr(755,root,root) %{_libdir}/libnoatuntags.so.*.*.*
-%{_libdir}/libnoatunarts.la
 %attr(755,root,root) %{_libdir}/libnoatunarts.so
-%{_libdir}/libwinskinvis.la
 %attr(755,root,root) %{_libdir}/libwinskinvis.so
