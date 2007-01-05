@@ -18,7 +18,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	3.5.5
-Release:	1.1
+Release:	2
 Epoch:		9
 License:	GPL
 Group:		X11/Applications
@@ -561,6 +561,8 @@ for f in `find . -name \*.desktop`; do
 	fi
 done
 
+find . -type f -name '*.mcopclass' | xargs %{__sed} -i -e 's:\.la::'
+
 cp %{_datadir}/automake/config.sub admin
 
 %{__make} -f admin/Makefile.common cvs
@@ -642,7 +644,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libartsbuilder.la
 %attr(755,root,root) %{_libdir}/libartsbuilder.so
 %{_libdir}/libartscontrolapplet.la
+%attr(755,root,root) %{_libdir}/libartscontrolapplet.so
 %{_libdir}/libartscontrolsupport.la
+%attr(755,root,root) %{_libdir}/libartscontrolsupport.so
 %{_libdir}/libartseffects.la
 %{_libdir}/libartsgui.la
 %attr(755,root,root) %{_libdir}/libartsgui.so
@@ -650,16 +654,20 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libartsgui_idl.so
 %{_libdir}/libartsgui_kde.la
 %attr(755,root,root) %{_libdir}/libartsgui_kde.so
-%{_libdir}/libartsmidi_idl.la
-%attr(755,root,root) %{_libdir}/libartsmidi_idl.so
 %{_libdir}/libartsmidi.la
 %attr(755,root,root) %{_libdir}/libartsmidi.so
+%{_libdir}/libartsmidi_idl.la
+%attr(755,root,root) %{_libdir}/libartsmidi_idl.so
 %{_libdir}/libartsmodules.la
-%attr(755,root,root) %{_libdir}/libartsmodules*.so
+%attr(755,root,root) %{_libdir}/libartsmodules.so
 %{_libdir}/libartsmodulescommon.la
+%attr(755,root,root) %{_libdir}/libartsmodulescommon.so
 %{_libdir}/libartsmoduleseffects.la
+%attr(755,root,root) %{_libdir}/libartsmoduleseffects.so
 %{_libdir}/libartsmodulesmixers.la
+%attr(755,root,root) %{_libdir}/libartsmodulesmixers.so
 %{_libdir}/libartsmodulessynth.la
+%attr(755,root,root) %{_libdir}/libartsmodulessynth.so
 %{_libdir}/libkcddb.la
 %attr(755,root,root) %{_libdir}/libkcddb.so
 %{_libdir}/libnoatun.la
@@ -673,41 +681,26 @@ rm -rf $RPM_BUILD_ROOT
 
 %files akode
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libarts_akode.so
 %attr(755,root,root) %{_libdir}/libarts_akode.so.*.*.*
 %{_libdir}/mcop/akode*.mcop*
 
 %files arts
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/midisend
-%attr(755,root,root) %{_libdir}/libarts_audiofile.so
 %attr(755,root,root) %{_libdir}/libarts_audiofile.so.*.*.*
-%attr(755,root,root) %{_libdir}/libartsbuilder.so
 %attr(755,root,root) %{_libdir}/libartsbuilder.so.*.*.*
-%attr(755,root,root) %{_libdir}/libartscontrolapplet.so
 %attr(755,root,root) %{_libdir}/libartscontrolapplet.so.*.*.*
-%attr(755,root,root) %{_libdir}/libartscontrolsupport.so
 %attr(755,root,root) %{_libdir}/libartscontrolsupport.so.*.*.*
 %attr(755,root,root) %{_libdir}/libartseffects.so
-%attr(755,root,root) %{_libdir}/libartsgui.so
 %attr(755,root,root) %{_libdir}/libartsgui.so.*.*.*
-%attr(755,root,root) %{_libdir}/libartsgui_idl.so
 %attr(755,root,root) %{_libdir}/libartsgui_idl.so.*.*.*
-%attr(755,root,root) %{_libdir}/libartsgui_kde.so
 %attr(755,root,root) %{_libdir}/libartsgui_kde.so.*.*.*
-%attr(755,root,root) %{_libdir}/libartsmidi.so
 %attr(755,root,root) %{_libdir}/libartsmidi.so.*.*.*
-%attr(755,root,root) %{_libdir}/libartsmidi_idl.so
 %attr(755,root,root) %{_libdir}/libartsmidi_idl.so.*.*.*
-%attr(755,root,root) %{_libdir}/libartsmodules.so
 %attr(755,root,root) %{_libdir}/libartsmodules.so.*.*.*
-%attr(755,root,root) %{_libdir}/libartsmodulescommon.so
 %attr(755,root,root) %{_libdir}/libartsmodulescommon.so.*.*.*
-%attr(755,root,root) %{_libdir}/libartsmoduleseffects.so
 %attr(755,root,root) %{_libdir}/libartsmoduleseffects.so.*.*.*
-%attr(755,root,root) %{_libdir}/libartsmodulesmixers.so
 %attr(755,root,root) %{_libdir}/libartsmodulesmixers.so.*.*.*
-%attr(755,root,root) %{_libdir}/libartsmodulessynth.so
 %attr(755,root,root) %{_libdir}/libartsmodulessynth.so.*.*.*
 %{_libdir}/mcop/Arts
 %{_libdir}/mcop/artseffects.mcopclass
@@ -753,7 +746,6 @@ rm -rf $RPM_BUILD_ROOT
 %files artsplugin-xine
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/kde3/videothumbnail.so
-%attr(755,root,root) %{_libdir}/libarts_xine.so
 %attr(755,root,root) %{_libdir}/libarts_xine.so.*.*.*
 %{_libdir}/mcop/xine*PlayObject.mcopclass
 %{_datadir}/apps/videothumbnail
@@ -765,7 +757,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/kcm_audiocd.so
 %attr(755,root,root) %{_libdir}/kde3/kio_audiocd.so
 %attr(755,root,root) %{_libdir}/kde3/libaudiocd_encoder*.so
-%attr(755,root,root) %{_libdir}/libaudiocdplugins.so
 %attr(755,root,root) %{_libdir}/libaudiocdplugins.so.*.*.*
 %{_datadir}/apps/kconf_update/upgrade-metadata.sh
 %{_datadir}/apps/konqueror/servicemenus/audiocd_*.desktop
@@ -820,7 +811,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kmid
 %attr(755,root,root) %{_libdir}/kde3/libkmidpart.so
-%attr(755,root,root) %{_libdir}/libkmidlib.so
 %attr(755,root,root) %{_libdir}/libkmidlib.so.*.*.*
 %{_datadir}/apps/kmid
 %{_datadir}/mimelnk/audio/x-karaoke.desktop
@@ -877,20 +867,14 @@ rm -rf $RPM_BUILD_ROOT
 
 %files libkcddb
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libkcddb.so
 %attr(755,root,root) %{_libdir}/libkcddb.so.*.*.*
 
 %files mpeglib
 %defattr(644,root,root,755)
-# mpeglib part
-%attr(755,root,root) %{_libdir}/libmpeg.so
-%attr(755,root,root) %{_libdir}/libmpeg-0.3.0.so
-# mpeglib_artsplug part
 %attr(755,root,root) %{_bindir}/mpeglibartsplay
-%attr(755,root,root) %{_libdir}/libarts_mpeglib.so
-%attr(755,root,root) %{_libdir}/libarts_mpeglib-0.3.0.so.*.*.*
-%attr(755,root,root) %{_libdir}/libarts_splay.so
+%attr(755,root,root) %{_libdir}/libarts_mpeglib-*.*.*.so.*.*.*
 %attr(755,root,root) %{_libdir}/libarts_splay.so.*.*.*
+%attr(755,root,root) %{_libdir}/libmpeg-*.*.*.so
 %attr(755,root,root) %{_libdir}/libyafcore.so
 %attr(755,root,root) %{_libdir}/libyafxplayer.so
 %{_libdir}/mcop/CDDAPlayObject.mcopclass
@@ -904,11 +888,14 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_includedir}/mpeglib
 %{_includedir}/mpeglib_artsplug
-%attr(755,root,root) %{_libdir}/libarts_mpeglib.la
-%attr(755,root,root) %{_libdir}/libarts_splay.la
-%attr(755,root,root) %{_libdir}/libmpeg.la
-%attr(755,root,root) %{_libdir}/libyafcore.la
-%attr(755,root,root) %{_libdir}/libyafxplayer.la
+%{_libdir}/libarts_mpeglib.la
+%attr(755,root,root) %{_libdir}/libarts_mpeglib.so
+%{_libdir}/libarts_splay.la
+%attr(755,root,root) %{_libdir}/libarts_splay.so
+%{_libdir}/libmpeg.la
+%attr(755,root,root) %{_libdir}/libmpeg.so
+%{_libdir}/libyafcore.la
+%{_libdir}/libyafxplayer.la
 
 %files mpeglib-examples
 %defattr(644,root,root,755)
@@ -942,11 +929,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files noatun-libs
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libnoatun.so
 %attr(755,root,root) %{_libdir}/libnoatun.so.*.*.*
-%attr(755,root,root) %{_libdir}/libnoatuncontrols.so
-%attr(755,root,root) %{_libdir}/libnoatuncontrols.so.*.*.*
-%attr(755,root,root) %{_libdir}/libnoatuntags.so
-%attr(755,root,root) %{_libdir}/libnoatuntags.so.*.*.*
 %attr(755,root,root) %{_libdir}/libnoatunarts.so
+%attr(755,root,root) %{_libdir}/libnoatuncontrols.so.*.*.*
+%attr(755,root,root) %{_libdir}/libnoatuntags.so.*.*.*
 %attr(755,root,root) %{_libdir}/libwinskinvis.so
