@@ -17,13 +17,13 @@
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
-Version:	3.5.5
-Release:	1
+Version:	3.5.6
+Release:	0.1
 Epoch:		9
 License:	GPL
 Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{version}/src/%{name}-%{version}.tar.bz2
-# Source0-md5:	fc8f0911050c42aec0636cf3873e22ba
+# Source0-md5:	57c50bfcb0147324a1af02ebcc103376
 Patch0:		kde-common-PLD.patch
 #Patch100:	%{name}-branch.diff
 Patch1:		kde-ac260-lt.patch
@@ -574,7 +574,7 @@ export CDPARANOIA=%{_bindir}/cdparanoia
 %if "%{_lib}" == "lib64"
 	--enable-libsuffix=64 \
 %endif
-	--with%{?without_alsa:out}-arts-alsa \
+	--with%{!?with_alsa:out}-arts-alsa \
 	--with-extra-includes=%{_includedir}/speex \
 	--with-qt-libraries=%{_libdir} \
 	--with-distribution="PLD Linux Distribution" \
