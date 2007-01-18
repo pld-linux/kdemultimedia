@@ -939,6 +939,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_datadir}/apps/kconf_update/noatun20update
 %{_datadir}/apps/kconf_update/*.upd
 %{_datadir}/apps/noatun*
+%dir %{_datadir}/mimelnk/interface
 %{_datadir}/mimelnk/interface/x-winamp-skin.desktop
 %{_desktopdir}/kde/noatun.desktop
 %{_iconsdir}/*/*/*/noatun.png
