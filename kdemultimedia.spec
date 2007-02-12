@@ -12,7 +12,7 @@
 %define		_minbaseevr	9:3.4.89.050625
 
 Summary:	K Desktop Environment - multimedia applications
-Summary(pl):	K Desktop Environment - aplikacje multimedialne
+Summary(pl.UTF-8):   K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	3.80.2
 Release:	1
@@ -69,20 +69,20 @@ KDE multimedia applications. Package includes:
  - KSCD - CD player,
  - Noatun - a media player.
 
-%description -l pl
+%description -l pl.UTF-8
 Multimedialne aplikacje KDE. Pakiet zawiera:
 
- - Arts - narzêdzia arts,
- - Kaboodle - odtwarzacz plików multimedialnych,
+ - Arts - narzÄ™dzia arts,
+ - Kaboodle - odtwarzacz plikÃ³w multimedialnych,
  - KMID - odtwarzacz MIDI,
  - KMIDI - programowy odtwarzacz MIDI,
  - KMIX - mikser audio,
  - KSCD - odtwarzacz CD,
- - Noatun - odtwarzacz plików multimedialnych.
+ - Noatun - odtwarzacz plikÃ³w multimedialnych.
 
 %package devel
 Summary:	Header files for kdemultimedia libraries
-Summary(pl):	Pliki nag³ówkowe bibliotek kdemultimedia
+Summary(pl.UTF-8):   Pliki nagÅ‚Ã³wkowe bibliotek kdemultimedia
 Group:		X11/Development/Libraries
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
@@ -93,12 +93,12 @@ Obsoletes:	kdemultimedia-static
 %description devel
 Header files for kdemultimedia libraries.
 
-%description devel -l pl
-Pliki nag³ówkowe bibliotek kdemultimedia
+%description devel -l pl.UTF-8
+Pliki nagÅ‚Ã³wkowe bibliotek kdemultimedia
 
 %package audiocd
 Summary:	Audiocd protocol for konqueror
-Summary(pl):	Protokó³ audiocd dla konquerora
+Summary(pl.UTF-8):   ProtokÃ³Å‚ audiocd dla konquerora
 Group:		X11/Applications
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
 Requires:	konqueror >= %{_minbaseevr}
@@ -108,14 +108,14 @@ Conflicts:	kdemultimedia-kaudiocreator < 9:3.1.92.031014
 This package allows konqueror to play audiocd's without the need of an
 external application. Just enter audiocd:/ in the location field.
 
-%description audiocd -l pl
-Ten pakiet pozwala konquerorowi odtwarzanie p³yt z muzyk± bez potrzeby
-u¿ywania zewnêtrznej aplikacji. Po prostu wpisz audiocd:/ w pole
+%description audiocd -l pl.UTF-8
+Ten pakiet pozwala konquerorowi odtwarzanie pÅ‚yt z muzykÄ… bez potrzeby
+uÅ¼ywania zewnÄ™trznej aplikacji. Po prostu wpisz audiocd:/ w pole
 adresu.
 
 %package cddb
 Summary:	CDDB library for KDE
-Summary(pl):	Biblioteka CDDB pod KDE
+Summary(pl.UTF-8):   Biblioteka CDDB pod KDE
 Group:		X11/Applications
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core >= %{_minbaseevr}
@@ -125,14 +125,14 @@ Conflicts:	kdemultimedia-libkcddb < 9:3.1.92.031014
 Support for cd database (CDDB), which is the source for track data for
 KDE apps (title, author, etc.) when the cd does not have CD-Text.
 
-%description cddb -l pl
-Wsparcie dla baz danych p³yt CD (CDDB) z których program ¶ci±ga
-informacje o odtwarzanym utworze (tytu³, autora itd.) je¶li p³yta nie
+%description cddb -l pl.UTF-8
+Wsparcie dla baz danych pÅ‚yt CD (CDDB) z ktÃ³rych program Å›ciÄ…ga
+informacje o odtwarzanym utworze (tytuÅ‚, autora itd.) jeÅ›li pÅ‚yta nie
 ma CD-Text.
 
 %package juk
 Summary:	A jukebox like program
-Summary(pl):	Program spe³niaj±cy funkcjê szafy graj±cej
+Summary(pl.UTF-8):   Program speÅ‚niajÄ…cy funkcjÄ™ szafy grajÄ…cej
 Group:		X11/Applications
 Requires:	kdebase-core >= %{_minbaseevr}
 Requires:	taglib >= 0.95.031114
@@ -154,35 +154,35 @@ disabled. To reenable it please repuild the source rpm with '--with
 gstreamer' option.
 %endif
 
-%description juk -l pl
-Juk (czyt. d¿uk, jak w Jukebox) to szafa graj±ca i zarz±dca muzyki dla
+%description juk -l pl.UTF-8
+Juk (czyt. dÅ¼uk, jak w Jukebox) to szafa grajÄ…ca i zarzÄ…dca muzyki dla
 KDE podobny do iTunes(R) lub RealOne(R). Podobnie jak wiele innych
-tego typu aplikacji, JuK umo¿liwia modyfikowanie znaczników plików
-d¼wiêkowych i zarz±dzanie kolekcj± oraz playlistami.
+tego typu aplikacji, JuK umoÅ¼liwia modyfikowanie znacznikÃ³w plikÃ³w
+dÅºwiÄ™kowych i zarzÄ…dzanie kolekcjÄ… oraz playlistami.
 %if %{without gstreamer}
 
-Juk (czyt. d¿uk, jak w Jukebox) to szafa graj±ca i zarz±dca muzyki dla
+Juk (czyt. dÅ¼uk, jak w Jukebox) to szafa grajÄ…ca i zarzÄ…dca muzyki dla
 KDE podobny do iTunes(R) lub RealOne(R). Podobnie jak wiele innych
-tego typu aplikacji, JuK umo¿liwia modyfikowanie znaczników plików
-d¼wiêkowych i zarz±dzanie kolekcj± oraz playlistami. Obs³uga bibliotek
-gstreamer zosta³a wy³±czona w tej wersji pakietu. Aby j± uaktywniæ,
-nale¿y przebudowaæ pakiet ¼ród³owy (.src.rpm) z parametrem '--with
+tego typu aplikacji, JuK umoÅ¼liwia modyfikowanie znacznikÃ³w plikÃ³w
+dÅºwiÄ™kowych i zarzÄ…dzanie kolekcjÄ… oraz playlistami. ObsÅ‚uga bibliotek
+gstreamer zostaÅ‚a wyÅ‚Ä…czona w tej wersji pakietu. Aby jÄ… uaktywniÄ‡,
+naleÅ¼y przebudowaÄ‡ pakiet ÅºrÃ³dÅ‚owy (.src.rpm) z parametrem '--with
 gstreamer'.
 %endif
 
-Juk (czyt. d¿uk, jak w Jukebox) to szafa graj±ca i zarz±dca muzyki dla
+Juk (czyt. dÅ¼uk, jak w Jukebox) to szafa grajÄ…ca i zarzÄ…dca muzyki dla
 KDE podobny do iTunes(R) lub RealOne(R). Podobnie jak wiele innych
-tego typu aplikacji, JuK umo¿liwia modyfikowanie znaczników plików
-d¼wiêkowych i zarz±dzanie kolekcj± oraz playlistami. Obs³uga bibliotek
-gstreamer zosta³a wy³±czona w tej wersji pakietu. Aby j± uaktywniæ,
-nale¿y przebudowaæ pakiet ¼ród³owy (.src.rpm) z parametrem '--with
+tego typu aplikacji, JuK umoÅ¼liwia modyfikowanie znacznikÃ³w plikÃ³w
+dÅºwiÄ™kowych i zarzÄ…dzanie kolekcjÄ… oraz playlistami. ObsÅ‚uga bibliotek
+gstreamer zostaÅ‚a wyÅ‚Ä…czona w tej wersji pakietu. Aby jÄ… uaktywniÄ‡,
+naleÅ¼y przebudowaÄ‡ pakiet ÅºrÃ³dÅ‚owy (.src.rpm) z parametrem '--with
 gstreamer'. #%package kaboodle #Summary: Media player #Summary(pl):
 Odtwarzacz multimedialny #Group: X11/Applications #Requires:
 kdebase-core >= %{_minbaseevr} #Obsoletes: kdemultimedia-aktion
 
 %package kappfinder
 Summary:	Kappfinder multimedia data
-Summary(pl):	Dane o aplikacjach multimedialnych dla kappfindera
+Summary(pl.UTF-8):   Dane o aplikacjach multimedialnych dla kappfindera
 Group:		X11/Applications
 Requires:	kdebase-kappfinder
 
@@ -190,13 +190,13 @@ Requires:	kdebase-kappfinder
 Multimedia application data for the kappfinder program, which find
 applications and adds them to the KDE menu.
 
-%description kappfinder -l pl
-Dane aplikacji multimedialnych dla kappfinder, aplikacji wyszukuj±cej
-inne aplikacje w systemie i dodaj±cej je do menu KDE.
+%description kappfinder -l pl.UTF-8
+Dane aplikacji multimedialnych dla kappfinder, aplikacji wyszukujÄ…cej
+inne aplikacje w systemie i dodajÄ…cej je do menu KDE.
 
 %package kaudiocreator
 Summary:	Audio Creator
-Summary(pl):	Kreator audio
+Summary(pl.UTF-8):   Kreator audio
 Group:		X11/Applications
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core >= %{_minbaseevr}
@@ -205,12 +205,12 @@ Requires:	kdemultimedia-audiocd >= %{_ver}
 %description kaudiocreator
 CD ripper and sound encoder frontend.
 
-%description kaudiocreator -l pl
-Nak³adka na CD ripper i koder d¼wiêku.
+%description kaudiocreator -l pl.UTF-8
+NakÅ‚adka na CD ripper i koder dÅºwiÄ™ku.
 
 %package kfile
 Summary:	Audio file formats enhanced information
-Summary(pl):	Rozszerzone informacje o plikach d¼wiêkowych
+Summary(pl.UTF-8):   Rozszerzone informacje o plikach dÅºwiÄ™kowych
 Group:		X11/Development/Libraries
 Requires:	konqueror >= %{_ver}
 Obsoletes:	kdemultimedia < 8:3.0.8
@@ -220,14 +220,14 @@ This package adds a fold to konqueror "file properties" dialog window
 with file enhanced informations for avi, au, FLAC, M3U, MP3, MPC, Ogg,
 SID and WAV files.
 
-%description kfile -l pl
-Ten pakiet dodaje do okna dialogowego "w³a¶ciwo¶ci pliku" konquerora
-dodatkow± zak³adkê z rozszerzonymi informacjami o plikach avi, au,
+%description kfile -l pl.UTF-8
+Ten pakiet dodaje do okna dialogowego "wÅ‚aÅ›ciwoÅ›ci pliku" konquerora
+dodatkowÄ… zakÅ‚adkÄ™ z rozszerzonymi informacjami o plikach avi, au,
 FLAC, MP3, M3U, MPC, Ogg, SID i WAV.
 
 %package kmid
 Summary:	KDE MIDI Player
-Summary(pl):	Odtwarzacz MIDI dla KDE
+Summary(pl.UTF-8):   Odtwarzacz MIDI dla KDE
 Group:		X11/Applications
 Requires:	kdebase-core >= %{_minbaseevr}
 Obsoletes:	kdemultimedia-kmidi
@@ -240,30 +240,30 @@ This is a MIDI player for KDE. It features:
 - powerful Midi Mapper
 - can play broken midi
 
-%description kmid -l pl
+%description kmid -l pl.UTF-8
 Odtwarzacz MIDI dla KDE. Oferuje:
-- interfejs do wy¶wietlania tekstów w trybie karaoke
-- tryb kana³ów, wy¶wietlaj±cy nuty odtwarzane przez poszczególne
+- interfejs do wyÅ›wietlania tekstÃ³w w trybie karaoke
+- tryb kanaÅ‚Ã³w, wyÅ›wietlajÄ…cy nuty odtwarzane przez poszczegÃ³lne
   instrumenty
-- wsparcie dla zewnêtrznych syntezatorów, kart AWE, wyj¶cia FM i GUS
+- wsparcie dla zewnÄ™trznych syntezatorÃ³w, kart AWE, wyjÅ›cia FM i GUS
 - rozbudowany mapper MIDI
-- odtwarzanie uszkodzony plików midi
+- odtwarzanie uszkodzony plikÃ³w midi
 
 %package kmix
 Summary:	KDE audio mixer
-Summary(pl):	Mikser d¼wiêku dla KDE
+Summary(pl.UTF-8):   Mikser dÅºwiÄ™ku dla KDE
 Group:		X11/Applications
 Requires:	kdebase-core >= %{_minbaseevr}
 
 %description kmix
 Sound mixer application for KDE.
 
-%description kmix -l pl
-Mikser d¼wiêku dla KDE.
+%description kmix -l pl.UTF-8
+Mikser dÅºwiÄ™ku dla KDE.
 
 %package kscd
 Summary:	KDE CD Player
-Summary(pl):	Odtwarzacz CD dla KDE
+Summary(pl.UTF-8):   Odtwarzacz CD dla KDE
 Group:		X11/Applications
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core >= %{_minbaseevr}
@@ -273,22 +273,22 @@ CD Player with CDDB support. It can automatically update its CD
 database with the Internet and show graphical interpretation of played
 sounds.
 
-%description kscd -l pl
-Odtwarzacz CD z obs³ug± CDDB. Automatycznie uaktualnia swoj± bazê
-danych o p³ytach CD z Internetem. Potrafi tak¿e wy¶wietliæ ³adn±
-graficzn± interpretacjê granych d¼wiêków.
+%description kscd -l pl.UTF-8
+Odtwarzacz CD z obsÅ‚ugÄ… CDDB. Automatycznie uaktualnia swojÄ… bazÄ™
+danych o pÅ‚ytach CD z Internetem. Potrafi takÅ¼e wyÅ›wietliÄ‡ Å‚adnÄ…
+graficznÄ… interpretacjÄ™ granych dÅºwiÄ™kÃ³w.
 
 %package libkcddb
 Summary:	CDDB accessing library
-Summary(pl):	Biblioteka dostêpu do baz CDDB
+Summary(pl.UTF-8):   Biblioteka dostÄ™pu do baz CDDB
 Group:		X11/Libraries
 Requires:	kdelibs >= %{_minlibsevr}
 
 %description libkcddb
 Library for accessing CDDB (cd track information databases) services.
 
-%description libkcddb -l pl
-Biblioteka dostêpu do serwisów CDDB (baz danych z informacjami o
+%description libkcddb -l pl.UTF-8
+Biblioteka dostÄ™pu do serwisÃ³w CDDB (baz danych z informacjami o
 utworach).
 
 %prep
