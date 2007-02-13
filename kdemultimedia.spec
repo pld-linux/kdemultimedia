@@ -15,7 +15,7 @@
 %define		_minbaseevr	9:%{version}
 
 Summary:	K Desktop Environment - multimedia applications
-Summary(pl.UTF-8):   K Desktop Environment - aplikacje multimedialne
+Summary(pl.UTF-8):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	3.5.6
 Release:	1
@@ -92,7 +92,7 @@ Multimedialne aplikacje KDE. Pakiet zawiera:
 
 %package devel
 Summary:	Header files for kdemultimedia libraries
-Summary(pl.UTF-8):   Pliki nagłówkowe bibliotek kdemultimedia
+Summary(pl.UTF-8):	Pliki nagłówkowe bibliotek kdemultimedia
 Group:		X11/Development/Libraries
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
@@ -108,7 +108,7 @@ Pliki nagłówkowe bibliotek kdemultimedia
 
 %package akode
 Summary:	A new generation arts plugin with high quality support for many formats
-Summary(pl.UTF-8):   Wtyczka do arts nowej generacji z wysokiej jakości obsługą różnych formatów .
+Summary(pl.UTF-8):	Wtyczka do arts nowej generacji z wysokiej jakości obsługą różnych formatów .
 Group:		X11/Libraries
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 
@@ -134,7 +134,7 @@ formatów:
 
 %package arts
 Summary:	Arts extensions
-Summary(pl.UTF-8):   Rozszerzenia Arts
+Summary(pl.UTF-8):	Rozszerzenia Arts
 Group:		X11/Applications
 Requires:	kdelibs >= %{_minlibsevr}
 Obsoletes:	kdemultimedia-artsplugin-audiofile
@@ -149,7 +149,7 @@ oraz biblioteki współdzielone dające do nich dostęp.
 
 %package artsbuilder
 Summary:	Arts Tools - builder
-Summary(pl.UTF-8):   Narzędzia Arts - builder
+Summary(pl.UTF-8):	Narzędzia Arts - builder
 Group:		X11/Applications
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 Conflicts:	kdemultimedia-arts < 9:3.1.92.021012
@@ -163,7 +163,7 @@ arts.
 
 %package artscontrol
 Summary:	Arts Tools - control
-Summary(pl.UTF-8):   Narzędzia Arts - control
+Summary(pl.UTF-8):	Narzędzia Arts - control
 Group:		X11/Applications
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 Conflicts:	kdemultimedia-arts < 9:3.1.92.021012
@@ -191,7 +191,7 @@ midi oraz środowiskiem, a także monitor stanu serwera dźwięku.
 
 %package artsplugin-xine
 Summary:	Xine engine plugin for arts
-Summary(pl.UTF-8):   Wtyczka silnika xine do arts
+Summary(pl.UTF-8):	Wtyczka silnika xine do arts
 Group:		X11/Applications
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 Requires:	xine-lib >= 1:1.0
@@ -233,7 +233,7 @@ jakość przy konkretnym formacie. Wspierane formaty to:
 
 %package audiocd
 Summary:	Audiocd protocol for konqueror
-Summary(pl.UTF-8):   Protokół audiocd dla konquerora
+Summary(pl.UTF-8):	Protokół audiocd dla konquerora
 Group:		X11/Applications
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
 Requires:	konqueror >= %{_minbaseevr}
@@ -250,7 +250,7 @@ adresu.
 
 %package cddb
 Summary:	CDDB library for KDE
-Summary(pl.UTF-8):   Biblioteka CDDB pod KDE
+Summary(pl.UTF-8):	Biblioteka CDDB pod KDE
 Group:		X11/Applications
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core >= %{_minbaseevr}
@@ -267,7 +267,7 @@ ma CD-Text.
 
 %package juk
 Summary:	A jukebox like program
-Summary(pl.UTF-8):   Program spełniający funkcję szafy grającej
+Summary(pl.UTF-8):	Program spełniający funkcję szafy grającej
 Group:		X11/Applications
 Requires:	kdebase-core >= %{_minbaseevr}
 Requires:	taglib >= 0.95.031114
@@ -298,7 +298,7 @@ ją uaktywnić, należy przebudować pakiet źródłowy (.src.rpm) z parametrem
 
 %package kaboodle
 Summary:	Media player
-Summary(pl.UTF-8):   Odtwarzacz multimedialny
+Summary(pl.UTF-8):	Odtwarzacz multimedialny
 Group:		X11/Applications
 Requires:	kdebase-core >= %{_minbaseevr}
 Obsoletes:	kdemultimedia-aktion
@@ -311,7 +311,7 @@ Prosty odtwarzacz pojedynczych plików.
 
 %package kappfinder
 Summary:	Kappfinder multimedia data
-Summary(pl.UTF-8):   Dane o aplikacjach multimedialnych dla kappfindera
+Summary(pl.UTF-8):	Dane o aplikacjach multimedialnych dla kappfindera
 Group:		X11/Applications
 Requires:	kdebase-kappfinder
 
@@ -325,7 +325,7 @@ inne aplikacje w systemie i dodającej je do menu KDE.
 
 %package kaudiocreator
 Summary:	Audio Creator
-Summary(pl.UTF-8):   Kreator audio
+Summary(pl.UTF-8):	Kreator audio
 Group:		X11/Applications
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core >= %{_minbaseevr}
@@ -339,7 +339,7 @@ Nakładka na CD ripper i koder dźwięku.
 
 %package kfile
 Summary:	Audio file formats enhanced information
-Summary(pl.UTF-8):   Rozszerzone informacje o plikach dźwiękowych
+Summary(pl.UTF-8):	Rozszerzone informacje o plikach dźwiękowych
 Group:		X11/Development/Libraries
 Requires:	konqueror >= %{version}
 Obsoletes:	kdemultimedia < 8:3.0.8
@@ -356,7 +356,7 @@ FLAC, MP3, M3U, MPC, Ogg, SID i WAV.
 
 %package kmid
 Summary:	KDE MIDI Player
-Summary(pl.UTF-8):   Odtwarzacz MIDI dla KDE
+Summary(pl.UTF-8):	Odtwarzacz MIDI dla KDE
 Group:		X11/Applications
 Requires:	kdebase-core >= %{_minbaseevr}
 Obsoletes:	kdemultimedia-kmidi
@@ -380,7 +380,7 @@ Odtwarzacz MIDI dla KDE. Oferuje:
 
 %package kmix
 Summary:	KDE audio mixer
-Summary(pl.UTF-8):   Mikser dźwięku dla KDE
+Summary(pl.UTF-8):	Mikser dźwięku dla KDE
 Group:		X11/Applications
 
 %description kmix
@@ -391,7 +391,7 @@ Mikser dźwięku dla KDE.
 
 %package krec
 Summary:	KDE sound recorder
-Summary(pl.UTF-8):   Rejestrator dźwięku dla KDE
+Summary(pl.UTF-8):	Rejestrator dźwięku dla KDE
 Group:		X11/Applications
 Requires:	%{name}-artscontrol = %{epoch}:%{version}-%{release}
 Requires:	%{name}-kmix = %{epoch}:%{version}-%{release}
@@ -406,7 +406,7 @@ prostymi efektami i mikserem.
 
 %package kscd
 Summary:	KDE CD Player
-Summary(pl.UTF-8):   Odtwarzacz CD dla KDE
+Summary(pl.UTF-8):	Odtwarzacz CD dla KDE
 Group:		X11/Applications
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core >= %{_minbaseevr}
@@ -423,7 +423,7 @@ graficzną interpretację granych dźwięków.
 
 %package libkcddb
 Summary:	CDDB accessing library
-Summary(pl.UTF-8):   Biblioteka dostępu do baz CDDB
+Summary(pl.UTF-8):	Biblioteka dostępu do baz CDDB
 Group:		X11/Libraries
 Requires:	kdelibs >= %{_minlibsevr}
 
@@ -436,7 +436,7 @@ utworach).
 
 %package mpeglib
 Summary:	MPEG playback plugin for arts
-Summary(pl.UTF-8):   Wtyczka z obsługą mpeg dla arts
+Summary(pl.UTF-8):	Wtyczka z obsługą mpeg dla arts
 Group:		X11/Applications
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 
@@ -453,7 +453,7 @@ zakodowany w MPEG.
 
 %package mpeglib-devel
 Summary:	MPEG libraries - development files
-Summary(pl.UTF-8):   Biblioteki obsługi MPEG - pliki dla programistów
+Summary(pl.UTF-8):	Biblioteki obsługi MPEG - pliki dla programistów
 Group:		X11/Applications
 Requires:	%{name}-mpeglib-examples = %{epoch}:%{version}-%{release}
 Requires:	kdelibs-devel >= %{_minlibsevr}
@@ -467,7 +467,7 @@ Biblioteki obsługi MPEG - pliki dla programistów.
 
 %package mpeglib-examples
 Summary:	MPEG libraries - examples
-Summary(pl.UTF-8):   Biblioteki obsługi MPEG - przykłady
+Summary(pl.UTF-8):	Biblioteki obsługi MPEG - przykłady
 Group:		X11/Applications
 Requires:	%{name}-mpeglib = %{epoch}:%{version}-%{release}
 Conflicts:	kdemultimedia-mpeglib < 9:3.1.92.031012
@@ -480,7 +480,7 @@ Biblioteki obsługi MPEG - przykłady.
 
 %package noatun
 Summary:	KDE Media Player
-Summary(pl.UTF-8):   KDE Media Player - odtwarzacz plików multimedialnych
+Summary(pl.UTF-8):	KDE Media Player - odtwarzacz plików multimedialnych
 Group:		X11/Applications
 Requires:	%{name}-noatun-libs = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core >= %{_minbaseevr}
@@ -496,7 +496,7 @@ KDE Media Player - odtwarzacz plików multimedialnych.
 
 %package noatun-libs
 Summary:	KDE Media Player - shared libs
-Summary(pl.UTF-8):   KDE Media Player - biblioteki współdzielone
+Summary(pl.UTF-8):	KDE Media Player - biblioteki współdzielone
 Group:		X11/Libraries
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 Conflicts:	kdemultimedia-noatun < 9:3.1.92.031012
