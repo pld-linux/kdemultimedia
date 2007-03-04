@@ -18,7 +18,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl.UTF-8):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	3.5.6
-Release:	1
+Release:	2
 Epoch:		9
 License:	GPL
 Group:		X11/Applications
@@ -617,8 +617,17 @@ rm -rf $RPM_BUILD_ROOT
 %post	akode			-p /sbin/ldconfig
 %postun	akode			-p /sbin/ldconfig
 
+%post	artsplugin-xine		-p /sbin/ldconfig
+%postun	artsplugin-xine		-p /sbin/ldconfig
+
 %post	arts			-p /sbin/ldconfig
 %postun	arts			-p /sbin/ldconfig
+
+%post	audiocd			-p /sbin/ldconfig
+%postun	audiocd			-p /sbin/ldconfig
+
+%post	kmid			-p /sbin/ldconfig
+%postun	kmid			-p /sbin/ldconfig
 
 %post	libkcddb		-p /sbin/ldconfig
 %postun	libkcddb		-p /sbin/ldconfig
