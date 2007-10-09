@@ -17,13 +17,13 @@
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl.UTF-8):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
-Version:	3.5.7
-Release:	2
+Version:	3.5.8
+Release:	1
 Epoch:		9
 License:	GPL
 Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{version}/src/%{name}-%{version}.tar.bz2
-# Source0-md5:	3d18574ca14258fb565160aa84bf217c
+# Source0-md5:	9f3c95231ea265b09f3010adb954ae30
 Patch0:		kde-common-PLD.patch
 #Patch100:	%{name}-branch.diff
 Patch1:		kde-ac260-lt.patch
