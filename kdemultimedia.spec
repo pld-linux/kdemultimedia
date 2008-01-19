@@ -4,11 +4,11 @@
 #   /usr/share/desktop-directories/kde-multimedia-music.directory
 #
 # Conditional build:
-%bcond_without	alsa	# build without ALSA support
-%bcond_without	xine	# build without xine support
-%bcond_with	tunepimp
-%bcond_with	gstreamer		# build with gstreamer support
-%bcond_with	hidden_visibility	# pass '--fvisibility=hidden' & '--fvisibility-inlines-hidden' to g++ 
+%bcond_without	alsa			# build without ALSA support
+%bcond_without	xine			# build without xine support
+%bcond_with	tunepimp		# build with tunepimp support (needs old libtunepimp)
+%bcond_with	gstreamer		# build with gstreamer support (needs old gstreamer)
+%bcond_with	hidden_visibility	# gcc hidden visibility
 #
 %define		_state		stable
 %define		_minlibsevr	9:%{version}
@@ -27,6 +27,7 @@ Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{version}/src/%{name}-%{version}.t
 Patch0:		kde-common-PLD.patch
 #Patch100:	%{name}-branch.diff
 Patch1:		kde-ac260-lt.patch
+URL:		http://www.kde.org/
 BuildRequires:	akode-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
 BuildRequires:	arts-qt-devel
@@ -278,7 +279,7 @@ desktop similar to jukebox software on other platforms such as
 iTunes(R) or RealOne(R). As is typical with many jukebox applications,
 JuK allows you to edit the "tags" of the audio files, and manage your
 collection and playlists.
-%if !%{with gstreamer}
+%if %{without gstreamer}
 
 Gstreamer support in this version has been disabled. To reenable it
 please repuild the source rpm with '--with gstreamer' option.
@@ -289,11 +290,11 @@ Juk (czyt. dżuk, jak w Jukebox) to szafa grająca i zarządca muzyki dla
 KDE podobny do iTunes(R) lub RealOne(R). Podobnie jak wiele innych
 tego typu aplikacji, JuK umożliwia modyfikowanie znaczników plików
 dźwiękowych i zarządzanie kolekcją oraz playlistami.
-%if !%{with gstreamer}
+%if %{without gstreamer}
 
-Obsługa bibliotek gstreamer została wyłączona w tej wersji pakietu. Aby 
-ją uaktywnić, należy przebudować pakiet źródłowy (.src.rpm) z parametrem 
-'--with gstreamer'.
+Obsługa bibliotek gstreamer została wyłączona w tej wersji pakietu.
+Aby ją uaktywnić, należy przebudować pakiet źródłowy (.src.rpm) z
+parametrem '--with gstreamer'.
 %endif
 
 %package kaboodle
