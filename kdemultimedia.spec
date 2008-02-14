@@ -15,7 +15,7 @@
 %define		_minbaseevr	9:%{version}
 
 Summary:	K Desktop Environment - multimedia applications
-Summary(pl):	K Desktop Environment - aplikacje multimedialne
+Summary(pl.UTF-8):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	3.5.8
 Release:	1
@@ -79,20 +79,20 @@ KDE multimedia applications. Package includes:
  - KSCD - CD player,
  - Noatun - a media player.
 
-%description -l pl
+%description -l pl.UTF-8
 Multimedialne aplikacje KDE. Pakiet zawiera:
 
- - Arts - narzêdzia arts,
- - Kaboodle - odtwarzacz plików multimedialnych,
+ - Arts - narzÄ™dzia arts,
+ - Kaboodle - odtwarzacz plikÃ³w multimedialnych,
  - KMID - odtwarzacz MIDI,
  - KMIDI - programowy odtwarzacz MIDI,
  - KMIX - mikser audio,
  - KSCD - odtwarzacz CD,
- - Noatun - odtwarzacz plików multimedialnych.
+ - Noatun - odtwarzacz plikÃ³w multimedialnych.
 
 %package devel
 Summary:	Header files for kdemultimedia libraries
-Summary(pl):	Pliki nag³ówkowe bibliotek kdemultimedia
+Summary(pl.UTF-8):	Pliki nagÅ‚Ã³wkowe bibliotek kdemultimedia
 Group:		X11/Development/Libraries
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
@@ -103,12 +103,12 @@ Obsoletes:	kdemultimedia-static
 %description devel
 Header files for kdemultimedia libraries.
 
-%description devel -l pl
-Pliki nag³ówkowe bibliotek kdemultimedia
+%description devel -l pl.UTF-8
+Pliki nagÅ‚Ã³wkowe bibliotek kdemultimedia
 
 %package akode
 Summary:	A new generation arts plugin with high quality support for many formats
-Summary(pl):	Wtyczka do arts nowej generacji z wysokiej jako¶ci obs³ug± ró¿nych formatów .
+Summary(pl.UTF-8):	Wtyczka do arts nowej generacji z wysokiej jakoÅ›ci obsÅ‚ugÄ… rÃ³Å¼nych formatÃ³w .
 Group:		X11/Libraries
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 
@@ -122,9 +122,9 @@ formats:
 - speex
 - WAV
 
-%description akode -l pl
-Wtyczka arts, która wspiera wysokiej jako¶ci odtwarzanie nastêpuj±cych
-formatów:
+%description akode -l pl.UTF-8
+Wtyczka arts, ktÃ³ra wspiera wysokiej jakoÅ›ci odtwarzanie nastÄ™pujÄ…cych
+formatÃ³w:
 - Musepack (.MPC)
 - mpeg (.MP3,.MP2, etc.)
 - Ogg Vorbis (.ogg)
@@ -134,7 +134,7 @@ formatów:
 
 %package arts
 Summary:	Arts extensions
-Summary(pl):	Rozszerzenia Arts
+Summary(pl.UTF-8):	Rozszerzenia Arts
 Group:		X11/Applications
 Requires:	kdelibs >= %{_minlibsevr}
 Obsoletes:	kdemultimedia-artsplugin-audiofile
@@ -143,13 +143,13 @@ Obsoletes:	kdemultimedia-artsplugin-audiofile
 Arts extensions such as effect definitions, mixers presets and shared
 libraries to access them.
 
-%description arts -l pl
-Rozszerzenia Arts takie jak definicje efektów, ustawienia mikserów
-oraz biblioteki wspó³dzielone daj±ce do nich dostêp.
+%description arts -l pl.UTF-8
+Rozszerzenia Arts takie jak definicje efektÃ³w, ustawienia mikserÃ³w
+oraz biblioteki wspÃ³Å‚dzielone dajÄ…ce do nich dostÄ™p.
 
 %package artsbuilder
 Summary:	Arts Tools - builder
-Summary(pl):	Narzêdzia Arts - builder
+Summary(pl.UTF-8):	NarzÄ™dzia Arts - builder
 Group:		X11/Applications
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 Conflicts:	kdemultimedia-arts < 9:3.1.92.021012
@@ -157,13 +157,13 @@ Conflicts:	kdemultimedia-arts < 9:3.1.92.021012
 %description artsbuilder
 A simple yet powerful effect and filter builder for arts.
 
-%description artsbuilder -l pl
-Prosty acz rozbudowany program do konstruowania efektów i filtrów w
+%description artsbuilder -l pl.UTF-8
+Prosty acz rozbudowany program do konstruowania efektÃ³w i filtrÃ³w w
 arts.
 
 %package artscontrol
 Summary:	Arts Tools - control
-Summary(pl):	Narzêdzia Arts - control
+Summary(pl.UTF-8):	NarzÄ™dzia Arts - control
 Group:		X11/Applications
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 Conflicts:	kdemultimedia-arts < 9:3.1.92.021012
@@ -173,10 +173,10 @@ An advanced configuration tool for arts with FFT scope, media type
 list, midi manager, client and environment manager and a server status
 reporter
 
-%description artscontrol -l pl
-Zaawansowane narzêdzie konfiguracyjne dla arts, zawiera: okno zakresu
-FFT, listê obs³ugiwanych typów plików, modu³y zarz±dzania klientami,
-midi oraz ¶rodowiskiem, a tak¿e monitor stanu serwera d¼wiêku.
+%description artscontrol -l pl.UTF-8
+Zaawansowane narzÄ™dzie konfiguracyjne dla arts, zawiera: okno zakresu
+FFT, listÄ™ obsÅ‚ugiwanych typÃ³w plikÃ³w, moduÅ‚y zarzÄ…dzania klientami,
+midi oraz Å›rodowiskiem, a takÅ¼e monitor stanu serwera dÅºwiÄ™ku.
 
 #%package artsplugin-audiofile
 #Summary:	Audiofile Plug-in
@@ -191,7 +191,7 @@ midi oraz ¶rodowiskiem, a tak¿e monitor stanu serwera d¼wiêku.
 
 %package artsplugin-xine
 Summary:	Xine engine plugin for arts
-Summary(pl):	Wtyczka silnika xine do arts
+Summary(pl.UTF-8):	Wtyczka silnika xine do arts
 Group:		X11/Applications
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 Requires:	xine-lib >= 1:1.0
@@ -214,12 +214,12 @@ supports:
 - ac3/aac/m4v/m4a
 - Ogg Vorbis (ogg)
 
-%description artsplugin-xine -l pl
-Ta wtyczka umo¿liwia arts odtwarzanie d¼wiêku za pomoc± silnika xine.
-Wspiera ona wiêcej formatów ni¿ akode, ale niektóre z nich akode
-odtwarza w lepszej jako¶ci. Dla najlepszej jako¶ci nale¿y u¿ywaæ tej
-wtyczki wraz z akode, a arts sam wykryje, która z nich da lepsz±
-jako¶æ przy konkretnym formacie. Wspierane formaty to:
+%description artsplugin-xine -l pl.UTF-8
+Ta wtyczka umoÅ¼liwia arts odtwarzanie dÅºwiÄ™ku za pomocÄ… silnika xine.
+Wspiera ona wiÄ™cej formatÃ³w niÅ¼ akode, ale niektÃ³re z nich akode
+odtwarza w lepszej jakoÅ›ci. Dla najlepszej jakoÅ›ci naleÅ¼y uÅ¼ywaÄ‡ tej
+wtyczki wraz z akode, a arts sam wykryje, ktÃ³ra z nich da lepszÄ…
+jakoÅ›Ä‡ przy konkretnym formacie. Wspierane formaty to:
 - Microsoft Windows media (asf,asx,wmv,wma)
 - mpeg (vob,mpg,mpeg,m1v,m2v,m1s,m2s,m2p,MP4,MP3,MP2,mp1)
 - divx i avi
@@ -233,7 +233,7 @@ jako¶æ przy konkretnym formacie. Wspierane formaty to:
 
 %package audiocd
 Summary:	Audiocd protocol for konqueror
-Summary(pl):	Protokó³ audiocd dla konquerora
+Summary(pl.UTF-8):	ProtokÃ³Å‚ audiocd dla konquerora
 Group:		X11/Applications
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
 Requires:	konqueror >= %{_minbaseevr}
@@ -243,14 +243,14 @@ Conflicts:	kdemultimedia-kaudiocreator < 9:3.1.92.031014
 This package allows konqueror to play audiocd's without the need of an
 external application. Just enter audiocd:/ in the location field.
 
-%description audiocd -l pl
-Ten pakiet pozwala konquerorowi odtwarzanie p³yt z muzyk± bez potrzeby
-u¿ywania zewnêtrznej aplikacji. Po prostu wpisz audiocd:/ w pole
+%description audiocd -l pl.UTF-8
+Ten pakiet pozwala konquerorowi odtwarzanie pÅ‚yt z muzykÄ… bez potrzeby
+uÅ¼ywania zewnÄ™trznej aplikacji. Po prostu wpisz audiocd:/ w pole
 adresu.
 
 %package cddb
 Summary:	CDDB library for KDE
-Summary(pl):	Biblioteka CDDB pod KDE
+Summary(pl.UTF-8):	Biblioteka CDDB pod KDE
 Group:		X11/Applications
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core >= %{_minbaseevr}
@@ -260,14 +260,14 @@ Conflicts:	kdemultimedia-libkcddb < 9:3.1.92.031014
 Support for cd database (CDDB), which is the source for track data for
 KDE apps (title, author, etc.) when the cd does not have CD-Text.
 
-%description cddb -l pl
-Wsparcie dla baz danych p³yt CD (CDDB) z których program ¶ci±ga
-informacje o odtwarzanym utworze (tytu³, autora itd.) je¶li p³yta nie
+%description cddb -l pl.UTF-8
+Wsparcie dla baz danych pÅ‚yt CD (CDDB) z ktÃ³rych program Å›ciÄ…ga
+informacje o odtwarzanym utworze (tytuÅ‚, autora itd.) jeÅ›li pÅ‚yta nie
 ma CD-Text.
 
 %package juk
 Summary:	A jukebox like program
-Summary(pl):	Program spe³niaj±cy funkcjê szafy graj±cej
+Summary(pl.UTF-8):	Program speÅ‚niajÄ…cy funkcjÄ™ szafy grajÄ…cej
 Group:		X11/Applications
 Requires:	kdebase-core >= %{_minbaseevr}
 Requires:	taglib >= 0.95.031114
@@ -284,21 +284,21 @@ Gstreamer support in this version has been disabled. To reenable it
 please repuild the source rpm with '--with gstreamer' option.
 %endif
 
-%description juk -l pl
-Juk (czyt. d¿uk, jak w Jukebox) to szafa graj±ca i zarz±dca muzyki dla
+%description juk -l pl.UTF-8
+Juk (czyt. dÅ¼uk, jak w Jukebox) to szafa grajÄ…ca i zarzÄ…dca muzyki dla
 KDE podobny do iTunes(R) lub RealOne(R). Podobnie jak wiele innych
-tego typu aplikacji, JuK umo¿liwia modyfikowanie znaczników plików
-d¼wiêkowych i zarz±dzanie kolekcj± oraz playlistami.
+tego typu aplikacji, JuK umoÅ¼liwia modyfikowanie znacznikÃ³w plikÃ³w
+dÅºwiÄ™kowych i zarzÄ…dzanie kolekcjÄ… oraz playlistami.
 %if %{without gstreamer}
 
-Obs³uga bibliotek gstreamer zosta³a wy³±czona w tej wersji pakietu. Aby 
-j± uaktywniæ, nale¿y przebudowaæ pakiet ¼ród³owy (.src.rpm) z parametrem 
+ObsÅ‚uga bibliotek gstreamer zostaÅ‚a wyÅ‚Ä…czona w tej wersji pakietu. Aby 
+jÄ… uaktywniÄ‡, naleÅ¼y przebudowaÄ‡ pakiet ÅºrÃ³dÅ‚owy (.src.rpm) z parametrem 
 '--with gstreamer'.
 %endif
 
 %package kaboodle
 Summary:	Media player
-Summary(pl):	Odtwarzacz multimedialny
+Summary(pl.UTF-8):	Odtwarzacz multimedialny
 Group:		X11/Applications
 Requires:	kdebase-core >= %{_minbaseevr}
 Obsoletes:	kdemultimedia-aktion
@@ -306,12 +306,12 @@ Obsoletes:	kdemultimedia-aktion
 %description kaboodle
 A simple, embeddable, single file media player.
 
-%description kaboodle -l pl
-Prosty odtwarzacz pojedynczych plików.
+%description kaboodle -l pl.UTF-8
+Prosty odtwarzacz pojedynczych plikÃ³w.
 
 %package kappfinder
 Summary:	Kappfinder multimedia data
-Summary(pl):	Dane o aplikacjach multimedialnych dla kappfindera
+Summary(pl.UTF-8):	Dane o aplikacjach multimedialnych dla kappfindera
 Group:		X11/Applications
 Requires:	kdebase-kappfinder
 
@@ -319,13 +319,13 @@ Requires:	kdebase-kappfinder
 Multimedia application data for the kappfinder program, which find
 applications and adds them to the KDE menu.
 
-%description kappfinder -l pl
-Dane aplikacji multimedialnych dla kappfinder, aplikacji wyszukuj±cej
-inne aplikacje w systemie i dodaj±cej je do menu KDE.
+%description kappfinder -l pl.UTF-8
+Dane aplikacji multimedialnych dla kappfinder, aplikacji wyszukujÄ…cej
+inne aplikacje w systemie i dodajÄ…cej je do menu KDE.
 
 %package kaudiocreator
 Summary:	Audio Creator
-Summary(pl):	Kreator audio
+Summary(pl.UTF-8):	Kreator audio
 Group:		X11/Applications
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core >= %{_minbaseevr}
@@ -334,12 +334,12 @@ Requires:	kdemultimedia-audiocd >= %{version}
 %description kaudiocreator
 CD ripper and sound encoder frontend.
 
-%description kaudiocreator -l pl
-Nak³adka na CD ripper i koder d¼wiêku.
+%description kaudiocreator -l pl.UTF-8
+NakÅ‚adka na CD ripper i koder dÅºwiÄ™ku.
 
 %package kfile
 Summary:	Audio file formats enhanced information
-Summary(pl):	Rozszerzone informacje o plikach d¼wiêkowych
+Summary(pl.UTF-8):	Rozszerzone informacje o plikach dÅºwiÄ™kowych
 Group:		X11/Development/Libraries
 Requires:	konqueror >= %{version}
 Obsoletes:	kdemultimedia < 8:3.0.8
@@ -349,14 +349,14 @@ This package adds a fold to konqueror "file properties" dialog window
 with file enhanced informations for avi, au, FLAC, M3U, MP3, MPC, Ogg,
 SID and WAV files.
 
-%description kfile -l pl
-Ten pakiet dodaje do okna dialogowego "w³a¶ciwo¶ci pliku" konquerora
-dodatkow± zak³adkê z rozszerzonymi informacjami o plikach avi, au,
+%description kfile -l pl.UTF-8
+Ten pakiet dodaje do okna dialogowego "wÅ‚aÅ›ciwoÅ›ci pliku" konquerora
+dodatkowÄ… zakÅ‚adkÄ™ z rozszerzonymi informacjami o plikach avi, au,
 FLAC, MP3, M3U, MPC, Ogg, SID i WAV.
 
 %package kmid
 Summary:	KDE MIDI Player
-Summary(pl):	Odtwarzacz MIDI dla KDE
+Summary(pl.UTF-8):	Odtwarzacz MIDI dla KDE
 Group:		X11/Applications
 Requires:	kdebase-core >= %{_minbaseevr}
 Obsoletes:	kdemultimedia-kmidi
@@ -369,29 +369,29 @@ This is a MIDI player for KDE. It features:
 - powerful Midi Mapper
 - can play broken midi
 
-%description kmid -l pl
+%description kmid -l pl.UTF-8
 Odtwarzacz MIDI dla KDE. Oferuje:
-- interfejs do wy¶wietlania tekstów w trybie karaoke
-- tryb kana³ów, wy¶wietlaj±cy nuty odtwarzane przez poszczególne
+- interfejs do wyÅ›wietlania tekstÃ³w w trybie karaoke
+- tryb kanaÅ‚Ã³w, wyÅ›wietlajÄ…cy nuty odtwarzane przez poszczegÃ³lne
   instrumenty
-- wsparcie dla zewnêtrznych syntezatorów, kart AWE, wyj¶cia FM i GUS
+- wsparcie dla zewnÄ™trznych syntezatorÃ³w, kart AWE, wyjÅ›cia FM i GUS
 - rozbudowany mapper MIDI
-- odtwarzanie uszkodzony plików midi
+- odtwarzanie uszkodzony plikÃ³w midi
 
 %package kmix
 Summary:	KDE audio mixer
-Summary(pl):	Mikser d¼wiêku dla KDE
+Summary(pl.UTF-8):	Mikser dÅºwiÄ™ku dla KDE
 Group:		X11/Applications
 
 %description kmix
 Sound mixer application for KDE.
 
-%description kmix -l pl
-Mikser d¼wiêku dla KDE.
+%description kmix -l pl.UTF-8
+Mikser dÅºwiÄ™ku dla KDE.
 
 %package krec
 Summary:	KDE sound recorder
-Summary(pl):	Rejestrator d¼wiêku dla KDE
+Summary(pl.UTF-8):	Rejestrator dÅºwiÄ™ku dla KDE
 Group:		X11/Applications
 Requires:	%{name}-artscontrol = %{epoch}:%{version}-%{release}
 Requires:	%{name}-kmix = %{epoch}:%{version}-%{release}
@@ -400,13 +400,13 @@ Requires:	%{name}-kmix = %{epoch}:%{version}-%{release}
 KDE sound recorder which supports MP3 and Ogg exporting and simple
 effects and mixers.
 
-%description krec -l pl
-Rejestrator d¼wiêku dla KDE z obs³ug± eksportu do MP3 i Ogg oraz
+%description krec -l pl.UTF-8
+Rejestrator dÅºwiÄ™ku dla KDE z obsÅ‚ugÄ… eksportu do MP3 i Ogg oraz
 prostymi efektami i mikserem.
 
 %package kscd
 Summary:	KDE CD Player
-Summary(pl):	Odtwarzacz CD dla KDE
+Summary(pl.UTF-8):	Odtwarzacz CD dla KDE
 Group:		X11/Applications
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core >= %{_minbaseevr}
@@ -416,27 +416,27 @@ CD Player with CDDB support. It can automatically update its CD
 database with the Internet and show graphical interpretation of played
 sounds.
 
-%description kscd -l pl
-Odtwarzacz CD z obs³ug± CDDB. Automatycznie uaktualnia swoj± bazê
-danych o p³ytach CD z Internetem. Potrafi tak¿e wy¶wietliæ ³adn±
-graficzn± interpretacjê granych d¼wiêków.
+%description kscd -l pl.UTF-8
+Odtwarzacz CD z obsÅ‚ugÄ… CDDB. Automatycznie uaktualnia swojÄ… bazÄ™
+danych o pÅ‚ytach CD z Internetem. Potrafi takÅ¼e wyÅ›wietliÄ‡ Å‚adnÄ…
+graficznÄ… interpretacjÄ™ granych dÅºwiÄ™kÃ³w.
 
 %package libkcddb
 Summary:	CDDB accessing library
-Summary(pl):	Biblioteka dostêpu do baz CDDB
+Summary(pl.UTF-8):	Biblioteka dostÄ™pu do baz CDDB
 Group:		X11/Libraries
 Requires:	kdelibs >= %{_minlibsevr}
 
 %description libkcddb
 Library for accessing CDDB (cd track information databases) services.
 
-%description libkcddb -l pl
-Biblioteka dostêpu do serwisów CDDB (baz danych z informacjami o
+%description libkcddb -l pl.UTF-8
+Biblioteka dostÄ™pu do serwisÃ³w CDDB (baz danych z informacjami o
 utworach).
 
 %package mpeglib
 Summary:	MPEG playback plugin for arts
-Summary(pl):	Wtyczka z obs³ug± mpeg dla arts
+Summary(pl.UTF-8):	Wtyczka z obsÅ‚ugÄ… mpeg dla arts
 Group:		X11/Applications
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 
@@ -445,15 +445,15 @@ Plugin that adds support of MPEG audio and video formats to arts. It
 give better quality than xine and worse than akode, yet it may be
 beter for playing broken or low quality MP3 files than akode.
 
-%description mpeglib -l pl
-Wtyczka dodaj±ca obs³ugê MPEG do arts daje jako¶æ lepsz± od wtyczki
-xine i gorsz± akode. Jedynie w przypadku uszkodzonych i niskiej
-jako¶ci MP3 jest lepsza od akode. Obs³uguje zarówno d¼wiêk jak i obraz
+%description mpeglib -l pl.UTF-8
+Wtyczka dodajÄ…ca obsÅ‚ugÄ™ MPEG do arts daje jakoÅ›Ä‡ lepszÄ… od wtyczki
+xine i gorszÄ… akode. Jedynie w przypadku uszkodzonych i niskiej
+jakoÅ›ci MP3 jest lepsza od akode. ObsÅ‚uguje zarÃ³wno dÅºwiÄ™k jak i obraz
 zakodowany w MPEG.
 
 %package mpeglib-devel
 Summary:	MPEG libraries - development files
-Summary(pl):	Biblioteki obs³ugi MPEG - pliki dla programistów
+Summary(pl.UTF-8):	Biblioteki obsÅ‚ugi MPEG - pliki dla programistÃ³w
 Group:		X11/Applications
 Requires:	%{name}-mpeglib-examples = %{epoch}:%{version}-%{release}
 Requires:	kdelibs-devel >= %{_minlibsevr}
@@ -462,12 +462,12 @@ Conflicts:	kdemultimedia-devel < 9:3.1.92.031012
 %description mpeglib-devel
 MPEG libraries - development files.
 
-%description mpeglib-devel -l pl
-Biblioteki obs³ugi MPEG - pliki dla programistów.
+%description mpeglib-devel -l pl.UTF-8
+Biblioteki obsÅ‚ugi MPEG - pliki dla programistÃ³w.
 
 %package mpeglib-examples
 Summary:	MPEG libraries - examples
-Summary(pl):	Biblioteki obs³ugi MPEG - przyk³ady
+Summary(pl.UTF-8):	Biblioteki obsÅ‚ugi MPEG - przykÅ‚ady
 Group:		X11/Applications
 Requires:	%{name}-mpeglib = %{epoch}:%{version}-%{release}
 Conflicts:	kdemultimedia-mpeglib < 9:3.1.92.031012
@@ -475,12 +475,12 @@ Conflicts:	kdemultimedia-mpeglib < 9:3.1.92.031012
 %description mpeglib-examples
 MPEG libraries - examples.
 
-%description mpeglib-examples -l pl
-Biblioteki obs³ugi MPEG - przyk³ady.
+%description mpeglib-examples -l pl.UTF-8
+Biblioteki obsÅ‚ugi MPEG - przykÅ‚ady.
 
 %package noatun
 Summary:	KDE Media Player
-Summary(pl):	KDE Media Player - odtwarzacz plików multimedialnych
+Summary(pl.UTF-8):	KDE Media Player - odtwarzacz plikÃ³w multimedialnych
 Group:		X11/Applications
 Requires:	%{name}-noatun-libs = %{epoch}:%{version}-%{release}
 Requires:	kdebase-core >= %{_minbaseevr}
@@ -491,12 +491,12 @@ Requires:	kdebase-core >= %{_minbaseevr}
 %description noatun
 KDE Media Player.
 
-%description noatun -l pl
-KDE Media Player - odtwarzacz plików multimedialnych.
+%description noatun -l pl.UTF-8
+KDE Media Player - odtwarzacz plikÃ³w multimedialnych.
 
 %package noatun-libs
 Summary:	KDE Media Player - shared libs
-Summary(pl):	KDE Media Player - biblioteki wspó³dzielone
+Summary(pl.UTF-8):	KDE Media Player - biblioteki wspÃ³Å‚dzielone
 Group:		X11/Libraries
 Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
 Conflicts:	kdemultimedia-noatun < 9:3.1.92.031012
@@ -504,8 +504,8 @@ Conflicts:	kdemultimedia-noatun < 9:3.1.92.031012
 %description noatun-libs
 KDE Media Player - shared libs.
 
-%description noatun-libs -l pl
-KDE Media Player - biblioteki wspó³dzielone.
+%description noatun-libs -l pl.UTF-8
+KDE Media Player - biblioteki wspÃ³Å‚dzielone.
 
 %prep
 %setup -q
