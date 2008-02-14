@@ -292,9 +292,9 @@ tego typu aplikacji, JuK umożliwia modyfikowanie znaczników plików
 dźwiękowych i zarządzanie kolekcją oraz playlistami.
 %if %{without gstreamer}
 
-Obsługa bibliotek gstreamer została wyłączona w tej wersji pakietu.
-Aby ją uaktywnić, należy przebudować pakiet źródłowy (.src.rpm) z
-parametrem '--with gstreamer'.
+Obsługa bibliotek gstreamer została wyłączona w tej wersji pakietu. Aby
+ją uaktywnić, należy przebudować pakiet źródłowy (.src.rpm) z parametrem
+'--with gstreamer'.
 %endif
 
 %package kaboodle
