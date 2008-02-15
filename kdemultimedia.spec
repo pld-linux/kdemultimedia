@@ -17,16 +17,17 @@
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl.UTF-8):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
-Version:	3.5.8
+Version:	3.5.9
 Release:	2
 Epoch:		9
 License:	GPL
 Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{version}/src/%{name}-%{version}.tar.bz2
-# Source0-md5:	9f3c95231ea265b09f3010adb954ae30
-Patch0:		kde-common-PLD.patch
+# Source0-md5:	fdfafe38d2c7e3019dafc80c177add15
 #Patch100:	%{name}-branch.diff
+Patch0:		kde-common-PLD.patch
 Patch1:		kde-ac260-lt.patch
+Patch2:		%{name}-bug-157891.patch
 URL:		http://www.kde.org/
 BuildRequires:	akode-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
@@ -513,6 +514,7 @@ KDE Media Player - biblioteki współdzielone.
 #%patch100 -p0
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Player;/' \
 	juk/juk.desktop \
@@ -586,13 +588,30 @@ export CDPARANOIA=%{_bindir}/cdparanoia
 %{__make}
 
 %install
-rm -rf $RPM_BUILD_ROOT
+if [ ! -f makeinstall.stamp -o ! -d $RPM_BUILD_ROOT ]; then
+	rm -rf makeinstall.stamp installed.stamp $RPM_BUILD_ROOT
+
+	%{__make} install \
+		DESTDIR=$RPM_BUILD_ROOT \
+		kde_htmldir=%{_kdedocdir}
+
+	touch makeinstall.stamp
+fi
+
+if [ ! -f installed.stamp ]; then
+	# PLD doesn't have 'Multimedia/Music' submenu
+	rm -f $RPM_BUILD_ROOT%{_sysconfdir}/xdg/menus/applications-merged/kde-multimedia-music.menu
+
+	# locolor icons are deprecated (in PLD?)
+	rm -rf $RPM_BUILD_ROOT%{_iconsdir}/locolor
+
+	rm $RPM_BUILD_ROOT%{_libdir}/kde3/*.la
+	rm $RPM_BUILD_ROOT%{_libdir}/libkdeinit_*.la
+
+	touch installed.stamp
+fi
+
 rm -f *.lang
-
-%{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT \
-	kde_htmldir=%{_kdedocdir}
-
 %find_lang artsbuilder		--with-kde
 %find_lang juk			--with-kde
 %find_lang kaudiocreator	--with-kde
@@ -603,14 +622,6 @@ rm -f *.lang
 %find_lang krec			--with-kde
 %find_lang kscd			--with-kde
 %find_lang noatun		--with-kde
-
-# locolor icons are deprecated (in PLD?)
-rm -f $RPM_BUILD_ROOT%{_iconsdir}/locolor/*/apps/kaudiocreator.png
-# PLD doesn't have 'Multimedia/Music' submenu
-rm -f $RPM_BUILD_ROOT%{_sysconfdir}/xdg/menus/applications-merged/kde-multimedia-music.menu
-
-rm $RPM_BUILD_ROOT%{_libdir}/kde3/*.la
-rm $RPM_BUILD_ROOT%{_libdir}/libkdeinit_*.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -686,30 +697,57 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libnoatuntags.la
 %attr(755,root,root) %{_libdir}/libnoatuntags.so
 %{_libdir}/libwinskinvis.la
+%attr(755,root,root) %{_libdir}/libarts_akode.so
+%{_libdir}/libarts_akode.la
+%attr(755,root,root) %{_libdir}/libarts_audiofile.so
+%{_libdir}/libarts_audiofile.la
+%if %{with xine}
+%attr(755,root,root) %{_libdir}/libarts_xine.so
+%{_libdir}/libarts_xine.la
+%endif
+%attr(755,root,root) %{_libdir}/libaudiocdplugins.so
+%{_libdir}/libaudiocdplugins.la
+%attr(755,root,root) %{_libdir}/libkmidlib.so
+%{_libdir}/libkmidlib.la
 
 %files akode
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libarts_akode.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libarts_akode.so.0
 %{_libdir}/mcop/akode*.mcop*
 
 %files arts
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/midisend
 %attr(755,root,root) %{_libdir}/libarts_audiofile.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libarts_audiofile.so.0
 %attr(755,root,root) %{_libdir}/libartsbuilder.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libartsbuilder.so.0
 %attr(755,root,root) %{_libdir}/libartscontrolapplet.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libartscontrolapplet.so.1
 %attr(755,root,root) %{_libdir}/libartscontrolsupport.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libartscontrolsupport.so.1
 %attr(755,root,root) %{_libdir}/libartseffects.so
 %attr(755,root,root) %{_libdir}/libartsgui.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libartsgui.so.0
 %attr(755,root,root) %{_libdir}/libartsgui_idl.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libartsgui_idl.so.0
 %attr(755,root,root) %{_libdir}/libartsgui_kde.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libartsgui_kde.so.0
 %attr(755,root,root) %{_libdir}/libartsmidi.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libartsmidi.so.0
 %attr(755,root,root) %{_libdir}/libartsmidi_idl.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libartsmidi_idl.so.0
 %attr(755,root,root) %{_libdir}/libartsmodules.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libartsmodules.so.0
 %attr(755,root,root) %{_libdir}/libartsmodulescommon.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libartsmodulescommon.so.0
 %attr(755,root,root) %{_libdir}/libartsmoduleseffects.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libartsmoduleseffects.so.0
 %attr(755,root,root) %{_libdir}/libartsmodulesmixers.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libartsmodulesmixers.so.0
 %attr(755,root,root) %{_libdir}/libartsmodulessynth.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libartsmodulessynth.so.0
 %{_libdir}/mcop/Arts
 %{_libdir}/mcop/artseffects.mcopclass
 %{_libdir}/mcop/artseffects.mcoptype
@@ -729,7 +767,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/mcop/artsmodulessynth.mcoptype
 %{_libdir}/mcop/audiofilearts.mcopclass
 %{_libdir}/mcop/audiofilearts.mcoptype
-%{_iconsdir}/[!l]*/*/actions/arts[!bc]*.*
+%{_iconsdir}/crystalsvg/*/actions/arts[!bc]*.*
 
 %files artsbuilder -f artsbuilder.lang
 %defattr(644,root,root,755)
@@ -739,8 +777,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/artsbuilder
 %{_datadir}/mimelnk/application/x-artsbuilder.desktop
 %{_desktopdir}/kde/artsbuilder.desktop
-%{_iconsdir}/[!l]*/*/actions/artsbuilderexecute.*
-%{_iconsdir}/[!l]*/*/apps/artsbuilder.*
+%{_iconsdir}/crystalsvg/*/actions/artsbuilderexecute.*
+%{_iconsdir}/hicolor/*/apps/artsbuilder.*
 
 %files artscontrol
 %defattr(644,root,root,755)
@@ -748,13 +786,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/artscontrol
 %{_datadir}/apps/kicker/applets/artscontrolapplet.desktop
 %{_desktopdir}/kde/artscontrol.desktop
-%{_iconsdir}/[!l]*/*/apps/artscontrol.*
+%{_iconsdir}/hicolor/*/apps/artscontrol.*
 
 %if %{with xine}
 %files artsplugin-xine
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/kde3/videothumbnail.so
 %attr(755,root,root) %{_libdir}/libarts_xine.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libarts_xine.so.0
 %{_libdir}/mcop/xine*PlayObject.mcopclass
 %{_datadir}/apps/videothumbnail
 %{_datadir}/services/videothumbnail.desktop
@@ -766,7 +805,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/kde3/kio_audiocd.so
 %attr(755,root,root) %{_libdir}/kde3/libaudiocd_encoder*.so
 %attr(755,root,root) %{_libdir}/libaudiocdplugins.so.*.*.*
-%{_datadir}/apps/kconf_update/upgrade-metadata.sh
+%attr(755,root,root) %ghost %{_libdir}/libaudiocdplugins.so.1
+%{_datadir}/apps/kconf_update/audiocd.upd
+%attr(755,root,root) %{_datadir}/apps/kconf_update/upgrade-metadata.sh
 %{_datadir}/apps/konqueror/servicemenus/audiocd_*.desktop
 %{_datadir}/config.kcfg/audiocd_*_encoder.kcfg
 %{_datadir}/services/audiocd.protocol
@@ -775,6 +816,7 @@ rm -rf $RPM_BUILD_ROOT
 %files cddb
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/kde3/kcm_cddb.so
+%{_datadir}/apps/kconf_update/kcmcddb-emailsettings.upd
 %{_datadir}/config.kcfg/libkcddb.kcfg
 %{_desktopdir}/kde/libkcddb.desktop
 
@@ -806,7 +848,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/kaudiocreator
 %{_datadir}/config.kcfg/kaudiocreator.kcfg
 %{_datadir}/config.kcfg/kaudiocreator_encoders.kcfg
-%{_datadir}/apps/kconf_update/upgrade-kaudiocreator-metadata.sh
+%{_datadir}/apps/kconf_update/kaudiocreator-libkcddb.upd
+%{_datadir}/apps/kconf_update/kaudiocreator-meta.upd
+%attr(755,root,root) %{_datadir}/apps/kconf_update/upgrade-kaudiocreator-metadata.sh
 %{_desktopdir}/kde/kaudiocreator.desktop
 %{_iconsdir}/*/*/*/kaudiocreator.png
 
@@ -820,6 +864,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/kmid
 %attr(755,root,root) %{_libdir}/kde3/libkmidpart.so
 %attr(755,root,root) %{_libdir}/libkmidlib.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libkmidlib.so.0
 %{_datadir}/apps/kmid
 %{_datadir}/mimelnk/audio/x-karaoke.desktop
 %{_datadir}/servicetypes/*midi*.desktop
@@ -876,12 +921,15 @@ rm -rf $RPM_BUILD_ROOT
 %files libkcddb
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libkcddb.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libkcddb.so.1
 
 %files mpeglib
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/mpeglibartsplay
 %attr(755,root,root) %{_libdir}/libarts_mpeglib-*.*.*.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libarts_mpeglib-*.*.*.so.0
 %attr(755,root,root) %{_libdir}/libarts_splay.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libarts_splay.so.0
 %attr(755,root,root) %{_libdir}/libmpeg-*.*.*.so
 %attr(755,root,root) %{_libdir}/libyafcore.so
 %attr(755,root,root) %{_libdir}/libyafxplayer.so
@@ -928,8 +976,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/mcop/noatunarts.mcoptype
 %{_libdir}/mcop/winskinvis.mcopclass
 %{_libdir}/mcop/winskinvis.mcoptype
-%attr(755,root,root) %{_datadir}/apps/kconf_update/noatun20update
-%{_datadir}/apps/kconf_update/*.upd
+%{_datadir}/apps/kconf_update/noatun.upd
+%attr(755,root,root) %{_libdir}/kconf_update_bin/noatun20update
 %{_datadir}/apps/noatun*
 %dir %{_datadir}/mimelnk/interface
 %{_datadir}/mimelnk/interface/x-winamp-skin.desktop
@@ -939,7 +987,10 @@ rm -rf $RPM_BUILD_ROOT
 %files noatun-libs
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libnoatun.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libnoatun.so.1
 %attr(755,root,root) %{_libdir}/libnoatunarts.so
 %attr(755,root,root) %{_libdir}/libnoatuncontrols.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libnoatuncontrols.so.1
 %attr(755,root,root) %{_libdir}/libnoatuntags.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libnoatuntags.so.1
 %attr(755,root,root) %{_libdir}/libwinskinvis.so
