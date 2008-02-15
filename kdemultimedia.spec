@@ -2,6 +2,41 @@
 # - enable gstreamer after making it selectable runtime
 # - not sure about those unpackaged files:
 #   /usr/share/desktop-directories/kde-multimedia-music.directory
+# - unpackaged:
+#   /usr/lib/libarts_akode.la
+#   /usr/lib/libarts_akode.so
+#   /usr/lib/libarts_akode.so.0
+#   /usr/lib/libarts_audiofile.la
+#   /usr/lib/libarts_audiofile.so
+#   /usr/lib/libarts_audiofile.so.0
+#   /usr/lib/libarts_mpeglib-0.3.0.so.0
+#   /usr/lib/libarts_splay.so.0
+#   /usr/lib/libarts_xine.la
+#   /usr/lib/libarts_xine.so
+#   /usr/lib/libarts_xine.so.0
+#   /usr/lib/libartsbuilder.so.0
+#   /usr/lib/libartscontrolapplet.so.1
+#   /usr/lib/libartscontrolsupport.so.1
+#   /usr/lib/libartsgui.so.0
+#   /usr/lib/libartsgui_idl.so.0
+#   /usr/lib/libartsgui_kde.so.0
+#   /usr/lib/libartsmidi.so.0
+#   /usr/lib/libartsmidi_idl.so.0
+#   /usr/lib/libartsmodules.so.0
+#   /usr/lib/libartsmodulescommon.so.0
+#   /usr/lib/libartsmoduleseffects.so.0
+#   /usr/lib/libartsmodulesmixers.so.0
+#   /usr/lib/libartsmodulessynth.so.0
+#   /usr/lib/libaudiocdplugins.la
+#   /usr/lib/libaudiocdplugins.so
+#   /usr/lib/libaudiocdplugins.so.1
+#   /usr/lib/libkcddb.so.1
+#   /usr/lib/libkmidlib.la
+#   /usr/lib/libkmidlib.so
+#   /usr/lib/libkmidlib.so.0
+#   /usr/lib/libnoatun.so.1
+#   /usr/lib/libnoatuncontrols.so.1
+#   /usr/lib/libnoatuntags.so.1
 #
 # Conditional build:
 %bcond_without	alsa			# build without ALSA support
@@ -17,13 +52,13 @@
 Summary:	K Desktop Environment - multimedia applications
 Summary(pl.UTF-8):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
-Version:	3.5.8
-Release:	1
+Version:	3.5.9
+Release:	0.1
 Epoch:		9
 License:	GPL
 Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{version}/src/%{name}-%{version}.tar.bz2
-# Source0-md5:	9f3c95231ea265b09f3010adb954ae30
+# Source0-md5:	fdfafe38d2c7e3019dafc80c177add15
 Patch0:		kde-common-PLD.patch
 #Patch100:	%{name}-branch.diff
 Patch1:		kde-ac260-lt.patch
