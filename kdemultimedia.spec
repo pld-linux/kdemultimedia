@@ -599,13 +599,16 @@ if [ ! -f makeinstall.stamp -o ! -d $RPM_BUILD_ROOT ]; then
 fi
 
 if [ ! -f installed.stamp ]; then
-	# locolor icons are deprecated (in PLD?)
-	rm -rf $RPM_BUILD_ROOT%{_iconsdir}/locolor
 	# PLD doesn't have 'Multimedia/Music' submenu
 	rm -f $RPM_BUILD_ROOT%{_sysconfdir}/xdg/menus/applications-merged/kde-multimedia-music.menu
 
+	# locolor icons are deprecated (in PLD?)
+	rm -rf $RPM_BUILD_ROOT%{_iconsdir}/locolor
+
 	rm $RPM_BUILD_ROOT%{_libdir}/kde3/*.la
 	rm $RPM_BUILD_ROOT%{_libdir}/libkdeinit_*.la
+
+	touch installed.stamp
 fi
 
 rm -f *.lang
@@ -764,7 +767,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/mcop/artsmodulessynth.mcoptype
 %{_libdir}/mcop/audiofilearts.mcopclass
 %{_libdir}/mcop/audiofilearts.mcoptype
-%{_iconsdir}/[!l]*/*/actions/arts[!bc]*.*
+%{_iconsdir}/crystalsvg/*/actions/arts[!bc]*.*
 
 %files artsbuilder -f artsbuilder.lang
 %defattr(644,root,root,755)
@@ -774,8 +777,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/artsbuilder
 %{_datadir}/mimelnk/application/x-artsbuilder.desktop
 %{_desktopdir}/kde/artsbuilder.desktop
-%{_iconsdir}/[!l]*/*/actions/artsbuilderexecute.*
-%{_iconsdir}/[!l]*/*/apps/artsbuilder.*
+%{_iconsdir}/crystalsvg/*/actions/artsbuilderexecute.*
+%{_iconsdir}/hicolor/*/apps/artsbuilder.*
 
 %files artscontrol
 %defattr(644,root,root,755)
@@ -783,7 +786,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/artscontrol
 %{_datadir}/apps/kicker/applets/artscontrolapplet.desktop
 %{_desktopdir}/kde/artscontrol.desktop
-%{_iconsdir}/[!l]*/*/apps/artscontrol.*
+%{_iconsdir}/hicolor/*/apps/artscontrol.*
 
 %if %{with xine}
 %files artsplugin-xine
