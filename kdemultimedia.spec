@@ -972,6 +972,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/mcop/winskinvis.mcopclass
 %{_libdir}/mcop/winskinvis.mcoptype
 %{_datadir}/apps/kconf_update/noatun.upd
+# XXX ELF binary
 %attr(755,root,root) %{_datadir}/apps/kconf_update/noatun20update
 %{_datadir}/apps/noatun*
 %dir %{_datadir}/mimelnk/interface
