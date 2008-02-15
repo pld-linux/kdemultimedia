@@ -18,15 +18,16 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl.UTF-8):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	3.5.9
-Release:	0.1
+Release:	1
 Epoch:		9
 License:	GPL
 Group:		X11/Applications
 Source0:	ftp://ftp.kde.org/pub/kde/%{_state}/%{version}/src/%{name}-%{version}.tar.bz2
 # Source0-md5:	fdfafe38d2c7e3019dafc80c177add15
-Patch0:		kde-common-PLD.patch
 #Patch100:	%{name}-branch.diff
+Patch0:		kde-common-PLD.patch
 Patch1:		kde-ac260-lt.patch
+Patch2:		%{name}-bug-157891.patch
 URL:		http://www.kde.org/
 BuildRequires:	akode-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
@@ -513,6 +514,7 @@ KDE Media Player - biblioteki współdzielone.
 #%patch100 -p0
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Player;/' \
 	juk/juk.desktop \
@@ -972,8 +974,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/mcop/winskinvis.mcopclass
 %{_libdir}/mcop/winskinvis.mcoptype
 %{_datadir}/apps/kconf_update/noatun.upd
-# XXX ELF binary
-%attr(755,root,root) %{_datadir}/apps/kconf_update/noatun20update
+%attr(755,root,root) %{_libdir}/kconf_update_bin/noatun20update
 %{_datadir}/apps/noatun*
 %dir %{_datadir}/mimelnk/interface
 %{_datadir}/mimelnk/interface/x-winamp-skin.desktop
