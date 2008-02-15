@@ -2,17 +2,6 @@
 # - enable gstreamer after making it selectable runtime
 # - not sure about those unpackaged files:
 #   /usr/share/desktop-directories/kde-multimedia-music.directory
-# - unpackaged:
-#%attr(755,root,root) %ghost %{_libdir}/libarts_akode.la
-#%attr(755,root,root) %ghost %{_libdir}/libarts_akode.so
-#%attr(755,root,root) %ghost %{_libdir}/libarts_audiofile.la
-#%attr(755,root,root) %ghost %{_libdir}/libarts_audiofile.so
-#%attr(755,root,root) %ghost %{_libdir}/libarts_xine.la
-#%attr(755,root,root) %ghost %{_libdir}/libarts_xine.so
-#%attr(755,root,root) %ghost %{_libdir}/libaudiocdplugins.la
-#%attr(755,root,root) %ghost %{_libdir}/libaudiocdplugins.so
-#%attr(755,root,root) %ghost %{_libdir}/libkmidlib.la
-#%attr(755,root,root) %ghost %{_libdir}/libkmidlib.so
 #
 # Conditional build:
 %bcond_without	alsa			# build without ALSA support
@@ -603,12 +592,13 @@ if [ ! -f makeinstall.stamp -o ! -d $RPM_BUILD_ROOT ]; then
 	%{__make} install \
 		DESTDIR=$RPM_BUILD_ROOT \
 		kde_htmldir=%{_kdedocdir}
+
 	touch makeinstall.stamp
 fi
 
 if [ ! -f installed.stamp ]; then
 	# locolor icons are deprecated (in PLD?)
-	rm -f $RPM_BUILD_ROOT%{_iconsdir}/locolor
+	rm -rf $RPM_BUILD_ROOT%{_iconsdir}/locolor
 	# PLD doesn't have 'Multimedia/Music' submenu
 	rm -f $RPM_BUILD_ROOT%{_sysconfdir}/xdg/menus/applications-merged/kde-multimedia-music.menu
 
@@ -702,6 +692,18 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libnoatuntags.la
 %attr(755,root,root) %{_libdir}/libnoatuntags.so
 %{_libdir}/libwinskinvis.la
+%attr(755,root,root) %{_libdir}/libarts_akode.so
+%{_libdir}/libarts_akode.la
+%attr(755,root,root) %{_libdir}/libarts_audiofile.so
+%{_libdir}/libarts_audiofile.la
+%if %{with xine}
+%attr(755,root,root) %{_libdir}/libarts_xine.so
+%{_libdir}/libarts_xine.la
+%endif
+%attr(755,root,root) %{_libdir}/libaudiocdplugins.so
+%{_libdir}/libaudiocdplugins.la
+%attr(755,root,root) %{_libdir}/libkmidlib.so
+%{_libdir}/libkmidlib.la
 
 %files akode
 %defattr(644,root,root,755)
