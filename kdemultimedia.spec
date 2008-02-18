@@ -18,7 +18,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl.UTF-8):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	3.5.9
-Release:	2
+Release:	3
 Epoch:		9
 License:	GPL
 Group:		X11/Applications
@@ -697,18 +697,19 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/libnoatuntags.la
 %attr(755,root,root) %{_libdir}/libnoatuntags.so
 %{_libdir}/libwinskinvis.la
-%attr(755,root,root) %{_libdir}/libarts_akode.so
-%{_libdir}/libarts_akode.la
+# nothing links with it
+#%attr(755,root,root) %{_libdir}/libarts_akode.so
+#%{_libdir}/libarts_akode.la
 %attr(755,root,root) %{_libdir}/libarts_audiofile.so
 %{_libdir}/libarts_audiofile.la
 %if %{with xine}
-%attr(755,root,root) %{_libdir}/libarts_xine.so
-%{_libdir}/libarts_xine.la
+#%attr(755,root,root) %{_libdir}/libarts_xine.so
+#%{_libdir}/libarts_xine.la
 %endif
-%attr(755,root,root) %{_libdir}/libaudiocdplugins.so
-%{_libdir}/libaudiocdplugins.la
-%attr(755,root,root) %{_libdir}/libkmidlib.so
-%{_libdir}/libkmidlib.la
+#%attr(755,root,root) %{_libdir}/libaudiocdplugins.so
+#%{_libdir}/libaudiocdplugins.la
+#%attr(755,root,root) %{_libdir}/libkmidlib.so
+#%{_libdir}/libkmidlib.la
 
 %files akode
 %defattr(644,root,root,755)
