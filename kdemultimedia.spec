@@ -239,6 +239,7 @@ Summary(pl.UTF-8):	Protokół audiocd dla konquerora
 Group:		X11/Applications
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
 Requires:	konqueror >= %{_minbaseevr}
+Provides:	kdemultimedia(audiocd) = %{version}-%{release}
 Conflicts:	kdemultimedia-kaudiocreator < 9:3.1.92.031014
 
 %description audiocd
