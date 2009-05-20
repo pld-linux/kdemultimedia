@@ -29,6 +29,7 @@ Patch0:		kde-common-PLD.patch
 Patch1:		kde-ac260-lt.patch
 Patch2:		%{name}-bug-157891.patch
 Patch3:		%{name}-gcc.patch
+Patch4:		kde-am.patch
 URL:		http://www.kde.org/
 BuildRequires:	akode-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
@@ -65,7 +66,6 @@ BuildRequires:	pulseaudio-devel
 BuildRequires:	rpmbuild(macros) >= 1.129
 BuildRequires:	speex-devel
 BuildRequires:	taglib-devel >= 0.95.031114
-#BuildRequires:	unsermake >= 040511
 %{?with_xine:BuildRequires:	xine-lib-devel >= 1:1.0}
 BuildRequires:	zlib-devel
 Obsoletes:	kdemultimedia-libworkman
@@ -181,16 +181,18 @@ Zaawansowane narzędzie konfiguracyjne dla arts, zawiera: okno zakresu
 FFT, listę obsługiwanych typów plików, moduły zarządzania klientami,
 midi oraz środowiskiem, a także monitor stanu serwera dźwięku.
 
-#%package artsplugin-audiofile
-#Summary:	Audiofile Plug-in
-#Summary(pl):	Wtyczka do Audiofile
-#Group:		X11/Applications
-#Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
-#Obsoletes:	kdemultimedia-arts < 9:3.1.92.021012
+%package artsplugin-audiofile
+Summary:	Audiofile Plug-in
+Summary(pl.UTF-8):	Wtyczka do Audiofile
+Group:		X11/Applications
+Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
+Obsoletes:	kdemultimedia-arts < 9:3.1.92.021012
 
-#%description artsplugin-audiofile #Audiofile Plug-in.
+%description artsplugin-audiofile
+Audiofile Plug-in.
 
-#%description artsplugin-audiofile -l pl #Wtyczka do Audiofile.
+%description artsplugin-audiofile -l pl.UTF-8
+Wtyczka do Audiofile.
 
 %package artsplugin-xine
 Summary:	Xine engine plugin for arts
@@ -518,6 +520,7 @@ KDE Media Player - biblioteki współdzielone.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %{__sed} -i -e 's/Categories=.*/Categories=Qt;KDE;Audio;Player;/' \
 	juk/juk.desktop \
