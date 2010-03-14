@@ -592,6 +592,7 @@ export CDPARANOIA=%{_bindir}/cdparanoia
 	--with-vorbis
 
 %{__make}
+rm -f makeinstall.stamp
 
 %install
 if [ ! -f makeinstall.stamp -o ! -d $RPM_BUILD_ROOT ]; then
