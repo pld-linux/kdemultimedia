@@ -1,7 +1,10 @@
 # TODO:
 # - enable gstreamer after making it selectable runtime
-# - not sure about those unpackaged files:
-#   /usr/share/desktop-directories/kde-multimedia-music.directory
+# - fix build for newer autoconf (pld patch breaks it?):
+#   i686-pld-linux-g++: ./.libs/libkmidlib.so: No such file or directory
+#   make[3]: *** [kmid] Error 1
+#   make[3]: *** Waiting for unfinished jobs....
+#   make[3]: Leaving directory `/home/glen/BUILD/kdemultimedia-3.5.10/kmid'
 #
 # Conditional build:
 %bcond_without	alsa			# build without ALSA support
@@ -10,7 +13,7 @@
 %bcond_with	tunepimp		# build with tunepimp support (needs old libtunepimp)
 %bcond_with	gstreamer		# build with gstreamer support (needs old gstreamer)
 %bcond_with	hidden_visibility	# gcc hidden visibility
-#
+
 %define		_state		stable
 %define		_minlibsevr	9:%{version}
 %define		_minbaseevr	9:%{version}
@@ -37,6 +40,7 @@ BuildRequires:	akode-devel
 %{?with_arts:BuildRequires:	arts-qt-devel}
 BuildRequires:	audiofile-devel
 BuildRequires:	autoconf
+BuildRequires:	autoconf < 2.64
 BuildRequires:	automake
 BuildRequires:	cdparanoia-III-devel >= alpha9.8-6
 BuildRequires:	flac-devel >= 1.1.2
@@ -71,6 +75,9 @@ BuildRequires:	taglib-devel >= 0.95.031114
 BuildRequires:	zlib-devel
 Obsoletes:	kdemultimedia-libworkman
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+# build broken with spaces in CC
+%undefine	with_ccache
 
 %description
 KDE multimedia applications. Package includes:
@@ -587,6 +594,7 @@ export CDPARANOIA=%{_bindir}/cdparanoia
 	--enable-libsuffix=64 \
 %endif
 	--with%{!?with_alsa:out}-arts-alsa \
+	--with%{!?with_arts:out}-arts \
 	--with-extra-includes=%{_includedir}/speex \
 	--with-qt-libraries=%{_libdir} \
 	--with-distribution="PLD Linux Distribution" \
@@ -609,6 +617,9 @@ fi
 if [ ! -f installed.stamp ]; then
 	# PLD doesn't have 'Multimedia/Music' submenu
 	rm -f $RPM_BUILD_ROOT%{_sysconfdir}/xdg/menus/applications-merged/kde-multimedia-music.menu
+
+	# not packaged for ages
+	rm -f $RPM_BUILD_ROOT%{_datadir}/desktop-directories/kde-multimedia-music.directory
 
 	# locolor icons are deprecated (in PLD?)
 	rm -rf $RPM_BUILD_ROOT%{_iconsdir}/locolor
@@ -664,10 +675,22 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(644,root,root,755)
 %{_includedir}/*.h
+%{_includedir}/libkcddb
+
+%if %{with arts}
 %{_includedir}/arts/*.h
 %{_includedir}/arts/*.idl
-%{_includedir}/libkcddb
 %{_includedir}/noatun
+%endif
+
+%attr(755,root,root) %{_libdir}/libkcddb.so
+%{_libdir}/libkcddb.la
+%attr(755,root,root) %{_libdir}/libaudiocdplugins.so
+%{_libdir}/libaudiocdplugins.la
+%attr(755,root,root) %{_libdir}/libkmidlib.so
+%{_libdir}/libkmidlib.la
+
+%if %{with arts}
 %{_libdir}/libartsbuilder.la
 %attr(755,root,root) %{_libdir}/libartsbuilder.so
 %{_libdir}/libartscontrolapplet.la
@@ -695,8 +718,6 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libartsmodulesmixers.so
 %{_libdir}/libartsmodulessynth.la
 %attr(755,root,root) %{_libdir}/libartsmodulessynth.so
-%{_libdir}/libkcddb.la
-%attr(755,root,root) %{_libdir}/libkcddb.so
 %{_libdir}/libnoatun.la
 %attr(755,root,root) %{_libdir}/libnoatun.so
 %{_libdir}/libnoatunarts.la
@@ -714,10 +735,6 @@ rm -rf $RPM_BUILD_ROOT
 #%attr(755,root,root) %{_libdir}/libarts_xine.so
 #%{_libdir}/libarts_xine.la
 %endif
-#%attr(755,root,root) %{_libdir}/libaudiocdplugins.so
-#%{_libdir}/libaudiocdplugins.la
-#%attr(755,root,root) %{_libdir}/libkmidlib.so
-#%{_libdir}/libkmidlib.la
 
 %files akode
 %defattr(644,root,root,755)
@@ -807,6 +824,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/apps/videothumbnail
 %{_datadir}/services/videothumbnail.desktop
 %endif
+%endif
 
 %files audiocd -f kioslave.lang
 %defattr(644,root,root,755)
@@ -837,6 +855,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_desktopdir}/kde/juk.desktop
 %{_iconsdir}/*/*/*/juk*.png
 
+%if %{with arts}
 %files kaboodle -f kaboodle.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/kaboodle
@@ -846,6 +865,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/services/kaboodleengine.desktop
 %{_desktopdir}/kde/kaboodle.desktop
 %{_iconsdir}/*/*/apps/kaboodle.*
+%endif
 
 %files kappfinder
 %defattr(644,root,root,755)
@@ -907,6 +927,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/mimelnk/text/xmcd.desktop
 %{_iconsdir}/*/*/*/kscd.png
 
+%if %{with arts}
 %files krec -f krec.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/krec
@@ -926,6 +947,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/servicetypes/krec_exportitem.desktop
 %{_desktopdir}/kde/krec.desktop
 %{_iconsdir}/*/*/*/krec*
+%endif
 
 %files libkcddb
 %defattr(644,root,root,755)
@@ -934,29 +956,35 @@ rm -rf $RPM_BUILD_ROOT
 
 %files mpeglib
 %defattr(644,root,root,755)
+%if %{with arts}
 %attr(755,root,root) %{_bindir}/mpeglibartsplay
 %attr(755,root,root) %{_libdir}/libarts_mpeglib-*.*.*.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libarts_mpeglib-*.*.*.so.0
 %attr(755,root,root) %{_libdir}/libarts_splay.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libarts_splay.so.0
+%endif
 %attr(755,root,root) %{_libdir}/libmpeg-*.*.*.so
 %attr(755,root,root) %{_libdir}/libyafcore.so
 %attr(755,root,root) %{_libdir}/libyafxplayer.so
+%if %{with arts}
 %{_libdir}/mcop/CDDAPlayObject.mcopclass
 %{_libdir}/mcop/MP3PlayObject.mcopclass
 %{_libdir}/mcop/NULLPlayObject.mcopclass
 %{_libdir}/mcop/OGGPlayObject.mcopclass
 %{_libdir}/mcop/SplayPlayObject.mcopclass
 %{_libdir}/mcop/WAVPlayObject.mcopclass
+%endif
 
 %files mpeglib-devel
 %defattr(644,root,root,755)
 %{_includedir}/mpeglib
+%if %{with arts}
 %{_includedir}/mpeglib_artsplug
 %{_libdir}/libarts_mpeglib.la
 %attr(755,root,root) %{_libdir}/libarts_mpeglib.so
 %{_libdir}/libarts_splay.la
 %attr(755,root,root) %{_libdir}/libarts_splay.so
+%endif
 %{_libdir}/libmpeg.la
 %attr(755,root,root) %{_libdir}/libmpeg.so
 %{_libdir}/libyafcore.la
@@ -971,6 +999,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/yaf-vorbis
 %attr(755,root,root) %{_bindir}/yaf-yuv
 
+%if %{with arts}
 %files noatun -f noatun.lang
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/noatun*
@@ -1003,3 +1032,4 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libdir}/libnoatuntags.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libnoatuntags.so.1
 %attr(755,root,root) %{_libdir}/libwinskinvis.so
+%endif
