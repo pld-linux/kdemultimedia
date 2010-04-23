@@ -5,6 +5,7 @@
 #
 # Conditional build:
 %bcond_without	alsa			# build without ALSA support
+%bcond_with	arts			# build with aRts support
 %bcond_without	xine			# build without xine support
 %bcond_with	tunepimp		# build with tunepimp support (needs old libtunepimp)
 %bcond_with	gstreamer		# build with gstreamer support (needs old gstreamer)
@@ -33,7 +34,7 @@ Patch4:		kde-am.patch
 URL:		http://www.kde.org/
 BuildRequires:	akode-devel
 %{?with_alsa:BuildRequires:	alsa-lib-devel}
-BuildRequires:	arts-qt-devel
+%{?with_arts:BuildRequires:	arts-qt-devel}
 BuildRequires:	audiofile-devel
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -74,7 +75,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %description
 KDE multimedia applications. Package includes:
 
- - Arts - arts tools
+%{?with_arts: - Arts - arts tools}
  - Kaboodle - a media player,
  - KMID - MIDI player,
  - KMIDI - software MIDI player,
@@ -85,7 +86,7 @@ KDE multimedia applications. Package includes:
 %description -l pl.UTF-8
 Multimedialne aplikacje KDE. Pakiet zawiera:
 
- - Arts - narzędzia arts,
+%{?with_arts: - Arts - narzędzia arts,}
  - Kaboodle - odtwarzacz plików multimedialnych,
  - KMID - odtwarzacz MIDI,
  - KMIDI - programowy odtwarzacz MIDI,
@@ -97,7 +98,7 @@ Multimedialne aplikacje KDE. Pakiet zawiera:
 Summary:	Header files for kdemultimedia libraries
 Summary(pl.UTF-8):	Pliki nagłówkowe bibliotek kdemultimedia
 Group:		X11/Development/Libraries
-Requires:	%{name}-arts = %{epoch}:%{version}-%{release}
+%{?with_arts:Requires:	%{name}-arts = %{epoch}:%{version}-%{release}}
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
 Requires:	%{name}-noatun-libs = %{epoch}:%{version}-%{release}
 Requires:	kdelibs-devel >= %{_minlibsevr}
