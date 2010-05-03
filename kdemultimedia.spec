@@ -22,7 +22,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl.UTF-8):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	3.5.10
-Release:	4
+Release:	5
 Epoch:		9
 License:	GPL
 Group:		X11/Applications
