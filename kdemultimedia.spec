@@ -22,7 +22,7 @@ Summary:	K Desktop Environment - multimedia applications
 Summary(pl.UTF-8):	K Desktop Environment - aplikacje multimedialne
 Name:		kdemultimedia
 Version:	3.5.10
-Release:	5
+Release:	6
 Epoch:		9
 License:	GPL
 Group:		X11/Applications
@@ -83,23 +83,23 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 KDE multimedia applications. Package includes:
 
 %{?with_arts: - Arts - arts tools}
- - Kaboodle - a media player,
- - KMID - MIDI player,
- - KMIDI - software MIDI player,
- - KMIX - audio mixer,
- - KSCD - CD player,
- - Noatun - a media player.
+ - Kaboodle - a media player
+ - KMID - MIDI player
+ - KMIDI - software MIDI player
+ - KMIX - audio mixer
+ - KSCD - CD player
+%{?with_arts: - Noatun - a media player}
 
 %description -l pl.UTF-8
 Multimedialne aplikacje KDE. Pakiet zawiera:
 
-%{?with_arts: - Arts - narzędzia arts,}
- - Kaboodle - odtwarzacz plików multimedialnych,
- - KMID - odtwarzacz MIDI,
- - KMIDI - programowy odtwarzacz MIDI,
- - KMIX - mikser audio,
- - KSCD - odtwarzacz CD,
- - Noatun - odtwarzacz plików multimedialnych.
+%{?with_arts: - Arts - narzędzia arts}
+ - Kaboodle - odtwarzacz plików multimedialnych
+ - KMID - odtwarzacz MIDI
+ - KMIDI - programowy odtwarzacz MIDI
+ - KMIX - mikser audio
+ - KSCD - odtwarzacz CD
+%{?with_arts: - Noatun - odtwarzacz plików multimedialnych}
 
 %package devel
 Summary:	Header files for kdemultimedia libraries
@@ -107,7 +107,7 @@ Summary(pl.UTF-8):	Pliki nagłówkowe bibliotek kdemultimedia
 Group:		X11/Development/Libraries
 %{?with_arts:Requires:	%{name}-arts = %{epoch}:%{version}-%{release}}
 Requires:	%{name}-libkcddb = %{epoch}:%{version}-%{release}
-Requires:	%{name}-noatun-libs = %{epoch}:%{version}-%{release}
+%{?with_arts:Requires:	%{name}-noatun-libs = %{epoch}:%{version}-%{release}}
 Requires:	kdelibs-devel >= %{_minlibsevr}
 Obsoletes:	kdemultimedia-static
 
