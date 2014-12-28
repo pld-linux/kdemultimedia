@@ -45,7 +45,7 @@ BuildRequires:	automake
 BuildRequires:	cdparanoia-III-devel >= alpha9.8-6
 BuildRequires:	flac-devel >= 1.1.2
 %{?with_hidden_visibility:BuildRequires:	gcc-c++ >= 5:4.1.0-0.20051206r108118.1}
-BuildRequires:	gettext-devel
+BuildRequires:	gettext-tools
 %if %{with gstreamer}
 BuildRequires:	gstreamer08x-devel >= 0.8
 %endif
